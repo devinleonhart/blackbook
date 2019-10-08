@@ -8,11 +8,11 @@ class User < ApplicationRecord
 
   # TODO: soft delete instead of hard delete
   has_many :owned_universes,
-           class_name: 'Universe',
-           inverse_of: :owner,
-           dependent: :destroy
+    class_name: "Universe",
+    inverse_of: :owner,
+    dependent: :destroy
 
   has_many :collaborations, dependent: :destroy, inverse_of: :user
   has_many :contributor_universes, through: :collaborations, class_name:
-    'Universe', inverse_of: :collaborators
+    "Universe", inverse_of: :collaborators
 end

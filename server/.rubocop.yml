@@ -10,6 +10,12 @@ AllCops:
   - 'spec/rails_helper.rb'
   - 'bin/**/*'
 
+Layout/AlignArguments:
+  EnforcedStyle: with_fixed_indentation
+
+Layout/CaseIndentation:
+  EnforcedStyle: end
+
 Metrics/BlockLength:
   Exclude:
   - spec/**/*
@@ -42,5 +48,15 @@ Rails/TimeZone:
 Style/Documentation:
   Enabled: false
 
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+

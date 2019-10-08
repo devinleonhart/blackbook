@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Trait, type: :model do
-  describe 'validations' do
+  describe "validations" do
     it { should validate_presence_of(:name) }
 
-    describe 'for uniqueness' do
+    describe "for uniqueness" do
       subject { create(:trait) }
 
       it { should validate_uniqueness_of(:name).ignoring_case_sensitivity }

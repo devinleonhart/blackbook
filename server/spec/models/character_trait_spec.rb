@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe CharacterTrait, type: :model do
-  describe 'validations' do
-    describe 'for uniqueness' do
+  describe "validations" do
+    describe "for uniqueness" do
       subject { create(:character_trait) }
 
       it { should validate_uniqueness_of(:character).scoped_to(:trait_id) }

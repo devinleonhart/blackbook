@@ -12,7 +12,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
 
     create_table :universes do |t|
       t.string :name, null: false
-      t.references :owner, null: false, foreign_key: { to_table: 'users' }
+      t.references :owner, null: false, foreign_key: { to_table: "users" }
       t.datetime :discarded_at
 
       t.timestamps
@@ -26,7 +26,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
-    add_index :collaborations, %i[user_id universe_id], unique: true
+    add_index :collaborations, [:user_id, :universe_id], unique: true
 
     create_table :characters do |t|
       t.string :name, null: false
@@ -35,7 +35,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
-    add_index :characters, %i[name universe_id], unique: true
+    add_index :characters, [:name, :universe_id], unique: true
 
     create_table :traits do |t|
       t.string :name, null: false
@@ -51,7 +51,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
-    add_index :character_traits, %i[character_id trait_id], unique: true
+    add_index :character_traits, [:character_id, :trait_id], unique: true
 
     create_table :mutual_relationships, &:timestamps
 
@@ -60,12 +60,12 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
       t.references(
         :originating_character,
         null: false,
-        foreign_key: { to_table: 'characters' }
+        foreign_key: { to_table: "characters" }
       )
       t.references(
         :target_character,
         null: false,
-        foreign_key: { to_table: 'characters' }
+        foreign_key: { to_table: "characters" }
       )
       t.string :name, null: false
 
@@ -73,9 +73,9 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
     end
     add_index(
       :relationships,
-      %i[originating_character_id target_character_id name],
+      [:originating_character_id, :target_character_id, :name],
       unique: true,
-      name: 'relationships_unique_constraint'
+      name: "relationships_unique_constraint"
     )
     execute <<-SQL
       ALTER TABLE relationships
@@ -96,7 +96,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
-    add_index :character_items, %i[character_id item_id], unique: true
+    add_index :character_items, [:character_id, :item_id], unique: true
 
     create_table :locations do |t|
       t.string :name, null: false
@@ -105,7 +105,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
 
       t.timestamps
     end
-    add_index :locations, %i[name universe_id], unique: true
+    add_index :locations, [:name, :universe_id], unique: true
   end
 
   def down
