@@ -100,7 +100,8 @@ CREATE TABLE public.characters (
     description character varying NOT NULL,
     universe_id bigint NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    discarded_at timestamp without time zone
 );
 
 
@@ -613,6 +614,13 @@ CREATE INDEX index_character_traits_on_trait_id ON public.character_traits USING
 
 
 --
+-- Name: index_characters_on_discarded_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_characters_on_discarded_at ON public.characters USING btree (discarded_at);
+
+
+--
 -- Name: index_characters_on_name_and_universe_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -810,6 +818,7 @@ ALTER TABLE ONLY public.character_items
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20191001214947');
+('20191001214947'),
+('20191008195955');
 
 
