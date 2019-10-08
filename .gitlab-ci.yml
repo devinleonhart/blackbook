@@ -16,7 +16,7 @@ server-tests:
     RAILS_ENV: test
     DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: "true"
   before_script:
-  - 'which git || (apt-get update -y && apt-get install git)'
+  - apt-get update -y && apt-get install -y git postgresql-client
   - cd server
   - gem install bundler
   - bundle install --without production
@@ -27,7 +27,7 @@ server-lints:
   image: ruby:2.6.4
   stage: test
   before_script:
-  - 'which git || (apt-get update -y && apt-get install git)'
+  - apt-get update -y && apt-get install -y git
   - cd server
   - gem install bundler
   - bundle install --without production
