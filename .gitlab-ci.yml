@@ -1,0 +1,73 @@
+services:
+  - postgres:latest
+
+stages:
+  - test
+  - deploy
+
+server-tests:
+  image: ruby:2.6.4
+  stage: test
+  variables:
+    POSTGRES_DB: black_book_test
+    POSTGRES_USER: black_book
+    POSTGRES_PASSWORD: ""
+    DATABASE_URL: 'postgresql://black_book:@postgres/black_book_test'
+    RAILS_ENV: test
+    DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: "true"
+  before_script:
+  - 'which git || (apt-get update -y && apt-get install git)'
+  - cd server
+  - gem install bundler
+  - bundle install --without production
+  script:
+  - time bundle exec rspec
+
+client-tests:
+  image: node:12
+  stage: test
+  variables:
+    NODE_ENV: test
+  before_script:
+  - cd client
+  - npm install
+  script:
+  - time npm run test
+
+client-build-test:
+  image: node:12
+  stage: test
+  before_script:
+  - cd client
+  - npm install
+  script:
+  - time npm run build
+
+client-lints:
+  image: node:12
+  stage: test
+  before_script:
+  - cd client
+  - npm install
+  script:
+  - time npm run lint
+
+deploy:
+  image: ruby:2.6.4
+  stage: deploy
+  before_script:
+    - apt-get update -y && apt-get install openssh-client git -y
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - cd server
+    - gem install bundler
+    - bundle install --without production test
+  script:
+  - mina deploy
+  only:
+  - master
+

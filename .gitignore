@@ -1,0 +1,6 @@
+tags.lock
+
+# ignore OS-specific metadata files
+.DS_Store
+Thumbs.db
+desktop.ini
