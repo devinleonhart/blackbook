@@ -12,7 +12,13 @@ RSpec.describe Location, type: :model do
     describe 'for uniqueness' do
       subject { create(:location) }
 
-      it { should validate_uniqueness_of(:name).scoped_to(:universe_id) }
+      it {
+        should(
+          validate_uniqueness_of(:name)
+          .scoped_to(:universe_id)
+          .ignoring_case_sensitivity
+        )
+      }
     end
   end
 

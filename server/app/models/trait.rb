@@ -2,7 +2,7 @@
 
 class Trait < ApplicationRecord
   validates :name, presence: true
-  validates :name, uniqueness: true
+  validates :name, uniqueness: { case_sensitive: false }
 
   has_many :character_traits, dependent: :restrict_with_error, inverse_of:
     :trait

@@ -15,6 +15,7 @@ RSpec.describe Relationship, type: :model do
         should(
           validate_uniqueness_of(:name)
           .scoped_to(%i[originating_character_id target_character_id])
+          .ignoring_case_sensitivity
         )
       }
     end

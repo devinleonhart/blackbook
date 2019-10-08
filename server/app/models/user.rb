@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_secure_password
 
   validates :name, presence: true
-  validates :name, uniqueness: true
+  validates :name, uniqueness: { case_sensitive: false }
 
   # TODO: soft delete instead of hard delete
   has_many :owned_universes,

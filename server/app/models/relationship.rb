@@ -4,7 +4,10 @@ class Relationship < ApplicationRecord
   validates :name, presence: true
   validates(
     :name,
-    uniqueness: { scope: %i[originating_character_id target_character_id] }
+    uniqueness: {
+      scope: %i[originating_character_id target_character_id],
+      case_sensitive: false,
+    }
   )
 
   belongs_to :originating_character, class_name: 'Character', inverse_of:

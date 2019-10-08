@@ -19,9 +19,28 @@ Metrics/MethodLength:
   Exclude:
   - db/migrate/*
 
+Metrics/LineLength:
+  Max: 80
+  IgnoredPatterns:
+    - "^\\s*describe"
+    - "^\\s*context"
+    - "^\\s*it"
+
 Metrics/AbcSize:
   Exclude:
   - db/migrate/*
 
+Rails:
+  Enabled: true
+
+Rails/SaveBang:
+  Enabled: true
+
+Rails/TimeZone:
+  EnforcedStyle: strict
+
 Style/Documentation:
   Enabled: false
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma

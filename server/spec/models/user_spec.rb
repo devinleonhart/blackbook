@@ -13,7 +13,7 @@ RSpec.describe User, type: :model do
     describe 'for uniqueness' do
       subject { create(:user) }
 
-      it { should validate_uniqueness_of(:name) }
+      it { should validate_uniqueness_of(:name).ignoring_case_sensitivity }
     end
   end
 

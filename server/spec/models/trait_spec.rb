@@ -9,7 +9,7 @@ RSpec.describe Trait, type: :model do
     describe 'for uniqueness' do
       subject { create(:trait) }
 
-      it { should validate_uniqueness_of(:name) }
+      it { should validate_uniqueness_of(:name).ignoring_case_sensitivity }
     end
   end
 
