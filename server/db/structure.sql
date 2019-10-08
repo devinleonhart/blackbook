@@ -32,7 +32,9 @@ CREATE TABLE public.ar_internal_metadata (
 CREATE TABLE public.character_items (
     id bigint NOT NULL,
     character_id bigint NOT NULL,
-    item_id bigint NOT NULL
+    item_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
@@ -192,7 +194,9 @@ CREATE TABLE public.locations (
     id bigint NOT NULL,
     name character varying NOT NULL,
     description character varying NOT NULL,
-    universe_id bigint NOT NULL
+    universe_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
 );
 
 
