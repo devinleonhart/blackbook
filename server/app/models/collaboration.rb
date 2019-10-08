@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Collaboration < ApplicationRecord
   validates :user, uniqueness: { scope: :universe_id }
 

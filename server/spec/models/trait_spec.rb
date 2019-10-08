@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe Trait, type: :model do
@@ -11,6 +13,19 @@ RSpec.describe Trait, type: :model do
     end
   end
 
-  it { should have_many(:character_traits).inverse_of(:trait) }
-  it { should have_many(:characters).through(:character_traits).inverse_of(:traits) }
+  it {
+    should(
+      have_many(:character_traits)
+      .dependent(:restrict_with_error)
+      .inverse_of(:trait)
+    )
+  }
+  it {
+    should(
+      have_many(:characters)
+      .through(:character_traits)
+      .dependent(:restrict_with_error)
+      .inverse_of(:traits)
+    )
+  }
 end

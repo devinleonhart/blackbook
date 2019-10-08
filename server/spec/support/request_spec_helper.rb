@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module JsonResponseHelper
   # parse a JSON response into a Ruby hash
   def json

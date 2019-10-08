@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Location < ApplicationRecord
   validates :name, :description, presence: true
   validates :name, uniqueness: { scope: :universe_id }

@@ -23,6 +23,36 @@ server-tests:
   script:
   - time bundle exec rspec
 
+server-lints:
+  image: ruby:2.6.4
+  stage: test
+  before_script:
+  - 'which git || (apt-get update -y && apt-get install git)'
+  - cd server
+  - gem install bundler
+  - bundle install --without production
+  script:
+  - time bundle exec rubocop
+
+deploy:
+  image: ruby:2.6.4
+  stage: deploy
+  before_script:
+    - apt-get update -y && apt-get install openssh-client git -y
+    - eval $(ssh-agent -s)
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - cd server
+    - gem install bundler
+    - bundle install --without production test
+  script:
+  - mina deploy
+  only:
+  - master
+
 client-tests:
   image: node:12
   stage: test

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CharacterTrait < ApplicationRecord
   validates :character, uniqueness: { scope: :trait_id }
 

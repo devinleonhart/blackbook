@@ -1,0 +1,27 @@
+require:
+- rubocop-rails
+
+AllCops:
+  Exclude:
+  - 'Gemfile'
+  - 'config/**/*'
+  - 'config.ru'
+  - 'spec/spec_helper.rb'
+  - 'spec/rails_helper.rb'
+  - 'bin/**/*'
+
+Metrics/BlockLength:
+  Exclude:
+  - spec/**/*
+  - db/migrate/*
+
+Metrics/MethodLength:
+  Exclude:
+  - db/migrate/*
+
+Metrics/AbcSize:
+  Exclude:
+  - db/migrate/*
+
+Style/Documentation:
+  Enabled: false

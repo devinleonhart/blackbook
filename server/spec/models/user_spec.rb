@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
@@ -15,13 +17,22 @@ RSpec.describe User, type: :model do
     end
   end
 
-  it { should have_many(:owned_universes).class_name("Universe").inverse_of(:owner).dependent(:destroy) }
+  it {
+    should(
+      have_many(:owned_universes)
+      .class_name('Universe')
+      .inverse_of(:owner)
+      .dependent(:destroy)
+    )
+  }
 
-  it { should have_many(:collaborations).inverse_of(:user) }
-  it { should(
-       have_many(:contributor_universes)
-       .through(:collaborations)
-       .class_name("Universe")
-       .inverse_of(:collaborators)
-  )}
+  it { should have_many(:collaborations).dependent(:destroy).inverse_of(:user) }
+  it {
+    should(
+      have_many(:contributor_universes)
+      .through(:collaborations)
+      .class_name('Universe')
+      .inverse_of(:collaborators)
+    )
+  }
 end
