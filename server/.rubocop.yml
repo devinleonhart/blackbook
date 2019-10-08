@@ -13,8 +13,17 @@ AllCops:
 Layout/AlignArguments:
   EnforcedStyle: with_fixed_indentation
 
+Layout/IndentFirstArrayElement:
+  EnforcedStyle: consistent
+
 Layout/CaseIndentation:
   EnforcedStyle: end
+
+Naming/RescuedExceptionsVariableName:
+  PreferredName: error
+
+Metrics/AbcSize:
+  Enabled: false
 
 Metrics/BlockLength:
   Exclude:
@@ -22,8 +31,7 @@ Metrics/BlockLength:
   - db/migrate/*
 
 Metrics/MethodLength:
-  Exclude:
-  - db/migrate/*
+  Enabled: false
 
 Metrics/LineLength:
   Max: 80
@@ -31,10 +39,6 @@ Metrics/LineLength:
     - "^\\s*describe"
     - "^\\s*context"
     - "^\\s*it"
-
-Metrics/AbcSize:
-  Exclude:
-  - db/migrate/*
 
 Rails:
   Enabled: true
@@ -45,11 +49,20 @@ Rails/SaveBang:
 Rails/TimeZone:
   EnforcedStyle: strict
 
+Style/ClassAndModuleChildren:
+  Enabled: false
+
 Style/Documentation:
   Enabled: false
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
+
+Style/TrailingCommaInArguments:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
