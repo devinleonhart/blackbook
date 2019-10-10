@@ -36,8 +36,11 @@ gem 'rack-cors'
 # a gem providing a helpful wrapper for PostgreSQL's full text search
 gem 'pg_search', '~> 2.3.0'
 
-# paranoia allows soft-deleting database rows
+# allows soft-deleting database rows
 gem 'discard', '~> 1.1.0'
+
+# provides token-based (JWT) authentication
+gem 'devise_token_auth', '~> 1.1.3'
 
 group :development, :test do
   gem 'awesome_print', '~> 1.8.0'
