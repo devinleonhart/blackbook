@@ -30,6 +30,9 @@ Metrics/BlockLength:
   - spec/**/*
   - db/migrate/*
 
+Metrics/ClassLength:
+  Enabled: false
+
 Metrics/MethodLength:
   Enabled: false
 
