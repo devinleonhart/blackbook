@@ -8,7 +8,7 @@
 #  mutual_relationship_id   :bigint           not null
 #  originating_character_id :bigint           not null
 #  target_character_id      :bigint           not null
-#  name                     :string           not null
+#  name                     :citext           not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #

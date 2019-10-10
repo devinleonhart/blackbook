@@ -5,7 +5,7 @@
 # Table name: universes
 #
 #  id           :bigint           not null, primary key
-#  name         :string           not null
+#  name         :citext           not null
 #  owner_id     :bigint           not null
 #  discarded_at :datetime
 #  created_at   :datetime         not null

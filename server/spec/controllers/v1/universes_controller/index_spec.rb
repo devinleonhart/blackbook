@@ -37,15 +37,11 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         expect(owner_information).to eq([
           {
             "id" => owner1.id,
-            "name" => owner1.name,
+            "display_name" => owner1.display_name,
           },
           {
             "id" => owner2.id,
-            "name" => owner2.name,
-          },
-          {
-            "id" => owner3.id,
-            "name" => owner3.name,
+            "display_name" => owner2.display_name,
           },
         ])
       end

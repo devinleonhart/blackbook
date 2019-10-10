@@ -5,7 +5,8 @@
 # Table name: users
 #
 #  id              :bigint           not null, primary key
-#  name            :string           not null
+#  email           :citext           not null
+#  display_name    :citext           not null
 #  password_digest :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
@@ -17,14 +18,18 @@ RSpec.describe User, type: :model do
   describe "validations" do
     subject { build(:user, :with_blank_password) }
 
-    it { should validate_presence_of(:name) }
+    it { should validate_presence_of(:display_name) }
 
     it { should validate_presence_of(:password) }
+    it { should validate_presence_of(:email) }
 
     describe "for uniqueness" do
       subject { create(:user) }
 
-      it { should validate_uniqueness_of(:name).ignoring_case_sensitivity }
+      it do
+        should validate_uniqueness_of(:email).ignoring_case_sensitivity
+        should validate_uniqueness_of(:display_name).ignoring_case_sensitivity
+      end
     end
   end
 
@@ -32,8 +37,9 @@ RSpec.describe User, type: :model do
     should(
       have_many(:owned_universes)
       .class_name("Universe")
+      .with_foreign_key("owner_id")
       .inverse_of(:owner)
-      .dependent(:destroy)
+      .dependent(:restrict_with_error)
     )
   }
 

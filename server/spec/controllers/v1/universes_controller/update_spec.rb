@@ -79,7 +79,7 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         it "returns the universe's new owner's information" do
           expect(universe_json["owner"]).to eq(
             "id" => new_owner.id,
-            "name" => new_owner.name,
+            "display_name" => new_owner.display_name,
           )
         end
 
@@ -87,11 +87,11 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           expect(universe_json["collaborators"]).to eq([
             {
               "id" => new_collaborator1.id,
-              "name" => new_collaborator1.name,
+              "display_name" => new_collaborator1.display_name,
             },
             {
               "id" => new_collaborator2.id,
-              "name" => new_collaborator2.name,
+              "display_name" => new_collaborator2.display_name,
             },
           ])
         end

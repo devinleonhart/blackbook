@@ -5,7 +5,7 @@
 # Table name: characters
 #
 #  id           :bigint           not null, primary key
-#  name         :string           not null
+#  name         :citext           not null
 #  description  :string           not null
 #  universe_id  :bigint           not null
 #  created_at   :datetime         not null
