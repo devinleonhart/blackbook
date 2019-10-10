@@ -17,7 +17,7 @@ RSpec.describe API::V1::UniversesController, type: :controller do
     context "when all universes are available" do
       before { get(:index, format: :json) }
 
-      RSpec.shared_examples "JSON properties" do |property|
+      RSpec.shared_examples "universe JSON properties" do |property|
         it "returns all the universes' #{property.to_s.pluralize}" do
           expected_values = [
             universe1.send(property),
@@ -29,8 +29,8 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         end
       end
 
-      include_examples "JSON properties", :id
-      include_examples "JSON properties", :name
+      include_examples "universe JSON properties", :id
+      include_examples "universe JSON properties", :name
 
       it "returns the universes' owner information" do
         owner_information = json.collect { |universe| universe["owner"] }

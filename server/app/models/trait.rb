@@ -1,5 +1,15 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: traits
+#
+#  id         :bigint           not null, primary key
+#  name       :string           not null
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
 class Trait < ApplicationRecord
   validates :name, presence: true
   validates :name, uniqueness: { case_sensitive: false }
