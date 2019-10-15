@@ -2,12 +2,12 @@
 
 require "rails_helper"
 
-RSpec.describe API::V1::LocationsController, type: :controller do
+RSpec.describe API::V1::CharactersController, type: :controller do
   render_views
 
-  let(:location) do
+  let(:character) do
     create(
-      :location,
+      :character,
       name: "Store",
       description: "Good deals here.",
       universe: universe,
@@ -26,31 +26,31 @@ RSpec.describe API::V1::LocationsController, type: :controller do
     context "when the user is authenticated as a user with access to the universe" do
       before { authenticate(collaborator) }
 
-      context "when the location exists" do
+      context "when the character exists" do
         let(:params) do
           {
             universe_id: universe.id,
-            id: location.id,
+            id: character.id,
           }
         end
 
         before { get(:show, format: :json, params: params) }
-        subject(:location_json) { json["location"] }
+        subject(:character_json) { json["character"] }
 
-        it "returns the location's ID" do
-          expect(location_json["id"]).to eq(location.id)
+        it "returns the character's ID" do
+          expect(character_json["id"]).to eq(character.id)
         end
 
-        it "returns the location's name" do
-          expect(location_json["name"]).to eq("Store")
+        it "returns the character's name" do
+          expect(character_json["name"]).to eq("Store")
         end
 
-        it "returns the location's description" do
-          expect(location_json["description"]).to eq("Good deals here.")
+        it "returns the character's description" do
+          expect(character_json["description"]).to eq("Good deals here.")
         end
       end
 
-      context "when the location doesn't exist" do
+      context "when the character doesn't exist" do
         let(:params) do
           {
             universe_id: universe.id,
@@ -64,9 +64,9 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           expect(response).to have_http_status(:not_found)
         end
 
-        it "returns an error message indicating the location doesn't exist" do
+        it "returns an error message indicating the character doesn't exist" do
           expect(json["errors"]).to eq([
-            "No location with ID -1 exists.",
+            "No character with ID -1 exists.",
           ])
         end
       end
@@ -76,7 +76,7 @@ RSpec.describe API::V1::LocationsController, type: :controller do
       let(:params) do
         {
           universe_id: universe.id,
-          id: location.id,
+          id: character.id,
         }
       end
 
@@ -92,7 +92,7 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           expect(json["errors"]).to(
             eq([<<~MESSAGE.strip])
               You must be an owner or collaborator for the universe with ID
-              #{universe.id} to interact with its locations.
+              #{universe.id} to interact with its characters.
             MESSAGE
           )
         end
@@ -103,7 +103,7 @@ RSpec.describe API::V1::LocationsController, type: :controller do
       let(:params) do
         {
           universe_id: universe.id,
-          id: location.id,
+          id: character.id,
         }
       end
 

@@ -2,16 +2,16 @@
 
 require "rails_helper"
 
-RSpec.describe API::V1::LocationsController, type: :controller do
+RSpec.describe API::V1::CharactersController, type: :controller do
   render_views
 
   let(:original_universe) { create :universe }
   let(:new_universe) { create :universe }
 
-  let(:location) do
+  let(:character) do
     create(
-      :location,
-      name: "Original Location",
+      :character,
+      name: "Original Character",
       description: "Original description.",
       universe: original_universe,
     )
@@ -25,63 +25,63 @@ RSpec.describe API::V1::LocationsController, type: :controller do
   end
 
   describe "PUT/PATCH update" do
-    context "when the user is authenticated as a user with access to the location's original universe" do
+    context "when the user is authenticated as a user with access to the character's original universe" do
       before do
         authenticate(collaborator)
       end
 
-      context "when the location exists" do
+      context "when the character exists" do
         context "when the parameters are valid" do
           let(:params) do
             {
-              id: location.id,
-              location: {
+              id: character.id,
+              character: {
                 id: -1,
                 universe_id: new_universe.id,
-                name: "Improved Location",
+                name: "Improved Character",
                 description: "Improved description.",
               },
             }
           end
 
           before { put(:update, format: :json, params: params) }
-          subject(:location_json) { json["location"] }
+          subject(:character_json) { json["character"] }
 
           it "returns a successful HTTP status code" do
             expect(response).to have_http_status(:success)
           end
 
-          it "doesn't update the location's ID" do
-            expect(location.reload.id).not_to eq(-1)
+          it "doesn't update the character's ID" do
+            expect(character.reload.id).not_to eq(-1)
           end
 
-          it "updates the location's name" do
-            expect(location.reload.name).to eq("Improved Location")
+          it "updates the character's name" do
+            expect(character.reload.name).to eq("Improved Character")
           end
 
-          it "ignores any attempt to change the location's universe" do
-            expect(location.reload.universe).to eq(original_universe)
+          it "ignores any attempt to change the character's universe" do
+            expect(character.reload.universe).to eq(original_universe)
           end
 
-          it "updates the location's description" do
-            expect(location.reload.description).to eq("Improved description.")
+          it "updates the character's description" do
+            expect(character.reload.description).to eq("Improved description.")
           end
 
-          it "returns the location's ID" do
-            expect(location_json["id"]).to eq(location.id)
+          it "returns the character's ID" do
+            expect(character_json["id"]).to eq(character.id)
           end
 
-          it "returns the location's new name" do
-            expect(location_json["name"]).to eq("Improved Location")
+          it "returns the character's new name" do
+            expect(character_json["name"]).to eq("Improved Character")
           end
 
-          it "returns the location's new description" do
-            expect(location_json["description"]).to eq("Improved description.")
+          it "returns the character's new description" do
+            expect(character_json["description"]).to eq("Improved description.")
           end
         end
 
         context "when the name parameter isn't valid" do
-          let(:params) { { id: location.id, location: { name: "" } } }
+          let(:params) { { id: character.id, character: { name: "" } } }
 
           before { put(:update, format: :json, params: params) }
           subject(:errors) { json["errors"] }
@@ -90,8 +90,8 @@ RSpec.describe API::V1::LocationsController, type: :controller do
             expect(response).to have_http_status(:bad_request)
           end
 
-          it "doesn't update the location's name" do
-            expect(location.reload.name).to eq("Original Location")
+          it "doesn't update the character's name" do
+            expect(character.reload.name).to eq("Original Character")
           end
 
           it "returns an error message for the invalid name" do
@@ -100,7 +100,7 @@ RSpec.describe API::V1::LocationsController, type: :controller do
         end
 
         context "when the description parameter isn't valid" do
-          let(:params) { { id: location.id, location: { description: "" } } }
+          let(:params) { { id: character.id, character: { description: "" } } }
 
           before { put(:update, format: :json, params: params) }
           subject(:errors) { json["errors"] }
@@ -109,8 +109,8 @@ RSpec.describe API::V1::LocationsController, type: :controller do
             expect(response).to have_http_status(:bad_request)
           end
 
-          it "doesn't update the location's description" do
-            expect(location.reload.description).to eq("Original description.")
+          it "doesn't update the character's description" do
+            expect(character.reload.description).to eq("Original description.")
           end
 
           it "returns an error message for the invalid description" do
@@ -118,31 +118,31 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           end
         end
 
-        context "when an attempt is made to change the location's universe" do
+        context "when an attempt is made to change the character's universe" do
           let(:params) do
             {
-              id: location.id,
-              location: {
+              id: character.id,
+              character: {
                 universe_id: new_universe.id,
-                name: "Improved Location",
+                name: "Improved Character",
               },
             }
           end
 
           before { put(:update, format: :json, params: params) }
-          subject(:location_json) { json["location"] }
+          subject(:character_json) { json["character"] }
 
           it "returns a successful HTTP status code" do
             expect(response).to have_http_status(:success)
           end
 
-          it "ignores any attempt to change the location's universe" do
-            expect(location.reload.universe).to eq(original_universe)
+          it "ignores any attempt to change the character's universe" do
+            expect(character.reload.universe).to eq(original_universe)
           end
         end
       end
 
-      context "when the location doesn't exist" do
+      context "when the character doesn't exist" do
         before { put(:update, format: :json, params: { id: -1 }) }
 
         it "responds with a Not Found HTTP status code" do
@@ -154,10 +154,10 @@ RSpec.describe API::V1::LocationsController, type: :controller do
     context "when the user is authenticated as a user without an association with the universe" do
       let(:params) do
         {
-          id: location.id,
-          location: {
+          id: character.id,
+          character: {
             id: -1,
-            name: "Improved Location",
+            name: "Improved Character",
             description: "Improved description.",
           },
         }
@@ -176,7 +176,7 @@ RSpec.describe API::V1::LocationsController, type: :controller do
         expect(json["errors"]).to(
           eq([<<~MESSAGE.squish])
             You must be an owner or collaborator for the universe with ID
-            #{original_universe.id} to interact with its locations.
+            #{original_universe.id} to interact with its characters.
           MESSAGE
         )
       end
@@ -185,10 +185,10 @@ RSpec.describe API::V1::LocationsController, type: :controller do
     context "when the user isn't authenticated" do
       let(:params) do
         {
-          id: location.id,
-          location: {
+          id: character.id,
+          character: {
             id: -1,
-            name: "Improved Location",
+            name: "Improved Character",
             description: "Improved description.",
           },
         }
