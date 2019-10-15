@@ -7,7 +7,6 @@ RSpec.describe API::V1::LocationsController, type: :controller do
 
   let(:original_universe) { create :universe }
   let(:new_universe) { create :universe }
-  let(:new_universe_without_collaborators) { create :universe }
 
   let(:location) do
     create(
@@ -23,8 +22,6 @@ RSpec.describe API::V1::LocationsController, type: :controller do
   before do
     original_universe.collaborators << collaborator
     original_universe.save!
-    new_universe.collaborators << collaborator
-    new_universe.save!
   end
 
   describe "PUT/PATCH update" do
@@ -62,8 +59,8 @@ RSpec.describe API::V1::LocationsController, type: :controller do
             expect(location.reload.name).to eq("Improved Location")
           end
 
-          it "updates the location's universe" do
-            expect(location.reload.universe).to eq(new_universe)
+          it "ignores any attempt to change the location's universe" do
+            expect(location.reload.universe).to eq(original_universe)
           end
 
           it "updates the location's description" do
@@ -82,10 +79,10 @@ RSpec.describe API::V1::LocationsController, type: :controller do
             expect(location_json["description"]).to eq("Improved description.")
           end
 
-          it "returns the location's new universe" do
+          it "returns the location's original universe" do
             expect(location_json["universe"]).to eq(
-              "id" => new_universe.id,
-              "name" => new_universe.name,
+              "id" => original_universe.id,
+              "name" => original_universe.name,
             )
           end
         end
@@ -128,50 +125,33 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           end
         end
 
-        context "when the universe_id parameter isn't valid" do
-          let(:params) { { id: location.id, location: { universe_id: -1 } } }
-
-          before { put(:update, format: :json, params: params) }
-          subject(:errors) { json["errors"] }
-
-          it "returns a Bad Request status" do
-            expect(response).to have_http_status(:bad_request)
-          end
-
-          it "doesn't update the location's universe" do
-            expect(location.reload.universe).to eq(original_universe)
-          end
-
-          it "returns an error message for the invalid universe ID" do
-            expect(errors).to eq(["Universe must exist"])
-          end
-        end
-
-        context "when the user doesn't have access to the new universe" do
+        context "when an attempt is made to change the location's universe" do
           let(:params) do
             {
               id: location.id,
-              location: { universe_id: new_universe_without_collaborators },
+              location: {
+                universe_id: new_universe.id,
+                name: "Improved Location",
+              },
             }
           end
 
           before { put(:update, format: :json, params: params) }
-          subject(:errors) { json["errors"] }
+          subject(:location_json) { json["location"] }
 
-          it "returns a Forbidden status" do
-            expect(response).to have_http_status(:forbidden)
+          it "returns a successful HTTP status code" do
+            expect(response).to have_http_status(:success)
           end
 
-          it "doesn't update the location's universe" do
+          it "ignores any attempt to change the location's universe" do
             expect(location.reload.universe).to eq(original_universe)
           end
 
-          it "returns an error message stating the user doesn't have access to the universe requested" do
-            expect(errors).to eq([<<~MESSAGE.squish])
-              You do not have access to the universe with ID
-              #{new_universe_without_collaborators.id}, which is required in
-              order to move this location into that universe.
-            MESSAGE
+          it "returns the location's original universe" do
+            expect(location_json["universe"]).to eq(
+              "id" => original_universe.id,
+              "name" => original_universe.name,
+            )
           end
         end
       end
@@ -191,7 +171,6 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           id: location.id,
           location: {
             id: -1,
-            universe_id: new_universe.id,
             name: "Improved Location",
             description: "Improved description.",
           },
@@ -223,7 +202,6 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           id: location.id,
           location: {
             id: -1,
-            universe_id: new_universe.id,
             name: "Improved Location",
             description: "Improved description.",
           },

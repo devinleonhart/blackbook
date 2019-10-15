@@ -30,15 +30,6 @@ class API::V1::LocationsController < API::V1::ApplicationController
       raise ForbiddenUniverseResource.new(@location.universe.id, "location")
     end
 
-    if allowed_location_params[:universe_id]
-      new_universe = Universe.find_by(id: allowed_location_params[:universe_id])
-      if new_universe && !new_universe.visible_to_user?(current_api_v1_user)
-        raise ForbiddenUniverseResourceReassignment.new(
-          new_universe.id, "location",
-        )
-      end
-    end
-
     @location.update!(allowed_location_params)
   end
 
@@ -56,10 +47,6 @@ class API::V1::LocationsController < API::V1::ApplicationController
   private
 
   def allowed_location_params
-    params.require(:location).permit(
-      :name,
-      :description,
-      :universe_id,
-    )
+    params.require(:location).permit(:name, :description)
   end
 end
