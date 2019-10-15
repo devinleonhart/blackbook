@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
       resources :universes do
         resources :locations, shallow: true
+        resources :characters, shallow: true
       end
     end
   end
