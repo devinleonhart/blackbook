@@ -5,7 +5,7 @@
 # Table name: universes
 #
 #  id           :bigint           not null, primary key
-#  name         :string           not null
+#  name         :citext           not null
 #  owner_id     :bigint           not null
 #  discarded_at :datetime
 #  created_at   :datetime         not null
@@ -27,4 +27,10 @@ class Universe < ApplicationRecord
 
   has_many :characters, inverse_of: :universe, dependent: :destroy
   has_many :locations, inverse_of: :universe, dependent: :destroy
+
+  # returns a boolean indicating whether the given User model is allowed to
+  # view this Universe
+  def visible_to_user?(user)
+    owner == user || collaborators.include?(user)
+  end
 end

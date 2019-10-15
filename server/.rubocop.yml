@@ -13,6 +13,9 @@ AllCops:
 Layout/AlignArguments:
   EnforcedStyle: with_fixed_indentation
 
+Layout/EndAlignment:
+  EnforcedStyleAlignWith: variable
+
 Layout/IndentFirstArrayElement:
   EnforcedStyle: consistent
 
@@ -33,15 +36,19 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Enabled: false
 
-Metrics/MethodLength:
-  Enabled: false
-
 Metrics/LineLength:
   Max: 80
   IgnoredPatterns:
-    - "^\\s*describe"
-    - "^\\s*context"
-    - "^\\s*it"
+  - "^\\s*describe"
+  - "^\\s*context"
+  - "^\\s*it"
+  Exclude:
+  - db/migrate/20191011181410_devise_token_auth_create_users.rb
+
+Metrics/MethodLength:
+  Max: 15
+  Exclude:
+  - "db/**/*"
 
 Rails:
   Enabled: true
@@ -56,6 +63,9 @@ Style/ClassAndModuleChildren:
   Enabled: false
 
 Style/Documentation:
+  Enabled: false
+
+Style/GuardClause:
   Enabled: false
 
 Style/StringLiterals:

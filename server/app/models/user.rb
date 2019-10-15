@@ -5,23 +5,28 @@
 # Table name: users
 #
 #  id              :bigint           not null, primary key
-#  name            :string           not null
+#  email           :citext           not null
+#  display_name    :citext           not null
 #  password_digest :string           not null
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
 #
 
 class User < ApplicationRecord
-  has_secure_password
+  include DeviseTokenAuth::Concerns::User
 
-  validates :name, presence: true
-  validates :name, uniqueness: { case_sensitive: false }
+  # TODO: implement user registration, password recovery, and email confirmation
+  devise :database_authenticatable
+  # devise :database_authenticatable, :registerable, :recoverable, :confirmable
 
-  # TODO: soft delete instead of hard delete
+  validates :email, :display_name, :encrypted_password, presence: true
+  validates :email, :display_name, uniqueness: { case_sensitive: false }
+
   has_many :owned_universes,
     class_name: "Universe",
+    foreign_key: "owner_id",
     inverse_of: :owner,
-    dependent: :destroy
+    dependent: :restrict_with_error
 
   has_many :collaborations, dependent: :destroy, inverse_of: :user
   has_many :contributor_universes, through: :collaborations, class_name:

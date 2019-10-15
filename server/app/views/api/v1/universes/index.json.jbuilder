@@ -6,6 +6,6 @@ json.array! @universes do |universe|
 
   json.owner do
     json.id universe.owner.id
-    json.name universe.owner.name
+    json.display_name universe.owner.display_name
   end
 end

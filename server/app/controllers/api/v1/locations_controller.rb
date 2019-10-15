@@ -1,24 +1,19 @@
 # frozen_string_literal: true
 
-class API::V1::LocationsController < ApplicationController
-  def index
-    if params[:universe_id].blank?
-      raise "Missing required parameter \"universe_id\""
-    end
+class API::V1::LocationsController < API::V1::ApplicationController
+  before_action -> { require_universe_visible_to_user("location") },
+    only: [:index, :create]
 
+  def index
     @locations = Location.where(universe_id: params[:universe_id]).all
-  rescue ActionController::ParameterMissing => error
-    log_error(
-      "Missing required parameter to location#index",
-      params,
-      error,
-    )
-    render json: { errors: [error.message] }, status: :bad_request
   end
 
   def show
     @location = Location.find_by(id: params[:id])
-    return head :not_found if @location.nil?
+    raise MissingResource.new("location", params[:id]) if @location.nil?
+    unless @location.universe.visible_to_user?(current_api_v1_user)
+      raise ForbiddenUniverseResource.new(@location.universe.id, "location")
+    end
   end
 
   def create
@@ -26,78 +21,33 @@ class API::V1::LocationsController < ApplicationController
       allowed_location_params.merge(universe_id: params[:universe_id])
     @location = Location.new(properties)
     @location.save!
-  rescue ActiveRecord::RecordInvalid => error
-    log_error(
-      "Failed model validations during location#create: #{@location.errors}",
-      params,
-      error,
-    )
-    render json:
-      { errors: @location.errors.full_messages }, status: :bad_request
-  rescue ActionController::ParameterMissing => error
-    log_error(
-      "Missing required parameter to location#create",
-      params,
-      error,
-    )
-    render json: { errors: [error.message] }, status: :bad_request
-  rescue ActiveRecord::RecordNotFound => error
-    log_error(
-      "Invalid model ID for an association was provided to location#create",
-      params,
-      error,
-    )
-    render json: { errors: [error.message] }, status: :bad_request
-  rescue StandardError => error
-    log_error(
-      "Unexpected error in location#create",
-      params,
-      error,
-    )
-    render json: { errors: [error.message] }, status: :internal_server_error
   end
 
   def update
     @location = Location.find_by(id: params[:id])
-    return head :not_found if @location.nil?
+    raise MissingResource.new("location", params[:id]) if @location.nil?
+    unless @location.universe.visible_to_user?(current_api_v1_user)
+      raise ForbiddenUniverseResource.new(@location.universe.id, "location")
+    end
+
+    if allowed_location_params[:universe_id]
+      new_universe = Universe.find_by(id: allowed_location_params[:universe_id])
+      if new_universe && !new_universe.visible_to_user?(current_api_v1_user)
+        raise ForbiddenUniverseResourceReassignment.new(
+          new_universe.id, "location",
+        )
+      end
+    end
 
     @location.update!(allowed_location_params)
-  rescue ActiveRecord::RecordInvalid => error
-    log_error(
-      "Failed model validations during location#update: #{@location.errors}",
-      params,
-      error,
-    )
-    render(
-      json: { errors: @location.errors.full_messages },
-      status: :bad_request,
-    )
-  rescue ActionController::ParameterMissing => error
-    log_error(
-      "Missing required parameter to location#update",
-      params,
-      error,
-    )
-    render json: { errors: [error.message] }, status: :bad_request
-  rescue ActiveRecord::RecordNotFound => error
-    log_error(
-      "Invalid model ID for an association was provided to location#update",
-      params,
-      error,
-    )
-    render json: { errors: [error.message] }, status: :bad_request
-  rescue StandardError => error
-    log_error(
-      "Unexpected error in location#update",
-      params,
-      error,
-    )
-    render json: { errors: [error.message] }, status: :internal_server_error
   end
 
   def destroy
     @location = Location.find_by(id: params[:id])
-    return head :not_found if @location.nil?
+    raise MissingResource.new("location", params[:id]) if @location.nil?
+    unless @location.universe.visible_to_user?(current_api_v1_user)
+      raise ForbiddenUniverseResource.new(@location.universe.id, "location")
+    end
 
     @location.destroy!
     head :no_content

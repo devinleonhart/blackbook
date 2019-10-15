@@ -2,16 +2,20 @@
 
 class CreateBaseTables < ActiveRecord::Migration[6.0]
   def up
+    enable_extension "citext"
+
     create_table :users do |t|
-      t.string :name, null: false
+      t.citext :email, null: false
+      t.citext :display_name, null: false
       t.string :password_digest, null: false
 
       t.timestamps
     end
-    add_index :users, :name, unique: true
+    add_index :users, :email, unique: true
+    add_index :users, :display_name, unique: true
 
     create_table :universes do |t|
-      t.string :name, null: false
+      t.citext :name, null: false
       t.references :owner, null: false, foreign_key: { to_table: "users" }
       t.datetime :discarded_at
 
@@ -29,7 +33,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
     add_index :collaborations, [:user_id, :universe_id], unique: true
 
     create_table :characters do |t|
-      t.string :name, null: false
+      t.citext :name, null: false
       t.string :description, null: false
       t.references :universe, null: false, foreign_key: true
 
@@ -38,7 +42,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
     add_index :characters, [:name, :universe_id], unique: true
 
     create_table :traits do |t|
-      t.string :name, null: false
+      t.citext :name, null: false
 
       t.timestamps
     end
@@ -67,7 +71,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
         null: false,
         foreign_key: { to_table: "characters" }
       )
-      t.string :name, null: false
+      t.citext :name, null: false
 
       t.timestamps
     end
@@ -99,7 +103,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
     add_index :character_items, [:character_id, :item_id], unique: true
 
     create_table :locations do |t|
-      t.string :name, null: false
+      t.citext :name, null: false
       t.string :description, null: false
       t.references :universe, null: false, foreign_key: true
 
