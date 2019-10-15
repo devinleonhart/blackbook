@@ -78,13 +78,6 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           it "returns the location's new description" do
             expect(location_json["description"]).to eq("Improved description.")
           end
-
-          it "returns the location's original universe" do
-            expect(location_json["universe"]).to eq(
-              "id" => original_universe.id,
-              "name" => original_universe.name,
-            )
-          end
         end
 
         context "when the name parameter isn't valid" do
@@ -145,13 +138,6 @@ RSpec.describe API::V1::LocationsController, type: :controller do
 
           it "ignores any attempt to change the location's universe" do
             expect(location.reload.universe).to eq(original_universe)
-          end
-
-          it "returns the location's original universe" do
-            expect(location_json["universe"]).to eq(
-              "id" => original_universe.id,
-              "name" => original_universe.name,
-            )
           end
         end
       end

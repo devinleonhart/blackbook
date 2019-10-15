@@ -48,13 +48,6 @@ RSpec.describe API::V1::LocationsController, type: :controller do
         it "returns the location's description" do
           expect(location_json["description"]).to eq("Good deals here.")
         end
-
-        it "returns the location's universe's information" do
-          expect(location_json["universe"]).to eq(
-            "id" => universe.id,
-            "name" => universe.name,
-          )
-        end
       end
 
       context "when the location doesn't exist" do
