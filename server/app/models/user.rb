@@ -13,9 +13,13 @@
 #
 
 class User < ApplicationRecord
-  has_secure_password
+  include DeviseTokenAuth::Concerns::User
 
-  validates :email, :display_name, presence: true
+  # TODO: implement user registration, password recovery, and email confirmation
+  devise :database_authenticatable
+  # devise :database_authenticatable, :registerable, :recoverable, :confirmable
+
+  validates :email, :display_name, :encrypted_password, presence: true
   validates :email, :display_name, uniqueness: { case_sensitive: false }
 
   has_many :owned_universes,
