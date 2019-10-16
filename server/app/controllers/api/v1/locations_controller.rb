@@ -11,9 +11,7 @@ class API::V1::LocationsController < API::V1::ApplicationController
   def show
     @location = Location.find_by(id: params[:id])
     raise MissingResource.new("location", params[:id]) if @location.nil?
-    unless @location.universe.visible_to_user?(current_api_v1_user)
-      raise ForbiddenUniverseResource.new(@location.universe.id, "location")
-    end
+    require_universe_visible_to_user("location", @location.universe.id)
   end
 
   def create
@@ -26,9 +24,7 @@ class API::V1::LocationsController < API::V1::ApplicationController
   def update
     @location = Location.find_by(id: params[:id])
     raise MissingResource.new("location", params[:id]) if @location.nil?
-    unless @location.universe.visible_to_user?(current_api_v1_user)
-      raise ForbiddenUniverseResource.new(@location.universe.id, "location")
-    end
+    require_universe_visible_to_user("location", @location.universe.id)
 
     @location.update!(allowed_location_params)
   end
@@ -36,9 +32,7 @@ class API::V1::LocationsController < API::V1::ApplicationController
   def destroy
     @location = Location.find_by(id: params[:id])
     raise MissingResource.new("location", params[:id]) if @location.nil?
-    unless @location.universe.visible_to_user?(current_api_v1_user)
-      raise ForbiddenUniverseResource.new(@location.universe.id, "location")
-    end
+    require_universe_visible_to_user("location", @location.universe.id)
 
     @location.destroy!
     head :no_content

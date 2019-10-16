@@ -56,9 +56,12 @@ class API::V1::ApplicationController < ::ApplicationController
 
   private
 
-  def require_universe_visible_to_user(model_name)
-    universe = Universe.kept.find_by(id: params[:universe_id])
-    raise MissingResource.new("universe", params[:universe_id]) if universe.nil?
+  def require_universe_visible_to_user(
+    model_name,
+    universe_id = params[:universe_id]
+  )
+    universe = Universe.kept.find_by(id: universe_id)
+    raise MissingResource.new("universe", universe_id) if universe.nil?
 
     unless universe.visible_to_user?(current_api_v1_user)
       raise ForbiddenUniverseResource.new(universe.id, model_name)
