@@ -22,6 +22,7 @@ class Relationship < ApplicationRecord
       case_sensitive: false,
     }
   )
+  validate :characters_must_be_in_same_universe
 
   belongs_to :originating_character, class_name: "Character", inverse_of:
     :originating_relationships
@@ -30,4 +31,12 @@ class Relationship < ApplicationRecord
   belongs_to :mutual_relationship, inverse_of: :relationships
 
   delegate :universe, to: :originating_character, allow_nil: true
+
+  def characters_must_be_in_same_universe
+    return if originating_character.nil? || target_character.nil?
+
+    if originating_character.universe != target_character.universe
+      errors.add(:base, "all characters must belong to the same universe")
+    end
+  end
 end
