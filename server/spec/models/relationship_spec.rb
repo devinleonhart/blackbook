@@ -59,4 +59,6 @@ RSpec.describe Relationship, type: :model do
       .inverse_of(:target_relationships)
     )
   }
+
+  it { should delegate_method(:universe).to(:originating_character).allow_nil }
 end

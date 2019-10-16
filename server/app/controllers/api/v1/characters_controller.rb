@@ -11,9 +11,7 @@ class API::V1::CharactersController < API::V1::ApplicationController
   def show
     @character = Character.find_by(id: params[:id])
     raise MissingResource.new("character", params[:id]) if @character.nil?
-    unless @character.universe.visible_to_user?(current_api_v1_user)
-      raise ForbiddenUniverseResource.new(@character.universe.id, "character")
-    end
+    require_universe_visible_to_user("character", @character.universe.id)
   end
 
   def create
@@ -26,9 +24,7 @@ class API::V1::CharactersController < API::V1::ApplicationController
   def update
     @character = Character.find_by(id: params[:id])
     raise MissingResource.new("character", params[:id]) if @character.nil?
-    unless @character.universe.visible_to_user?(current_api_v1_user)
-      raise ForbiddenUniverseResource.new(@character.universe.id, "character")
-    end
+    require_universe_visible_to_user("character", @character.universe.id)
 
     @character.update!(allowed_character_params)
   end
@@ -36,9 +32,7 @@ class API::V1::CharactersController < API::V1::ApplicationController
   def destroy
     @character = Character.find_by(id: params[:id])
     raise MissingResource.new("character", params[:id]) if @character.nil?
-    unless @character.universe.visible_to_user?(current_api_v1_user)
-      raise ForbiddenUniverseResource.new(@character.universe.id, "character")
-    end
+    require_universe_visible_to_user("character", @character.universe.id)
 
     @character.destroy!
     head :no_content

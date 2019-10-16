@@ -27,14 +27,7 @@ RSpec.describe API::V1::LocationsController, type: :controller do
       before { authenticate(collaborator) }
 
       context "when the location exists" do
-        let(:params) do
-          {
-            universe_id: universe.id,
-            id: location.id,
-          }
-        end
-
-        before { get(:show, format: :json, params: params) }
+        before { get(:show, format: :json, params: { id: location.id }) }
         subject(:location_json) { json["location"] }
 
         it "returns the location's ID" do
@@ -51,14 +44,7 @@ RSpec.describe API::V1::LocationsController, type: :controller do
       end
 
       context "when the location doesn't exist" do
-        let(:params) do
-          {
-            universe_id: universe.id,
-            id: -1,
-          }
-        end
-
-        before { get(:show, format: :json, params: params) }
+        before { get(:show, format: :json, params: { id: -1 }) }
 
         it "responds with a Not Found HTTP status code" do
           expect(response).to have_http_status(:not_found)
@@ -73,16 +59,9 @@ RSpec.describe API::V1::LocationsController, type: :controller do
     end
 
     context "when the user is authenticated as a user without an association with the universe" do
-      let(:params) do
-        {
-          universe_id: universe.id,
-          id: location.id,
-        }
-      end
-
       before do
         authenticate(create(:user))
-        get(:show, format: :json, params: params)
+        get(:show, format: :json, params: { id: -1 })
 
         it "returns a forbidden HTTP status code" do
           expect(response).to have_http_status(:forbidden)
@@ -100,14 +79,7 @@ RSpec.describe API::V1::LocationsController, type: :controller do
     end
 
     context "when the user isn't authenticated" do
-      let(:params) do
-        {
-          universe_id: universe.id,
-          id: location.id,
-        }
-      end
-
-      before { get(:show, format: :json, params: params) }
+      before { get(:show, format: :json, params: { id: location.id }) }
 
       it "returns an unauthorized HTTP status code" do
         expect(response).to have_http_status(:unauthorized)

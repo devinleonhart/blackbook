@@ -51,6 +51,10 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         it "returns a Not Found Response" do
           expect(response).to have_http_status(:not_found)
         end
+
+        it "returns an error message informing the user the resource doesn't exist" do
+          expect(json["errors"]).to eq(["No universe with ID -1 exists."])
+        end
       end
     end
 

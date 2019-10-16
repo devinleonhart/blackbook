@@ -17,7 +17,7 @@ RSpec.describe API::V1::CharactersController, type: :controller do
     universe.save!
   end
 
-  describe "DELETE delete" do
+  describe "DELETE destroy" do
     context "when the user is authenticated as a user with access to the parent universe" do
       before { authenticate(collaborator) }
 
@@ -38,6 +38,10 @@ RSpec.describe API::V1::CharactersController, type: :controller do
 
         it "returns a Not Found Response" do
           expect(response).to have_http_status(:not_found)
+        end
+
+        it "returns an error message informing the user the resource doesn't exist" do
+          expect(json["errors"]).to eq(["No character with ID -1 exists."])
         end
       end
     end

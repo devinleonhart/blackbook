@@ -17,4 +17,6 @@ class CharacterTrait < ApplicationRecord
 
   belongs_to :character, inverse_of: :character_traits
   belongs_to :trait, inverse_of: :character_traits
+
+  delegate :universe, to: :character, allow_nil: true
 end
