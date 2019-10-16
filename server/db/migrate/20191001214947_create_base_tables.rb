@@ -51,7 +51,6 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
     create_table :character_traits do |t|
       t.references :character, null: false, foreign_key: true
       t.references :trait, null: false, foreign_key: true
-      t.string :value, null: false
 
       t.timestamps
     end

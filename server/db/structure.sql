@@ -79,7 +79,6 @@ CREATE TABLE public.character_traits (
     id bigint NOT NULL,
     character_id bigint NOT NULL,
     trait_id bigint NOT NULL,
-    value character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL
 );
