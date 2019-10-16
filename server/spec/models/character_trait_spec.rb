@@ -25,4 +25,6 @@ RSpec.describe CharacterTrait, type: :model do
 
   it { should belong_to(:character).required.inverse_of(:character_traits) }
   it { should belong_to(:trait).required.inverse_of(:character_traits) }
+
+  it { should delegate_method(:universe).to(:character).allow_nil }
 end

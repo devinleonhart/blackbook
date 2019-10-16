@@ -28,4 +28,6 @@ class Relationship < ApplicationRecord
   belongs_to :target_character, class_name: "Character", inverse_of:
     :target_relationships
   belongs_to :mutual_relationship, inverse_of: :relationships
+
+  delegate :universe, to: :originating_character, allow_nil: true
 end

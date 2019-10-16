@@ -16,4 +16,6 @@ class CharacterItem < ApplicationRecord
 
   belongs_to :character, inverse_of: :character_items
   belongs_to :item, inverse_of: :character_items
+
+  delegate :universe, to: :character, allow_nil: true
 end
