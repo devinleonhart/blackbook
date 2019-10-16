@@ -37,7 +37,6 @@ RSpec.describe API::V1::CharactersController, type: :controller do
               id: character.id,
               character: {
                 id: -1,
-                universe_id: new_universe.id,
                 name: "Improved Character",
                 description: "Improved description.",
               },
@@ -57,10 +56,6 @@ RSpec.describe API::V1::CharactersController, type: :controller do
 
           it "updates the character's name" do
             expect(character.reload.name).to eq("Improved Character")
-          end
-
-          it "ignores any attempt to change the character's universe" do
-            expect(character.reload.universe).to eq(original_universe)
           end
 
           it "updates the character's description" do

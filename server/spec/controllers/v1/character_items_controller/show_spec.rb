@@ -2,18 +2,15 @@
 
 require "rails_helper"
 
-RSpec.describe API::V1::CharactersController, type: :controller do
+RSpec.describe API::V1::CharacterItemsController, type: :controller do
   render_views
 
-  let(:character) do
-    create(
-      :character,
-      name: "Store",
-      description: "Good deals here.",
-      universe: universe,
-    )
+  let(:character_item) do
+    create(:character_item, item: item, character: character)
   end
+  let(:item) { create :item, name: "Cookies" }
 
+  let(:character) { create :character, universe: universe }
   let(:universe) { create :universe }
   let(:collaborator) { create :user }
 
@@ -26,33 +23,29 @@ RSpec.describe API::V1::CharactersController, type: :controller do
     context "when the user is authenticated as a user with access to the universe" do
       before { authenticate(collaborator) }
 
-      context "when the character exists" do
-        before { get(:show, format: :json, params: { id: character.id }) }
-        subject(:character_json) { json["character"] }
+      context "when the CharacterItem exists" do
+        before { get(:show, format: :json, params: { id: character_item.id }) }
+        subject(:character_item_json) { json["character_item"] }
 
-        it "returns the character's ID" do
-          expect(character_json["id"]).to eq(character.id)
+        it "returns the CharacterItem's ID" do
+          expect(character_item_json["id"]).to eq(character_item.id)
         end
 
-        it "returns the character's name" do
-          expect(character_json["name"]).to eq("Store")
-        end
-
-        it "returns the character's description" do
-          expect(character_json["description"]).to eq("Good deals here.")
+        it "returns the CharacterItem's item name" do
+          expect(character_item_json["name"]).to eq("Cookies")
         end
       end
 
-      context "when the character doesn't exist" do
+      context "when the CharacterItem doesn't exist" do
         before { get(:show, format: :json, params: { id: -1 }) }
 
         it "responds with a Not Found HTTP status code" do
           expect(response).to have_http_status(:not_found)
         end
 
-        it "returns an error message indicating the character doesn't exist" do
+        it "returns an error message indicating the CharacterItem doesn't exist" do
           expect(json["errors"]).to eq([
-            "No character with ID -1 exists.",
+            "No CharacterItem with ID -1 exists.",
           ])
         end
       end
@@ -61,7 +54,7 @@ RSpec.describe API::V1::CharactersController, type: :controller do
     context "when the user is authenticated as a user without an association with the universe" do
       before do
         authenticate(create(:user))
-        get(:show, format: :json, params: { id: character.id })
+        get(:show, format: :json, params: { id: character_item.id })
 
         it "returns a forbidden HTTP status code" do
           expect(response).to have_http_status(:forbidden)
@@ -71,7 +64,7 @@ RSpec.describe API::V1::CharactersController, type: :controller do
           expect(json["errors"]).to(
             eq([<<~MESSAGE.strip])
               You must be an owner or collaborator for the universe with ID
-              #{universe.id} to interact with its characters.
+              #{universe.id} to interact with its characters' items.
             MESSAGE
           )
         end
@@ -79,14 +72,7 @@ RSpec.describe API::V1::CharactersController, type: :controller do
     end
 
     context "when the user isn't authenticated" do
-      let(:params) do
-        {
-          universe_id: universe.id,
-          id: character.id,
-        }
-      end
-
-      before { get(:show, format: :json, params: params) }
+      before { get(:show, format: :json, params: { id: character_item.id }) }
 
       it "returns an unauthorized HTTP status code" do
         expect(response).to have_http_status(:unauthorized)
