@@ -1,0 +1,49 @@
+{
+  "name": "black-book",
+  "version": "1.0.0",
+  "description": "The blackbook helps authors track characters, items, locations, and relationships for their works of fiction. It specializes in tracking the bidirectional relationships between characters.",
+  "author": "Devin Leonhart",
+  "private": true,
+  "scripts": {
+    "serve": "./node_modules/.bin/webpack-dev-server --open --config webpack.dev.js",
+    "build": "rm -rf ./dist && ./node_modules/.bin/webpack --config webpack.prod.js && cp index.html ./dist && cp -r ./static ./dist"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.20",
+    "@fortawesome/free-solid-svg-icons": "^5.10.0",
+    "@fortawesome/vue-fontawesome": "^0.1.6",
+    "buefy": "^0.7.10",
+    "fuzzy-dice": "^2.0.0",
+    "sanitize-html": "^1.20.1",
+    "sweetalert2": "^8.15.0",
+    "tiptap": "^1.24.0",
+    "tiptap-extensions": "^1.26.0",
+    "vue": "^2.6.10",
+    "vue-localstorage": "^0.6.2",
+    "vue-resource": "^1.5.1",
+    "vue-router": "^3.0.7",
+    "vuex": "^3.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^3.1.0",
+    "cssnano": "^4.1.10",
+    "eslint": "^6.2.1",
+    "eslint-plugin-vue": "^5.2.3",
+    "node-sass": "^4.12.0",
+    "postcss-import": "^12.0.1",
+    "postcss-loader": "^3.0.0",
+    "postcss-preset-env": "^6.7.0",
+    "sass-loader": "^7.1.0",
+    "vue-loader": "^15.7.1",
+    "vue-style-loader": "^4.1.2",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.39.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2",
+    "webpack-merge": "^4.2.1"
+  }
+}
