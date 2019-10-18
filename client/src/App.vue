@@ -2,7 +2,7 @@
   <div id="app-component">
     <div class="container">
       <router-view></router-view>
-      <test-component></test-component>
+      <test-component superfood="cheese-whiz"></test-component>
     </div>
   </div>
 </template>
