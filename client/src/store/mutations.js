@@ -1,3 +1,3 @@
-export const testMutation = (state, payload) => {
+export const testMutation = () => {
 
 };

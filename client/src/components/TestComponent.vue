@@ -1,10 +1,10 @@
 <template>
   <div id="test-component">
     <h1>
-      Props: {{superfood.name}}
+      Props: {{ superfood.name }}
     </h1>
     <h1>
-      Store: {{food}}
+      Store: {{ food }}
     </h1>
   </div>
 </template>

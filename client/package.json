@@ -5,8 +5,9 @@
   "author": "Devin Leonhart",
   "private": true,
   "scripts": {
+    "build": "rm -rf ./dist && npx webpack --config webpack.prod.js && cp index.html ./dist",
+    "lint": "npx eslint --ext js,vue ./src",
     "serve": "npx webpack-dev-server --open --config webpack.dev.js",
-    "build": "rm -rf ./dist && npx webpack --config webpack.prod.js && cp index.html ./dist && cp -r ./static ./dist",
     "test": "npx jest"
   },
   "dependencies": {
@@ -36,7 +37,8 @@
     "babel-preset-env": "^1.7.0",
     "css-loader": "^3.1.0",
     "cssnano": "^4.1.10",
-    "eslint": "^6.2.1",
+    "eslint": "^6.5.1",
+    "eslint-loader": "^3.0.2",
     "eslint-plugin-vue": "^5.2.3",
     "jsdom": "^15.2.0",
     "node-sass": "^4.12.0",

@@ -8,7 +8,6 @@
 </template>
 
 <script>
-  import Vue from 'vue';
   import TestComponent from './components/TestComponent';
 
   export default {
