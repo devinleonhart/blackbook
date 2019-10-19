@@ -6,11 +6,14 @@ class API::V1::CharacterItemsController < API::V1::ApplicationController
 
   def index
     @character_items =
-      CharacterItem.where(character_id: params[:character_id]).all
+      CharacterItem
+      .includes(:item)
+      .where(character_id: params[:character_id])
+      .all
   end
 
   def show
-    @character_item = CharacterItem.find_by(id: params[:id])
+    @character_item = CharacterItem.includes(:item).find_by(id: params[:id])
     if @character_item.nil?
       raise MissingResource.new("CharacterItem", params[:id])
     end
@@ -31,7 +34,7 @@ class API::V1::CharacterItemsController < API::V1::ApplicationController
   end
 
   def update
-    @character_item = CharacterItem.find_by(id: params[:id])
+    @character_item = CharacterItem.includes(:item).find_by(id: params[:id])
     if @character_item.nil?
       raise MissingResource.new("CharacterItem", params[:id])
     end

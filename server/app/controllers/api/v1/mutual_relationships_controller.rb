@@ -7,12 +7,17 @@ class API::V1::MutualRelationshipsController < API::V1::ApplicationController
   def index
     @mutual_relationships =
       Relationship
+      .includes(:target_character)
       .where(originating_character_id: params[:character_id])
       .all
   end
 
   def show
-    @mutual_relationship = MutualRelationship.find_by(id: params[:id])
+    @mutual_relationship =
+      MutualRelationship
+      .includes(relationships: [:originating_character, :target_character])
+      .find_by(id: params[:id])
+
     if @mutual_relationship.nil?
       raise MissingResource.new("MutualRelationship", params[:id])
     end
@@ -47,7 +52,11 @@ class API::V1::MutualRelationshipsController < API::V1::ApplicationController
   end
 
   def update
-    @mutual_relationship = MutualRelationship.find_by(id: params[:id])
+    @mutual_relationship =
+      MutualRelationship
+      .includes(relationships: [:originating_character, :target_character])
+      .find_by(id: params[:id])
+
     if @mutual_relationship.nil?
       raise MissingResource.new("MutualRelationship", params[:id])
     end
