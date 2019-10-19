@@ -46,7 +46,7 @@ Metrics/LineLength:
   - db/migrate/20191011181410_devise_token_auth_create_users.rb
 
 Metrics/MethodLength:
-  Max: 15
+  Enabled: false
   Exclude:
   - "db/**/*"
 

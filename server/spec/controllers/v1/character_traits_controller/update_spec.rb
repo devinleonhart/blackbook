@@ -8,12 +8,12 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
   let(:character_trait) do
     create(
       :character_trait,
-      trait: watermelon,
+      trait: trait,
       character: original_character,
     )
   end
 
-  let(:watermelon) { create :trait, name: "Adventurous" }
+  let(:trait) { create :trait, name: "Adventurous" }
 
   let(:original_character) { create :character, universe: universe }
   let(:new_character) { create :character, universe: universe }

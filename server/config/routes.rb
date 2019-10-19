@@ -13,6 +13,7 @@ Rails.application.routes.draw do
         resources :characters, shallow: true do
           resources :character_items, shallow: true
           resources :character_traits, shallow: true
+          resources :mutual_relationships, shallow: true
         end
       end
     end

@@ -24,8 +24,7 @@ class API::V1::UniversesController < API::V1::ApplicationController
   end
 
   def create
-    @universe = Universe.new(allowed_universe_params)
-    @universe.save!
+    @universe = Universe.create!(allowed_universe_params)
   end
 
   def update

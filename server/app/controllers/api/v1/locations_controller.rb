@@ -18,8 +18,7 @@ class API::V1::LocationsController < API::V1::ApplicationController
   def create
     properties =
       allowed_location_params.merge(universe_id: params[:universe_id])
-    @location = Location.new(properties)
-    @location.save!
+    @location = Location.create!(properties)
   end
 
   def update

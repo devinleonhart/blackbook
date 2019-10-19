@@ -18,8 +18,7 @@ class API::V1::CharactersController < API::V1::ApplicationController
   def create
     properties =
       allowed_character_params.merge(universe_id: params[:universe_id])
-    @character = Character.new(properties)
-    @character.save!
+    @character = Character.create!(properties)
   end
 
   def update

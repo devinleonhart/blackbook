@@ -14,6 +14,9 @@
 #
 
 FactoryBot.define do
+  # NOTE: the Relationship factory doesn't work on its own, it cannot be used
+  # directly. You have to use the MutualRelationships factory to create
+  # Relationships.
   factory :relationship do
     transient do
       character_universe { create(:universe) }
@@ -22,7 +25,6 @@ FactoryBot.define do
     mutual_relationship
     association :originating_character, factory: :character
     association :target_character, factory: :character
-    sequence(:name) { |n| "Relationship #{n}" }
 
     after(:build) do |relationship, evaluator|
       next if relationship.originating_character.nil?
