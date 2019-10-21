@@ -8,10 +8,11 @@ The Black Book's server-side components present a JSON API.
 
 ### Errors
 
-If an unexpted error occurs, the server will respond with a 500 Internal Server
-Error status code and no body. Otherwise, the response will have an `errors`
-field containing an array of the errors that occurred in response to the
-request. For example, the response to an unauthenticated request would look like this:
+If an unexpected error occurs, the server will respond with a 500 Internal
+Server Error status code and no body. Otherwise, the response will have an
+`errors` field containing an array of the errors that occurred in response to
+the request. For example, the response to an unauthenticated request would look
+like this:
 
 ```
 {
