@@ -127,6 +127,40 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           end
         end
 
+        context "when the collaborator IDs are empty" do
+          let(:params) do
+            {
+              id: universe.id,
+              universe: {
+                name: "Andromeda",
+                collaborator_ids: [],
+              },
+            }
+          end
+
+          before { put(:update, format: :json, params: params) }
+          subject(:universe_json) { json["universe"] }
+
+          it "returns a successful HTTP status code" do
+            expect(response).to have_http_status(:success)
+          end
+
+          it "doesn't update the universe's collaborators" do
+            expect(universe.reload.collaborators).to(
+              eq([original_collaborator])
+            )
+          end
+
+          it "returns a list of the universe's previous collaborators" do
+            expect(universe_json["collaborators"]).to eq([
+              {
+                "id" => original_collaborator.id,
+                "display_name" => original_collaborator.display_name,
+              },
+            ])
+          end
+        end
+
         context "when the non-association parameters are invalid" do
           let(:params) do
             {
