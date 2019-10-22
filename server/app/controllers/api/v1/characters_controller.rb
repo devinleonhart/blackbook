@@ -9,7 +9,10 @@ class API::V1::CharactersController < API::V1::ApplicationController
   end
 
   def show
-    @character = Character.find_by(id: params[:id])
+    @character =
+      Character
+      .includes(character_items: [:item], character_traits: [:trait])
+      .find_by(id: params[:id])
     raise MissingResource.new("character", params[:id]) if @character.nil?
 
     require_universe_visible_to_user("character", @character.universe.id)

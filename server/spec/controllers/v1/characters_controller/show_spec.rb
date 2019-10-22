@@ -8,11 +8,17 @@ RSpec.describe API::V1::CharactersController, type: :controller do
   let(:character) do
     create(
       :character,
-      name: "Store",
-      description: "Good deals here.",
+      name: "Slab Bulkhead",
+      description: "Tough and dense.",
       universe: universe,
     )
   end
+
+  let!(:character_item1) { create(:character_item, character: character) }
+  let!(:character_item2) { create(:character_item, character: character) }
+
+  let!(:character_trait1) { create(:character_trait, character: character) }
+  let!(:character_trait2) { create(:character_trait, character: character) }
 
   let(:universe) { create :universe }
   let(:collaborator) { create :user }
@@ -35,11 +41,37 @@ RSpec.describe API::V1::CharactersController, type: :controller do
         end
 
         it "returns the character's name" do
-          expect(character_json["name"]).to eq("Store")
+          expect(character_json["name"]).to eq("Slab Bulkhead")
         end
 
         it "returns the character's description" do
-          expect(character_json["description"]).to eq("Good deals here.")
+          expect(character_json["description"]).to eq("Tough and dense.")
+        end
+
+        it "returns a list of the character's items" do
+          expect(character_json["items"]).to match_array([
+            {
+              "id" => character_item1.id,
+              "name" => character_item1.item.name,
+            },
+            {
+              "id" => character_item2.id,
+              "name" => character_item2.item.name,
+            },
+          ])
+        end
+
+        it "returns a list of the character's traits" do
+          expect(character_json["traits"]).to match_array([
+            {
+              "id" => character_trait1.id,
+              "name" => character_trait1.trait.name,
+            },
+            {
+              "id" => character_trait2.id,
+              "name" => character_trait2.trait.name,
+            },
+          ])
         end
       end
 
