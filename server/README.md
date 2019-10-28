@@ -661,10 +661,10 @@ HTTP 204 No Content status code with no body
 
 ### Search
 
-The Search API allows fuzzy text searching across models. It returns a mix of
-any Character and Location models that match the given search terms. It also
-returns Character models whose Relationships, Items, or Traits match the given
-search terms.
+The Search API allows fuzzy text searching across models within a single
+universe. It returns a mix of any Character and Location models that match the
+given search terms. It also returns Character models whose Relationships,
+Items, or Traits match the given search terms.
 
 `GET /api/v1/universes/{universe ID}/search`
 
