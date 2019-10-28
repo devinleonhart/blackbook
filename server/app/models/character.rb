@@ -15,6 +15,9 @@
 
 class Character < ApplicationRecord
   include Discard::Model
+  include PgSearch::Model
+
+  multisearchable against: [:name, :description]
 
   validates :name, :description, presence: true
   validates :name, uniqueness: { scope: :universe_id, case_sensitive: false }

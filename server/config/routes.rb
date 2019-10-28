@@ -15,6 +15,8 @@ Rails.application.routes.draw do
           resources :character_traits, shallow: true
           resources :mutual_relationships, shallow: true
         end
+
+        get 'search', to: 'search#multisearch', as: :search
       end
     end
   end

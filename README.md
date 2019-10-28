@@ -657,3 +657,40 @@ response:
 
 HTTP 204 No Content status code with no body
 
+### Search
+
+The Search API allows fuzzy text searching across models. It returns a mix of
+any Character and Location models that match the given search terms. It also
+returns Character models whose Relationships, Items, or Traits match the given
+search terms.
+
+`GET /api/v1/universes/{universe ID}/search`
+
+parameters:
+
+* `terms` (required, string): the text to search for
+
+sample response:
+
+```
+[
+  {
+    id: 1,              # the model ID
+    type: "Character",  # the model's class
+    name: "Arturo",     # the name field for the model
+    highlights: [       # an array containing the parts of the model that matched the search query
+      "<strong>Arturo</strong>",
+      "<strong>Adventurer's Kit</strong>",  # includes items attached to the character
+      "<strong>Adventurous</strong>",       # includes traits attached to the character
+    ],
+  },
+  {
+    id: 2,
+    type: "Location",
+    name: "Adventurer's Guild",
+    highlights: [
+      "Adventurer's Guild",
+    ],
+  },
+]
+```

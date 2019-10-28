@@ -23,6 +23,34 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
 
+--
+-- Name: fuzzystrmatch; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS fuzzystrmatch WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION fuzzystrmatch; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION fuzzystrmatch IS 'determine similarities and distance between strings';
+
+
+--
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
@@ -264,6 +292,39 @@ ALTER SEQUENCE public.mutual_relationships_id_seq OWNED BY public.mutual_relatio
 
 
 --
+-- Name: pg_search_documents; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.pg_search_documents (
+    id bigint NOT NULL,
+    content text,
+    searchable_type character varying,
+    searchable_id bigint,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: pg_search_documents_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.pg_search_documents_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: pg_search_documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.pg_search_documents_id_seq OWNED BY public.pg_search_documents.id;
+
+
+--
 -- Name: relationships; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -465,6 +526,13 @@ ALTER TABLE ONLY public.mutual_relationships ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: pg_search_documents id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pg_search_documents ALTER COLUMN id SET DEFAULT nextval('public.pg_search_documents_id_seq'::regclass);
+
+
+--
 -- Name: relationships id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -554,6 +622,14 @@ ALTER TABLE ONLY public.locations
 
 ALTER TABLE ONLY public.mutual_relationships
     ADD CONSTRAINT mutual_relationships_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: pg_search_documents pg_search_documents_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.pg_search_documents
+    ADD CONSTRAINT pg_search_documents_pkey PRIMARY KEY (id);
 
 
 --
@@ -699,6 +775,13 @@ CREATE UNIQUE INDEX index_locations_on_name_and_universe_id ON public.locations 
 --
 
 CREATE INDEX index_locations_on_universe_id ON public.locations USING btree (universe_id);
+
+
+--
+-- Name: index_pg_search_documents_on_searchable_type_and_searchable_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_pg_search_documents_on_searchable_type_and_searchable_id ON public.pg_search_documents USING btree (searchable_type, searchable_id);
 
 
 --
@@ -873,6 +956,8 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20191001214947'),
 ('20191008195955'),
-('20191011181410');
+('20191011181410'),
+('20191022212050'),
+('20191022212516');
 
 

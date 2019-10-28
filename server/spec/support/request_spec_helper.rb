@@ -20,3 +20,9 @@ end
 RSpec.configure do |config|
   config.include JsonResponseHelper, type: :controller
 end
+
+RSpec.shared_examples "returns a success HTTP status code" do
+  it "returns a success HTTP status code" do
+    expect(response).to have_http_status(:success)
+  end
+end
