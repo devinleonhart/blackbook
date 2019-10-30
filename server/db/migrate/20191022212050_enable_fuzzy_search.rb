@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EnableFuzzySearch < ActiveRecord::Migration[6.0]
   def up
     execute "CREATE EXTENSION IF NOT EXISTS pg_trgm;"

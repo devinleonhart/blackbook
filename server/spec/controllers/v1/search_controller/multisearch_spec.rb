@@ -49,7 +49,7 @@ RSpec.describe API::V1::SearchController, type: :controller do
             "id" => character.id,
             "name" => character.name,
             "type" => "Character",
-            "highlights" => [<<~HIGHLIGHT.squish]
+            "highlights" => [<<~HIGHLIGHT.squish],
               Arturo An <strong>adventurer</strong> and explorer of the far
               reaches of the Milky Way galaxy
             HIGHLIGHT
@@ -165,13 +165,15 @@ RSpec.describe API::V1::SearchController, type: :controller do
         include_examples "returns a success HTTP status code"
 
         it "only returns matches to models in the requested universe" do
-          matched_model_ids = json["matches"].map {|match| match["id"] }
+          matched_model_ids = json["matches"].map { |match| match["id"] }
           expect(matched_model_ids).not_to include(location2.id)
         end
       end
 
       context "when the search matches both a character and an item the character owns" do
-        let(:character) { create :character, name: "Adven", universe: universe1 }
+        let(:character) do
+          create :character, name: "Adven", universe: universe1
+        end
         let(:item) { create :item, name: "Adventurer's Kit" }
         let!(:character_item) do
           create :character_item, character: character, item: item
@@ -201,9 +203,9 @@ RSpec.describe API::V1::SearchController, type: :controller do
         # unintuitive highlight of "Adventurer"
         it "returns the Character with the highlights combined" do
           expect(json["matches"].first["highlights"]).to match_array([
-              "<strong>Adven</strong> description",
-              "<strong>Adventurer</strong>",
-            ])
+            "<strong>Adven</strong> description",
+            "<strong>Adventurer</strong>",
+          ])
         end
       end
     end

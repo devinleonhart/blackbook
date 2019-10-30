@@ -11,4 +11,3 @@ class InvalidPaginationParameterError < BlackBookError
     :bad_request
   end
 end
-
