@@ -5,7 +5,55 @@ class API::V1::CharactersController < API::V1::ApplicationController
     only: [:index, :create]
 
   def index
-    @characters = Character.where(universe_id: params[:universe_id]).all
+    begin
+      @page = Integer(params[:page])
+    rescue TypeError
+      @page = 1
+    rescue ArgumentError
+      raise InvalidPaginationParameterError.new(
+        "page",
+        params[:page],
+        "The value couldn't be parsed as an integer.",
+      )
+    end
+
+    begin
+      @page_size = Integer(params[:page_size])
+    rescue TypeError
+      @page_size = Rails.configuration.pagination_default_page_size
+    rescue ArgumentError
+      raise InvalidPaginationParameterError.new(
+        "page_size",
+        params[:page_size],
+        "The value couldn't be parsed as an integer.",
+      )
+    end
+
+    if @page < 1
+      raise InvalidPaginationParameterError.new(
+        "page",
+        @page,
+        "Pages start at 1.",
+      )
+    end
+
+    if @page_size < 1
+      raise InvalidPaginationParameterError.new(
+        "page_size",
+        @page_size,
+        "Page size must be at least 1.",
+      )
+    end
+
+    total_characters = Character.where(universe_id: params[:universe_id]).count
+    @total_pages = (total_characters / @page_size.to_f).ceil
+
+    @characters =
+      Character
+      .where(universe_id: params[:universe_id])
+      .offset((@page - 1) * @page_size)
+      .limit(@page_size)
+      .order(created_at: :asc)
   end
 
   def show

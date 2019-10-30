@@ -5,12 +5,8 @@ require "rails_helper"
 RSpec.describe API::V1::CharactersController, type: :controller do
   render_views
 
-  let!(:character1) { create :character, name: "Lil Kay", universe: universe1 }
-  let!(:character2) { create :character, name: "Osgood", universe: universe1 }
-  let!(:character3) { create :character, name: "Scarlet", universe: universe2 }
-
-  let(:universe1) { create :universe }
-  let(:universe2) { create :universe }
+  let!(:universe1) { create :universe }
+  let!(:universe2) { create :universe }
 
   let(:collaborator) { create :user }
 
@@ -23,27 +19,188 @@ RSpec.describe API::V1::CharactersController, type: :controller do
     context "when the user is authenticated as a user with access to the universe" do
       before do
         authenticate(collaborator)
-        get(:index, format: :json, params: { universe_id: universe1.id })
       end
 
-      RSpec.shared_examples "character JSON properties" do |property|
-        it "returns the #{property.to_s.pluralize} for only characters belonging to the given universe" do
-          expected_values = [
-            character1.send(property),
-            character2.send(property),
-          ]
-          received_values = json.collect do |character|
-            character[property.to_s]
-          end
-          expect(received_values).to eq(expected_values)
+      let!(:character1) do
+        create :character, name: "Lil Kay", universe: universe1
+      end
+      let!(:character2) do
+        create :character, name: "Osgood", universe: universe1
+      end
+      let!(:character3) do
+        create :character, name: "Scarlet", universe: universe2
+      end
+      let!(:character4) do
+        create :character, name: "Elise", universe: universe1
+      end
+      let!(:character5) do
+        create :character, name: "Nicolette", universe: universe1
+      end
+      let!(:character6) do
+        create :character, name: "Dale", universe: universe1
+      end
+      let!(:character7) do
+        create :character, name: "Sophie", universe: universe1
+      end
+      let!(:character8) do
+        create :character, name: "Gabe", universe: universe1
+      end
+
+      context "when the user requests pagination" do
+        before do
+          get(
+            :index,
+            format: :json,
+            params: {
+              universe_id: universe1.id,
+              page: 3,
+              page_size: 2,
+            }
+          )
+        end
+
+        include_examples "returns a success HTTP status code"
+
+        it "returns the page this character list is on" do
+          expect(json["page"]).to eq(3)
+        end
+
+        it "returns the size of each page" do
+          expect(json["page_size"]).to eq(2)
+        end
+
+        it "returns the total number of pages" do
+          expect(json["total_pages"]).to eq(4)
+        end
+
+        it "returns the IDs for the characters on the requested page" do
+          character_names = json["characters"].collect { |entry| entry["id"] }
+          expect(character_names).to eq([character6.id, character7.id])
+        end
+
+        it "returns the names for the characters on the requested page" do
+          character_names = json["characters"].collect { |entry| entry["name"] }
+          expect(character_names).to eq(["Dale", "Sophie"])
         end
       end
 
-      include_examples "character JSON properties", :id
-      include_examples "character JSON properties", :name
+      context "when the user omits custom pagination" do
+        before do
+          get(:index, format: :json, params: { universe_id: universe1.id })
+        end
 
-      it "returns a success HTTP status code" do
-        expect(response).to have_http_status(:success)
+        it "defaults to returning page 1" do
+          expect(json["page"]).to eq(1)
+        end
+
+        it "defaults to the page size configuration setting" do
+          expect(json["page_size"]).to eq(
+            Rails.configuration.pagination_default_page_size
+          )
+        end
+
+        it "returns the total number of pages" do
+          # Note that this number will have to be adjusted if the default page
+          # size drops below 7. I didn't want to reproduce the logic to
+          # dynamically calculate page size here because I would just be
+          # asserting that the output of my page count calculation equals
+          # itself, testing nothing.
+          expect(json["total_pages"]).to eq(1)
+        end
+
+        it "returns the IDs for the characters on the requested page" do
+          character_names = json["characters"].collect { |entry| entry["id"] }
+          expect(character_names).to eq([
+            character1.id,
+            character2.id,
+            character4.id,
+            character5.id,
+            character6.id,
+            character7.id,
+            character8.id,
+          ])
+        end
+
+        it "returns the names for the characters on the requested page" do
+          character_names = json["characters"].collect { |entry| entry["name"] }
+          expect(character_names).to eq([
+            "Lil Kay",
+            "Osgood",
+            "Elise",
+            "Nicolette",
+            "Dale",
+            "Sophie",
+            "Gabe",
+          ])
+        end
+      end
+
+      context "when the user requests a page beyond the total number of pages" do
+        before do
+          get(
+            :index,
+            format: :json,
+            params: {
+              universe_id: universe1.id,
+              page: 100,
+              page_size: 10,
+            }
+          )
+        end
+
+        include_examples "returns a success HTTP status code"
+
+        it "returns an empty characters list" do
+          expect(json["characters"]).to eq([])
+        end
+      end
+
+      context "when the user requests an invalid page" do
+        before do
+          get(
+            :index,
+            format: :json,
+            params: {
+              universe_id: universe1.id,
+              page: 0,
+              page_size: 2,
+            }
+          )
+        end
+
+        it "returns a Bad Request HTTP status code" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "returns a message describing the invalid parameter" do
+          expect(json["errors"]).to eq([<<~ERROR_MESSAGE.squish])
+            Invalid page parameter value: 0. Pages start at 1.
+          ERROR_MESSAGE
+        end
+      end
+
+      context "when the user requests an invalid page size" do
+        before do
+          get(
+            :index,
+            format: :json,
+            params: {
+              universe_id: universe1.id,
+              page: 3,
+              page_size: 0,
+            }
+          )
+        end
+
+        it "returns a Bad Request HTTP status code" do
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "returns a message describing the invalid parameter" do
+          expect(json["errors"]).to eq([<<~ERROR_MESSAGE.squish])
+            Invalid page_size parameter value: 0. Page size must be at least 1.
+          ERROR_MESSAGE
+        end
       end
     end
 

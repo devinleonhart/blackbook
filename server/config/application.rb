@@ -38,5 +38,10 @@ module BlackBook
 
     # using PostgreSQL check constraints requires dumping the schema to SQL
     config.active_record.schema_format = :sql
+
+    # if changing this value, update the documented default value for the
+    # page_size parameter to characters#index in the server API section of the
+    # readme
+    config.pagination_default_page_size = 100
   end
 end

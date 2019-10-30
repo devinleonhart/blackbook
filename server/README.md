@@ -258,30 +258,40 @@ operations on the Character.
 
 #### index
 
-Lists all Characters in the specified Universe.
+Lists all Characters in the specified Universe using pagination.
 
 `GET /api/v1/universes/{universe ID}/characters`
+
+parameters:
+
+* `page` (optional, integer): The page of results to return. Defaults to page 1.
+* `page_size` (optional, integer): The number of characters per page. Defaults to 100.
 
 sample response:
 
 ```
-[
-  {
-    id: 1,
-    name: "Lance",
-  },
-  {
-    id: 2,
-    name: "Kiki",
-  },
-  {
-    id: 3,
-    name: "Simon",
-  },
-  {
-    id: 4,
-    name: "Saltykov",
-  },
+{
+  page: 3,
+  page_size: 4,
+  total_pages: 39,
+  characters: [
+    {
+      id: 1,
+      name: "Lance",
+    },
+    {
+      id: 2,
+      name: "Kiki",
+    },
+    {
+      id: 3,
+      name: "Simon",
+    },
+    {
+      id: 4,
+      name: "Saltykov",
+    },
+  ],
 ]
 ```
 
