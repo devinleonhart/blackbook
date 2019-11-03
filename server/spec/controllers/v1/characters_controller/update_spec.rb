@@ -17,12 +17,23 @@ RSpec.describe API::V1::CharactersController, type: :controller do
     )
   end
 
+  let!(:character_item1) { create(:character_item, character: character) }
+  let!(:character_item2) { create(:character_item, character: character) }
+
+  let!(:character_trait1) { create(:character_trait, character: character) }
+  let!(:character_trait2) { create(:character_trait, character: character) }
+
   let(:collaborator) { create :user }
+
+  let(:image) { create :image, caption: "A great pic." }
+  let!(:image_tag) { create :image_tag, character: character, image: image }
 
   before do
     original_universe.collaborators << collaborator
     original_universe.save!
   end
+
+  subject { put(:update, format: :json, params: params) }
 
   describe "PUT/PATCH update" do
     context "when the user is authenticated as a user with access to the character's original universe" do
@@ -43,73 +54,119 @@ RSpec.describe API::V1::CharactersController, type: :controller do
             }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:character_json) { json["character"] }
-
           it "returns a successful HTTP status code" do
+            subject
             expect(response).to have_http_status(:success)
           end
 
           it "doesn't update the character's ID" do
+            subject
             expect(character.reload.id).not_to eq(-1)
           end
 
           it "updates the character's name" do
+            subject
             expect(character.reload.name).to eq("Improved Character")
           end
 
           it "updates the character's description" do
+            subject
             expect(character.reload.description).to eq("Improved description.")
           end
 
           it "returns the character's ID" do
-            expect(character_json["id"]).to eq(character.id)
+            subject
+            expect(json["character"]["id"]).to eq(character.id)
           end
 
           it "returns the character's new name" do
-            expect(character_json["name"]).to eq("Improved Character")
+            subject
+            expect(json["character"]["name"]).to eq("Improved Character")
           end
 
           it "returns the character's new description" do
-            expect(character_json["description"]).to eq("Improved description.")
+            subject
+            expect(json["character"]["description"]).to(
+              eq("Improved description.")
+            )
+          end
+
+          it "returns a list of the character's items" do
+            subject
+            expect(json["character"]["items"]).to match_array([
+              {
+                "id" => character_item1.id,
+                "name" => character_item1.item.name,
+              },
+              {
+                "id" => character_item2.id,
+                "name" => character_item2.item.name,
+              },
+            ])
+          end
+
+          it "returns a list of the character's traits" do
+            subject
+            expect(json["character"]["traits"]).to match_array([
+              {
+                "id" => character_trait1.id,
+                "name" => character_trait1.trait.name,
+              },
+              {
+                "id" => character_trait2.id,
+                "name" => character_trait2.trait.name,
+              },
+            ])
+          end
+
+          it "returns a list of the images the character is tagged in" do
+            subject
+            expect(json["character"]["image_tags"].length).to eq(1)
+            image_tag_json = json["character"]["image_tags"].first
+            expect(image_tag_json["image_tag_id"]).to eq(image_tag.id)
+            expect(image_tag_json["image_id"]).to eq(image.id)
+            expect(image_tag_json["image_caption"]).to eq("A great pic.")
+            expect(image_tag_json["image_url"]).to(
+              start_with("/rails/active_storage/blobs/")
+            )
           end
         end
 
         context "when the name parameter isn't valid" do
           let(:params) { { id: character.id, character: { name: "" } } }
 
-          before { put(:update, format: :json, params: params) }
-          subject(:errors) { json["errors"] }
-
           it "returns a Bad Request status" do
+            subject
             expect(response).to have_http_status(:bad_request)
           end
 
           it "doesn't update the character's name" do
+            subject
             expect(character.reload.name).to eq("Original Character")
           end
 
           it "returns an error message for the invalid name" do
-            expect(errors).to eq(["Name can't be blank"])
+            subject
+            expect(json["errors"]).to eq(["Name can't be blank"])
           end
         end
 
         context "when the description parameter isn't valid" do
           let(:params) { { id: character.id, character: { description: "" } } }
 
-          before { put(:update, format: :json, params: params) }
-          subject(:errors) { json["errors"] }
-
           it "returns a Bad Request status" do
+            subject
             expect(response).to have_http_status(:bad_request)
           end
 
           it "doesn't update the character's description" do
+            subject
             expect(character.reload.description).to eq("Original description.")
           end
 
           it "returns an error message for the invalid description" do
-            expect(errors).to eq(["Description can't be blank"])
+            subject
+            expect(json["errors"]).to eq(["Description can't be blank"])
           end
         end
 
@@ -124,24 +181,31 @@ RSpec.describe API::V1::CharactersController, type: :controller do
             }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:character_json) { json["character"] }
-
           it "returns a successful HTTP status code" do
+            subject
             expect(response).to have_http_status(:success)
           end
 
           it "ignores any attempt to change the character's universe" do
+            subject
             expect(character.reload.universe).to eq(original_universe)
           end
         end
       end
 
       context "when the character doesn't exist" do
-        before { put(:update, format: :json, params: { id: -1 }) }
+        let(:params) { { id: -1 } }
 
         it "responds with a Not Found HTTP status code" do
+          subject
           expect(response).to have_http_status(:not_found)
+        end
+
+        it "returns an error message indicating the character doesn't exist" do
+          subject
+          expect(json["errors"]).to eq([
+            "No character with ID -1 exists.",
+          ])
         end
       end
     end
@@ -160,14 +224,15 @@ RSpec.describe API::V1::CharactersController, type: :controller do
 
       before do
         authenticate(create(:user))
-        put(:update, format: :json, params: params)
       end
 
       it "returns a forbidden HTTP status code" do
+        subject
         expect(response).to have_http_status(:forbidden)
       end
 
       it "returns an error message indicating only the owner or a collaborator can view the universe" do
+        subject
         expect(json["errors"]).to(
           eq([<<~MESSAGE.squish])
             You must be an owner or collaborator for the universe with ID
@@ -189,13 +254,13 @@ RSpec.describe API::V1::CharactersController, type: :controller do
         }
       end
 
-      before { put(:update, format: :json, params: params) }
-
       it "returns an unauthorized HTTP status code" do
+        subject
         expect(response).to have_http_status(:unauthorized)
       end
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

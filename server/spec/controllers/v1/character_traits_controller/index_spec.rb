@@ -29,33 +29,64 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
   end
 
   describe "GET index" do
+    subject do
+      get(
+        :index,
+        format: :json,
+        params: params,
+      )
+    end
+
     context "when the user is authenticated as a user with access to the universe" do
-      before do
-        authenticate(collaborator)
-        get(
-          :index,
-          format: :json,
-          params: { universe_id: universe.id, character_id: character1.id }
-        )
-      end
+      before { authenticate(collaborator) }
 
-      it "returns the IDs only for CharacterTraits belonging to the given character" do
-        expected_values = [character_trait1.id, character_trait2.id]
-        received_values = json.collect do |character_trait|
-          character_trait["id"]
+      context "and the requested character is in that universe" do
+        let(:params) do
+          { universe_id: universe.id, character_id: character1.id }
         end
-        expect(received_values).to match_array(expected_values)
-      end
 
-      it "returns the names only for CharacterTraits belonging to the given character" do
-        received_values = json.collect do |character_trait|
-          character_trait["name"]
+        it "returns the IDs only for CharacterTraits belonging to the given character" do
+          subject
+          expected_values = [character_trait1.id, character_trait2.id]
+          received_values = json.collect do |character_trait|
+            character_trait["id"]
+          end
+          expect(received_values).to match_array(expected_values)
         end
-        expect(received_values).to match_array(["Adventurous", "Scarred"])
+
+        it "returns the names only for CharacterTraits belonging to the given character" do
+          subject
+          received_values = json.collect do |character_trait|
+            character_trait["name"]
+          end
+          expect(received_values).to match_array(["Adventurous", "Scarred"])
+        end
+
+        it "returns a success HTTP status code" do
+          subject
+          expect(response).to have_http_status(:success)
+        end
       end
 
-      it "returns a success HTTP status code" do
-        expect(response).to have_http_status(:success)
+      context "and the requested character isn't in that universe" do
+        let(:non_universe_character) { create :character }
+
+        let(:params) do
+          { universe_id: universe.id, character_id: non_universe_character.id }
+        end
+
+        it "returns a Bad Request status" do
+          subject
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "returns an error message for the character not belonging to the universe" do
+          subject
+          expect(json["errors"]).to eq([<<~ERROR_MESSAGE.squish])
+            Character with ID #{non_universe_character.id} does not belong to
+            Universe #{universe.id}.
+          ERROR_MESSAGE
+        end
       end
     end
 

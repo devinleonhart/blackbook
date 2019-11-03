@@ -298,7 +298,7 @@ sample response:
 #### show
 
 Enumerates all properties of the requested Character, including associated
-Items and Traits.
+Items, Traits, and images the character has been tagged in.
 
 `GET /api/v1/characters/{character id}`
 
@@ -327,6 +327,20 @@ sample response:
     {
       id: 291,
       name: "Perfectionistic",
+    },
+  ],
+  image_tags: [
+    {
+      image_tag_id: 546,
+      image_id: 27,
+      image_caption: "Christmas Party",
+      image_url "http://www.example.com/storage/christmas_party.jpg",
+    },
+    {
+      image_tag_id: 549,
+      image_id: 20,
+      image_caption: "School ID photo",
+      image_url "http://www.example.com/storage/kiki_id.jpg",
     },
   ],
 }
@@ -664,6 +678,126 @@ a list of properties for the new Mutual Relationship (structurally identical to 
 Erase a relationship.
 
 `DELETE /api/v1/mutual_relationships/{mutual relationship ID}`
+
+response:
+
+HTTP 204 No Content status code with no body
+
+### Images
+
+Images are image files uploaded to the Black Book. Once an Image is created,
+characters in the image can be tagged using the ImageTag model below.
+
+#### show
+
+Enumerates all properties of the requested Image and lists all characters that
+have been tagged in the Image. The characters shown are restricted to only
+characters in universes the current user has access to--tagged characters in
+universes not visible to the current user aren't shown.
+
+`GET /api/v1/images/{image ID}`
+
+sample response:
+
+```
+{
+  id: 2,
+  caption: "Christmas Party",
+  image_url: "http://example.com/storage/christmas_party.jpg",
+  characters: [
+    { id: 34, name: "B.A. Baracus" },
+    { id: 35, name: "John Smith" },
+    { id: 36, name: "Templeton Pec" },
+    { id: 37, name: "H.M. Murdock" },
+  ],
+}
+```
+
+#### create
+
+Create a new Image by uploading an image file and optionally providing a
+caption.
+
+`POST /api/v1/images/`
+
+parameters:
+
+* `image_file` (required, file): The image file.
+* `caption` (optional, string): A caption for the image.
+
+response:
+
+a list of properties of the new Image (structurally identical to `images#show`)
+
+#### update
+
+Change the caption of an Image.
+
+`PUT/PATCH /api/v1/images/{image ID}`
+
+parameters:
+
+* `caption` (required, string): The new caption for the Image.
+
+response:
+
+a list of updated properties for the Image (structurally identical to `image#show`)
+
+#### destroy
+
+Delete a stored Image.
+
+`DELETE /api/v1/images/{image ID}`
+
+response:
+
+HTTP 204 No Content status code with no body
+
+### Image Tag
+
+Tag characters in an Image.
+
+#### show
+
+Enumerates all properties of the requested ImageTag. If the current user isn't
+a collaborator or owner of the universe the tagged character belongs to, then a
+403 Forbidden error will be returned.
+
+`GET /api/v1/image_tags/{image tag ID}`
+
+sample response:
+
+```
+{
+  id: 5,
+  character: { id: 6, name: "Buck Firestone" },
+  image: { id: 1, url: "http://example.com/storage/sky.png" },
+}
+```
+
+#### create
+
+Tag a character in an image. If the current user isn't a collaborator or owner
+of the universe the tagged character belongs to, then a 403 Forbidden error
+will be returned and the ImageTag won't be created.
+
+`POST /api/v1/images/{image ID}/image_tags`
+
+parameters:
+
+* `character_id` (required, integer): the ID of the character to tag in the image.
+
+response:
+
+a list of properties of the new ImageTag (structurally identical to `image_tags#show`)
+
+#### destroy
+
+Remove a character tagging from an image. If the current user isn't a
+collaborator or owner of the universe the tagged character belongs to, then a
+403 Forbidden error will be returned and the ImageTag won't be deleted.
+
+`DELETE /api/v1/image_tags/{image tag ID}`
 
 response:
 

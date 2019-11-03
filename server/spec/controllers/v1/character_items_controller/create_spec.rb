@@ -174,6 +174,37 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
           expect(errors).to eq(["Character must exist"])
         end
       end
+
+      context "when the given character doesn't belong to the given universe" do
+        let(:non_universe_character) { create :character }
+
+        let(:params) do
+          {
+            universe_id: universe.id,
+            character_id: non_universe_character.id,
+            character_item: { item_name: "Windy Woof" },
+          }
+        end
+
+        subject { post(:create, format: :json, params: params) }
+
+        it "returns a Bad Request status" do
+          subject
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "doesn't create the CharacterItem" do
+          expect { subject }.not_to change { CharacterItem.count }.from(0)
+        end
+
+        it "returns an error message for the character not belonging to the universe" do
+          subject
+          expect(json["errors"]).to eq([<<~ERROR_MESSAGE.squish])
+            Character with ID #{non_universe_character.id} does not belong to
+            Universe #{universe.id}.
+          ERROR_MESSAGE
+        end
+      end
     end
 
     context "when the user is authenticated as a user who doesn't have access to the parent universe" do

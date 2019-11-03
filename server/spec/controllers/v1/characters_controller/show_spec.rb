@@ -23,6 +23,9 @@ RSpec.describe API::V1::CharactersController, type: :controller do
   let(:universe) { create :universe }
   let(:collaborator) { create :user }
 
+  let(:image) { create :image, caption: "A great pic." }
+  let!(:image_tag) { create :image_tag, character: character, image: image }
+
   before do
     universe.collaborators << collaborator
     universe.save!
@@ -72,6 +75,17 @@ RSpec.describe API::V1::CharactersController, type: :controller do
               "name" => character_trait2.trait.name,
             },
           ])
+        end
+
+        it "returns a list of the images the character is tagged in" do
+          expect(character_json["image_tags"].length).to eq(1)
+          image_tag_json = character_json["image_tags"].first
+          expect(image_tag_json["image_tag_id"]).to eq(image_tag.id)
+          expect(image_tag_json["image_id"]).to eq(image.id)
+          expect(image_tag_json["image_caption"]).to eq("A great pic.")
+          expect(image_tag_json["image_url"]).to(
+            start_with("/rails/active_storage/blobs/")
+          )
         end
       end
 

@@ -18,6 +18,10 @@ Rails.application.routes.draw do
 
         get 'search', to: 'search#multisearch', as: :search
       end
+
+      resources :images, except: [:index] do
+        resources :image_tags, except: [:update], shallow: true
+      end
     end
   end
 end

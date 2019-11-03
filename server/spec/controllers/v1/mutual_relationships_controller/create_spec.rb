@@ -293,6 +293,42 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
           expect(errors).to eq(["Name has already been taken"])
         end
       end
+
+      context "when the given character doesn't belong to the given universe" do
+        let(:non_universe_character) { create :character }
+
+        let(:params) do
+          {
+            universe_id: universe.id,
+            character_id: non_universe_character.id,
+            mutual_relationship: {
+              target_character_id: character2.id,
+              forward_name: "Father",
+              reverse_name: "Daughter",
+            },
+          }
+        end
+
+        subject { post(:create, format: :json, params: params) }
+
+        it "returns a Bad Request status" do
+          subject
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "doesn't create any relationships" do
+          expect { subject }.not_to change { MutualRelationship.count }.from(0)
+          expect { subject }.not_to change { Relationship.count }.from(0)
+        end
+
+        it "returns an error message for the character not belonging to the universe" do
+          subject
+          expect(json["errors"]).to eq([<<~ERROR_MESSAGE.squish])
+            Character with ID #{non_universe_character.id} does not belong to
+            Universe #{universe.id}.
+          ERROR_MESSAGE
+        end
+      end
     end
 
     context "when the user is authenticated as a user who doesn't have access to the parent universe" do

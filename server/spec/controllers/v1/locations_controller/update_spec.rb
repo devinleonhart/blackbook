@@ -148,6 +148,13 @@ RSpec.describe API::V1::LocationsController, type: :controller do
         it "responds with a Not Found HTTP status code" do
           expect(response).to have_http_status(:not_found)
         end
+
+        it "returns an error message indicating the location doesn't exist" do
+          subject
+          expect(json["errors"]).to eq([
+            "No location with ID -1 exists.",
+          ])
+        end
       end
     end
 
