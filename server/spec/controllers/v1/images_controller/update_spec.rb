@@ -47,11 +47,11 @@ RSpec.describe API::V1::ImagesController, type: :controller do
 
           it "returns the image file's URL" do
             subject
-            # I don't know how to generate the download URL for an attachment
-            # inside a test so I can only assert that the returned URL has the
-            # prefix of a locally stored file
-            expect(json["image"]["image_url"]).to(
-              start_with("/rails/active_storage/blobs/")
+            expect(json["image"]["image_url"]).to eq(
+              Rails.application.routes.url_helpers.rails_blob_path(
+                image.reload.image_file,
+                only_path: true,
+              )
             )
           end
 
