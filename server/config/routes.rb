@@ -8,6 +8,8 @@ Rails.application.routes.draw do
       # TODO: is this needed?
       #post '/auth/login', to: 'authentication#login'
 
+      resources :users, only: [:show, :update]
+
       resources :universes do
         resources :locations, shallow: true
         resources :characters, shallow: true do

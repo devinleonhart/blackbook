@@ -28,6 +28,42 @@ All requests other than sign-in require sending a JWT alongside the request. To 
 
 TODO: figure out how to authenticate with `devise_token_auth`
 
+### Users
+
+Users are the people with access to the Black Book. Note that there is no API
+to create or delete Users; these actions have to be carried out by a Black Book
+administrator directly in the database.
+
+#### show
+
+Details the requested user's ID, display name, and avatar if present.
+
+`GET /api/v1/users/{user ID}`
+
+sample response:
+
+```
+{
+  id: 2,
+  display_name: "T. Just T.",
+  avatar_url: "http://www.example.com/storage/t.jpg",
+}
+```
+
+#### update
+
+Change a User's avatar.
+
+`PUT/PATCH /api/v1/users/{user ID}`
+
+parameters:
+
+* `avatar` (optional, file): The new avatar for this user.
+
+response:
+
+a list of properties of the User (structurally identical to `users#show`)
+
 ### Universes
 
 Universes contain Locations and Characters. They have a single User as an owner
