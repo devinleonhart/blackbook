@@ -81,5 +81,4 @@ test:
 production:
   <<: *default
   database: black_book_production
-  username: black_book
-  password: <%= ENV['BLACK_BOOK_DATABASE_PASSWORD'] %>
+  username: blackbook

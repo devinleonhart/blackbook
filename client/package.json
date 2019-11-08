@@ -5,7 +5,7 @@
   "author": "Devin Leonhart",
   "private": true,
   "scripts": {
-    "build": "rm -rf ./dist && npx webpack --config webpack.prod.js && cp index.html ./dist",
+    "build": "npx webpack --config webpack.prod.js && cp index.html ./dist",
     "lint": "npx eslint --ext js,vue ./src",
     "serve": "npx webpack-dev-server --open --config webpack.dev.js",
     "test": "npx jest"
