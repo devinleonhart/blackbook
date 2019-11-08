@@ -18,6 +18,13 @@ module JsonResponseHelper
 end
 
 RSpec.configure do |config|
+  # This provides the url_for helper, but using url_for() raises the error
+  # "Missing host to link to! Please provide the :host parameter, set
+  # default_url_options[:host], or set :only_path to true"
+  # This appears to be an error between Rails and Rspec has no resolution:
+  # https://github.com/rspec/rspec-rails/issues/1275
+  # config.include Rails.application.routes.url_helpers
+
   config.include JsonResponseHelper, type: :controller
 end
 

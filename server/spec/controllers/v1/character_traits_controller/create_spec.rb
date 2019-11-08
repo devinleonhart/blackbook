@@ -17,6 +17,8 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
   end
 
   describe "POST create" do
+    subject { post(:create, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the parent universe" do
       before { authenticate(collaborator) }
 
@@ -27,33 +29,28 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           {
             universe_id: universe.id,
             character_id: character.id,
-            character_trait: { id: -1, trait_name: "Adventurous" },
+            character_trait: { trait_name: "Adventurous" },
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-
-        subject(:character_trait) { CharacterTrait.first }
-        subject(:character_trait_json) { json["character_trait"] }
-
         it "returns a successful HTTP status code" do
+          subject
           expect(response).to have_http_status(:success)
         end
 
-        it "ignores the id parameter" do
-          expect(character_trait.id).not_to eq(-1)
-        end
-
         it "sets the new CharacterTrait's trait to the existing Trait" do
-          expect(character_trait.trait_id).to eq(trait.id)
+          subject
+          expect(CharacterTrait.first.trait_id).to eq(trait.id)
         end
 
         it "returns the new CharacterTrait's ID" do
-          expect(character_trait_json["id"]).to eq(character_trait.id)
+          subject
+          expect(json["character_trait"]["id"]).to eq(CharacterTrait.first.id)
         end
 
         it "returns the new CharacterTrait's trait name" do
-          expect(character_trait_json["name"]).to eq("Adventurous")
+          subject
+          expect(json["character_trait"]["name"]).to eq("Adventurous")
         end
       end
 
@@ -62,38 +59,34 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           {
             universe_id: universe.id,
             character_id: character.id,
-            character_trait: { id: -1, trait_name: "Adventurous" },
+            character_trait: { trait_name: "Adventurous" },
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-
-        subject(:character_trait) { CharacterTrait.first }
-        subject(:character_trait_json) { json["character_trait"] }
-
         it "returns a successful HTTP status code" do
+          subject
           expect(response).to have_http_status(:success)
         end
 
-        it "ignores the id parameter" do
-          expect(character_trait.id).not_to eq(-1)
-        end
-
         it "creates a new Trait with the requested name" do
+          subject
           expect(Trait.last.name).to eq("Adventurous")
         end
 
         it "assigns the new Trait to the new CharacterTrait" do
+          subject
           new_trait = Trait.find_by(name: "Adventurous")
-          expect(character_trait.trait).to eq(new_trait)
+          expect(CharacterTrait.first.trait).to eq(new_trait)
         end
 
         it "returns the new CharacterTrait's ID" do
-          expect(character_trait_json["id"]).to eq(character_trait.id)
+          subject
+          expect(json["character_trait"]["id"]).to eq(CharacterTrait.first.id)
         end
 
         it "returns the new character trait's name" do
-          expect(character_trait_json["name"]).to eq("Adventurous")
+          subject
+          expect(json["character_trait"]["name"]).to eq("Adventurous")
         end
       end
 
@@ -106,20 +99,18 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:character_trait) { CharacterTrait.first }
-        subject(:errors) { json["errors"] }
-
         it "returns a Bad Request status" do
+          subject
           expect(response).to have_http_status(:bad_request)
         end
 
         it "doesn't create the CharacterTrait" do
-          expect(character_trait).to be_nil
+          expect { subject }.not_to change { CharacterTrait.count }.from(0)
         end
 
         it "returns an error message for the invalid name" do
-          expect(errors).to eq(["Name can't be blank"])
+          subject
+          expect(json["errors"]).to eq(["Name can't be blank"])
         end
       end
 
@@ -132,20 +123,18 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:character_trait) { CharacterTrait.first }
-        subject(:errors) { json["errors"] }
-
         it "returns a Bad Request status" do
+          subject
           expect(response).to have_http_status(:not_found)
         end
 
         it "doesn't create the CharacterTrait" do
-          expect(character_trait).to be_nil
+          expect { subject }.not_to change { CharacterTrait.count }.from(0)
         end
 
         it "returns an error message for the invalid universe ID" do
-          expect(errors).to eq(["No universe with ID -1 exists."])
+          subject
+          expect(json["errors"]).to eq(["No universe with ID -1 exists."])
         end
       end
 
@@ -158,20 +147,43 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:character_trait) { CharacterTrait.first }
-        subject(:errors) { json["errors"] }
-
         it "returns a Bad Request status" do
+          subject
           expect(response).to have_http_status(:bad_request)
         end
 
         it "doesn't create the CharacterTrait" do
-          expect(character_trait).to be_nil
+          expect { subject }.not_to change { CharacterTrait.count }.from(0)
         end
 
         it "returns an error message for the invalid character ID" do
-          expect(errors).to eq(["Character must exist"])
+          subject
+          expect(json["errors"]).to eq(["Character must exist"])
+        end
+      end
+
+      context "when the given character isn't in the given universe" do
+        let(:non_universe_character) { create :character }
+
+        let(:params) do
+          { universe_id: universe.id, character_id: non_universe_character.id }
+        end
+
+        it "returns a Bad Request status" do
+          subject
+          expect(response).to have_http_status(:bad_request)
+        end
+
+        it "doesn't create a new CharacterTrait" do
+          expect { subject }.not_to change { CharacterTrait.count }.from(0)
+        end
+
+        it "returns an error message for the character not belonging to the universe" do
+          subject
+          expect(json["errors"]).to eq([<<~ERROR_MESSAGE.squish])
+            Character with ID #{non_universe_character.id} does not belong to
+            Universe #{universe.id}.
+          ERROR_MESSAGE
         end
       end
     end
@@ -180,25 +192,24 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
       let(:params) do
         {
           universe_id: universe.id,
-          character_id: -1,
+          character_id: character.id,
           character_trait: { trait_name: "Adventurous" },
         }
       end
 
-      before do
-        authenticate(not_owner)
-        post(:create, format: :json, params: params)
-      end
+      before { authenticate(not_owner) }
 
       it "returns an unauthorized HTTP status code" do
+        subject
         expect(response).to have_http_status(:forbidden)
       end
 
       it "doesn't create a new CharacterTrait" do
-        expect(CharacterTrait.count).to eq(0)
+        expect { subject }.not_to change { CharacterTrait.count }.from(0)
       end
 
       it "returns an error message informing the user they don't have access" do
+        subject
         expect(json["errors"]).to(
           eq([<<~MESSAGE.squish])
             You must be an owner or collaborator for the universe with ID
@@ -212,22 +223,22 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
       let(:params) do
         {
           universe_id: universe.id,
-          character_id: -1,
+          character_id: character.id,
           character_trait: { trait_name: "Adventurous" },
         }
       end
 
-      before { post(:create, format: :json, params: params) }
-
       it "returns an unauthorized HTTP status code" do
+        subject
         expect(response).to have_http_status(:unauthorized)
       end
 
       it "doesn't create a new CharacterTrait" do
-        expect(CharacterTrait.count).to eq(0)
+        expect { subject }.not_to change { CharacterTrait.count }.from(0)
       end
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

@@ -17,3 +17,12 @@ json.traits do
     json.name character_trait.trait.name
   end
 end
+
+json.image_tags do
+  json.array!(character.image_tags) do |image_tag|
+    json.image_tag_id image_tag.id
+    json.image_id image_tag.image.id
+    json.image_caption image_tag.image.caption
+    json.image_url url_for(image_tag.image.image_file)
+  end
+end

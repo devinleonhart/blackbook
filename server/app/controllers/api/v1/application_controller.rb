@@ -67,4 +67,21 @@ class API::V1::ApplicationController < ::ApplicationController
       raise ForbiddenUniverseResource.new(universe.id, model_name)
     end
   end
+
+  def require_resource_be_in_universe(
+    resource_class,
+    resource_id,
+    universe_id
+  )
+    resource = resource_class.find_by(id: resource_id)
+    return if resource.nil?
+
+    if resource.universe.id != universe_id.to_i
+      raise ResourceNotInUniverse.new(
+        resource_class.name,
+        resource_id,
+        universe_id,
+      )
+    end
+  end
 end

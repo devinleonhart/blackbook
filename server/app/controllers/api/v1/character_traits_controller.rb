@@ -3,6 +3,13 @@
 class API::V1::CharacterTraitsController < API::V1::ApplicationController
   before_action -> { require_universe_visible_to_user("characters' traits") },
     only: [:index, :create]
+  before_action lambda {
+    require_resource_be_in_universe(
+      Character,
+      params[:character_id],
+      params[:universe_id],
+    )
+  }, only: [:index, :create]
 
   def index
     @character_traits =

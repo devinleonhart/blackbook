@@ -86,4 +86,19 @@ RSpec.describe Character, type: :model do
     )
   }
   it { should respond_to(:relationships) }
+
+  it {
+    should(
+      have_many(:image_tags)
+      .inverse_of(:character)
+      .dependent(:destroy)
+    )
+  }
+  it {
+    should(
+      have_many(:images)
+      .through(:image_tags)
+      .inverse_of(:characters)
+    )
+  }
 end

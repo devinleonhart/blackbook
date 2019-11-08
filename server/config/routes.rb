@@ -8,6 +8,8 @@ Rails.application.routes.draw do
       # TODO: is this needed?
       #post '/auth/login', to: 'authentication#login'
 
+      resources :users, only: [:show, :update]
+
       resources :universes do
         resources :locations, shallow: true
         resources :characters, shallow: true do
@@ -17,6 +19,10 @@ Rails.application.routes.draw do
         end
 
         get 'search', to: 'search#multisearch', as: :search
+      end
+
+      resources :images, except: [:index] do
+        resources :image_tags, except: [:update], shallow: true
       end
     end
   end

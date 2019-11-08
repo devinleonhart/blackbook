@@ -36,6 +36,8 @@ class Relationship < ApplicationRecord
 
   delegate :universe, to: :originating_character, allow_nil: true
 
+  private
+
   def characters_must_be_in_same_universe
     return if originating_character.nil? || target_character.nil?
 

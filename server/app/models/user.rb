@@ -33,6 +33,8 @@ class User < ApplicationRecord
   validates :email, :display_name, :encrypted_password, presence: true
   validates :email, :display_name, uniqueness: { case_sensitive: false }
 
+  has_one_attached :avatar
+
   has_many :owned_universes,
     class_name: "Universe",
     foreign_key: "owner_id",

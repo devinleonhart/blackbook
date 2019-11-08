@@ -3,6 +3,13 @@
 class API::V1::CharacterItemsController < API::V1::ApplicationController
   before_action -> { require_universe_visible_to_user("characters' items") },
     only: [:index, :create]
+  before_action lambda {
+    require_resource_be_in_universe(
+      Character,
+      params[:character_id],
+      params[:universe_id],
+    )
+  }, only: [:index, :create]
 
   def index
     @character_items =
@@ -28,6 +35,7 @@ class API::V1::CharacterItemsController < API::V1::ApplicationController
     ActiveRecord::Base.transaction do
       item =
         Item.find_or_create_by!(name: allowed_character_item_params[:item_name])
+
       @character_item =
         CharacterItem.create!(character_id: params[:character_id], item: item)
     end

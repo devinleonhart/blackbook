@@ -59,7 +59,11 @@ class API::V1::CharactersController < API::V1::ApplicationController
   def show
     @character =
       Character
-      .includes(character_items: [:item], character_traits: [:trait])
+      .includes(
+        character_items: [:item],
+        character_traits: [:trait],
+        image_tags: [:image],
+      )
       .find_by(id: params[:id])
     raise MissingResource.new("character", params[:id]) if @character.nil?
 
@@ -73,7 +77,14 @@ class API::V1::CharactersController < API::V1::ApplicationController
   end
 
   def update
-    @character = Character.find_by(id: params[:id])
+    @character =
+      Character
+      .includes(
+        character_items: [:item],
+        character_traits: [:trait],
+        image_tags: [:image],
+      )
+      .find_by(id: params[:id])
     raise MissingResource.new("character", params[:id]) if @character.nil?
 
     require_universe_visible_to_user("character", @character.universe.id)
@@ -94,6 +105,6 @@ class API::V1::CharactersController < API::V1::ApplicationController
   private
 
   def allowed_character_params
-    params.require(:character).permit(:name, :description)
+    params.require(:character).permit(:name, :description, images: [])
   end
 end
