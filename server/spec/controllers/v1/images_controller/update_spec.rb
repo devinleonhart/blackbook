@@ -37,7 +37,7 @@ RSpec.describe API::V1::ImagesController, type: :controller do
 
           it "returns the image's ID" do
             subject
-            expect(json["image"]["id"]).to eq(image.id)
+            expect(json["image"]["id"]).to eq(image.reload.id)
           end
 
           it "returns the image's new caption" do
