@@ -39,7 +39,7 @@ RSpec.describe API::V1::UsersController, type: :controller do
 
           it "returns the user's display name" do
             subject
-            expect(json["user"]["display_name"]).to eq("John Smith")
+            expect(json["user"]["display_name"]).to eq("T. Just T.")
           end
 
           it "returns the URL for the user's new avatar" do
