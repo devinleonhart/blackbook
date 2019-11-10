@@ -69,7 +69,7 @@ deploy:
   before_script:
     - apt-get update -y && apt-get install openssh-client git -y
     - eval $(ssh-agent -s)
-    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - ssh-add <(echo -e "$DEPLOYMENT_SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
