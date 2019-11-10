@@ -12,7 +12,7 @@ server-tests:
     POSTGRES_DB: black_book_test
     POSTGRES_USER: blackbook
     POSTGRES_PASSWORD: ""
-    DATABASE_URL: 'postgresql://black_book:@postgres/black_book_test'
+    DATABASE_URL: 'postgresql://blackbook:@postgres/black_book_test'
     RAILS_ENV: test
     DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: "true"
   before_script:
