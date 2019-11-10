@@ -11,7 +11,7 @@ require 'mina/puma'
 #   branch       - Branch name to deploy. (needed by mina/git)
 
 set :application_name, 'black-book'
-set :domain, 'lionheart.design'
+set :domain, '198.199.119.91'
 set :deploy_to, '/home/blackbook'
 set :repository, 'https://gitlab.com/starim/black-book.git'
 set :branch, 'master'
