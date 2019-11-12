@@ -16,7 +16,6 @@ class API::V1::CharacterTraitsController < API::V1::ApplicationController
       CharacterTrait
       .includes(:trait)
       .where(character_id: params[:character_id])
-      .all
   end
 
   def show

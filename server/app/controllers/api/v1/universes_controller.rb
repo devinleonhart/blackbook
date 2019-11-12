@@ -3,14 +3,13 @@
 class API::V1::UniversesController < API::V1::ApplicationController
   def index
     owned_universes =
-      Universe.kept.where(owner: current_api_v1_user).all
+      Universe.kept.where(owner: current_api_v1_user)
 
     collaborated_universes =
       Universe
       .kept
       .joins(:collaborations)
       .where(collaborations: { user: current_api_v1_user })
-      .all
 
     @universes = (owned_universes + collaborated_universes).uniq
   end

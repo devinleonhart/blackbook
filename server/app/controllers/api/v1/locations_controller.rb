@@ -5,7 +5,7 @@ class API::V1::LocationsController < API::V1::ApplicationController
     only: [:index, :create]
 
   def index
-    @locations = Location.where(universe_id: params[:universe_id]).all
+    @locations = Location.where(universe_id: params[:universe_id])
   end
 
   def show

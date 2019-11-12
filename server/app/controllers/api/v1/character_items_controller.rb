@@ -16,7 +16,6 @@ class API::V1::CharacterItemsController < API::V1::ApplicationController
       CharacterItem
       .includes(:item)
       .where(character_id: params[:character_id])
-      .all
   end
 
   def show

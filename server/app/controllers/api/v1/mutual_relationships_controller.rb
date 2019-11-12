@@ -16,7 +16,6 @@ class API::V1::MutualRelationshipsController < API::V1::ApplicationController
       Relationship
       .includes(:target_character)
       .where(originating_character_id: params[:character_id])
-      .all
   end
 
   def show
