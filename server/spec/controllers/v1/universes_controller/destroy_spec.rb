@@ -17,42 +17,43 @@ RSpec.describe API::V1::UniversesController, type: :controller do
   end
 
   describe "DELETE destroy" do
+    subject { delete(:destroy, format: :json, params: params) }
+
     context "when the user is authenticated as the universe's owner" do
       before { authenticate(owner) }
 
       context "when the universe is available" do
-        before { delete(:destroy, format: :json, params: { id: universe.id }) }
+        let(:params) { { id: universe.id } }
 
-        it "returns a success response" do
-          expect(response).to have_http_status(:success)
-        end
+        it { is_expected.to have_http_status(:success) }
 
         it "soft deletes the universe" do
+          subject
           expect(universe.reload.discarded?).to be(true)
         end
       end
 
-      context "when the universe is already deleted" do
+      context "when the universe has already been deleted" do
         before do
           universe.discard!
         end
 
-        before { delete(:destroy, format: :json, params: { id: universe.id }) }
+        let(:params) { { id: universe.id } }
+
+        it { is_expected.to have_http_status(:not_found) }
 
         it "is idempotent" do
-          expect(response).to have_http_status(:success)
           expect(universe.reload.discarded?).to be(true)
         end
       end
 
       context "when the universe doesn't exist" do
-        before { delete(:destroy, format: :json, params: { id: -1 }) }
+        let(:params) { { id: -1 } }
 
-        it "returns a Not Found Response" do
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "returns an error message informing the user the resource doesn't exist" do
+          subject
           expect(json["errors"]).to eq(["No universe with ID -1 exists."])
         end
       end
@@ -61,37 +62,36 @@ RSpec.describe API::V1::UniversesController, type: :controller do
     context "when the user is signed in as a collaborator" do
       before do
         authenticate(collaborator)
-        delete(:destroy, format: :json, params: { id: universe.id })
       end
 
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:forbidden)
-      end
+      let(:params) { { id: universe.id } }
+
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "doesn't destroy the universe" do
-        expect(Universe.count).to eq(1)
+        expect { subject }.not_to change { Universe.count }
       end
     end
 
     context "when the user is signed in as a user who isn't the universe's owner" do
       before do
         authenticate(not_owner)
-        delete(:destroy, format: :json, params: { id: universe.id })
       end
 
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:forbidden)
-      end
+      let(:params) { { id: universe.id } }
+
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "doesn't destroy the universe" do
-        expect(Universe.count).to eq(1)
+        expect { subject }.not_to change { Universe.count }
       end
 
       it "doesn't soft delete the universe" do
-        expect(Universe.kept.count).to eq(1)
+        expect { subject }.not_to change { Universe.kept.count }
       end
 
       it "returns an error message indicating only the owner can delete a universe" do
+        subject
         expect(json["errors"]).to(
           eq(["A universe can only be deleted by its owner."])
         )
@@ -101,22 +101,22 @@ RSpec.describe API::V1::UniversesController, type: :controller do
     context "when the user is signed in as a user who isn't the universe's owner" do
       before do
         authenticate(not_owner)
-        delete(:destroy, format: :json, params: { id: universe.id })
       end
 
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:forbidden)
-      end
+      let(:params) { { id: universe.id } }
+
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "doesn't destroy the universe" do
-        expect(Universe.count).to eq(1)
+        expect { subject }.not_to change { Universe.count }
       end
 
       it "doesn't soft delete the universe" do
-        expect(Universe.kept.count).to eq(1)
+        expect { subject }.not_to change { Universe.kept.count }
       end
 
       it "returns an error message indicating only the owner can delete a universe" do
+        subject
         expect(json["errors"]).to(
           eq(["A universe can only be deleted by its owner."])
         )
@@ -124,21 +124,20 @@ RSpec.describe API::V1::UniversesController, type: :controller do
     end
 
     context "when the user isn't authenticated" do
-      before { delete(:destroy, format: :json, params: { id: universe.id }) }
+      let(:params) { { id: universe.id } }
 
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "doesn't destroy the universe" do
-        expect(Universe.count).to eq(1)
+        expect { subject }.not_to change { Universe.count }
       end
 
       it "doesn't soft delete the universe" do
-        expect(Universe.kept.count).to eq(1)
+        expect { subject }.not_to change { Universe.kept.count }
       end
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

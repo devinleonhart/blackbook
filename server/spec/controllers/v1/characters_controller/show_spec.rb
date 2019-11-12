@@ -32,27 +32,32 @@ RSpec.describe API::V1::CharactersController, type: :controller do
   end
 
   describe "GET show" do
+    subject { get(:show, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the universe" do
       before { authenticate(collaborator) }
 
       context "when the character exists" do
-        before { get(:show, format: :json, params: { id: character.id }) }
-        subject(:character_json) { json["character"] }
+        let(:params) { { id: character.id } }
 
         it "returns the character's ID" do
-          expect(character_json["id"]).to eq(character.id)
+          subject
+          expect(json["character"]["id"]).to eq(character.id)
         end
 
         it "returns the character's name" do
-          expect(character_json["name"]).to eq("Slab Bulkhead")
+          subject
+          expect(json["character"]["name"]).to eq("Slab Bulkhead")
         end
 
         it "returns the character's description" do
-          expect(character_json["description"]).to eq("Tough and dense.")
+          subject
+          expect(json["character"]["description"]).to eq("Tough and dense.")
         end
 
         it "returns a list of the character's items" do
-          expect(character_json["items"]).to match_array([
+          subject
+          expect(json["character"]["items"]).to match_array([
             {
               "id" => character_item1.id,
               "name" => character_item1.item.name,
@@ -65,7 +70,8 @@ RSpec.describe API::V1::CharactersController, type: :controller do
         end
 
         it "returns a list of the character's traits" do
-          expect(character_json["traits"]).to match_array([
+          subject
+          expect(json["character"]["traits"]).to match_array([
             {
               "id" => character_trait1.id,
               "name" => character_trait1.trait.name,
@@ -78,8 +84,9 @@ RSpec.describe API::V1::CharactersController, type: :controller do
         end
 
         it "returns a list of the images the character is tagged in" do
-          expect(character_json["image_tags"].length).to eq(1)
-          image_tag_json = character_json["image_tags"].first
+          subject
+          expect(json["character"]["image_tags"].length).to eq(1)
+          image_tag_json = json["character"]["image_tags"].first
           expect(image_tag_json["image_tag_id"]).to eq(image_tag.id)
           expect(image_tag_json["image_id"]).to eq(image.id)
           expect(image_tag_json["image_caption"]).to eq("A great pic.")
@@ -90,13 +97,12 @@ RSpec.describe API::V1::CharactersController, type: :controller do
       end
 
       context "when the character doesn't exist" do
-        before { get(:show, format: :json, params: { id: -1 }) }
+        let(:params) { { id: -1 } }
 
-        it "responds with a Not Found HTTP status code" do
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "returns an error message indicating the character doesn't exist" do
+          subject
           expect(json["errors"]).to eq([
             "No character with ID -1 exists.",
           ])
@@ -105,22 +111,20 @@ RSpec.describe API::V1::CharactersController, type: :controller do
     end
 
     context "when the user is authenticated as a user without an association with the universe" do
-      before do
-        authenticate(create(:user))
-        get(:show, format: :json, params: { id: character.id })
+      before { authenticate(create(:user)) }
 
-        it "returns a forbidden HTTP status code" do
-          expect(response).to have_http_status(:forbidden)
-        end
+      let(:params) { { id: character.id } }
 
-        it "returns an error message indicating only the owner or a collaborator can view the universe" do
-          expect(json["errors"]).to(
-            eq([<<~MESSAGE.strip])
-              You must be an owner or collaborator for the universe with ID
-              #{universe.id} to interact with its characters.
-            MESSAGE
-          )
-        end
+      it { is_expected.to have_http_status(:forbidden) }
+
+      it "returns an error message indicating only the owner or a collaborator can view the universe" do
+        subject
+        expect(json["errors"]).to(
+          eq([<<~MESSAGE.squish])
+            You must be an owner or collaborator for the universe with ID
+            #{universe.id} to interact with its characters.
+          MESSAGE
+        )
       end
     end
 
@@ -132,13 +136,10 @@ RSpec.describe API::V1::CharactersController, type: :controller do
         }
       end
 
-      before { get(:show, format: :json, params: params) }
-
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

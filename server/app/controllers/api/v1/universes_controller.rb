@@ -39,14 +39,14 @@ class API::V1::UniversesController < API::V1::ApplicationController
   end
 
   def destroy
-    @universe = Universe.find_by(id: params[:id])
+    @universe = Universe.kept.find_by(id: params[:id])
     raise MissingResource.new("universe", params[:id]) if @universe.nil?
 
     if @universe.owner != current_api_v1_user
       raise ForbiddenUniverseAction.new("deleted", false)
     end
 
-    @universe.discard! unless @universe.discarded?
+    @universe.discard!
     head :no_content
   end
 

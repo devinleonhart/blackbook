@@ -16,10 +16,10 @@ RSpec.describe API::V1::ImagesController, type: :controller do
       context "when the Image exists" do
         let(:params) { { id: image.id } }
 
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "deletes the image" do
-          expect { subject }.to change { Image.count }.from(1).to(0)
+          expect { subject }.to change { Image.count }.by(-1)
         end
       end
 
@@ -47,7 +47,7 @@ RSpec.describe API::V1::ImagesController, type: :controller do
       end
 
       it "doesn't destroy the image" do
-        expect { subject }.not_to change { Image.count }.from(1)
+        expect { subject }.not_to change { Image.count }
       end
 
       it "returns an error message asking the user to authenticate" do

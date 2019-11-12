@@ -62,10 +62,7 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           expect(received_values).to match_array(["Adventurous", "Scarred"])
         end
 
-        it "returns a success HTTP status code" do
-          subject
-          expect(response).to have_http_status(:success)
-        end
+        it { is_expected.to have_http_status(:success) }
       end
 
       context "and the requested character isn't in that universe" do
@@ -75,10 +72,7 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           { universe_id: universe.id, character_id: non_universe_character.id }
         end
 
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "returns an error message for the character not belonging to the universe" do
           subject

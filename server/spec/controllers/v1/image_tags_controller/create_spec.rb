@@ -29,10 +29,10 @@ RSpec.describe API::V1::ImageTagsController, type: :controller do
           }
         end
 
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "creates an image_tag" do
-          expect { subject }.to change { ImageTag.count }.from(0).to(1)
+          expect { subject }.to change { ImageTag.count }.by(1)
         end
 
         it "sets the new ImageTag's character" do
@@ -78,10 +78,10 @@ RSpec.describe API::V1::ImageTagsController, type: :controller do
           }
         end
 
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "creates an image_tag" do
-          expect { subject }.to change { ImageTag.count }.from(0).to(1)
+          expect { subject }.to change { ImageTag.count }.by(1)
         end
 
         it "ignores the ID parameter" do
@@ -98,13 +98,10 @@ RSpec.describe API::V1::ImageTagsController, type: :controller do
           }
         end
 
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "doesn't create an ImageTag" do
-          expect { subject }.not_to change { ImageTag.count }.from(0)
+          expect { subject }.not_to change { ImageTag.count }
         end
 
         it "returns an error message for the invalid character ID" do
@@ -124,13 +121,10 @@ RSpec.describe API::V1::ImageTagsController, type: :controller do
         }
       end
 
-      it "returns an unauthorized HTTP status code" do
-        subject
-        expect(response).to have_http_status(:forbidden)
-      end
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "doesn't create the image_tag" do
-        expect { subject }.not_to change { ImageTag.count }.from(0)
+        expect { subject }.not_to change { ImageTag.count }
       end
 
       it "returns an error message asking the user to authenticate" do
@@ -152,13 +146,10 @@ RSpec.describe API::V1::ImageTagsController, type: :controller do
         }
       end
 
-      it "returns an unauthorized HTTP status code" do
-        subject
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "doesn't create the image_tag" do
-        expect { subject }.not_to change { ImageTag.count }.from(0)
+        expect { subject }.not_to change { ImageTag.count }
       end
 
       it "returns an error message asking the user to authenticate" do

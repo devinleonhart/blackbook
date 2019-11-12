@@ -10,6 +10,8 @@ RSpec.describe API::V1::UniversesController, type: :controller do
   let(:collaborator2) { create :user }
 
   describe "POST create" do
+    subject { post(:create, format: :json, params: params) }
+
     context "when the user has authenticated" do
       before { authenticate(owner) }
 
@@ -17,7 +19,6 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         let(:params) do
           {
             universe: {
-              id: -1,
               owner_id: owner.id,
               name: "Milky Way",
               collaborator_ids: [collaborator1.id, collaborator2.id],
@@ -25,49 +26,50 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:universe) { Universe.first }
-        subject(:universe_json) { json["universe"] }
+        it { is_expected.to have_http_status(:success) }
 
-        it "returns a successful HTTP status code" do
-          expect(response).to have_http_status(:success)
-        end
-
-        it "ignores the id parameter" do
-          expect(universe.id).not_to eq(-1)
+        it "creates the Universe" do
+          expect { subject }.to change { Universe.count }.by(1)
         end
 
         it "sets the new universe's name" do
-          expect(universe.name).to eq("Milky Way")
+          subject
+          expect(Universe.first.name).to eq("Milky Way")
         end
 
         it "sets the new universe's owner" do
-          expect(universe.owner).to eq(owner)
+          subject
+          expect(Universe.first.owner).to eq(owner)
         end
 
         it "sets the new universe's collaborators" do
-          expect(universe.collaborators).to match_array(
+          subject
+          expect(Universe.first.collaborators).to match_array(
             [collaborator1, collaborator2]
           )
         end
 
         it "returns the new universe's ID" do
-          expect(universe_json["id"]).to eq(universe.id)
+          subject
+          expect(json["universe"]["id"]).to eq(Universe.first.id)
         end
 
         it "returns the new universe's name" do
-          expect(universe_json["name"]).to eq("Milky Way")
+          subject
+          expect(json["universe"]["name"]).to eq("Milky Way")
         end
 
         it "returns the new universe's owner's information" do
-          expect(universe_json["owner"]).to eq(
+          subject
+          expect(json["universe"]["owner"]).to eq(
             "id" => owner.id,
             "display_name" => owner.display_name,
           )
         end
 
         it "returns a list of the new universe's collaborators" do
-          expect(universe_json["collaborators"]).to match_array([
+          subject
+          expect(json["universe"]["collaborators"]).to match_array([
             {
               "id" => collaborator1.id,
               "display_name" => collaborator1.display_name,
@@ -80,11 +82,13 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         end
 
         it "returns a list of the universe's characters" do
-          expect(universe_json["characters"]).to eq([])
+          subject
+          expect(json["universe"]["characters"]).to eq([])
         end
 
         it "returns a list of the universe's locations" do
-          expect(universe_json["locations"]).to eq([])
+          subject
+          expect(json["universe"]["locations"]).to eq([])
         end
       end
 
@@ -99,20 +103,15 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:universe) { Universe.first }
-        subject(:errors) { json["errors"] }
-
-        it "returns a Bad Request status" do
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the universe" do
-          expect(universe).to be_nil
+          expect { subject }.not_to change { Universe.count }
         end
 
         it "returns an error message for the invalid name" do
-          expect(errors).to eq(["Name can't be blank"])
+          subject
+          expect(json["errors"]).to eq(["Name can't be blank"])
         end
       end
 
@@ -127,20 +126,15 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:universe) { Universe.first }
-        subject(:errors) { json["errors"] }
-
-        it "returns a Bad Request status" do
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the universe" do
-          expect(universe).to be_nil
+          expect { subject }.not_to change { Universe.count }
         end
 
         it "returns an error message for the invalid owner ID" do
-          expect(errors).to eq(["Owner must exist"])
+          subject
+          expect(json["errors"]).to eq(["Owner must exist"])
         end
       end
 
@@ -155,20 +149,15 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:universe) { Universe.first }
-        subject(:errors) { json["errors"] }
-
-        it "returns a Bad Request status" do
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the universe" do
-          expect(universe).to be_nil
+          expect { subject }.not_to change { Universe.count }
         end
 
         it "returns an error message for the invalid collaborator ID" do
-          expect(errors).to eq(["No User with ID [-1] exists."])
+          subject
+          expect(json["errors"]).to eq(["No User with ID [-1] exists."])
         end
       end
     end
@@ -185,17 +174,14 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         }
       end
 
-      before { post(:create, format: :json, params: params) }
-
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "doesn't create a new Universe" do
-        expect(Universe.count).to eq(0)
+        expect { subject }.not_to change { Universe.count }
       end
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe API::V1::CharacterTraitsController, type: :controller do
   render_views
 
-  let(:character_trait) do
+  let!(:character_trait) do
     create(
       :character_trait,
       trait: trait,
@@ -26,14 +26,14 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
   end
 
   describe "PUT/PATCH update" do
+    subject { put(:update, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the character's universe" do
-      before do
-        authenticate(collaborator)
-      end
+      before { authenticate(collaborator) }
 
       context "when the character trait exists" do
-        context "when an Trait exists with the requested name" do
-          let!(:new_trait) { create :trait, name: "Tired" }
+        context "when a Trait exists with the requested name" do
+          before { create :trait, name: "Tired" }
 
           let(:params) do
             {
@@ -42,29 +42,27 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
             }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:character_trait_json) { json["character_trait"] }
-
-          it "returns a successful HTTP status code" do
-            expect(response).to have_http_status(:success)
-          end
+          it { is_expected.to have_http_status(:success) }
 
           it "doesn't create a new Trait" do
-            expect(Trait.count).to eq(2)
+            expect { subject }.not_to change { Trait.count }
           end
 
           it "updates the character trait's name" do
+            subject
             expect(character_trait.reload.trait.name).to(
               eq("Tired")
             )
           end
 
           it "returns the character trait's ID" do
-            expect(character_trait_json["id"]).to eq(character_trait.id)
+            subject
+            expect(json["character_trait"]["id"]).to eq(character_trait.id)
           end
 
           it "returns the character trait's new trait name" do
-            expect(character_trait_json["name"]).to eq("Tired")
+            subject
+            expect(json["character_trait"]["name"]).to eq("Tired")
           end
         end
 
@@ -76,56 +74,28 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
             }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:character_trait_json) { json["character_trait"] }
+          it { is_expected.to have_http_status(:success) }
 
-          it "returns a successful HTTP status code" do
-            expect(response).to have_http_status(:success)
-          end
-
-          it "creates a new Trait" do
+          it "creates a new Trait with the requested name" do
+            expect { subject }.to change { Trait.count }.by(1)
             expect(Trait.last.name).to eq("Tired")
           end
 
           it "updates the character trait's name" do
+            subject
             expect(character_trait.reload.trait.name).to(
               eq("Tired")
             )
           end
 
           it "returns the character trait's ID" do
-            expect(character_trait_json["id"]).to eq(character_trait.id)
+            subject
+            expect(json["character_trait"]["id"]).to eq(character_trait.id)
           end
 
           it "returns the character trait's new trait name" do
-            expect(character_trait_json["name"]).to eq("Tired")
-          end
-        end
-
-        context "when an attempt is made to change the character trait's ID" do
-          let(:params) do
-            {
-              id: character_trait.id,
-              character_trait: {
-                id: -1,
-                trait_name: "Tired",
-              },
-            }
-          end
-
-          before { put(:update, format: :json, params: params) }
-          subject(:character_trait_json) { json["character_trait"] }
-
-          it "returns a successful HTTP status code" do
-            expect(response).to have_http_status(:success)
-          end
-
-          it "doesn't update the character trait's ID" do
-            expect(character_trait.reload.id).not_to eq(-1)
-          end
-
-          it "returns the character trait's original ID" do
-            expect(character_trait_json["id"]).to eq(character_trait.id)
+            subject
+            expect(json["character_trait"]["name"]).to eq("Tired")
           end
         end
 
@@ -134,19 +104,18 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
             { id: character_trait.id, character_trait: { trait_name: "" } }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:errors) { json["errors"] }
-
-          it "returns a Bad Request status" do
-            expect(response).to have_http_status(:bad_request)
-          end
+          it { is_expected.to have_http_status(:bad_request) }
 
           it "doesn't update the character trait's name" do
-            expect(character_trait.reload.trait.name).to eq("Adventurous")
+            subject
+            expect { subject }.not_to change {
+              character_trait.reload.trait.name
+            }
           end
 
           it "returns an error message for the invalid name" do
-            expect(errors).to eq(["Name can't be blank"])
+            subject
+            expect(json["errors"]).to eq(["Name can't be blank"])
           end
         end
 
@@ -161,29 +130,26 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
             }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:character_trait_json) { json["character_trait"] }
+          it { is_expected.to have_http_status(:success) }
 
-          it "returns a successful HTTP status code" do
-            expect(response).to have_http_status(:success)
-          end
-
-          it "ignores any attempt to change the character trait's associated character" do
-            expect(character_trait.reload.character).to eq(original_character)
+          it "doesn't change the character trait's associated character" do
+            expect { subject }.not_to change {
+              character_trait.reload.character_id
+            }
           end
         end
       end
 
       context "when the character trait doesn't exist" do
-        before { put(:update, format: :json, params: { id: -1 }) }
+        let(:params) { { id: -1 } }
 
-        it "responds with a Not Found HTTP status code" do
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
       end
     end
 
     context "when the user is authenticated as a user without an association with the universe" do
+      before { authenticate(create(:user)) }
+
       let(:params) do
         {
           id: character_trait.id,
@@ -191,16 +157,10 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
         }
       end
 
-      before do
-        authenticate(create(:user))
-        put(:update, format: :json, params: params)
-      end
-
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:forbidden)
-      end
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "returns an error message indicating only the owner or a collaborator can view the universe" do
+        subject
         expect(json["errors"]).to(
           eq([<<~MESSAGE.squish])
             You must be an owner or collaborator for the universe with ID
@@ -218,13 +178,10 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
         }
       end
 
-      before { put(:update, format: :json, params: params) }
-
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

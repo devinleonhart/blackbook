@@ -29,10 +29,10 @@ RSpec.describe API::V1::ImagesController, type: :controller do
           }
         end
 
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "creates an Image" do
-          expect { subject }.to change { Image.count }.from(0).to(1)
+          expect { subject }.to change { Image.count }.by(1)
         end
 
         it "sets the new Image's caption" do
@@ -44,7 +44,7 @@ RSpec.describe API::V1::ImagesController, type: :controller do
         # expect?
         it "saves the image" do
           expect { subject }.to(
-            change { ActiveStorage::Blob.count }.from(0).to(1)
+            change { ActiveStorage::Blob.count }.by(1)
           )
         end
 
@@ -85,10 +85,10 @@ RSpec.describe API::V1::ImagesController, type: :controller do
           }
         end
 
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "creates an Image" do
-          expect { subject }.to change { Image.count }.from(0).to(1)
+          expect { subject }.to change { Image.count }.by(1)
         end
 
         it "ignores the ID parameter" do
@@ -115,11 +115,11 @@ RSpec.describe API::V1::ImagesController, type: :controller do
         end
 
         it "doesn't create the Image" do
-          expect { subject }.not_to change { Image.count }.from(0)
+          expect { subject }.not_to change { Image.count }
         end
 
         it "doesn't save the image file" do
-          expect { subject }.not_to change { ActiveStorage::Blob.count }.from(0)
+          expect { subject }.not_to change { ActiveStorage::Blob.count }
         end
 
         it "returns an error message for the invalid image file" do
@@ -146,11 +146,11 @@ RSpec.describe API::V1::ImagesController, type: :controller do
         end
 
         it "doesn't create the Image" do
-          expect { subject }.not_to change { Image.count }.from(0)
+          expect { subject }.not_to change { Image.count }
         end
 
         it "doesn't save the image file" do
-          expect { subject }.not_to change { ActiveStorage::Blob.count }.from(0)
+          expect { subject }.not_to change { ActiveStorage::Blob.count }
         end
 
         it "returns an error message for the invalid image file" do
@@ -178,11 +178,11 @@ RSpec.describe API::V1::ImagesController, type: :controller do
       end
 
       it "doesn't create the Image" do
-        expect { subject }.not_to change { Image.count }.from(0)
+        expect { subject }.not_to change { Image.count }
       end
 
       it "doesn't save the image file" do
-        expect { subject }.not_to change { ActiveStorage::Blob.count }.from(0)
+        expect { subject }.not_to change { ActiveStorage::Blob.count }
       end
 
       it "returns an error message asking the user to authenticate" do

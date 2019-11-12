@@ -17,10 +17,10 @@ RSpec.describe API::V1::SearchController, type: :controller do
   end
 
   describe "GET search" do
+    subject { get(:multisearch, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the universe" do
-      before do
-        authenticate(collaborator)
-      end
+      before { authenticate(collaborator) }
 
       context "when there is a matching Character model" do
         let!(:character) do
@@ -33,18 +33,12 @@ RSpec.describe API::V1::SearchController, type: :controller do
             universe: universe1,
           )
         end
+        let(:params) { { universe_id: universe1.id, terms: "adven" } }
 
-        before do
-          get(
-            :multisearch,
-            format: :json,
-            params: { universe_id: universe1.id, terms: "adven" },
-          )
-        end
-
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "finds matches on the Character model" do
+          subject
           expect(json["matches"]).to eq([
             "id" => character.id,
             "name" => character.name,
@@ -68,18 +62,12 @@ RSpec.describe API::V1::SearchController, type: :controller do
             universe: universe1,
           )
         end
+        let(:params) { { universe_id: universe1.id, terms: "adven" } }
 
-        before do
-          get(
-            :multisearch,
-            format: :json,
-            params: { universe_id: universe1.id, terms: "adven" },
-          )
-        end
-
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "finds matches on the Location model" do
+          subject
           expect(json["matches"]).to eq([
             "id" => location.id,
             "name" => location.name,
@@ -98,18 +86,12 @@ RSpec.describe API::V1::SearchController, type: :controller do
         let!(:character_item) do
           create :character_item, character: character, item: item
         end
+        let(:params) { { universe_id: universe1.id, terms: "adven" } }
 
-        before do
-          get(
-            :multisearch,
-            format: :json,
-            params: { universe_id: universe1.id, terms: "adven" },
-          )
-        end
-
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "returns the attached Character with the Item's name as the highlight" do
+          subject
           expect(json["matches"]).to eq([
             "id" => character.id,
             "name" => character.name,
@@ -125,18 +107,12 @@ RSpec.describe API::V1::SearchController, type: :controller do
         let!(:character_trait) do
           create :character_trait, character: character, trait: trait
         end
+        let(:params) { { universe_id: universe1.id, terms: "adven" } }
 
-        before do
-          get(
-            :multisearch,
-            format: :json,
-            params: { universe_id: universe1.id, terms: "adven" },
-          )
-        end
-
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "returns the attached Character with the Trait's name as the highlight" do
+          subject
           expect(json["matches"]).to eq([
             "id" => character.id,
             "name" => character.name,
@@ -153,18 +129,12 @@ RSpec.describe API::V1::SearchController, type: :controller do
         let!(:location2) do
           create :location, name: "Adventure Station", universe: universe2
         end
+        let(:params) { { universe_id: universe1.id, terms: "adven" } }
 
-        before do
-          get(
-            :multisearch,
-            format: :json,
-            params: { universe_id: universe1.id, terms: "adven" },
-          )
-        end
-
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "only returns matches to models in the requested universe" do
+          subject
           matched_model_ids = json["matches"].map { |match| match["id"] }
           expect(matched_model_ids).not_to include(location2.id)
         end
@@ -178,18 +148,12 @@ RSpec.describe API::V1::SearchController, type: :controller do
         let!(:character_item) do
           create :character_item, character: character, item: item
         end
+        let(:params) { { universe_id: universe1.id, terms: "adven" } }
 
-        before do
-          get(
-            :multisearch,
-            format: :json,
-            params: { universe_id: universe1.id, terms: "adven" },
-          )
-        end
-
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "only returns the Character once" do
+          subject
           expect(json["matches"].length).to eq(1)
           expect(json["matches"].first["id"]).to eq(character.id)
         end
@@ -202,6 +166,7 @@ RSpec.describe API::V1::SearchController, type: :controller do
         # 2. it breaks on special characters, so "Adventurer's Kit" returns an
         # unintuitive highlight of "Adventurer"
         it "returns the Character with the highlights combined" do
+          subject
           expect(json["matches"].first["highlights"]).to match_array([
             "<strong>Adven</strong> description",
             "<strong>Adventurer</strong>",
@@ -211,16 +176,13 @@ RSpec.describe API::V1::SearchController, type: :controller do
     end
 
     context "when the user is authenticated as a user who doesn't have access to the universe" do
-      before do
-        authenticate(create(:user))
-        get(:multisearch, format: :json, params: { universe_id: universe1.id })
-      end
+      before { authenticate(create(:user)) }
+      let(:params) { { universe_id: universe1.id } }
 
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:forbidden)
-      end
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "returns an error message indicating this user can't interact with the universe" do
+        subject
         expect(json["errors"]).to(
           eq([<<~MESSAGE.squish])
             You must be an owner or collaborator for the universe with ID
@@ -231,15 +193,12 @@ RSpec.describe API::V1::SearchController, type: :controller do
     end
 
     context "when the user isn't authenticated" do
-      before do
-        get(:multisearch, format: :json, params: { universe_id: universe1.id })
-      end
+      let(:params) { { universe_id: universe1.id } }
 
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

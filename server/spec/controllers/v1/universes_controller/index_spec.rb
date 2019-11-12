@@ -22,14 +22,15 @@ RSpec.describe API::V1::UniversesController, type: :controller do
   end
 
   describe "GET index" do
+    subject { get(:index, format: :json) }
+
     context "when the user is authenticated" do
       before { authenticate(owner1) }
 
       context "when all universes exist" do
-        before { get(:index, format: :json) }
-
         RSpec.shared_examples "universe JSON properties" do |property|
           it "returns all the universes' #{property.to_s.pluralize}" do
+            subject
             expected_values = [
               universe1.send(property),
               universe2.send(property),
@@ -45,11 +46,10 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         include_examples "universe JSON properties", :id
         include_examples "universe JSON properties", :name
 
-        it "returns a success HTTP status code" do
-          expect(response).to have_http_status(:success)
-        end
+        it { is_expected.to have_http_status(:success) }
 
         it "returns the universes' owner information" do
+          subject
           owner_information = json.collect { |universe| universe["owner"] }
           expect(owner_information).to match_array([
             {
@@ -74,9 +74,8 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           universe3.save!
         end
 
-        before { get(:index, format: :json) }
-
         it "doesn't appear in the returned results" do
+          subject
           universe_names = json.collect { |universe| universe["name"] }
           expect(universe_names).to match_array(["Milky Way", "Andromeda"])
         end
@@ -87,9 +86,8 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           universe3.discard!
         end
 
-        before { get(:index, format: :json) }
-
         it "doesn't appear in the returned results" do
+          subject
           universe_names = json.collect { |universe| universe["name"] }
           expect(universe_names).to match_array(["Milky Way", "Andromeda"])
         end
@@ -97,13 +95,10 @@ RSpec.describe API::V1::UniversesController, type: :controller do
     end
 
     context "when the user isn't authenticated" do
-      before { get(:index, format: :json) }
-
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

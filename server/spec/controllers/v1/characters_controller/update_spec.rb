@@ -33,13 +33,11 @@ RSpec.describe API::V1::CharactersController, type: :controller do
     original_universe.save!
   end
 
-  subject { put(:update, format: :json, params: params) }
-
   describe "PUT/PATCH update" do
+    subject { put(:update, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the character's original universe" do
-      before do
-        authenticate(collaborator)
-      end
+      before { authenticate(collaborator) }
 
       context "when the character exists" do
         context "when the parameters are valid" do
@@ -47,22 +45,13 @@ RSpec.describe API::V1::CharactersController, type: :controller do
             {
               id: character.id,
               character: {
-                id: -1,
                 name: "Improved Character",
                 description: "Improved description.",
               },
             }
           end
 
-          it "returns a successful HTTP status code" do
-            subject
-            expect(response).to have_http_status(:success)
-          end
-
-          it "doesn't update the character's ID" do
-            subject
-            expect(character.reload.id).not_to eq(-1)
-          end
+          it { is_expected.to have_http_status(:success) }
 
           it "updates the character's name" do
             subject
@@ -135,10 +124,7 @@ RSpec.describe API::V1::CharactersController, type: :controller do
         context "when the name parameter isn't valid" do
           let(:params) { { id: character.id, character: { name: "" } } }
 
-          it "returns a Bad Request status" do
-            subject
-            expect(response).to have_http_status(:bad_request)
-          end
+          it { is_expected.to have_http_status(:bad_request) }
 
           it "doesn't update the character's name" do
             subject

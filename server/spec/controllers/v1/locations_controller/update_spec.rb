@@ -25,10 +25,10 @@ RSpec.describe API::V1::LocationsController, type: :controller do
   end
 
   describe "PUT/PATCH update" do
+    subject { put(:update, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the location's original universe" do
-      before do
-        authenticate(collaborator)
-      end
+      before { authenticate(collaborator) }
 
       context "when the location exists" do
         context "when the parameters are valid" do
@@ -36,7 +36,6 @@ RSpec.describe API::V1::LocationsController, type: :controller do
             {
               id: location.id,
               location: {
-                id: -1,
                 universe_id: new_universe.id,
                 name: "Improved Location",
                 description: "Improved description.",
@@ -44,77 +43,68 @@ RSpec.describe API::V1::LocationsController, type: :controller do
             }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:location_json) { json["location"] }
-
-          it "returns a successful HTTP status code" do
-            expect(response).to have_http_status(:success)
-          end
-
-          it "doesn't update the location's ID" do
-            expect(location.reload.id).not_to eq(-1)
-          end
+          it { is_expected.to have_http_status(:success) }
 
           it "updates the location's name" do
+            subject
             expect(location.reload.name).to eq("Improved Location")
           end
 
           it "ignores any attempt to change the location's universe" do
+            subject
             expect(location.reload.universe).to eq(original_universe)
           end
 
           it "updates the location's description" do
+            subject
             expect(location.reload.description).to eq("Improved description.")
           end
 
           it "returns the location's ID" do
-            expect(location_json["id"]).to eq(location.id)
+            subject
+            expect(json["location"]["id"]).to eq(location.id)
           end
 
           it "returns the location's new name" do
-            expect(location_json["name"]).to eq("Improved Location")
+            subject
+            expect(json["location"]["name"]).to eq("Improved Location")
           end
 
           it "returns the location's new description" do
-            expect(location_json["description"]).to eq("Improved description.")
+            subject
+            expect(json["location"]["description"]).to(
+              eq("Improved description.")
+            )
           end
         end
 
         context "when the name parameter isn't valid" do
           let(:params) { { id: location.id, location: { name: "" } } }
 
-          before { put(:update, format: :json, params: params) }
-          subject(:errors) { json["errors"] }
-
-          it "returns a Bad Request status" do
-            expect(response).to have_http_status(:bad_request)
-          end
+          it { is_expected.to have_http_status(:bad_request) }
 
           it "doesn't update the location's name" do
-            expect(location.reload.name).to eq("Original Location")
+            expect { subject }.not_to change { location.reload.name }
           end
 
           it "returns an error message for the invalid name" do
-            expect(errors).to eq(["Name can't be blank"])
+            subject
+            expect(json["errors"]).to eq(["Name can't be blank"])
           end
         end
 
         context "when the description parameter isn't valid" do
           let(:params) { { id: location.id, location: { description: "" } } }
 
-          before { put(:update, format: :json, params: params) }
-          subject(:errors) { json["errors"] }
-
-          it "returns a Bad Request status" do
-            expect(response).to have_http_status(:bad_request)
-          end
+          it { is_expected.to have_http_status(:bad_request) }
 
           it "doesn't update the location's description" do
-            expect(location.reload.description).to eq("Original description.")
+            expect { subject }.not_to change { location.reload.description }
           end
 
           it "returns an error message for the invalid description" do
-            expect(errors).to eq(["Description can't be blank"])
+            subject
+            expect(json["errors"]).to eq(["Description can't be blank"])
           end
         end
 
@@ -129,25 +119,18 @@ RSpec.describe API::V1::LocationsController, type: :controller do
             }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:location_json) { json["location"] }
-
-          it "returns a successful HTTP status code" do
-            expect(response).to have_http_status(:success)
-          end
+          it { is_expected.to have_http_status(:success) }
 
           it "ignores any attempt to change the location's universe" do
-            expect(location.reload.universe).to eq(original_universe)
+            expect { subject }.not_to change { location.reload.universe }
           end
         end
       end
 
       context "when the location doesn't exist" do
-        before { put(:update, format: :json, params: { id: -1 }) }
+        let(:params) { { id: -1 } }
 
-        it "responds with a Not Found HTTP status code" do
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "returns an error message indicating the location doesn't exist" do
           subject

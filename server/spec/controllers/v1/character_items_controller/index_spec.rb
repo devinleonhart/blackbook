@@ -66,10 +66,7 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
           expect(received_values).to match_array(expected_values)
         end
 
-        it "returns a success HTTP status code" do
-          subject
-          expect(response).to have_http_status(:success)
-        end
+        it { is_expected.to have_http_status(:success) }
       end
 
       context "and the requested character isn't in that universe" do
@@ -79,10 +76,7 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
           { universe_id: universe.id, character_id: non_universe_character.id }
         end
 
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "returns an error message for the character not belonging to the universe" do
           subject
@@ -95,20 +89,14 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
     end
 
     context "when the user is authenticated as a user who doesn't have access to the universe" do
-      before do
-        authenticate(create(:user))
-        get(
-          :index,
-          format: :json,
-          params: { universe_id: universe.id, character_id: character1.id }
-        )
-      end
+      before { authenticate(create(:user)) }
 
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:forbidden)
-      end
+      let(:params) { { universe_id: universe.id, character_id: character1.id } }
+
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "returns an error message indicating this user can't interact with the universe" do
+        subject
         expect(json["errors"]).to(
           eq([<<~MESSAGE.squish])
             You must be an owner or collaborator for the universe with ID
@@ -119,19 +107,12 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
     end
 
     context "when the user isn't authenticated" do
-      before do
-        get(
-          :index,
-          format: :json,
-          params: { universe_id: universe.id, character_id: character1.id },
-        )
-      end
+      let(:params) { { universe_id: universe.id, character_id: character1.id } }
 
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

@@ -26,7 +26,7 @@ RSpec.describe API::V1::ImageTagsController, type: :controller do
       context "when the image_tag exists" do
         let(:params) { { id: image_tag.id } }
 
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "returns the image_tag's ID" do
           subject

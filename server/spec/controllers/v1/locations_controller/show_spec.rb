@@ -23,34 +23,37 @@ RSpec.describe API::V1::LocationsController, type: :controller do
   end
 
   describe "GET show" do
+    subject { get(:show, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the universe" do
       before { authenticate(collaborator) }
 
       context "when the location exists" do
-        before { get(:show, format: :json, params: { id: location.id }) }
-        subject(:location_json) { json["location"] }
+        let(:params) { { id: location.id } }
 
         it "returns the location's ID" do
-          expect(location_json["id"]).to eq(location.id)
+          subject
+          expect(json["location"]["id"]).to eq(location.id)
         end
 
         it "returns the location's name" do
-          expect(location_json["name"]).to eq("Store")
+          subject
+          expect(json["location"]["name"]).to eq("Store")
         end
 
         it "returns the location's description" do
-          expect(location_json["description"]).to eq("Good deals here.")
+          subject
+          expect(json["location"]["description"]).to eq("Good deals here.")
         end
       end
 
       context "when the location doesn't exist" do
-        before { get(:show, format: :json, params: { id: -1 }) }
+        let(:params) { { id: -1 } }
 
-        it "responds with a Not Found HTTP status code" do
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "returns an error message indicating the location doesn't exist" do
+          subject
           expect(json["errors"]).to eq([
             "No location with ID -1 exists.",
           ])
@@ -59,33 +62,30 @@ RSpec.describe API::V1::LocationsController, type: :controller do
     end
 
     context "when the user is authenticated as a user without an association with the universe" do
-      before do
-        authenticate(create(:user))
-        get(:show, format: :json, params: { id: -1 })
+      before { authenticate(create(:user)) }
 
-        it "returns a forbidden HTTP status code" do
-          expect(response).to have_http_status(:forbidden)
-        end
+      let(:params) { { id: location.id } }
 
-        it "returns an error message indicating only the owner or a collaborator can view the universe" do
-          expect(json["errors"]).to(
-            eq([<<~MESSAGE.strip])
-              You must be an owner or collaborator for the universe with ID
-              #{universe.id} to interact with its locations.
-            MESSAGE
-          )
-        end
+      it { is_expected.to have_http_status(:forbidden) }
+
+      it "returns an error message indicating only the owner or a collaborator can view the universe" do
+        subject
+        expect(json["errors"]).to(
+          eq([<<~MESSAGE.squish])
+            You must be an owner or collaborator for the universe with ID
+            #{universe.id} to interact with its locations.
+          MESSAGE
+        )
       end
     end
 
     context "when the user isn't authenticated" do
-      before { get(:show, format: :json, params: { id: location.id }) }
+      let(:params) { { id: location.id } }
 
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

@@ -20,14 +20,16 @@ RSpec.describe API::V1::LocationsController, type: :controller do
   end
 
   describe "GET index" do
+    subject { get(:index, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the universe" do
-      before do
-        authenticate(collaborator)
-        get(:index, format: :json, params: { universe_id: universe1.id })
-      end
+      before { authenticate(collaborator) }
+
+      let(:params) { { universe_id: universe1.id } }
 
       RSpec.shared_examples "location JSON properties" do |property|
         it "returns the #{property.to_s.pluralize} for only locations belonging to the given universe" do
+          subject
           expected_values = [
             location1.send(property),
             location2.send(property),
@@ -40,22 +42,18 @@ RSpec.describe API::V1::LocationsController, type: :controller do
       include_examples "location JSON properties", :id
       include_examples "location JSON properties", :name
 
-      it "returns a success HTTP status code" do
-        expect(response).to have_http_status(:success)
-      end
+      it { is_expected.to have_http_status(:success) }
     end
 
     context "when the user is authenticated as a user who doesn't have access to the universe" do
-      before do
-        authenticate(create(:user))
-        get(:index, format: :json, params: { universe_id: universe1.id })
-      end
+      before { authenticate(create(:user)) }
 
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:forbidden)
-      end
+      let(:params) { { universe_id: universe1.id } }
+
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "returns an error message indicating this user can't interact with the universe" do
+        subject
         expect(json["errors"]).to(
           eq([<<~MESSAGE.squish])
             You must be an owner or collaborator for the universe with ID
@@ -66,15 +64,12 @@ RSpec.describe API::V1::LocationsController, type: :controller do
     end
 
     context "when the user isn't authenticated" do
-      before do
-        get(:index, format: :json, params: { universe_id: universe1.id })
-      end
+      let(:params) { { universe_id: universe1.id } }
 
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

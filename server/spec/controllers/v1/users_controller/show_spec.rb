@@ -23,7 +23,7 @@ RSpec.describe API::V1::UsersController, type: :controller do
       context "when the user exists" do
         let(:params) { { id: user.id } }
 
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "returns the user's ID" do
           subject

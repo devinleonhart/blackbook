@@ -16,6 +16,8 @@ RSpec.describe API::V1::LocationsController, type: :controller do
   end
 
   describe "POST create" do
+    subject { post(:create, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the parent universe" do
       before { authenticate(collaborator) }
 
@@ -24,43 +26,43 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           {
             universe_id: universe.id,
             location: {
-              id: -1,
               name: "Home",
               description: "Is where the heart is.",
             },
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:location) { Location.first }
-        subject(:location_json) { json["location"] }
+        it { is_expected.to have_http_status(:success) }
 
-        it "returns a successful HTTP status code" do
-          expect(response).to have_http_status(:success)
-        end
-
-        it "ignores the id parameter" do
-          expect(location.id).not_to eq(-1)
+        it "creates a new Location" do
+          expect { subject }.to change { Location.count }.by(1)
         end
 
         it "sets the new location's name" do
-          expect(location.name).to eq("Home")
+          subject
+          expect(Location.first.name).to eq("Home")
         end
 
         it "sets the new location's description" do
-          expect(location.description).to eq("Is where the heart is.")
+          subject
+          expect(Location.first.description).to eq("Is where the heart is.")
         end
 
         it "returns the new location's ID" do
-          expect(location_json["id"]).to eq(location.id)
+          subject
+          expect(json["location"]["id"]).to eq(Location.first.id)
         end
 
         it "returns the new location's name" do
-          expect(location_json["name"]).to eq("Home")
+          subject
+          expect(json["location"]["name"]).to eq("Home")
         end
 
         it "returns the new location's description" do
-          expect(location_json["description"]).to eq("Is where the heart is.")
+          subject
+          expect(json["location"]["description"]).to(
+            eq("Is where the heart is.")
+          )
         end
       end
 
@@ -75,20 +77,15 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:location) { Location.first }
-        subject(:errors) { json["errors"] }
-
-        it "returns a Bad Request status" do
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the location" do
-          expect(location).to be_nil
+          expect { subject }.not_to change { Location.count }
         end
 
         it "returns an error message for the invalid name" do
-          expect(errors).to eq(["Name can't be blank"])
+          subject
+          expect(json["errors"]).to eq(["Name can't be blank"])
         end
       end
 
@@ -103,20 +100,15 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:location) { Location.first }
-        subject(:errors) { json["errors"] }
-
-        it "returns a Bad Request status" do
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the location" do
-          expect(location).to be_nil
+          expect { subject }.not_to change { Location.count }
         end
 
         it "returns an error message for the invalid name" do
-          expect(errors).to eq(["Description can't be blank"])
+          subject
+          expect(json["errors"]).to eq(["Description can't be blank"])
         end
       end
 
@@ -131,20 +123,15 @@ RSpec.describe API::V1::LocationsController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:location) { Location.first }
-        subject(:errors) { json["errors"] }
-
-        it "returns a Bad Request status" do
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "doesn't create the location" do
-          expect(location).to be_nil
+          expect { subject }.not_to change { Location.count }
         end
 
         it "returns an error message for the invalid universe ID" do
-          expect(errors).to eq(["No universe with ID -1 exists."])
+          subject
+          expect(json["errors"]).to eq(["No universe with ID -1 exists."])
         end
       end
     end
@@ -154,27 +141,22 @@ RSpec.describe API::V1::LocationsController, type: :controller do
         {
           universe_id: universe.id,
           location: {
-            id: -1,
             name: "Home",
             description: "Is where the heart is.",
           },
         }
       end
 
-      before do
-        authenticate(not_owner)
-        post(:create, format: :json, params: params)
-      end
+      before { authenticate(not_owner) }
 
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:forbidden)
-      end
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "doesn't create a new Location" do
-        expect(Location.count).to eq(0)
+        expect { subject }.not_to change { Location.count }
       end
 
       it "returns an error message informing the user they don't have access" do
+        subject
         expect(json["errors"]).to(
           eq([<<~MESSAGE.squish])
             You must be an owner or collaborator for the universe with ID
@@ -189,24 +171,20 @@ RSpec.describe API::V1::LocationsController, type: :controller do
         {
           universe_id: universe.id,
           location: {
-            id: -1,
             name: "Home",
             description: "Is where the heart is.",
           },
         }
       end
 
-      before { post(:create, format: :json, params: params) }
-
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "doesn't create a new Location" do
-        expect(Location.count).to eq(0)
+        expect { subject }.not_to change { Location.count }
       end
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

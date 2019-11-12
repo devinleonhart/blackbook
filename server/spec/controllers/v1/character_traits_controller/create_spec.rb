@@ -33,10 +33,7 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           }
         end
 
-        it "returns a successful HTTP status code" do
-          subject
-          expect(response).to have_http_status(:success)
-        end
+        it { is_expected.to have_http_status(:success) }
 
         it "sets the new CharacterTrait's trait to the existing Trait" do
           subject
@@ -63,13 +60,10 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           }
         end
 
-        it "returns a successful HTTP status code" do
-          subject
-          expect(response).to have_http_status(:success)
-        end
+        it { is_expected.to have_http_status(:success) }
 
         it "creates a new Trait with the requested name" do
-          subject
+          expect { subject }.to change { Trait.count }.by(1)
           expect(Trait.last.name).to eq("Adventurous")
         end
 
@@ -99,13 +93,10 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           }
         end
 
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the CharacterTrait" do
-          expect { subject }.not_to change { CharacterTrait.count }.from(0)
+          expect { subject }.not_to change { CharacterTrait.count }
         end
 
         it "returns an error message for the invalid name" do
@@ -123,13 +114,10 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           }
         end
 
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "doesn't create the CharacterTrait" do
-          expect { subject }.not_to change { CharacterTrait.count }.from(0)
+          expect { subject }.not_to change { CharacterTrait.count }
         end
 
         it "returns an error message for the invalid universe ID" do
@@ -147,13 +135,10 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           }
         end
 
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the CharacterTrait" do
-          expect { subject }.not_to change { CharacterTrait.count }.from(0)
+          expect { subject }.not_to change { CharacterTrait.count }
         end
 
         it "returns an error message for the invalid character ID" do
@@ -169,13 +154,10 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
           { universe_id: universe.id, character_id: non_universe_character.id }
         end
 
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create a new CharacterTrait" do
-          expect { subject }.not_to change { CharacterTrait.count }.from(0)
+          expect { subject }.not_to change { CharacterTrait.count }
         end
 
         it "returns an error message for the character not belonging to the universe" do
@@ -199,13 +181,10 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
 
       before { authenticate(not_owner) }
 
-      it "returns an unauthorized HTTP status code" do
-        subject
-        expect(response).to have_http_status(:forbidden)
-      end
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "doesn't create a new CharacterTrait" do
-        expect { subject }.not_to change { CharacterTrait.count }.from(0)
+        expect { subject }.not_to change { CharacterTrait.count }
       end
 
       it "returns an error message informing the user they don't have access" do
@@ -228,13 +207,10 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
         }
       end
 
-      it "returns an unauthorized HTTP status code" do
-        subject
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "doesn't create a new CharacterTrait" do
-        expect { subject }.not_to change { CharacterTrait.count }.from(0)
+        expect { subject }.not_to change { CharacterTrait.count }
       end
 
       it "returns an error message asking the user to authenticate" do

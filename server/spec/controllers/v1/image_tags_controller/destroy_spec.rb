@@ -24,10 +24,10 @@ RSpec.describe API::V1::ImageTagsController, type: :controller do
       context "when the image_tag exists" do
         let(:params) { { id: image_tag.id } }
 
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "deletes the image_tag" do
-          expect { subject }.to change { ImageTag.count }.from(1).to(0)
+          expect { subject }.to change { ImageTag.count }.by(-1)
         end
       end
 
@@ -59,7 +59,7 @@ RSpec.describe API::V1::ImageTagsController, type: :controller do
       end
 
       it "doesn't delete the ImageTag" do
-        expect { subject }.not_to change { ImageTag.count }.from(1)
+        expect { subject }.not_to change { ImageTag.count }
       end
 
       it "returns an error message informing the user they don't have access" do
@@ -82,7 +82,7 @@ RSpec.describe API::V1::ImageTagsController, type: :controller do
       end
 
       it "doesn't destroy the image_tag" do
-        expect { subject }.not_to change { ImageTag.count }.from(1)
+        expect { subject }.not_to change { ImageTag.count }
       end
 
       it "returns an error message asking the user to authenticate" do

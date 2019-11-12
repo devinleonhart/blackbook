@@ -30,7 +30,7 @@ RSpec.describe API::V1::ImagesController, type: :controller do
       context "when the image exists" do
         let(:params) { { id: image.id } }
 
-        include_examples "returns a success HTTP status code"
+        it { is_expected.to have_http_status(:success) }
 
         it "returns the image's ID" do
           subject

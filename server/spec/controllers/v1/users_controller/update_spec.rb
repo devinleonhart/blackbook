@@ -24,7 +24,7 @@ RSpec.describe API::V1::UsersController, type: :controller do
             }
           end
 
-          include_examples "returns a success HTTP status code"
+          it { is_expected.to have_http_status(:success) }
 
           it "updates the user's avatar" do
             expect { subject }.to(
@@ -61,7 +61,7 @@ RSpec.describe API::V1::UsersController, type: :controller do
             }
           end
 
-          include_examples "returns a success HTTP status code"
+          it { is_expected.to have_http_status(:success) }
 
           it "ignores the ID parameter" do
             expect { subject }.not_to(change { user.reload.id })

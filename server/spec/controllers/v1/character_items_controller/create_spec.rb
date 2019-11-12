@@ -17,43 +17,40 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
   end
 
   describe "POST create" do
+    subject { post(:create, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the parent universe" do
       before { authenticate(collaborator) }
 
       context "when the named item exists" do
         let!(:item) { create :item, name: "Windy Woof" }
-
         let(:params) do
           {
             universe_id: universe.id,
             character_id: character.id,
-            character_item: { id: -1, item_name: "Windy Woof" },
+            character_item: { item_name: "Windy Woof" },
           }
         end
 
-        before { post(:create, format: :json, params: params) }
+        it { is_expected.to have_http_status(:success) }
 
-        subject(:character_item) { CharacterItem.first }
-        subject(:character_item_json) { json["character_item"] }
-
-        it "returns a successful HTTP status code" do
-          expect(response).to have_http_status(:success)
-        end
-
-        it "ignores the id parameter" do
-          expect(character_item.id).not_to eq(-1)
+        it "creates a new CharacterItem" do
+          expect { subject }.to change { CharacterItem.count }.by(1)
         end
 
         it "sets the new CharacterItem's item to the existing Item" do
-          expect(character_item.item_id).to eq(item.id)
+          subject
+          expect(CharacterItem.first.item_id).to eq(item.id)
         end
 
         it "returns the new CharacterItem's ID" do
-          expect(character_item_json["id"]).to eq(character_item.id)
+          subject
+          expect(json["character_item"]["id"]).to eq(CharacterItem.first.id)
         end
 
         it "returns the new CharacterItem's item name" do
-          expect(character_item_json["name"]).to eq("Windy Woof")
+          subject
+          expect(json["character_item"]["name"]).to eq("Windy Woof")
         end
       end
 
@@ -62,38 +59,31 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
           {
             universe_id: universe.id,
             character_id: character.id,
-            character_item: { id: -1, item_name: "Windy Woof" },
+            character_item: { item_name: "Windy Woof" },
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-
-        subject(:character_item) { CharacterItem.first }
-        subject(:character_item_json) { json["character_item"] }
-
-        it "returns a successful HTTP status code" do
-          expect(response).to have_http_status(:success)
-        end
-
-        it "ignores the id parameter" do
-          expect(character_item.id).not_to eq(-1)
-        end
+        it { is_expected.to have_http_status(:success) }
 
         it "creates a new Item with the requested name" do
+          expect { subject }.to change { Item.count }.by(1)
           expect(Item.last.name).to eq("Windy Woof")
         end
 
         it "assigns the new Item to the new CharacterItem" do
+          subject
           new_item = Item.find_by(name: "Windy Woof")
-          expect(character_item.item).to eq(new_item)
+          expect(CharacterItem.first.item).to eq(new_item)
         end
 
         it "returns the new CharacterItem's ID" do
-          expect(character_item_json["id"]).to eq(character_item.id)
+          subject
+          expect(json["character_item"]["id"]).to eq(CharacterItem.first.id)
         end
 
         it "returns the new CharacterItem's item name" do
-          expect(character_item_json["name"]).to eq("Windy Woof")
+          subject
+          expect(json["character_item"]["name"]).to eq("Windy Woof")
         end
       end
 
@@ -106,20 +96,15 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:character_item) { CharacterItem.first }
-        subject(:errors) { json["errors"] }
-
-        it "returns a Bad Request status" do
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the CharacterItem" do
-          expect(character_item).to be_nil
+          expect { subject }.not_to change { CharacterItem.count }
         end
 
         it "returns an error message for the invalid name" do
-          expect(errors).to eq(["Name can't be blank"])
+          subject
+          expect(json["errors"]).to eq(["Name can't be blank"])
         end
       end
 
@@ -132,20 +117,15 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:character_item) { CharacterItem.first }
-        subject(:errors) { json["errors"] }
-
-        it "returns a Bad Request status" do
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "doesn't create the CharacterItem" do
-          expect(character_item).to be_nil
+          expect { subject }.not_to change { CharacterItem.count }
         end
 
         it "returns an error message for the invalid universe ID" do
-          expect(errors).to eq(["No universe with ID -1 exists."])
+          subject
+          expect(json["errors"]).to eq(["No universe with ID -1 exists."])
         end
       end
 
@@ -158,20 +138,15 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
           }
         end
 
-        before { post(:create, format: :json, params: params) }
-        subject(:character_item) { CharacterItem.first }
-        subject(:errors) { json["errors"] }
-
-        it "returns a Bad Request status" do
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the CharacterItem" do
-          expect(character_item).to be_nil
+          expect { subject }.not_to change { CharacterItem.count }
         end
 
         it "returns an error message for the invalid character ID" do
-          expect(errors).to eq(["Character must exist"])
+          subject
+          expect(json["errors"]).to eq(["Character must exist"])
         end
       end
 
@@ -186,12 +161,7 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
           }
         end
 
-        subject { post(:create, format: :json, params: params) }
-
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the CharacterItem" do
           expect { subject }.not_to change { CharacterItem.count }.from(0)
@@ -216,20 +186,16 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
         }
       end
 
-      before do
-        authenticate(not_owner)
-        post(:create, format: :json, params: params)
-      end
+      before { authenticate(not_owner) }
 
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:forbidden)
-      end
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "doesn't create a new CharacterItem" do
-        expect(CharacterItem.count).to eq(0)
+        expect { subject }.not_to change { CharacterItem.count }
       end
 
       it "returns an error message informing the user they don't have access" do
+        subject
         expect(json["errors"]).to(
           eq([<<~MESSAGE.squish])
             You must be an owner or collaborator for the universe with ID
@@ -248,17 +214,14 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
         }
       end
 
-      before { post(:create, format: :json, params: params) }
-
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "doesn't create a new CharacterItem" do
-        expect(CharacterItem.count).to eq(0)
+        expect { subject }.not_to change { CharacterItem.count }
       end
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

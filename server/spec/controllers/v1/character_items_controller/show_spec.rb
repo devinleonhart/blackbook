@@ -20,30 +20,34 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
   end
 
   describe "GET show" do
+    subject { get(:show, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the universe" do
       before { authenticate(collaborator) }
 
       context "when the CharacterItem exists" do
-        before { get(:show, format: :json, params: { id: character_item.id }) }
-        subject(:character_item_json) { json["character_item"] }
+        let(:params) { { id: character_item.id } }
+
+        it { is_expected.to have_http_status(:success) }
 
         it "returns the CharacterItem's ID" do
-          expect(character_item_json["id"]).to eq(character_item.id)
+          subject
+          expect(json["character_item"]["id"]).to eq(character_item.id)
         end
 
         it "returns the CharacterItem's item name" do
-          expect(character_item_json["name"]).to eq("Cookies")
+          subject
+          expect(json["character_item"]["name"]).to eq("Cookies")
         end
       end
 
       context "when the CharacterItem doesn't exist" do
-        before { get(:show, format: :json, params: { id: -1 }) }
+        let(:params) { { id: -1 } }
 
-        it "responds with a Not Found HTTP status code" do
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "returns an error message indicating the CharacterItem doesn't exist" do
+          subject
           expect(json["errors"]).to eq([
             "No CharacterItem with ID -1 exists.",
           ])
@@ -52,33 +56,30 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
     end
 
     context "when the user is authenticated as a user without an association with the universe" do
-      before do
-        authenticate(create(:user))
-        get(:show, format: :json, params: { id: character_item.id })
+      before { authenticate(create(:user)) }
 
-        it "returns a forbidden HTTP status code" do
-          expect(response).to have_http_status(:forbidden)
-        end
+      let(:params) { { id: character_item.id } }
 
-        it "returns an error message indicating only the owner or a collaborator can view the universe" do
-          expect(json["errors"]).to(
-            eq([<<~MESSAGE.strip])
-              You must be an owner or collaborator for the universe with ID
-              #{universe.id} to interact with its characters' items.
-            MESSAGE
-          )
-        end
+      it { is_expected.to have_http_status(:forbidden) }
+
+      it "returns an error message indicating only the owner or a collaborator can view the universe" do
+        subject
+        expect(json["errors"]).to(
+          eq([<<~MESSAGE.squish])
+            You must be an owner or collaborator for the universe with ID
+            #{universe.id} to interact with its characters' items.
+          MESSAGE
+        )
       end
     end
 
     context "when the user isn't authenticated" do
-      before { get(:show, format: :json, params: { id: character_item.id }) }
+      let(:params) { { id: character_item.id } }
 
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

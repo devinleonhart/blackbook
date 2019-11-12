@@ -28,7 +28,7 @@ RSpec.describe API::V1::ImagesController, type: :controller do
             }
           end
 
-          include_examples "returns a success HTTP status code"
+          it { is_expected.to have_http_status(:success) }
 
           it "updates the image's caption" do
             subject
@@ -69,7 +69,7 @@ RSpec.describe API::V1::ImagesController, type: :controller do
             }
           end
 
-          include_examples "returns a success HTTP status code"
+          it { is_expected.to have_http_status(:success) }
 
           it "ignores the ID parameter" do
             expect { subject }.not_to(change { image.reload.id })
@@ -93,7 +93,7 @@ RSpec.describe API::V1::ImagesController, type: :controller do
             }
           end
 
-          include_examples "returns a success HTTP status code"
+          it { is_expected.to have_http_status(:success) }
 
           it "ignores the new image" do
             expect { subject }.not_to(

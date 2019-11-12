@@ -30,6 +30,8 @@ RSpec.describe API::V1::UniversesController, type: :controller do
   end
 
   describe "PUT/PATCH update" do
+    subject { put(:update, format: :json, params: params) }
+
     context "when the user is authenticated as the universe's original owner" do
       before { authenticate(original_owner) }
 
@@ -39,7 +41,6 @@ RSpec.describe API::V1::UniversesController, type: :controller do
             {
               id: universe.id,
               universe: {
-                id: -1,
                 owner_id: new_owner.id,
                 name: "Andromeda",
                 collaborator_ids: [new_collaborator1.id, new_collaborator2.id],
@@ -47,48 +48,46 @@ RSpec.describe API::V1::UniversesController, type: :controller do
             }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:universe_json) { json["universe"] }
-
-          it "returns a successful HTTP status code" do
-            expect(response).to have_http_status(:success)
-          end
-
-          it "doesn't update the universe's ID" do
-            expect(universe.reload.id).not_to eq(-1)
-          end
+          it { is_expected.to have_http_status(:success) }
 
           it "updates the universe's name" do
+            subject
             expect(universe.reload.name).to eq("Andromeda")
           end
 
           it "updates the universe's owner" do
+            subject
             expect(universe.reload.owner).to eq(new_owner)
           end
 
           it "updates the universe's collaborators" do
+            subject
             expect(universe.reload.collaborators).to(
               match_array([new_collaborator1, new_collaborator2])
             )
           end
 
           it "returns the universe's ID" do
-            expect(universe_json["id"]).to eq(universe.id)
+            subject
+            expect(json["universe"]["id"]).to eq(universe.id)
           end
 
           it "returns the universe's new name" do
-            expect(universe_json["name"]).to eq("Andromeda")
+            subject
+            expect(json["universe"]["name"]).to eq("Andromeda")
           end
 
           it "returns the universe's new owner's information" do
-            expect(universe_json["owner"]).to eq(
+            subject
+            expect(json["universe"]["owner"]).to eq(
               "id" => new_owner.id,
               "display_name" => new_owner.display_name,
             )
           end
 
           it "returns a list of the universe's new collaborators" do
-            expect(universe_json["collaborators"]).to eq([
+            subject
+            expect(json["universe"]["collaborators"]).to eq([
               {
                 "id" => new_collaborator1.id,
                 "display_name" => new_collaborator1.display_name,
@@ -101,7 +100,8 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           end
 
           it "returns a list of the universe's characters" do
-            expect(universe_json["characters"]).to eq([
+            subject
+            expect(json["universe"]["characters"]).to eq([
               {
                 "id" => character1.id,
                 "name" => character1.name,
@@ -114,7 +114,8 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           end
 
           it "returns a list of the universe's locations" do
-            expect(universe_json["locations"]).to eq([
+            subject
+            expect(json["universe"]["locations"]).to eq([
               {
                 "id" => location1.id,
                 "name" => location1.name,
@@ -138,21 +139,18 @@ RSpec.describe API::V1::UniversesController, type: :controller do
             }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:universe_json) { json["universe"] }
-
-          it "returns a successful HTTP status code" do
-            expect(response).to have_http_status(:success)
-          end
+          it { is_expected.to have_http_status(:success) }
 
           it "doesn't update the universe's collaborators" do
+            subject
             expect(universe.reload.collaborators).to(
               eq([original_collaborator])
             )
           end
 
           it "returns a list of the universe's previous collaborators" do
-            expect(universe_json["collaborators"]).to eq([
+            subject
+            expect(json["universe"]["collaborators"]).to eq([
               {
                 "id" => original_collaborator.id,
                 "display_name" => original_collaborator.display_name,
@@ -172,19 +170,15 @@ RSpec.describe API::V1::UniversesController, type: :controller do
             }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:errors) { json["errors"] }
-
-          it "returns a Bad Request status" do
-            expect(response).to have_http_status(:bad_request)
-          end
+          it { is_expected.to have_http_status(:bad_request) }
 
           it "doesn't update the universe's name" do
-            expect(universe.reload.name).to eq("Milky Way")
+            expect { subject }.not_to change { universe.reload.name }
           end
 
           it "returns an error message for the invalid name" do
-            expect(errors).to match_array([
+            subject
+            expect(json["errors"]).to match_array([
               "Name can't be blank",
               "Owner must exist",
             ])
@@ -196,29 +190,25 @@ RSpec.describe API::V1::UniversesController, type: :controller do
             { id: universe.id, universe: { collaborator_ids: [-1] } }
           end
 
-          before { put(:update, format: :json, params: params) }
-          subject(:errors) { json["errors"] }
-
-          it "returns a Bad Request status" do
-            expect(response).to have_http_status(:bad_request)
-          end
+          it { is_expected.to have_http_status(:bad_request) }
 
           it "doesn't update the universe's collaborators" do
-            expect(universe.reload.collaborators).to eq([original_collaborator])
+            expect { subject }.not_to change {
+              universe.reload.collaborators.map(&:id)
+            }
           end
 
           it "returns an error message for the invalid collaborator ID" do
-            expect(errors).to eq(["No User with ID [-1] exists."])
+            subject
+            expect(json["errors"]).to eq(["No User with ID [-1] exists."])
           end
         end
       end
 
       context "when the universe doesn't exist" do
-        before { put(:update, format: :json, params: { id: -1 }) }
+        let(:params) { { id: -1 } }
 
-        it "responds with a Not Found HTTP status code" do
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "returns an error message indicating the universe doesn't exist" do
           subject
@@ -229,6 +219,8 @@ RSpec.describe API::V1::UniversesController, type: :controller do
       end
 
       context "when the universe has been soft deleted" do
+        before { universe.discard! }
+
         let(:params) do
           {
             id: universe.id,
@@ -241,12 +233,7 @@ RSpec.describe API::V1::UniversesController, type: :controller do
           }
         end
 
-        before { universe.discard! }
-        before { put(:update, format: :json, params: params) }
-
-        it "responds with a Not Found HTTP status code" do
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
       end
     end
 
@@ -255,7 +242,6 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         {
           id: universe.id,
           universe: {
-            id: -1,
             owner_id: new_owner.id,
             name: "Andromeda",
             collaborator_ids: [new_collaborator1.id, new_collaborator2.id],
@@ -263,16 +249,12 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         }
       end
 
-      before do
-        authenticate(original_collaborator)
-        put(:update, format: :json, params: params)
-      end
+      before { authenticate(original_collaborator) }
 
-      it "returns a forbidden HTTP status code" do
-        expect(response).to have_http_status(:forbidden)
-      end
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "returns an error message indicating only the owner can change the universe" do
+        subject
         expect(json["errors"]).to(
           eq(["A universe can only be changed by its owner."])
         )
@@ -284,7 +266,6 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         {
           id: universe.id,
           universe: {
-            id: -1,
             owner_id: new_owner.id,
             name: "Andromeda",
             collaborator_ids: [new_collaborator1.id, new_collaborator2.id],
@@ -313,7 +294,6 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         {
           id: universe.id,
           universe: {
-            id: -1,
             owner_id: new_owner.id,
             name: "Andromeda",
             collaborator_ids: [new_collaborator1.id, new_collaborator2.id],
@@ -321,13 +301,10 @@ RSpec.describe API::V1::UniversesController, type: :controller do
         }
       end
 
-      before { put(:update, format: :json, params: params) }
-
-      it "returns an unauthorized HTTP status code" do
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "returns an error message asking the user to authenticate" do
+        subject
         expect(json["errors"]).to(
           eq(["You need to sign in or sign up before continuing."])
         )

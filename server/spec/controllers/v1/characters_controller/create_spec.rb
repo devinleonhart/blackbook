@@ -15,9 +15,9 @@ RSpec.describe API::V1::CharactersController, type: :controller do
     universe.save!
   end
 
-  subject { post(:create, format: :json, params: params) }
-
   describe "POST create" do
+    subject { post(:create, format: :json, params: params) }
+
     context "when the user is authenticated as a user with access to the parent universe" do
       before { authenticate(collaborator) }
 
@@ -26,35 +26,26 @@ RSpec.describe API::V1::CharactersController, type: :controller do
           {
             universe_id: universe.id,
             character: {
-              id: -1,
-              name: "Home",
-              description: "Is where the heart is.",
+              name: "Juliet Cannell",
+              description: "Happy-go-lucky.",
             },
           }
         end
 
-        it "returns a successful HTTP status code" do
-          subject
-          expect(response).to have_http_status(:success)
-        end
+        it { is_expected.to have_http_status(:success) }
 
         it "creates the character" do
-          expect { subject }.to change { Character.count }.from(0).to(1)
-        end
-
-        it "ignores the id parameter" do
-          subject
-          expect(Character.first.id).not_to eq(-1)
+          expect { subject }.to change { Character.count }.by(1)
         end
 
         it "sets the new character's name" do
           subject
-          expect(Character.first.name).to eq("Home")
+          expect(Character.first.name).to eq("Juliet Cannell")
         end
 
         it "sets the new character's description" do
           subject
-          expect(Character.first.description).to eq("Is where the heart is.")
+          expect(Character.first.description).to eq("Happy-go-lucky.")
         end
 
         it "returns the new character's ID" do
@@ -64,13 +55,13 @@ RSpec.describe API::V1::CharactersController, type: :controller do
 
         it "returns the new character's name" do
           subject
-          expect(json["character"]["name"]).to eq("Home")
+          expect(json["character"]["name"]).to eq("Juliet Cannell")
         end
 
         it "returns the new character's description" do
           subject
           expect(json["character"]["description"]).to(
-            eq("Is where the heart is.")
+            eq("Happy-go-lucky.")
           )
         end
 
@@ -96,18 +87,15 @@ RSpec.describe API::V1::CharactersController, type: :controller do
             universe_id: universe.id,
             character: {
               name: "",
-              description: "Is where the heart is.",
+              description: "Happy-go-lucky.",
             },
           }
         end
 
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the character" do
-          expect { subject }.not_to change { Character.count }.from(0)
+          expect { subject }.not_to change { Character.count }
         end
 
         it "returns an error message for the invalid name" do
@@ -121,19 +109,16 @@ RSpec.describe API::V1::CharactersController, type: :controller do
           {
             universe_id: universe.id,
             character: {
-              name: "Home",
+              name: "Juliet Cannell",
               description: "",
             },
           }
         end
 
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:bad_request)
-        end
+        it { is_expected.to have_http_status(:bad_request) }
 
         it "doesn't create the character" do
-          expect { subject }.not_to change { Character.count }.from(0)
+          expect { subject }.not_to change { Character.count }
         end
 
         it "returns an error message for the invalid name" do
@@ -147,20 +132,17 @@ RSpec.describe API::V1::CharactersController, type: :controller do
           {
             universe_id: -1,
             character: {
-              name: "Home",
-              description: "Is where the heart is.",
+              name: "Juliet Cannell",
+              description: "Happy-go-lucky.",
             },
           }
         end
 
-        it "returns a Bad Request status" do
-          subject
-          expect(response).to have_http_status(:not_found)
-        end
+        it { is_expected.to have_http_status(:not_found) }
 
         it "doesn't create the character" do
           subject
-          expect { subject }.not_to change { Character.count }.from(0)
+          expect { subject }.not_to change { Character.count }
         end
 
         it "returns an error message for the invalid universe ID" do
@@ -175,9 +157,8 @@ RSpec.describe API::V1::CharactersController, type: :controller do
         {
           universe_id: universe.id,
           character: {
-            id: -1,
-            name: "Home",
-            description: "Is where the heart is.",
+            name: "Juliet Cannell",
+            description: "Happy-go-lucky.",
           },
         }
       end
@@ -186,13 +167,10 @@ RSpec.describe API::V1::CharactersController, type: :controller do
         authenticate(not_owner)
       end
 
-      it "returns an unauthorized HTTP status code" do
-        subject
-        expect(response).to have_http_status(:forbidden)
-      end
+      it { is_expected.to have_http_status(:forbidden) }
 
       it "doesn't create a new Character" do
-        expect { subject }.not_to change { Character.count }.from(0)
+        expect { subject }.not_to change { Character.count }
       end
 
       it "returns an error message informing the user they don't have access" do
@@ -211,21 +189,16 @@ RSpec.describe API::V1::CharactersController, type: :controller do
         {
           universe_id: universe.id,
           character: {
-            id: -1,
-            name: "Home",
-            description: "Is where the heart is.",
+            name: "Juliet Cannell",
+            description: "Happy-go-lucky.",
           },
         }
       end
 
-      it "returns an unauthorized HTTP status code" do
-        subject
-        expect(response).to have_http_status(:unauthorized)
-      end
+      it { is_expected.to have_http_status(:unauthorized) }
 
       it "doesn't create a new Character" do
-        subject
-        expect(Character.count).to eq(0)
+        expect { subject }.not_to change { Character.count }
       end
 
       it "returns an error message asking the user to authenticate" do
