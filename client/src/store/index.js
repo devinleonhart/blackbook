@@ -7,7 +7,7 @@ import * as mutations from './mutations';
 Vue.use(Vuex);
 
 const state = {
-  food: "cheese",
+  auth: {}
 };
 
 export const store = new Vuex.Store({

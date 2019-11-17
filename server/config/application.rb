@@ -39,6 +39,14 @@ module BlackBook
     # using PostgreSQL check constraints requires dumping the schema to SQL
     config.active_record.schema_format = :sql
 
+    # Allow domains for CORS.
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins 'localhost:9000', 'lionheart.design'
+        resource '*', headers: :any, methods: [:get, :post, :options], expose: ['access-token', 'expiry', 'token-type', 'uid', 'client']
+      end
+    end
+
     # if changing this value, update the documented default value for the
     # page_size parameter to characters#index in the server API section of the
     # readme

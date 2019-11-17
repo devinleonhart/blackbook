@@ -27,7 +27,7 @@ class User < ApplicationRecord
   include DeviseTokenAuth::Concerns::User
 
   # TODO: implement user registration, password recovery, and email confirmation
-  devise :database_authenticatable
+  devise :database_authenticatable, :confirmable
   # devise :database_authenticatable, :registerable, :recoverable, :confirmable
 
   validates :email, :display_name, :encrypted_password, presence: true
