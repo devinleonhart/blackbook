@@ -2,6 +2,8 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 import App from './App';
+import Dashboard from './components/Dashboard';
+import Lobby from './components/Lobby';
 
 import {
   store
@@ -26,7 +28,11 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 // Project-Wide Custom Styling
 import './main.scss';
 
-const routes = [];
+const routes = [
+  { path: '/', component: Lobby },
+  { path: '/dashboard', component: Dashboard },
+  { path: '*', component: Lobby }
+];
 
 const router = new VueRouter({
   routes

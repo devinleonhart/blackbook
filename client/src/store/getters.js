@@ -1,1 +1,1 @@
-export const food = state => (state.food);
+export const auth = state => (state.auth);

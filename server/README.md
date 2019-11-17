@@ -24,7 +24,8 @@ like this:
 
 ### Authentication
 
-All requests other than sign-in require sending a JWT alongside the request. To sign in and receive a JWT, use the endpoint `/auth`
+All requests other than sign-in require sending a JWT alongside the request.  
+To sign in and receive a JWT, POST `email` and `password` to endpoint `/auth/sign_in`
 
 TODO: figure out how to authenticate with `devise_token_auth`
 
