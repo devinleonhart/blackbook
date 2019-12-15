@@ -1,5 +1,4 @@
 import axios from 'axios';
-import logger from '../logger';
 import Vue from 'vue';
 import VueLocalStorage from 'vue-localstorage';
 import { API_ROOT } from '../config';
