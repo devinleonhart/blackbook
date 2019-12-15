@@ -7,7 +7,7 @@ import * as mutations from './mutations';
 Vue.use(Vuex);
 
 const state = {
-  auth: {}
+  universes: {}
 };
 
 export const store = new Vuex.Store({

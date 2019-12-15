@@ -9,6 +9,7 @@ module.exports = {
     "plugin:vue/recommended"
   ],
   "rules": {
+    "no-empty-pattern": "off",
     "vue/html-indent": ["error", 2],
     "vue/html-self-closing": "off",
     "vue/no-v-html": "off",

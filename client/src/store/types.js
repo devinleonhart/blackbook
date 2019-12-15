@@ -1,1 +1,1 @@
-export const LOGIN = 'LOGIN';
+export const UPDATE_UNIVERSES = 'UPDATE_UNIVERSES';

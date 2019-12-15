@@ -13,6 +13,9 @@
       <b-button @click="login">
         Log In
       </b-button>
+      <b-button @click="logout">
+        Log Out
+      </b-button>
     </div>
     <b-button @click="getUniverses">
       Get Universes
@@ -40,10 +43,13 @@
         this.$store.dispatch('loginUser', {
           email: this.email,
           password: this.password
-        })
+        });
+      },
+      logout() {
+        this.$store.dispatch('logoutUser');
       },
       getUniverses() {
-        this.$store.dispatch('getUniverses')
+        this.$store.dispatch('getUniverses');
       }
     }
   };
