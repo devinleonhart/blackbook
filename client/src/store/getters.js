@@ -1,1 +1,2 @@
-export const auth = state => (state.auth);
+export const universes = state => (state.universes);
+export const user = state => (state.user);

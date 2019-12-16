@@ -13,6 +13,7 @@ module.exports = {
     "vue/html-indent": ["error", 2],
     "vue/html-self-closing": "off",
     "vue/no-v-html": "off",
-    "vue/require-v-for-key": "off"
+    "vue/v-on-style": "off",
+    "vue/require-v-for-key": "off",
   }
 };
