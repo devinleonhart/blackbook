@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VueLocalStorage from 'vue-localstorage';
 
 import App from './App';
 import Dashboard from './components/Dashboard';
@@ -10,6 +11,7 @@ import {
 } from './store';
 
 Vue.use(VueRouter);
+Vue.use(VueLocalStorage);
 
 // Buefy
 import Buefy from 'buefy';

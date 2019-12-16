@@ -1,1 +1,6 @@
+// UNIVERSE
 export const UPDATE_UNIVERSES = 'UPDATE_UNIVERSES';
+
+// USER
+export const DELETE_USER = 'DELETE_USER';
+export const UPDATE_USER = 'UPDATE_USER';

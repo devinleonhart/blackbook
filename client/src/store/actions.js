@@ -2,36 +2,56 @@ import * as api from '../api';
 import logger from '../logger';
 import * as types from './types';
 
-// Auth
-export const loginUser = ({}, data) => {
+// User
+export const loginUser = ({ commit, dispatch }, data) => {
   api.SIGN_IN(data)
   .then((response) => {
     api.refreshHeaders(response.headers);
-  }, (response) => {
+    commit(types.UPDATE_USER, response.data.data);
+    dispatch('getUniverses');
+  }, () => {
     logger.error("loginUser action has failed.");
-    response.body.error ? logger.error(response.body.error) : null;
   });
 }
 
-export const logoutUser = ({}) => {
+export const logoutUser = ({ commit }) => {
   api.SIGN_OUT()
-  .then((response) => {
-    api.deleteHeaders(response.headers);
-  }, (response) => {
-    logger.error("logoutUser action has failed.");
-    response.body.error ? logger.error(response.body.error) : null;
+  .finally(() => {
+    api.deleteHeaders();
+    commit(types.DELETE_USER);
   });
 }
 
-// Universes - GET ALL
-export const getUniverses = ({commit}, data) => {
-  api.GET_UNIVERSES(data)
+export const restoreSession = ({ commit, dispatch }, data) => {
+  api.VALIDATE_USER(data)
+  .then((response) => {
+    api.refreshHeaders(response.headers);
+    commit(types.UPDATE_USER, response.data.data);
+    dispatch('getUniverses');
+  }, () => {
+    logger.error("loginUser action has failed.");
+  });
+}
+
+// Universe
+export const createUniverse = ({ state, dispatch }, data) => {
+  data.owner_id = state.user.id;
+  api.CREATE_UNIVERSE(data)
+  .then((response) => {
+    api.refreshHeaders(response.headers);
+    dispatch('getUniverses');
+  }, () => {
+    logger.error("createUniverse action has failed.");
+  });
+}
+
+export const getUniverses = ({ commit }) => {
+  api.GET_UNIVERSES()
   .then((response) => {
     api.refreshHeaders(response.headers);
     commit(types.UPDATE_UNIVERSES, response.data);
-  }, (response) => {
+  }, () => {
     logger.error("getUniverses action has failed.");
-    response.body.error ? logger.error(response.body.error) : null;
   });
 }
 

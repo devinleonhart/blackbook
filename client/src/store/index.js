@@ -7,7 +7,8 @@ import * as mutations from './mutations';
 Vue.use(Vuex);
 
 const state = {
-  universes: {}
+  universes: {},
+  user: {}
 };
 
 export const store = new Vuex.Store({
