@@ -2,6 +2,7 @@
   <div id="universes-component">
     <div
       v-for="universe in universes"
+      :key="universe.id"
       class="card"
     >
       <router-link :to="'/universe/' + universe.id">

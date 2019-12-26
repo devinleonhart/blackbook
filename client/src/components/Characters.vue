@@ -4,6 +4,9 @@
       <b-table
         :data="characters"
         :columns="columns"
+        :checked-rows.sync="checkedRows"
+        checkable
+        :checkbox-position="'right'"
       >
       </b-table>
       <b-field label="New Character">
@@ -11,6 +14,14 @@
       </b-field>
       <b-button @click="createCharacter">
         Create Character
+      </b-button>
+      <b-button
+        v-if="rowsChecked"
+        icon-right="times"
+        type="is-danger"
+        @click="deleteCharacters"
+      >
+        Delete Characters
       </b-button>
     </ul>
   </div>
@@ -29,6 +40,7 @@
     },
     data() {
       return {
+        checkedRows: [],
         columns: [
           {
             field: 'id',
@@ -39,7 +51,7 @@
           {
             field: 'name',
             label: 'Name',
-          }
+          },
         ],
         newCharacterName: ''
       };
@@ -48,6 +60,9 @@
       ...mapGetters([
         'universe'
       ]),
+      rowsChecked() {
+        return this.checkedRows.length !== 0;
+      },
     },
     methods: {
       createCharacter() {
@@ -55,7 +70,35 @@
           name: this.newCharacterName,
           description: "A brand new character.",
         } );
-      }
+      },
+      deleteCharacters() {
+        this.$buefy.dialog.confirm({
+          message: 'Are you sure you want to delete these characters?',
+          onConfirm: () => {
+            this.checkedRows.forEach((row) => {
+              this.$store.dispatch('deleteCharacter', { id: row.id }).then(
+              () => {
+                this.$buefy.toast.open({
+                  message: `${row.name} Deleted`,
+                  type: 'is-success',
+                  position: 'is-top-right'
+                });
+                this.clearChecked();
+              },
+              () => {
+                this.$buefy.toast.open({
+                  message: 'Something went wrong!',
+                  type: 'is-danger',
+                  position: 'is-top-right'
+                });
+              });
+            });
+          }
+        });
+      },
+      clearChecked() {
+        this.checkedRows = [];
+      },
     }
   };
 </script>

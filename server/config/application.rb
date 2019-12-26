@@ -43,7 +43,7 @@ module BlackBook
     config.middleware.insert_before 0, Rack::Cors do
       allow do
         origins 'localhost:9000', 'lionheart.design'
-        resource '*', headers: :any, methods: [:delete, :get, :post], expose: ['access-token', 'client', 'expiry', 'token-type', 'uid', ]
+        resource '*', headers: :any, methods: [:get, :post, :options, :put, :delete], expose: ['access-token', 'client', 'expiry', 'token-type', 'uid', ]
       end
     end
 

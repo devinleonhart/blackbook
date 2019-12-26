@@ -45,6 +45,16 @@ export const createUniverse = ({ state, dispatch }, data) => {
   });
 };
 
+export const deleteUniverse = ({ dispatch }, data) => {
+  api.DELETE_UNIVERSE(data)
+  .then((response) => {
+    api.refreshHeaders(response.headers);
+    dispatch('getUniverses');
+  }).catch((error) => {
+    handleError(error.response, dispatch, 'deleteUniverse');
+  });
+};
+
 export const getUniverse = ({ commit, dispatch }, data) => {
   api.GET_UNIVERSE(data)
   .then((response) => {
@@ -67,12 +77,30 @@ export const getUniverses = ({ commit, dispatch }) => {
 
 // Character
 export const createCharacter = ({ state, dispatch }, data) => {
-  api.CREATE_CHARACTER(data, state.universe.id)
-  .then((response) => {
-    api.refreshHeaders(response.headers);
-    dispatch('getUniverse', { id: state.universe.id });
-  }).catch((error) => {
-    handleError(error.response, dispatch, 'createCharacter');
+  return new Promise((resolve, reject) => {
+    api.CREATE_CHARACTER(data, state.universe.id)
+    .then((response) => {
+      api.refreshHeaders(response.headers);
+      dispatch('getUniverse', { id: state.universe.id });
+      resolve();
+    }).catch((error) => {
+      handleError(error.response, dispatch, 'createCharacter');
+      reject();
+    });
+  });
+};
+
+export const deleteCharacter = ({ state, dispatch }, data) => {
+  return new Promise((resolve, reject) => {
+    api.DELETE_CHARACTER(data)
+    .then((response) => {
+      api.refreshHeaders(response.headers);
+      dispatch('getUniverse', { id: state.universe.id });
+      resolve();
+    }).catch((error) => {
+      handleError(error.response, dispatch, 'deleteCharacter');
+      reject();
+    });
   });
 };
 
