@@ -4,7 +4,6 @@
       v-if="user.uid"
       class="authenticated"
     >
-      <navbar v-on:logout="logout" />
       <universes />
     </div>
     <div
@@ -31,13 +30,11 @@
 
 <script>
   import { mapGetters } from 'vuex';
-  import Navbar from './Navbar.vue';
   import Universes from './Universes.vue';
 
   export default {
     name: 'LobbyComponent',
     components: {
-      navbar: Navbar,
       universes: Universes,
     },
     props: {},
@@ -58,9 +55,6 @@
           email: this.email,
           password: this.password
         });
-      },
-      logout() {
-        this.$store.dispatch('logoutUser');
       }
     }
   };

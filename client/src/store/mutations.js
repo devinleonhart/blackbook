@@ -1,4 +1,8 @@
 // UNIVERSE
+export const UPDATE_UNIVERSE = (state, payload) => {
+  state.universe = payload;
+};
+
 export const UPDATE_UNIVERSES = (state, payload) => {
   state.universes = payload;
 };

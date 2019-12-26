@@ -4,11 +4,13 @@
       v-for="universe in universes"
       class="card"
     >
-      <div class="card-content">
-        <p class="title">
-          {{ universe.name }}
-        </p>
-      </div>
+      <router-link :to="'/universe/' + universe.id">
+        <div class="card-content">
+          <p class="title">
+            {{ universe.name }}
+          </p>
+        </div>
+      </router-link>
     </div>
     <b-field label="New Universe">
       <b-input v-model="newUniverseName"></b-input>

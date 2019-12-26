@@ -62,6 +62,12 @@ export const VALIDATE_USER = () => api.get('auth/validate_token');
 // Create a universe.
 export const CREATE_UNIVERSE = (data) => api.post('universes', data);
 
+// Get a universe.
+export const GET_UNIVERSE = (data) => api.get('universes/' + data.id);
+
 // Get all universes.
 export const GET_UNIVERSES = () => api.get('universes');
+
+// Create a character.
+export const CREATE_CHARACTER = (data, universe_id) => api.post('universes/' + universe_id + '/characters', data);
 
