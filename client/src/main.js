@@ -3,7 +3,7 @@ import VueRouter from 'vue-router';
 import VueLocalStorage from 'vue-localstorage';
 
 import App from './App';
-import Dashboard from './components/Dashboard';
+import Universe from './components/Universe';
 import Lobby from './components/Lobby';
 
 import {
@@ -32,7 +32,7 @@ import './main.scss';
 
 const routes = [
   { path: '/', component: Lobby },
-  { path: '/dashboard', component: Dashboard },
+  { path: '/universe/:id', component: Universe, props: true },
   { path: '*', component: Lobby }
 ];
 

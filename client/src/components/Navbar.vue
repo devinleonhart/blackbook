@@ -6,6 +6,7 @@
       </p>
       <p class="level-right has-text-centered">
         <a
+          v-if="user.uid"
           class="link is-info"
           @click="$emit('logout')"
         >
@@ -26,8 +27,9 @@
       return {};
     },
     computed: {
-    ...mapGetters({
-      }),
+    ...mapGetters([
+        'user'
+      ]),
     }
   };
 </script>

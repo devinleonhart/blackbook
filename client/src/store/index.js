@@ -7,6 +7,7 @@ import * as mutations from './mutations';
 Vue.use(Vuex);
 
 const state = {
+  universe: {},
   universes: {},
   user: {}
 };
