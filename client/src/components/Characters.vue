@@ -1,29 +1,64 @@
 <template>
   <div id="characters-component">
-    <ul>
-      <b-table
-        :data="characters"
-        :columns="columns"
-        :checked-rows.sync="checkedRows"
-        checkable
-        :checkbox-position="'right'"
-      >
-      </b-table>
-      <b-field label="New Character">
-        <b-input v-model="newCharacterName"></b-input>
-      </b-field>
-      <b-button @click="createCharacter">
-        Create Character
-      </b-button>
-      <b-button
-        v-if="rowsChecked"
-        icon-right="times"
-        type="is-danger"
-        @click="deleteCharacters"
-      >
-        Delete Characters
-      </b-button>
-    </ul>
+    <b-table
+      :data="characters"
+      :striped="true"
+      :narrowed="true"
+      :hoverable="true"
+      :checked-rows.sync="checkedRows"
+      checkable
+      :checkbox-position="'right'"
+    >
+      <template slot-scope="props">
+        <b-table-column
+          field="id"
+          label="ID"
+          width="40"
+          numeric
+        >
+          {{ props.row.id }}
+        </b-table-column>
+
+        <b-table-column
+          field="name"
+          label="Name"
+        >
+          <router-link :to="'/character/' + props.row.id">
+            {{ props.row.name }}
+          </router-link>
+        </b-table-column>
+      </template>
+
+      <template slot="empty">
+        <section class="section">
+          <div class="content has-text-grey has-text-centered">
+            <p>
+              <b-icon
+                icon="leaf"
+                size="is-large"
+              >
+              </b-icon>
+            </p>
+            <p>Nothing here.</p>
+          </div>
+        </section>
+      </template>
+    </b-table>
+
+    <b-field label="New Character">
+      <b-input v-model="newCharacterName"></b-input>
+    </b-field>
+    <b-button @click="createCharacter">
+      Create Character
+    </b-button>
+    <b-button
+      v-if="rowsChecked"
+      icon-right="times"
+      type="is-danger"
+      @click="deleteCharacters"
+    >
+      Delete Characters
+    </b-button>
   </div>
 </template>
 

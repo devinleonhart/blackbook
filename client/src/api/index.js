@@ -56,23 +56,11 @@ export const SIGN_OUT = () => api.delete('auth/sign_out', {
   'uid': api.defaults.headers['uid'],
 });
 
-// Ask API if user has active session.
 export const VALIDATE_USER = () => api.get('auth/validate_token');
-
-// Create a universe.
 export const CREATE_UNIVERSE = (data) => api.post('universes', data);
-
-// Delete a universe.
 export const DELETE_UNIVERSE = (data) => api.delete('universes/' + data.id);
-
-// Get a universe.
 export const GET_UNIVERSE = (data) => api.get('universes/' + data.id);
-
-// Get all universes.
 export const GET_UNIVERSES = () => api.get('universes');
-
-// Create a character.
 export const CREATE_CHARACTER = (data, universe_id) => api.post('universes/' + universe_id + '/characters', data);
-
-// Delete a character.
 export const DELETE_CHARACTER = (data) => api.delete('characters/' + data.id, data);
+export const GET_CHARACTER = (data) => api.get('characters/' + data.id);

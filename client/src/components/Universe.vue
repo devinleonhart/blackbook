@@ -1,10 +1,7 @@
 <template>
   <div id="universe-component">
     <div v-if="universe">
-      Universe {{ id }}! <br />
-      Owner: {{ universe.owner }} <br />
-      Collaborators: {{ universe.collaborators }} <br />
-      Locations: {{ universe.locations }} <br />
+      {{ universe }}
       <characters :characters="universe.characters" />
 
       <b-button

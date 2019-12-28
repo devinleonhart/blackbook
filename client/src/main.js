@@ -3,8 +3,9 @@ import VueRouter from 'vue-router';
 import VueLocalStorage from 'vue-localstorage';
 
 import App from './App';
-import Universe from './components/Universe';
+import Character from './components/Character';
 import Lobby from './components/Lobby';
+import Universe from './components/Universe';
 
 import {
   store
@@ -18,9 +19,10 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faTimes,
   faArrowUp,
+  faLeaf,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-library.add([faTimes, faArrowUp]);
+library.add([faTimes, faArrowUp, faLeaf]);
 Vue.component('vue-fontawesome', FontAwesomeIcon);
 
 // Buefy
@@ -37,6 +39,7 @@ import './main.scss';
 const routes = [
   { path: '/', component: Lobby },
   { path: '/universe/:id', component: Universe, props: true },
+  { path: '/character/:id', component: Character, props: true },
   { path: '*', component: Lobby }
 ];
 

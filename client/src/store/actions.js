@@ -104,6 +104,16 @@ export const deleteCharacter = ({ state, dispatch }, data) => {
   });
 };
 
+export const getCharacter = ({ commit, dispatch }, data) => {
+  api.GET_CHARACTER(data)
+  .then((response) => {
+    api.refreshHeaders(response.headers);
+    commit(types.UPDATE_CHARACTER, response.data.character);
+  }).catch((error) => {
+    handleError(error.response, dispatch, 'getCharacter');
+  });
+};
+
 function handleError(error, dispatch, name) {
   if(error.status === 401) {
     dispatch('logoutUser');
