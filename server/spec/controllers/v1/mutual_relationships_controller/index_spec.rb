@@ -60,13 +60,13 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
   let(:character2) { create :character, universe: universe }
   let(:character3) { create :character, universe: universe }
 
-  let(:universe) { create :universe }
-  let(:collaborator) { create :user }
-
-  before do
+  let(:universe) do
+    universe = build :universe
     universe.collaborators << collaborator
     universe.save!
+    universe
   end
+  let(:collaborator) { create :user }
 
   describe "GET index" do
     subject { get(:index, format: :json, params: params) }
@@ -74,90 +74,66 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
     context "when the user is authenticated as a user with access to the universe" do
       before { authenticate(collaborator) }
 
-      context "and the characters are in that universe" do
-        let(:params) do
-          { universe_id: universe.id, character_id: character1.id }
-        end
+      let(:params) { { character_id: character1.id } }
 
-        it "returns the first relationship from character1 to character2" do
-          subject
-          expect(json).to include(
-            "id" => mutual_relationship1.id,
-            "name" => "Father",
-            "target_character" => {
-              "id" => character2.id,
-              "name" => character2.name,
-            },
-          )
-        end
-
-        it "returns the second relationship from character1 to character2" do
-          subject
-          expect(json).to include(
-            "id" => mutual_relationship2.id,
-            "name" => "Mentor",
-            "target_character" => {
-              "id" => character2.id,
-              "name" => character2.name,
-            },
-          )
-        end
-
-        it "returns the third relationship from character1 to character2" do
-          subject
-          expect(json).to include(
-            "id" => mutual_relationship3.id,
-            "name" => "Secret Santa gift-recipient",
-            "target_character" => {
-              "id" => character2.id,
-              "name" => character2.name,
-            },
-          )
-        end
-
-        it "returns the first relationship from character1 to character3" do
-          subject
-          expect(json).to include(
-            "id" => mutual_relationship4.id,
-            "name" => "Father",
-            "target_character" => {
-              "id" => character3.id,
-              "name" => character3.name,
-            },
-          )
-        end
-
-        it "returns only the four relevant relationships" do
-          subject
-          expect(json.length).to eq(4)
-        end
+      it "returns the first relationship from character1 to character2" do
+        subject
+        expect(json).to include(
+          "id" => mutual_relationship1.id,
+          "name" => "Father",
+          "target_character" => {
+            "id" => character2.id,
+            "name" => character2.name,
+          },
+        )
       end
 
-      context "and the requested characters aren't in that universe" do
-        let(:non_universe_character) { create :character }
+      it "returns the second relationship from character1 to character2" do
+        subject
+        expect(json).to include(
+          "id" => mutual_relationship2.id,
+          "name" => "Mentor",
+          "target_character" => {
+            "id" => character2.id,
+            "name" => character2.name,
+          },
+        )
+      end
 
-        let(:params) do
-          { universe_id: universe.id, character_id: non_universe_character.id }
-        end
+      it "returns the third relationship from character1 to character2" do
+        subject
+        expect(json).to include(
+          "id" => mutual_relationship3.id,
+          "name" => "Secret Santa gift-recipient",
+          "target_character" => {
+            "id" => character2.id,
+            "name" => character2.name,
+          },
+        )
+      end
 
-        it { is_expected.to have_http_status(:bad_request) }
+      it "returns the first relationship from character1 to character3" do
+        subject
+        expect(json).to include(
+          "id" => mutual_relationship4.id,
+          "name" => "Father",
+          "target_character" => {
+            "id" => character3.id,
+            "name" => character3.name,
+          },
+        )
+      end
 
-        it "returns an error message for the character not belonging to the universe" do
-          subject
-          expect(json["errors"]).to eq([<<~ERROR_MESSAGE.squish])
-            Character with ID #{non_universe_character.id} does not belong to
-            Universe #{universe.id}.
-          ERROR_MESSAGE
-        end
+      it "returns only the four relevant relationships" do
+        subject
+        expect(json.length).to eq(4)
       end
     end
 
     context "when the user is authenticated as a user who doesn't have access to the universe" do
       before { authenticate(create(:user)) }
 
-      let(:params) do
-        { universe_id: universe.id, character_id: character1.id }
-      end
+      let(:params) { { character_id: character1.id } }
 
       it { is_expected.to have_http_status(:forbidden) }
 
@@ -173,9 +149,7 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
     end
 
     context "when the user isn't authenticated" do
-      let(:params) do
-        { universe_id: universe.id, character_id: character1.id }
-      end
+      let(:params) { { character_id: character1.id } }
 
       it { is_expected.to have_http_status(:unauthorized) }
 

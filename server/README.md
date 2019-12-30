@@ -434,7 +434,7 @@ operations on the Character Item.
 
 Lists all items belongong to the specified character.
 
-`GET /api/v1/universes/{universe ID}/characters/{character ID}/character_items`
+`GET /api/v1/characters/{character ID}/character_items`
 
 sample response:
 
@@ -474,7 +474,7 @@ sample response:
 
 Add an item to a Character.
 
-`POST /api/v1/universes/{universe ID}/characters/{character ID}/character_items`
+`POST /api/v1/characters/{character ID}/character_items`
 
 parameters:
 
@@ -519,7 +519,7 @@ for all operations on the Character Trait.
 
 Lists all traits belonging to the specified character.
 
-`GET /api/v1/universes/{universe ID}/characters/{character ID}/character_traits`
+`GET /api/v1/characters/{character ID}/character_traits`
 
 sample response:
 
@@ -559,7 +559,7 @@ sample response:
 
 Add a trait to a Character.
 
-`POST /api/v1/universes/{universe ID}/characters/{character ID}/character_traits`
+`POST /api/v1/characters/{character ID}/character_traits`
 
 parameters:
 
@@ -605,7 +605,7 @@ returned for all operations on the Mutual Relationship.
 
 Lists all relationships emanating out from the specified Character.
 
-`GET /api/v1/universes/{universe ID}/characters/{character ID}/mutual_relationships`
+`GET /api/v1/characters/{character ID}/mutual_relationships`
 
 sample response:
 
@@ -682,7 +682,7 @@ sample response:
 
 Add a relationship between two Characters.
 
-`POST /api/v1/universes/{universe ID}/characters/{originatng character ID}/mutual_relationships`
+`POST /api/v1/characters/{originatng character ID}/mutual_relationships`
 
 parameters:
 

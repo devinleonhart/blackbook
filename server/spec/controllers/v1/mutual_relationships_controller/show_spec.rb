@@ -19,13 +19,13 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
   let(:character1) { create :character, universe: universe }
   let(:character2) { create :character, universe: universe }
 
-  let(:universe) { create :universe }
-  let(:collaborator) { create :user }
-
-  before do
+  let(:universe) do
+    universe = build :universe
     universe.collaborators << collaborator
     universe.save!
+    universe
   end
+  let(:collaborator) { create :user }
 
   describe "GET show" do
     subject { get(:show, format: :json, params: params) }

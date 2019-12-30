@@ -5,16 +5,16 @@ require "rails_helper"
 RSpec.describe API::V1::CharacterItemsController, type: :controller do
   render_views
 
-  let(:universe) { create :universe, owner: owner }
+  let(:universe) do
+    universe = build(:universe, owner: owner)
+    universe.collaborators << collaborator
+    universe.save!
+    universe
+  end
   let(:owner) { create :user }
   let(:not_owner) { create :user }
   let(:collaborator) { create :user }
   let(:character) { create :character, universe: universe }
-
-  before do
-    universe.collaborators << collaborator
-    universe.save!
-  end
 
   describe "POST create" do
     subject { post(:create, format: :json, params: params) }
@@ -26,7 +26,6 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
         let!(:item) { create :item, name: "Windy Woof" }
         let(:params) do
           {
-            universe_id: universe.id,
             character_id: character.id,
             character_item: { item_name: "Windy Woof" },
           }
@@ -57,7 +56,6 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
       context "when the named item doesn't exist" do
         let(:params) do
           {
-            universe_id: universe.id,
             character_id: character.id,
             character_item: { item_name: "Windy Woof" },
           }
@@ -90,7 +88,6 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
       context "when the item name parameter isn't valid" do
         let(:params) do
           {
-            universe_id: universe.id,
             character_id: character.id,
             character_item: { item_name: "" },
           }
@@ -108,11 +105,10 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
         end
       end
 
-      context "when the universe_id parameter isn't valid" do
+      context "when the character_id parameter isn't valid" do
         let(:params) do
           {
-            universe_id: -1,
-            character_id: character.id,
+            character_id: -1,
             character_item: { item_name: "Windy Woof" },
           }
         end
@@ -123,56 +119,9 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
           expect { subject }.not_to change { CharacterItem.count }
         end
 
-        it "returns an error message for the invalid universe ID" do
-          subject
-          expect(json["errors"]).to eq(["No universe with ID -1 exists."])
-        end
-      end
-
-      context "when the character_id parameter isn't valid" do
-        let(:params) do
-          {
-            universe_id: universe.id,
-            character_id: -1,
-            character_item: { item_name: "Windy Woof" },
-          }
-        end
-
-        it { is_expected.to have_http_status(:bad_request) }
-
-        it "doesn't create the CharacterItem" do
-          expect { subject }.not_to change { CharacterItem.count }
-        end
-
         it "returns an error message for the invalid character ID" do
           subject
-          expect(json["errors"]).to eq(["Character must exist"])
-        end
-      end
-
-      context "when the given character doesn't belong to the given universe" do
-        let(:non_universe_character) { create :character }
-
-        let(:params) do
-          {
-            universe_id: universe.id,
-            character_id: non_universe_character.id,
-            character_item: { item_name: "Windy Woof" },
-          }
-        end
-
-        it { is_expected.to have_http_status(:bad_request) }
-
-        it "doesn't create the CharacterItem" do
-          expect { subject }.not_to change { CharacterItem.count }.from(0)
-        end
-
-        it "returns an error message for the character not belonging to the universe" do
-          subject
-          expect(json["errors"]).to eq([<<~ERROR_MESSAGE.squish])
-            Character with ID #{non_universe_character.id} does not belong to
-            Universe #{universe.id}.
-          ERROR_MESSAGE
+          expect(json["errors"]).to eq(["No character with ID -1 exists."])
         end
       end
     end
@@ -180,8 +129,7 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
     context "when the user is authenticated as a user who doesn't have access to the parent universe" do
       let(:params) do
         {
-          universe_id: universe.id,
-          character_id: -1,
+          character_id: character.id,
           character_item: { item_name: "Windy Woof" },
         }
       end
@@ -208,7 +156,6 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
     context "when the user isn't authenticated" do
       let(:params) do
         {
-          universe_id: universe.id,
           character_id: -1,
           character_item: { item_name: "Windy Woof" },
         }

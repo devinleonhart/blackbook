@@ -17,13 +17,13 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
 
   let(:original_character) { create :character, universe: universe }
   let(:new_character) { create :character, universe: universe }
-  let(:universe) { create :universe }
-  let(:collaborator) { create :user }
-
-  before do
+  let(:universe) do
+    universe = build :universe
     universe.collaborators << collaborator
     universe.save!
+    universe
   end
+  let(:collaborator) { create :user }
 
   describe "PUT/PATCH update" do
     subject { put(:update, format: :json, params: params) }

@@ -8,13 +8,13 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
   let(:character1) { create :character, universe: universe }
   let(:character2) { create :character, universe: universe }
 
-  let(:universe) { create :universe }
-  let(:collaborator) { create :user }
-
-  before do
+  let(:universe) do
+    universe = build :universe
     universe.collaborators << collaborator
     universe.save!
+    universe
   end
+  let(:collaborator) { create :user }
 
   describe "POST create" do
     subject { post(:create, format: :json, params: params) }
@@ -25,7 +25,6 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
       context "when the parameters are valid" do
         let(:params) do
           {
-            universe_id: universe.id,
             character_id: character1.id,
             mutual_relationship: {
               target_character_id: character2.id,
@@ -74,7 +73,6 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
       context "when the character ID parameter isn't valid" do
         let(:params) do
           {
-            universe_id: universe.id,
             character_id: -1,
             mutual_relationship: {
               target_character_id: character2.id,
@@ -84,7 +82,7 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
           }
         end
 
-        it { is_expected.to have_http_status(:bad_request) }
+        it { is_expected.to have_http_status(:not_found) }
 
         it "doesn't create the MutualRelationship" do
           expect { subject }.not_to change { MutualRelationship.count }
@@ -92,14 +90,13 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
 
         it "returns an error message for the invalid character ID" do
           subject
-          expect(json["errors"]).to eq(["Originating character must exist"])
+          expect(json["errors"]).to eq(["No character with ID -1 exists."])
         end
       end
 
       context "when the forward name parameter isn't valid" do
         let(:params) do
           {
-            universe_id: universe.id,
             character_id: character1.id,
             mutual_relationship: {
               target_character_id: character2.id,
@@ -124,7 +121,6 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
       context "when the other character ID parameter isn't valid" do
         let(:params) do
           {
-            universe_id: universe.id,
             character_id: character1.id,
             mutual_relationship: {
               target_character_id: -1,
@@ -149,7 +145,6 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
       context "when the reverse name parameter isn't valid" do
         let(:params) do
           {
-            universe_id: universe.id,
             character_id: character1.id,
             mutual_relationship: {
               target_character_id: character2.id,
@@ -174,7 +169,6 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
       context "when the two given characters are the same" do
         let(:params) do
           {
-            universe_id: universe.id,
             character_id: character1.id,
             mutual_relationship: {
               target_character_id: character1.id,
@@ -201,7 +195,6 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
       context "when the the new relationship duplicates an existing relationship" do
         let(:params) do
           {
-            universe_id: universe.id,
             character_id: character1.id,
             mutual_relationship: {
               target_character_id: character2.id,
@@ -233,46 +226,11 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
           expect(json["errors"]).to eq(["Name has already been taken"])
         end
       end
-
-      context "when the given character doesn't belong to the given universe" do
-        let(:non_universe_character) { create :character }
-
-        let(:params) do
-          {
-            universe_id: universe.id,
-            character_id: non_universe_character.id,
-            mutual_relationship: {
-              target_character_id: character2.id,
-              forward_name: "Father",
-              reverse_name: "Daughter",
-            },
-          }
-        end
-
-        it { is_expected.to have_http_status(:bad_request) }
-
-        it "doesn't create any MutualRelationships" do
-          expect { subject }.not_to change { MutualRelationship.count }
-        end
-
-        it "doesn't create any Relationships" do
-          expect { subject }.not_to change { Relationship.count }
-        end
-
-        it "returns an error message for the character not belonging to the universe" do
-          subject
-          expect(json["errors"]).to eq([<<~ERROR_MESSAGE.squish])
-            Character with ID #{non_universe_character.id} does not belong to
-            Universe #{universe.id}.
-          ERROR_MESSAGE
-        end
-      end
     end
 
     context "when the user is authenticated as a user who doesn't have access to the parent universe" do
       let(:params) do
         {
-          universe_id: universe.id,
           character_id: character1.id,
           mutual_relationship: {
             target_character_id: character2.id,
@@ -304,7 +262,6 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
     context "when the user isn't authenticated" do
       let(:params) do
         {
-          universe_id: universe.id,
           character_id: character1.id,
           mutual_relationship: {
             target_character_id: character2.id,

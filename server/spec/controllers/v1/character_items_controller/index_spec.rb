@@ -20,13 +20,13 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
 
   let(:character1) { create :character, universe: universe }
   let(:character2) { create :character, universe: universe }
-  let(:universe) { create :universe }
-  let(:collaborator) { create :user }
-
-  before do
+  let(:universe) do
+    universe = build :universe
     universe.collaborators << collaborator
     universe.save!
+    universe
   end
+  let(:collaborator) { create :user }
 
   describe "GET index" do
     subject do
@@ -40,58 +40,38 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
     context "when the user is authenticated as a user with access to the universe" do
       before { authenticate(collaborator) }
 
-      context "and the requested character is in that universe" do
-        let(:params) do
-          { universe_id: universe.id, character_id: character1.id }
-        end
-
-        it "returns the IDs only for CharacterItems belonging to the given character" do
-          subject
-          expected_values = [character_item1.id, character_item2.id]
-          received_values = json.collect do |character_item|
-            character_item["id"]
-          end
-          expect(received_values).to match_array(expected_values)
-        end
-
-        it "returns the names only for CharacterItems belonging to the given character" do
-          subject
-          expected_values = [
-            character_item1.item.name,
-            character_item2.item.name,
-          ]
-          received_values = json.collect do |character_item|
-            character_item["name"]
-          end
-          expect(received_values).to match_array(expected_values)
-        end
-
-        it { is_expected.to have_http_status(:success) }
+      let(:params) do
+        { character_id: character1.id }
       end
 
-      context "and the requested character isn't in that universe" do
-        let(:non_universe_character) { create :character }
-
-        let(:params) do
-          { universe_id: universe.id, character_id: non_universe_character.id }
+      it "returns the IDs only for CharacterItems belonging to the given character" do
+        subject
+        expected_values = [character_item1.id, character_item2.id]
+        received_values = json.collect do |character_item|
+          character_item["id"]
         end
-
-        it { is_expected.to have_http_status(:bad_request) }
-
-        it "returns an error message for the character not belonging to the universe" do
-          subject
-          expect(json["errors"]).to eq([<<~ERROR_MESSAGE.squish])
-            Character with ID #{non_universe_character.id} does not belong to
-            Universe #{universe.id}.
-          ERROR_MESSAGE
-        end
+        expect(received_values).to match_array(expected_values)
       end
+
+      it "returns the names only for CharacterItems belonging to the given character" do
+        subject
+        expected_values = [
+          character_item1.item.name,
+          character_item2.item.name,
+        ]
+        received_values = json.collect do |character_item|
+          character_item["name"]
+        end
+        expect(received_values).to match_array(expected_values)
+      end
+
+      it { is_expected.to have_http_status(:success) }
     end
 
     context "when the user is authenticated as a user who doesn't have access to the universe" do
       before { authenticate(create(:user)) }
 
-      let(:params) { { universe_id: universe.id, character_id: character1.id } }
+      let(:params) { { character_id: character1.id } }
 
       it { is_expected.to have_http_status(:forbidden) }
 
@@ -107,7 +87,7 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
     end
 
     context "when the user isn't authenticated" do
-      let(:params) { { universe_id: universe.id, character_id: character1.id } }
+      let(:params) { { character_id: character1.id } }
 
       it { is_expected.to have_http_status(:unauthorized) }
 

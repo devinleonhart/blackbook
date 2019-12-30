@@ -8,15 +8,15 @@ RSpec.describe API::V1::CharacterTraitsController, type: :controller do
   let!(:character_trait) { create :character_trait, character: character }
 
   let(:character) { create :character, universe: universe }
-  let(:universe) { create :universe, owner: owner }
+  let(:universe) do
+    universe = build(:universe, owner: owner)
+    universe.collaborators << collaborator
+    universe.save!
+    universe
+  end
   let(:owner) { create :user }
   let(:collaborator) { create :user }
   let(:not_owner) { create :user }
-
-  before do
-    universe.collaborators << collaborator
-    universe.save!
-  end
 
   describe "DELETE destroy" do
     subject { delete(:destroy, format: :json, params: params) }

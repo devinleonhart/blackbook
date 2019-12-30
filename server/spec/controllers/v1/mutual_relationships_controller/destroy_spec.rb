@@ -9,13 +9,13 @@ RSpec.describe API::V1::MutualRelationshipsController, type: :controller do
     create :mutual_relationship, character_universe: universe
   end
 
-  let(:universe) { create :universe }
-  let(:collaborator) { create :user }
-
-  before do
+  let(:universe) do
+    universe = build :universe
     universe.collaborators << collaborator
     universe.save!
+    universe
   end
+  let(:collaborator) { create :user }
 
   describe "DELETE destroy" do
     subject { delete(:destroy, format: :json, params: params) }

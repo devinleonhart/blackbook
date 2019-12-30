@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 class API::V1::CharacterItemsController < API::V1::ApplicationController
-  before_action -> { require_universe_visible_to_user("characters' items") },
-    only: [:index, :create]
   before_action lambda {
-    require_resource_be_in_universe(
-      Character,
-      params[:character_id],
-      params[:universe_id],
+    character = Character.find_by(id: params[:character_id])
+    if character.nil?
+      raise MissingResource.new("character", params[:character_id])
+    end
+
+    require_universe_visible_to_user(
+      "characters' items",
+      character&.universe_id,
     )
   }, only: [:index, :create]
 

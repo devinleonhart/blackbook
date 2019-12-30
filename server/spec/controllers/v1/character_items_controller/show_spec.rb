@@ -11,13 +11,13 @@ RSpec.describe API::V1::CharacterItemsController, type: :controller do
   let(:item) { create :item, name: "Cookies" }
 
   let(:character) { create :character, universe: universe }
-  let(:universe) { create :universe }
-  let(:collaborator) { create :user }
-
-  before do
+  let(:universe) do
+    universe = build :universe
     universe.collaborators << collaborator
     universe.save!
+    universe
   end
+  let(:collaborator) { create :user }
 
   describe "GET show" do
     subject { get(:show, format: :json, params: params) }
