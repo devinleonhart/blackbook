@@ -78,6 +78,6 @@ deploy:
     - gem install bundler
     - bundle install --without production test
   script:
-  - mina deploy
+  - bundle exec mina deploy
   only:
   - master
