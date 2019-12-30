@@ -61,10 +61,9 @@ end
 desc "Deploys the current version to the server."
 task :deploy do
   # uncomment this line to make sure you pushed your local branch to the remote origin
-  invoke :'git:ensure_pushed'
+  #invoke :'git:ensure_pushed'
 
   command %{LANG=en.US-UTF-8}
-  command %{LC_ALL=en.US-UTF-8}
 
   deploy do
     # load environment variables
