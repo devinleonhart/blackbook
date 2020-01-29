@@ -17,3 +17,7 @@ export const UPDATE_USER = (state, payload) => {
 export const UPDATE_CHARACTER = (state, payload) => {
   state.character = payload;
 };
+
+export const UPDATE_CHARACTER_RELATIONSHIPS = (state, payload) => {
+  state.characterRelationships = payload;
+};

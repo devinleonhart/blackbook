@@ -1,17 +1,9 @@
 <template>
   <div id="universe-component">
-    <div v-if="universe">
+    <section class="section">
       {{ universe }}
       <characters :characters="universe.characters" />
-
-      <b-button
-        icon-right="times"
-        type="is-danger"
-        @click="deleteUniverse"
-      >
-        Delete Universe?
-      </b-button>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -42,29 +34,7 @@
       this.$store.dispatch('getUniverse', { id: this.id });
     },
     methods: {
-      deleteUniverse() {
-        this.$buefy.dialog.confirm({
-          message: 'Are you sure you want to delete this universe?',
-          onConfirm: () => {
-            this.$store.dispatch('deleteUniverse', { id: this.id }).then(
-            () => {
-              this.$buefy.toast.open({
-                message: 'Universe Deleted',
-                type: 'is-success',
-                position: 'is-top-right'
-              });
-              this.$router.push('/');
-            },
-            () => {
-              this.$buefy.toast.open({
-                message: 'Something went wrong!',
-                type: 'is-danger',
-                position: 'is-top-right'
-              });
-            });
-          }
-        });
-      },
+
     }
   };
 </script>

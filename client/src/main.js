@@ -17,13 +17,14 @@ Vue.use(VueLocalStorage);
 // Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
+  faBook,
   faTimes,
   faArrowUp,
   faLeaf,
   faUserFriends,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-library.add([faTimes, faArrowUp, faLeaf, faUserFriends]);
+library.add([faBook, faTimes, faArrowUp, faLeaf, faUserFriends]);
 Vue.component('vue-fontawesome', FontAwesomeIcon);
 
 // Buefy

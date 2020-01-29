@@ -1,16 +1,25 @@
 <template>
   <div id="navbar-component">
     <nav class="level">
-      <p class="level-left has-text-centered">
-        Black Book
+      <p class="brand level-left">
+        <router-link :to="'/'">
+          Black Book
+          <b-icon
+            icon="book"
+            size="is-large"
+          >
+          </b-icon>
+        </router-link>
       </p>
-      <p class="level-right has-text-centered">
+      <p class="level-right">
         <a
           v-if="user.uid"
           class="link is-info"
           @click="$emit('logout')"
         >
-          Logout
+          <a class="button is-light">
+            Log Out
+          </a>
         </a>
       </p>
     </nav>
@@ -34,6 +43,15 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+  #navbar-component {
+    color: #0C0C0C;
+    a {
+      color: #0C0C0C;
+    }
+    .brand {
+      font-size: 1.5em;
+    }
+  }
 </style>
 

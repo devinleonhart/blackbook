@@ -114,9 +114,19 @@ export const getCharacter = ({ commit, dispatch }, data) => {
   });
 };
 
+export const getCharacterRelationships = ({ commit, dispatch }, data) => {
+  api.GET_CHARACTER_RELATIONSHIPS(data)
+  .then((response) => {
+    api.refreshHeaders(response.headers);
+    commit(types.UPDATE_CHARACTER_RELATIONSHIPS, response.data);
+  }).catch((error) => {
+    handleError(error.response, dispatch, 'getCharacterRelationships');
+  });
+};
+
 export const relateCharacters = ({ dispatch, state }, data) => {
   return new Promise((resolve, reject) => {
-    api.RELATE_CHARACTERS(data, state.universe.id)
+    api.RELATE_CHARACTERS(data, data.originating_character_id)
     .then((response) => {
       api.refreshHeaders(response.headers);
       dispatch('getUniverse', { id: state.universe.id });

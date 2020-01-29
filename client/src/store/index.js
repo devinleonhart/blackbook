@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 const state = {
   character: {},
+  characterRelationships: {},
   universe: {},
   universes: {},
   user: {}

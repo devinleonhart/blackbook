@@ -1,6 +1,8 @@
 <template>
   <div id="character-component">
     {{ character }}
+    <hr />
+    {{ characterRelationships }}
   </div>
 </template>
 
@@ -22,11 +24,13 @@
     },
     computed: {
       ...mapGetters([
-        'character'
+        'character',
+        'characterRelationships',
       ]),
     },
     created: function() {
       this.$store.dispatch('getCharacter', { id: this.id });
+      this.$store.dispatch('getCharacterRelationships', { id: this.id });
     },
   };
 </script>

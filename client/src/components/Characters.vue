@@ -45,28 +45,34 @@
       </template>
     </b-table>
 
-    <b-field label="New Character">
-      <b-input v-model="newCharacterName"></b-input>
-    </b-field>
-    <b-button @click="createCharacter">
-      Create Character
-    </b-button>
-    <b-button
-      v-if="rowsChecked"
-      icon-right="times"
-      type="is-danger"
-      @click="deleteCharacters"
-    >
-      Delete Characters
-    </b-button>
-    <b-button
-      v-if="twoRowsChecked"
-      icon-right="user-friends"
-      type="is-primary"
-      @click="relateCharacters"
-    >
-      Relate Characters
-    </b-button>
+    <div class="columns controls">
+      <div class="column is-half">
+        <b-field label="New Character">
+          <b-input v-model="newCharacterName"></b-input>
+        </b-field>
+        <b-button @click="createCharacter">
+          Create Character
+        </b-button>
+      </div>
+      <div class="column is-half">
+        <b-button
+          v-if="twoRowsChecked"
+          icon-right="user-friends"
+          type="is-primary"
+          @click="relateCharacters"
+        >
+          Relate Characters
+        </b-button>
+        <b-button
+          v-if="rowsChecked"
+          icon-right="times"
+          type="is-danger"
+          @click="deleteCharacters"
+        >
+          Delete Characters
+        </b-button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -141,11 +147,35 @@
         });
       },
       relateCharacters() {
-        this.$store.dispatch('relateCharacters', {
-          "forward_name": `${this.checkedRows[0].name} to ${this.checkedRows[1].name}`,
-          "reverse_name": `${this.checkedRows[1].name} to ${this.checkedRows[0].name}`,
-          "target_character_id": this.checkedRows[1].id,
-          "originating_character_id": this.checkedRows[0].id
+
+
+        this.$buefy.dialog.confirm({
+          message: 'Are you sure you want to relate these characters?',
+          onConfirm: () => {
+            this.$store.dispatch('relateCharacters', {
+              "mutual_relationship": {
+                "forward_name": `${this.checkedRows[0].name} to ${this.checkedRows[1].name}`,
+                "reverse_name": `${this.checkedRows[1].name} to ${this.checkedRows[0].name}`,
+                "target_character_id": this.checkedRows[1].id,
+              },
+              "originating_character_id": this.checkedRows[0].id,
+            }).then(
+              () => {
+                this.$buefy.toast.open({
+                  message: 'Characters related!',
+                  type: 'is-success',
+                  position: 'is-top-right'
+                });
+                this.checkedRows = [];
+              },
+              () => {
+                this.$buefy.toast.open({
+                  message: 'Something went wrong!',
+                  type: 'is-danger',
+                  position: 'is-top-right'
+                });
+              });
+          }
         });
       },
       clearChecked() {
@@ -155,5 +185,8 @@
   };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+  .controls {
+    margin-top: 1em;
+  }
 </style>

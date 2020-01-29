@@ -58,10 +58,11 @@ export const SIGN_OUT = () => api.delete('auth/sign_out', {
 
 export const VALIDATE_USER = () => api.get('auth/validate_token');
 export const CREATE_UNIVERSE = (data) => api.post('universes', data);
-export const DELETE_UNIVERSE = (data) => api.delete('universes/' + data.id);
-export const GET_UNIVERSE = (data) => api.get('universes/' + data.id);
+export const DELETE_UNIVERSE = (data) => api.delete(`universes/${data.id}`);
+export const GET_UNIVERSE = (data) => api.get(`universes/${data.id}`);
 export const GET_UNIVERSES = () => api.get('universes');
-export const CREATE_CHARACTER = (data, universe_id) => api.post('universes/' + universe_id + '/characters', data);
-export const DELETE_CHARACTER = (data) => api.delete('characters/' + data.id, data);
-export const GET_CHARACTER = (data) => api.get('characters/' + data.id);
-export const RELATE_CHARACTERS = (data, universe_id) => api.post(`universes/${universe_id}/characters/${data.originating_character_id}/mutual_relationships`);
+export const CREATE_CHARACTER = (data, universe_id) => api.post(`universes/${universe_id}/characters`, data);
+export const DELETE_CHARACTER = (data) => api.delete(`characters/${data.id}`, data);
+export const GET_CHARACTER = (data) => api.get(`characters/${data.id}`);
+export const GET_CHARACTER_RELATIONSHIPS = (data) => api.get(`characters/${data.id}/mutual_relationships`);
+export const RELATE_CHARACTERS = (data, character_id) => api.post(`characters/${character_id}/mutual_relationships`, data);
