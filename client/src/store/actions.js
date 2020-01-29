@@ -114,6 +114,20 @@ export const getCharacter = ({ commit, dispatch }, data) => {
   });
 };
 
+export const relateCharacters = ({ dispatch, state }, data) => {
+  return new Promise((resolve, reject) => {
+    api.RELATE_CHARACTERS(data, state.universe.id)
+    .then((response) => {
+      api.refreshHeaders(response.headers);
+      dispatch('getUniverse', { id: state.universe.id });
+      resolve();
+    }).catch((error) => {
+      handleError(error.response, dispatch, 'relateCharacters');
+      reject();
+    });
+  });
+};
+
 function handleError(error, dispatch, name) {
   if(error.status === 401) {
     dispatch('logoutUser');

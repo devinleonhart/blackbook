@@ -20,9 +20,10 @@ import {
   faTimes,
   faArrowUp,
   faLeaf,
+  faUserFriends,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-library.add([faTimes, faArrowUp, faLeaf]);
+library.add([faTimes, faArrowUp, faLeaf, faUserFriends]);
 Vue.component('vue-fontawesome', FontAwesomeIcon);
 
 // Buefy

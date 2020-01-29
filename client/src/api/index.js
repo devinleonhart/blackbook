@@ -64,3 +64,4 @@ export const GET_UNIVERSES = () => api.get('universes');
 export const CREATE_CHARACTER = (data, universe_id) => api.post('universes/' + universe_id + '/characters', data);
 export const DELETE_CHARACTER = (data) => api.delete('characters/' + data.id, data);
 export const GET_CHARACTER = (data) => api.get('characters/' + data.id);
+export const RELATE_CHARACTERS = (data, universe_id) => api.post(`universes/${universe_id}/characters/${data.originating_character_id}/mutual_relationships`);

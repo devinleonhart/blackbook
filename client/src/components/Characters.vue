@@ -59,6 +59,14 @@
     >
       Delete Characters
     </b-button>
+    <b-button
+      v-if="twoRowsChecked"
+      icon-right="user-friends"
+      type="is-primary"
+      @click="relateCharacters"
+    >
+      Relate Characters
+    </b-button>
   </div>
 </template>
 
@@ -92,11 +100,12 @@
       };
     },
     computed: {
-      ...mapGetters([
-        'universe'
-      ]),
+      ...mapGetters([]),
       rowsChecked() {
         return this.checkedRows.length !== 0;
+      },
+      twoRowsChecked() {
+        return this.checkedRows.length === 2;
       },
     },
     methods: {
@@ -129,6 +138,14 @@
               });
             });
           }
+        });
+      },
+      relateCharacters() {
+        this.$store.dispatch('relateCharacters', {
+          "forward_name": `${this.checkedRows[0].name} to ${this.checkedRows[1].name}`,
+          "reverse_name": `${this.checkedRows[1].name} to ${this.checkedRows[0].name}`,
+          "target_character_id": this.checkedRows[1].id,
+          "originating_character_id": this.checkedRows[0].id
         });
       },
       clearChecked() {
