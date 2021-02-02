@@ -12,7 +12,7 @@ class API::V1::ApplicationController < ::ApplicationController
   rescue_from ActiveRecord::RecordNotFound,
     with: :handle_associated_record_not_found
 
-  rescue_from BlackBookError, with: :handle_black_book_error
+  rescue_from BlackBookError, with: :handle_blackbook_error
 
   protected
 
@@ -49,7 +49,7 @@ class API::V1::ApplicationController < ::ApplicationController
     render json: { errors: [error.message] }, status: :forbidden
   end
 
-  def handle_black_book_error(error)
+  def handle_blackbook_error(error)
     log_error(error)
     render json: { errors: [error.message] }, status: error.status
   end

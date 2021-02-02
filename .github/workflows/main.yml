@@ -66,37 +66,3 @@ jobs:
           DATABASE_URL: postgres://blackbook:blackbook_test_pass@localhost:5432/blackbook_test
         run: |
           bundle exec rspec
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-latest
-    # needs: test
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-
-      - name: Cache Gems
-        uses: actions/cache@v2
-        with:
-          path: vendor/bundle
-          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gems-
-
-      - name: Install Gems
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
-
-      - name: Deploy with Mina
-        run: |
-          apt-get update -y && apt-get install openssh-client git -y
-          eval $(ssh-agent -s)
-          ssh-add <(echo -e "${{ secrets.DEPLOYMENT_SSH_PRIVATE_KEY }}")
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          echo "${{ secrets.DEPLOYMENT_SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts
-          bundle exec mina deploy
