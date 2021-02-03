@@ -5,22 +5,14 @@
 # Table name: users
 #
 #  id                     :bigint           not null, primary key
-#  email                  :citext           not null
-#  display_name           :citext           not null
-#  encrypted_password     :string           not null
+#  display_name           :citext
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
-#  provider               :string           default("email"), not null
-#  uid                    :string           default(""), not null
+#  email                  :string           default(""), not null
+#  encrypted_password     :string           default(""), not null
 #  reset_password_token   :string
 #  reset_password_sent_at :datetime
-#  allow_password_change  :boolean          default(FALSE)
 #  remember_created_at    :datetime
-#  confirmation_token     :string
-#  confirmed_at           :datetime
-#  confirmation_sent_at   :datetime
-#  unconfirmed_email      :string
-#  tokens                 :json
 #
 
 require "rails_helper"
@@ -29,19 +21,15 @@ RSpec.describe User, type: :model do
   describe "validations" do
     subject { build(:user, :with_blank_password) }
 
-    it { should validate_presence_of(:display_name) }
     it { should validate_presence_of(:encrypted_password) }
     it { should validate_presence_of(:email) }
 
     describe "for uniqueness" do
       subject { create(:user) }
 
-      # devise-token-auth unfortunately interferes with this validation so
-      # while email should be case-sensitively unique, shoulda matchers can't
-      # prove it with devise-token-auth's User model extensions in place
-      # it do
-      #   should validate_uniqueness_of(:email).ignoring_case_sensitivity
-      # end
+      it do
+        should validate_uniqueness_of(:email).ignoring_case_sensitivity
+      end
 
       it do
         should validate_uniqueness_of(:display_name).ignoring_case_sensitivity

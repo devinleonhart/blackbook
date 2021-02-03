@@ -5,13 +5,10 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
     enable_extension "citext"
 
     create_table :users do |t|
-      t.citext :email, null: false
-      t.citext :display_name, null: false
-      t.string :password_digest, null: false
+      t.citext :display_name
 
       t.timestamps
     end
-    add_index :users, :email, unique: true
     add_index :users, :display_name, unique: true
 
     create_table :universes do |t|

@@ -13,7 +13,7 @@ gem 'factory_bot_rails', '~> 5.0.2'
 gem 'rack-cors'
 gem 'pg_search', '~> 2.3.0'
 gem 'discard', '~> 1.1.0'
-gem 'devise_token_auth', '~> 1.1.3'
+gem 'devise'
 
 group :development, :test do
   gem 'awesome_print', '~> 1.8.0'

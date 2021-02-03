@@ -53,7 +53,7 @@ COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: active_storage_attachments; Type: TABLE; Schema: public; Owner: -
@@ -569,22 +569,14 @@ ALTER SEQUENCE public.universes_id_seq OWNED BY public.universes.id;
 
 CREATE TABLE public.users (
     id bigint NOT NULL,
-    email public.citext NOT NULL,
-    display_name public.citext NOT NULL,
-    encrypted_password character varying NOT NULL,
+    display_name public.citext,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    provider character varying DEFAULT 'email'::character varying NOT NULL,
-    uid character varying DEFAULT ''::character varying NOT NULL,
+    email character varying DEFAULT ''::character varying NOT NULL,
+    encrypted_password character varying DEFAULT ''::character varying NOT NULL,
     reset_password_token character varying,
     reset_password_sent_at timestamp without time zone,
-    allow_password_change boolean DEFAULT false,
-    remember_created_at timestamp without time zone,
-    confirmation_token character varying,
-    confirmed_at timestamp without time zone,
-    confirmation_sent_at timestamp without time zone,
-    unconfirmed_email character varying,
-    tokens json
+    remember_created_at timestamp without time zone
 );
 
 
@@ -1067,13 +1059,6 @@ CREATE INDEX index_universes_on_owner_id ON public.universes USING btree (owner_
 
 
 --
--- Name: index_users_on_confirmation_token; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_confirmation_token ON public.users USING btree (confirmation_token);
-
-
---
 -- Name: index_users_on_display_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -1092,13 +1077,6 @@ CREATE UNIQUE INDEX index_users_on_email ON public.users USING btree (email);
 --
 
 CREATE UNIQUE INDEX index_users_on_reset_password_token ON public.users USING btree (reset_password_token);
-
-
---
--- Name: index_users_on_uid_and_provider; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_users_on_uid_and_provider ON public.users USING btree (uid, provider);
 
 
 --
@@ -1197,10 +1175,10 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20191001214947'),
 ('20191008195955'),
-('20191011181410'),
 ('20191022212050'),
 ('20191022212516'),
 ('20191030174420'),
-('20191031153948');
+('20191031153948'),
+('20210202181002');
 
 

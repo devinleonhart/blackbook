@@ -9,18 +9,16 @@ ActiveRecord::Base.transaction do
     :user,
     display_name: "user1",
     email: "user1@lionheart.design",
-    password: "password1",
+    encrypted_password: "password1",
   )
-  user1.skip_confirmation!
   user1.save!
 
   user2 = FactoryBot.build(
     :user,
     display_name: "user2",
     email: "user2@lionheart.design",
-    password: "password2",
+    encrypted_password: "password2",
   )
-  user2.skip_confirmation!
   user2.save!
 
   # Universes
