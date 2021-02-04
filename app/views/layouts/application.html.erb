@@ -5,10 +5,22 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= favicon_link_tag 'favicon.ico' %>
+    <%= stylesheet_packs_with_chunks_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_packs_with_chunks_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-  <body>
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
-    <%= yield%>
+  <body class="bb-dark">
+    <%= render 'shared/navbar' %>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-10 mx-auto">
+            <% flash.each do |key, value| %>
+              <div class="<%= flash_class(key) %>">
+                <%= value %>
+              </div>
+            <% end %>
+          <%= yield%>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

@@ -5,7 +5,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
     enable_extension "citext"
 
     create_table :users do |t|
-      t.citext :display_name
+      t.citext :display_name, null: false
 
       t.timestamps
     end

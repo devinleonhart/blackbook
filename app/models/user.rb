@@ -21,7 +21,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :email, :encrypted_password, presence: true
+  validates :email, :display_name, :encrypted_password, presence: true
   validates :email, :display_name, uniqueness: { case_sensitive: false }
 
   has_one_attached :avatar

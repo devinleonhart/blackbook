@@ -1,0 +1,19 @@
+@import './palette.scss';
+@import './alerts.scss';
+@import './forms.scss';
+@import './navbar.scss';
+
+html, body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.bb-dark {
+  background-color: $dark-gray;
+  color: $light-gray;
+}

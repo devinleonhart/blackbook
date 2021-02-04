@@ -569,7 +569,7 @@ ALTER SEQUENCE public.universes_id_seq OWNED BY public.universes.id;
 
 CREATE TABLE public.users (
     id bigint NOT NULL,
-    display_name public.citext,
+    display_name public.citext NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
     email character varying DEFAULT ''::character varying NOT NULL,

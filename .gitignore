@@ -103,3 +103,10 @@ yarn-debug.log*
 # End of https://www.toptal.com/developers/gitignore/api/macos,rails
 
 /config/master.key
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
