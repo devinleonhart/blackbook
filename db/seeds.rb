@@ -3,13 +3,19 @@
 # rubocop:disable Metrics/BlockLength
 require "factory_bot_rails"
 
+def characters_with_items(number_of_characters)
+  FactoryBot.create_list(:character, number_of_characters) do |character|
+    character.items = FactoryBot.create_list(:item, 5)
+  end
+end
+
 ActiveRecord::Base.transaction do
   # Users
   user1 = FactoryBot.build(
     :user,
     display_name: "user1",
     email: "user1@lionheart.design",
-    encrypted_password: "password1",
+    password: "password1",
   )
   user1.save!
 
@@ -17,23 +23,44 @@ ActiveRecord::Base.transaction do
     :user,
     display_name: "user2",
     email: "user2@lionheart.design",
-    encrypted_password: "password2",
+    password: "password2",
   )
   user2.save!
 
   # Universes
-  universe1 = FactoryBot.create(
+  universe1 = FactoryBot.build(
     :universe,
     name: "universe1",
+    owner: user1,
+    collaborators: [user2],
+    characters: characters_with_items(10),
+    locations: FactoryBot.create_list(:location, 5)
+  )
+
+  universe2 = FactoryBot.build(
+    :universe,
+    name: "universe2",
+    owner: user1,
+    collaborators: [user2],
+    characters: characters_with_items(10),
+    locations: FactoryBot.create_list(:location, 5)
+  )
+
+  universe3 = FactoryBot.build(
+    :universe,
+    name: "universe3",
     owner: user1
   )
 
-  # Characters
-  FactoryBot.create(
-    :character,
-    universe: universe1,
-    name: "Character 1",
-    description: "Character 1's Description",
+  universe4 = FactoryBot.build(
+    :universe,
+    name: "universe4",
+    owner: user2
   )
+
+  universe1.save!
+  universe2.save!
+  universe3.save!
+  universe4.save!
 end
 # rubocop:enable Metrics/BlockLength

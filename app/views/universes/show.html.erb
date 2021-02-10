@@ -1,0 +1,53 @@
+<section class="universe-show">
+  <header>
+    <h1><%= @universe.name %></h1>
+    <span>Owner: <%= @universe.owner.display_name %></span>
+    <% unless @universe.collaborators.empty? %>
+      <span>
+        Collaborators:
+        <% @universe.collaborators.each do |collaborator| %>
+          <%= collaborator.display_name %>
+        <% end %>
+      </span>
+    <% end %>
+  </header>
+
+  <div class="row">
+    <% if @universe.characters.empty? %>
+      <%= render partial: 'universes/empty_universe_table', locals:
+        {
+          label: 'Characters',
+        }
+      %>
+    <% else %>
+    <%= render partial: 'universes/universe_table', locals:
+      {
+        rows: @universe.characters,
+        label: 'Characters',
+        show_path: ->(character) {character_url(character)},
+        update_path: ->(character) {edit_character_url(character)},
+      }
+    %>
+    <% end %>
+
+    <% if @universe.locations.empty? %>
+      <%= render partial: 'universes/empty_universe_table', locals:
+        {
+          label: 'Locations',
+        }
+      %>
+    <% else %>
+    <%= render partial: 'universes/universe_table', locals:
+      {
+        rows: @universe.locations,
+        label: 'Locations',
+        show_path: ->(location) {location_url(location)},
+        update_path: ->(location) {edit_location_url(location)},
+      }
+    %>
+    <% end %>
+  </div>
+  <div class="row">
+    <%= link_to "Edit", edit_universe_url(@universe), class: 'btn btn-primary' %>
+  </div>
+</section>

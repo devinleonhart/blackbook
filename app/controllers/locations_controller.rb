@@ -21,6 +21,11 @@ class LocationsController < ApplicationController
     @location = Location.create!(properties)
   end
 
+  def edit
+    @location = Location.find_by(id: params[:id])
+    raise MissingResource.new("location", params[:id]) if @location.nil?
+  end
+
   def update
     @location = Location.find_by(id: params[:id])
     raise MissingResource.new("location", params[:id]) if @location.nil?

@@ -1,0 +1,22 @@
+  <div class="col-md-4">
+    <table class="table table-dark table-striped table-hover">
+      <thead>
+        <tr>
+          <th scope="col"><%= label %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% rows.each do |row| %>
+          <tr>
+            <td>
+              <%= row.name %>
+              <div class="btn-group">
+                <%= link_to "Show", show_path.call(row), class: 'btn btn-primary' %>
+                <%= link_to "Edit", update_path.call(row), class: 'btn btn-primary' %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>

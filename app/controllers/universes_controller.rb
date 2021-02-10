@@ -2,6 +2,7 @@
 
 class UniversesController < ApplicationController
   def index
+
     owned_universes =
       Universe.kept.where(owner: current_user)
 
@@ -12,6 +13,7 @@ class UniversesController < ApplicationController
       .where(collaborations: { user: current_user })
 
     @universes = (owned_universes + collaborated_universes).uniq
+
   end
 
   def show
@@ -26,15 +28,23 @@ class UniversesController < ApplicationController
     @universe = Universe.create!(allowed_universe_params)
   end
 
+  def edit
+    @universe = Universe.kept.find_by(id: params[:id])
+    raise MissingResource.new("universe", params[:id]) if @universe.nil?
+  end
+
   def update
     @universe = Universe.kept.find_by(id: params[:id])
     raise MissingResource.new("universe", params[:id]) if @universe.nil?
 
     if @universe.owner != current_user
+      flash[:alert] = "You are not the owner of this universe."
       raise ForbiddenUniverseAction.new("changed", false)
     end
 
     @universe.update!(allowed_universe_params)
+    flash[:success] = "Universe updated!"
+    redirect_to universes_path
   end
 
   def destroy

@@ -70,6 +70,18 @@ class CharactersController < ApplicationController
     require_universe_visible_to_user("character", @character.universe.id)
   end
 
+  def edit
+    @character =
+      Character
+      .includes(
+        character_items: [:item],
+        character_traits: [:trait],
+        image_tags: [:image],
+      )
+      .find_by(id: params[:id])
+    raise MissingResource.new("character", params[:id]) if @character.nil?
+  end
+
   def create
     properties =
       allowed_character_params.merge(universe_id: params[:universe_id])

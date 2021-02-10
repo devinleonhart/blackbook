@@ -1,3 +1,7 @@
-Hello!
-
- <% @universes %>
+<section class="universe-index">
+  <div class="card-deck">
+    <% @universes.each do |universe| %>
+      <%= link_to render(:partial => 'universes/universe_card', locals: { universe: universe }), universe_url(universe) %>
+    <% end %>
+  </div>
+</section>
