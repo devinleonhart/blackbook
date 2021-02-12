@@ -13,6 +13,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
 
     create_table :universes do |t|
       t.citext :name, null: false
+      t.string :description, null: false
       t.references :owner, null: false, foreign_key: { to_table: "users" }
       t.datetime :discarded_at
 

@@ -15,6 +15,7 @@
 FactoryBot.define do
   factory :universe do
     sequence(:name) { |n| "Universe #{n}" }
+    description { "description" }
     association :owner, factory: :user
   end
 end

@@ -1,7 +1,9 @@
 <section class="universe-index">
-  <div class="card-deck">
-    <% @universes.each do |universe| %>
-      <%= link_to render(:partial => 'universes/universe_card', locals: { universe: universe }), universe_url(universe) %>
+  <div class="row">
+    <% @universes.each do | universe | %>
+      <div class="col-sm-3">
+        <%= link_to render(:partial => 'shared/card', locals: { title: universe.name, body: universe.description }), universe_url(universe) %>
+      </div>
     <% end %>
   </div>
 </section>

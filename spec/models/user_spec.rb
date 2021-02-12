@@ -5,7 +5,7 @@
 # Table name: users
 #
 #  id                     :bigint           not null, primary key
-#  display_name           :citext
+#  display_name           :citext           not null
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  email                  :string           default(""), not null

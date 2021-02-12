@@ -2,13 +2,13 @@
   <div class="col-md-6 mx-auto">
     <h2>Universe</h2>
 
-    <%= form_with model: @universe, url: universe_path(@universe), method: "patch", class: "bbform border border-dark border-2 rounded" do |form| %>
+    <%= form_with model: @universe, url: universes_url(@universe), method: "patch", class: "bbform border border-dark border-2 rounded" do |form| %>
       <div class="mb-3">
         <%= form.label :name, class: "form-label" %>
         <%= form.text_field :name, class: "form-control" %>
       </div>
       <%= form.submit "Save", class: "btn btn-primary" %>
-      <%= link_to "Cancel", universes_path, class: "btn btn-primary" %>
+      <%= link_to "Cancel", universe_url(@universe), class: "btn btn-danger" %>
     <% end %>
 
   </div>

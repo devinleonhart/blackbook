@@ -537,6 +537,7 @@ ALTER SEQUENCE public.traits_id_seq OWNED BY public.traits.id;
 CREATE TABLE public.universes (
     id bigint NOT NULL,
     name public.citext NOT NULL,
+    description character varying NOT NULL,
     owner_id bigint NOT NULL,
     discarded_at timestamp without time zone,
     created_at timestamp(6) without time zone NOT NULL,
