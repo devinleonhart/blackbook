@@ -1,0 +1,13 @@
+<h1>New Location</h1>
+
+<%= form_with local: true, model: @location, url: universe_locations_url(universe_id: @location.universe_id) do |form| %>
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+  <div class="mb-3">
+    <%= form.label :description, class: "form-label" %>
+    <%= form.text_area :description, size: "60x10", class: "form-control" %>
+  </div>
+  <%= form.submit "Save", class: "btn btn-primary" %>
+<% end %>

@@ -24,5 +24,7 @@ module BlackBook
       end
     end
 
+    # Disable remote forms. The equivalent of using local: true on every form.
+    config.action_view.form_with_generates_remote_forms = false
   end
 end

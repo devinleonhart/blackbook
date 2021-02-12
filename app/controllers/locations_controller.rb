@@ -15,10 +15,16 @@ class LocationsController < ApplicationController
     require_universe_visible_to_user("location", @location.universe.id)
   end
 
+  def new
+    @location = Location.new(universe_id: params[:universe_id])
+  end
+
   def create
     properties =
       allowed_location_params.merge(universe_id: params[:universe_id])
     @location = Location.create!(properties)
+    flash[:success] = "Location created!"
+    redirect_to location_url(@location)
   end
 
   def edit
@@ -33,6 +39,7 @@ class LocationsController < ApplicationController
     require_universe_visible_to_user("location", @location.universe.id)
 
     @location.update!(allowed_location_params)
+    redirect_to location_url(@location)
   end
 
   def destroy
@@ -42,7 +49,8 @@ class LocationsController < ApplicationController
     require_universe_visible_to_user("location", @location.universe.id)
 
     @location.destroy!
-    head :no_content
+    flash[:success] = "Location deleted!"
+    redirect_to universe_url(@location.universe)
   end
 
   private

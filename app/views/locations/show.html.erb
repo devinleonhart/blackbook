@@ -1,1 +1,4 @@
-<h1>Show!</h1>
+<h1><%= @location.name %></h1>
+<p><%= @location.description %></p>
+
+<%= link_to 'Back to Universe', universe_url(@location.universe), class: 'btn btn-primary' %>

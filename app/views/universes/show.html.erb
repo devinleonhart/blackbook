@@ -24,6 +24,7 @@
       {
         rows: @universe.characters,
         label: 'Characters',
+        new_path: ->() {new_universe_character_url(@universe)},
         show_path: ->(character) {character_url(character)},
         update_path: ->(character) {edit_character_url(character)},
       }
@@ -34,6 +35,7 @@
       <%= render partial: 'universes/empty_universe_table', locals:
         {
           label: 'Locations',
+          new_path: ->() {new_universe_location_url(@universe)},
         }
       %>
     <% else %>
@@ -41,6 +43,7 @@
       {
         rows: @universe.locations,
         label: 'Locations',
+        new_path: ->() {new_universe_location_url(@universe)},
         show_path: ->(location) {location_url(location)},
         update_path: ->(location) {edit_location_url(location)},
       }
