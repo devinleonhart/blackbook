@@ -1,1 +1,15 @@
-<h1>Show!</h1>
+<h1><%= @character.name %></h1>
+<p><%= @character.description %></p>
+
+<div class="container">
+  <div class="row">
+    <% @character.traits.each do |trait| %>
+      <div class="col-sm col-3">
+        <%= trait.name %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<%= link_to "Edit #{@character.name}", edit_character_url(@character), class: "btn btn-primary" %>
+<%= link_to "Back to #{@character.universe.name}", universe_url(@character.universe), class: "btn btn-primary" %>

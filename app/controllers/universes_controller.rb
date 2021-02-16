@@ -26,6 +26,8 @@ class UniversesController < ApplicationController
 
   def create
     @universe = Universe.create!(allowed_universe_params)
+    flash[:success] = "Universe created!"
+    redirect_to universes_url()
   end
 
   def edit
@@ -44,7 +46,7 @@ class UniversesController < ApplicationController
 
     @universe.update!(allowed_universe_params)
     flash[:success] = "Universe updated!"
-    redirect_to universes_path
+    redirect_to universes_url()
   end
 
   def destroy
@@ -56,7 +58,8 @@ class UniversesController < ApplicationController
     end
 
     @universe.discard!
-    head :no_content
+    flash[:success] = "Universe deleted!"
+    redirect_to universes_url()
   end
 
   private

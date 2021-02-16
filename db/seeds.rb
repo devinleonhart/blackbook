@@ -3,9 +3,10 @@
 # rubocop:disable Metrics/BlockLength
 require "factory_bot_rails"
 
-def characters_with_items(number_of_characters)
+def characters_with_items_and_traits(number_of_characters)
   FactoryBot.create_list(:character, number_of_characters) do |character|
-    character.items = FactoryBot.create_list(:item, 5)
+    character.traits = FactoryBot.create_list(:trait, 50)
+    character.items = FactoryBot.create_list(:item, 10)
   end
 end
 
@@ -33,7 +34,7 @@ ActiveRecord::Base.transaction do
     name: "universe1",
     owner: user1,
     collaborators: [user2],
-    characters: characters_with_items(10),
+    characters: characters_with_items_and_traits(10),
     locations: FactoryBot.create_list(:location, 5)
   )
 
@@ -42,7 +43,7 @@ ActiveRecord::Base.transaction do
     name: "universe2",
     owner: user1,
     collaborators: [user2],
-    characters: characters_with_items(10),
+    characters: characters_with_items_and_traits(10),
     locations: FactoryBot.create_list(:location, 5)
   )
 

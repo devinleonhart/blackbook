@@ -2,7 +2,7 @@
   <div class="col-md-6 mx-auto">
     <h2>Edit Location</h2>
 
-    <%= form_with model: @location, url: location_path(@location), method: "patch", class: "bbform border border-dark border-2 rounded" do |form| %>
+    <%= form_with model: @location, url: location_url(@location), method: "patch", class: "bbform border border-dark border-2 rounded" do |form| %>
       <div class="mb-3">
         <%= form.label :name, class: "form-label" %>
         <%= form.text_field :name, class: "form-control" %>
@@ -12,8 +12,8 @@
         <%= form.text_area :description, size: "60x10", class: "form-control" %>
       </div>
       <%= form.submit "Save", class: "btn btn-primary" %>
-      <%= link_to "Cancel", location_path(@location), class: "btn btn-primary" %>
-      <%= link_to "Delete", location_path(@location), method: 'delete', :data => {:confirm => 'Are you sure?'}, class: 'btn btn-danger' %>
+      <%= link_to "Cancel", location_url(@location), class: "btn btn-primary" %>
+      <%= link_to "Delete", location_url(@location), method: "delete", :data => {:confirm => "Are you sure?"}, class: "btn btn-danger" %>
     <% end %>
 
   </div>

@@ -38,6 +38,7 @@ class LocationsController < ApplicationController
 
     require_universe_visible_to_user("location", @location.universe.id)
 
+    flash[:success] = "Location updated!"
     @location.update!(allowed_location_params)
     redirect_to location_url(@location)
   end

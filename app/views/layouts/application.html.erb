@@ -4,12 +4,12 @@
     <title>Blackbook</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= favicon_link_tag 'favicon.ico' %>
-    <%= stylesheet_packs_with_chunks_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_packs_with_chunks_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= favicon_link_tag "favicon.ico" %>
+    <%= stylesheet_packs_with_chunks_tag "application", media: "all", "data-turbolinks-track": "reload" %>
+    <%= javascript_packs_with_chunks_tag "application", "data-turbolinks-track": "reload" %>
   </head>
   <body class="bb-dark">
-    <%= render 'shared/navbar' %>
+    <%= render "shared/navbar" %>
     <div class="container">
       <% flash.each do |key, value| %>
         <div class="<%= flash_class(key) %>">

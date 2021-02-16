@@ -56,6 +56,10 @@ class CharactersController < ApplicationController
       .order(created_at: :asc)
   end
 
+  def new
+    @character = Character.new(universe_id: params[:universe_id])
+  end
+
   def show
     @character =
       Character
@@ -86,6 +90,7 @@ class CharactersController < ApplicationController
     properties =
       allowed_character_params.merge(universe_id: params[:universe_id])
     @character = Character.create!(properties)
+    redirect_to character_url(@character)
   end
 
   def update
@@ -102,6 +107,7 @@ class CharactersController < ApplicationController
     require_universe_visible_to_user("character", @character.universe.id)
 
     @character.update!(allowed_character_params)
+    redirect_to character_url(@character)
   end
 
   def destroy
@@ -111,7 +117,8 @@ class CharactersController < ApplicationController
     require_universe_visible_to_user("character", @character.universe.id)
 
     @character.destroy!
-    head :no_content
+    flash[:success] = "Character deleted!"
+    redirect_to universe_url(@character.universe)
   end
 
   private
