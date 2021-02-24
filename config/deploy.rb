@@ -1,78 +1,67 @@
-require 'mina/rails'
-require 'mina/git'
-require 'mina/rbenv'
-require 'mina/puma'
+set :rbenv_type, :user
+set :rbenv_ruby, '2.7.2'
 
-set :application_name, 'blackbook'
-set :domain, '198.199.119.91'
-set :deploy_to, '/home/blackbook'
-set :repository, 'https://github.com/devinleonhart/blackbook'
-set :branch, 'master'
+lock "~> 3.15.0"
 
-# Optional settings:
-   set :user, 'blackbook'  # Username in the server to SSH to.
-   set :port, '22'               # SSH port number.
-#   set :forward_agent, true       # SSH forward_agent.
+set :application, "blackbook"
+set :repo_url, "git@github.com:devinleonhart/blackbook.git"
+set :deploy_to, "/home/blackbook/"
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', '.bundle', 'public/system', 'public/uploads'
+append :linked_files, "config/master.key"
 
-set :shared_dirs,
-  ['log', 'tmp/pids', 'tmp/sockets', 'storage']
-
-
-# mina-puma settings
-set :puma_config,    "config/puma.rb"
-set :puma_socket,    "#{fetch(:shared_path)}/tmp/sockets/puma.sock"
-set :puma_state,     "#{fetch(:shared_path)}/tmp/sockets/puma.state"
-set :puma_pid,       "#{fetch(:shared_path)}/tmp/pids/puma.pid"
-set :puma_stdout,    "#{fetch(:shared_path)}/log/puma.log"
-set :puma_stderr,    "#{fetch(:shared_path)}/log/puma.log"
-set :pumactl_socket, "#{fetch(:shared_path)}/tmp/sockets/pumactl.sock"
-set :puma_root_path, "#{fetch(:current_path)}"
-
-# Shared dirs and files will be symlinked into the app-folder by the 'deploy:link_shared_paths' step.
-# Some plugins already add folders to shared_dirs like `mina/rails` add `public/assets`, `vendor/bundle` and many more
-# run `mina -d` to see all folders and files already included in `shared_dirs` and `shared_files`
-# set :shared_dirs, fetch(:shared_dirs, []).push('public/assets')
-# set :shared_files, fetch(:shared_files, []).push('config/database.yml', 'config/secrets.yml')
-
-task :remote_environment do
-  invoke :'rbenv:load'
-end
-
-# Put any custom commands you need to run at setup
-# All paths in `shared_dirs` and `shared_paths` will be created on their own.
-task :setup do
-  # command %{rbenv install 2.3.0 --skip-existing}
-end
-
-desc "Deploys the current version to the server."
-task :deploy do
-  # uncomment this line to make sure you pushed your local branch to the remote origin
-  #invoke :'git:ensure_pushed'
-
-  command %{LANG=en.US-UTF-8}
-
-  deploy do
-    # load environment variables
-    command %{source ~/.bashrc}
-
-    invoke :'git:clone'
-    invoke :'deploy:link_shared_paths'
-    command %{ln -rs /home/blackbook/master.key config/}
-    invoke :'bundle:install'
-    invoke :'rails:db_migrate'
-    invoke :'deploy:cleanup'
-
-    on :launch do
-      invoke :'puma:stop'
-      command %{rm -f tmp/sockets/*}
-      invoke :'puma:start'
+namespace :puma do
+  desc 'Create Directories for Puma Pids and Socket'
+  task :make_dirs do
+    on roles(:app) do
+      execute "mkdir #{shared_path}/tmp/sockets -p"
+      execute "mkdir #{shared_path}/tmp/pids -p"
     end
   end
 
-  # you can use `run :local` to run tasks on local machine before of after the deploy scripts
-  # run(:local){ say 'done' }
+  before 'deploy:starting', 'puma:make_dirs'
 end
 
-# For help in making your deploy script, see the Mina documentation:
-#
-#  - https://github.com/mina-deploy/mina/tree/master/docs
+namespace :deploy do
+  namespace :check do
+    before :linked_files, :set_master_key do
+      on roles(:app), in: :sequence, wait: 10 do
+        unless test("[ -f #{shared_path}/config/master.key ]")
+          upload! 'config/master.key', "#{shared_path}/config/master.key"
+        end
+      end
+    end
+  end
+
+  desc "Make sure local git is in sync with remote."
+  task :check_revision do
+    on roles(:app) do
+
+      # Update this to your branch name: master, main, etc. Here it's main
+      unless `git rev-parse HEAD` == `git rev-parse origin/master`
+        puts "WARNING: HEAD is not the same as origin/master"
+        puts "Run `git push` to sync changes."
+        exit
+      end
+    end
+  end
+
+  desc 'Initial Deploy'
+  task :initial do
+    on roles(:app) do
+      before 'deploy:restart', 'puma:start'
+      invoke 'deploy'
+    end
+  end
+
+  desc 'Restart application'
+    task :restart do
+      on roles(:app), in: :sequence, wait: 5 do
+        invoke 'puma:restart'
+      end
+  end
+
+  before :starting,     :check_revision
+  after  :finishing,    :compile_assets
+  after  :finishing,    :cleanup
+  # after  :finishing,    :restart
+end
