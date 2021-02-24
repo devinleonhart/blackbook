@@ -11,12 +11,15 @@
 #
 
 class Image < ApplicationRecord
+  after_create :set_filename
   validate :requires_image_attached
 
   has_one_attached :image_file
 
   has_many :image_tags, inverse_of: :image, dependent: :destroy
   has_many :characters, through: :image_tags, inverse_of: :images
+
+  belongs_to :universe, inverse_of: :images
 
   private
 
@@ -26,5 +29,11 @@ class Image < ApplicationRecord
     end
   rescue ActiveSupport::MessageVerifier::InvalidSignature => error
     errors.add(:image_file, "has invalid data (#{error.message})")
+  end
+
+  def set_filename
+    if image_file.attached?
+      image_file.blob.update(filename: "#{SecureRandom.uuid}.#{image_file.filename.extension}")
+    end
   end
 end

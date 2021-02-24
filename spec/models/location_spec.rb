@@ -19,7 +19,6 @@ RSpec.describe Location, type: :model do
     subject { build(:location) }
 
     it { should validate_presence_of(:name) }
-    it { should validate_presence_of(:description) }
 
     describe "for uniqueness" do
       subject { create(:location) }

@@ -4,6 +4,8 @@ class CreateCharacterImageTaggingModels < ActiveRecord::Migration[6.0]
   def change
     create_table :images do |t|
       t.text :caption, null: false, default: ""
+      t.boolean :avatar, null: false, default: false
+      t.references :universe, null: false
 
       t.timestamps
     end

@@ -1,0 +1,29 @@
+<div class="character-trait-component container" data-controller="character-trait">
+  <div class="row">
+    <div class="col-md-4 mx-auto">
+      <%= form_with model: @character_trait, url: character_character_traits_url(@character), method: "post" do | form | %>
+        <div class="form-group">
+          <div class="input-group">
+              <%= form.text_field :trait_name, class: "form-control" %>
+            <div class="input-group-append">
+              <%= form.submit "Add", class: "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <% @character.traits.sort_by{ |e| e.name.downcase }.each do | trait | %>
+      <div class="col-md-auto">
+        <span class="badge bg-dark">
+          <span><%= trait.name %></span>
+          <%= link_to character_trait_url(trait), method: "delete" do %>
+            <button type="button" class="btn-close btn-close-white" aria-label="Close"></button>
+          <% end %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+</div>

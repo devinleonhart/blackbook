@@ -1,15 +1,16 @@
 <h1><%= @character.name %></h1>
-<p><%= @character.description %></p>
-
 <div class="container">
-  <div class="row">
-    <% @character.traits.each do |trait| %>
-      <div class="col-sm col-3">
-        <%= trait.name %>
-      </div>
-    <% end %>
-  </div>
+  <p><%= @character.content %></p>
 </div>
+
+<%= render(CharacterImageComponent.new(character: @character, images: @images)) %>
+
+<h2>Traits</h2>
+<%= render(CharacterTraitComponent.new(character: @character)) %>
+
+<h2>Items</h2>
+<%= render(CharacterItemComponent.new(character: @character)) %>
+
 
 <%= link_to "Edit #{@character.name}", edit_character_url(@character), class: "btn btn-primary" %>
 <%= link_to "Back to #{@character.universe.name}", universe_url(@character.universe), class: "btn btn-primary" %>

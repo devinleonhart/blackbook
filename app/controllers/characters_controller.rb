@@ -72,6 +72,8 @@ class CharactersController < ApplicationController
     raise MissingResource.new("character", params[:id]) if @character.nil?
 
     require_universe_visible_to_user("character", @character.universe.id)
+
+    @images = Image.joins(:image_tags).where(image_tags: { character: @character }).paginate(page: params[:page], per_page: 12)
   end
 
   def edit
@@ -124,6 +126,6 @@ class CharactersController < ApplicationController
   private
 
   def allowed_character_params
-    params.require(:character).permit(:name, :description, images: [])
+    params.require(:character).permit(:name, :content, :page, images: [])
   end
 end

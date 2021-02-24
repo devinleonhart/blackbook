@@ -1,11 +1,16 @@
 @import './palette.scss';
 @import './shared/_card.scss';
-@import './alerts.scss';
-@import './forms.scss';
-@import './navbar.scss';
+@import './shared/_new_button_card.scss';
+@import './components/character_image_component.scss';
+@import './components/character_item_component.scss';
+@import './components/character_trait_component.scss';
+@import './characters/show.scss';
+@import './images/edit.scss';
+@import './universes/_card_list.scss';
+@import './universes/_image_list.scss';
 @import './universes/index.scss';
 @import './universes/show.scss';
-@import './characters/show.scss';
+
 
 html, body {
   box-sizing: border-box;
@@ -17,7 +22,60 @@ html, body {
   box-sizing: inherit;
 }
 
+a {
+  text-decoration: none;
+}
+
 .bb-dark {
   background-color: $dark-gray;
   color: $light-gray;
+}
+
+// Flash alerts
+div.alert {
+  line-height: 1.3;
+  margin-top: 1em;
+  ul {
+    margin: 0 !important;
+  }
+}
+
+// Navbar
+nav.navbar {
+  margin-bottom: 2em;
+}
+
+// Forms
+.bbform {
+  padding: 1.5rem;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+// Trix
+.trix-content {
+  .attachment-gallery {
+    > action-text-attachment,
+    > .attachment {
+      flex: 1 0 33%;
+      padding: 0 0.5em;
+      max-width: 33%;
+    }
+
+    &.attachment-gallery--2,
+    &.attachment-gallery--4 {
+      > action-text-attachment,
+      > .attachment {
+        flex-basis: 50%;
+        max-width: 50%;
+      }
+    }
+  }
+
+  action-text-attachment {
+    .attachment {
+      padding: 0 !important;
+      max-width: 100% !important;
+    }
+  }
 }

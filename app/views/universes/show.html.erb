@@ -1,49 +1,43 @@
 <section class="universe-show">
   <header>
     <h1><%= @universe.name %></h1>
-    <span>Owner: <%= @universe.owner.display_name %></span>
-    <% unless @universe.collaborators.empty? %>
-      <span>
-        Collaborators:
-        <% @universe.collaborators.each do | collaborator | %>
-          <%= collaborator.display_name %>
-        <% end %>
-      </span>
-    <% end %>
   </header>
 
-  <div class="cards">
-    <h2>Characters <%= link_to "New", new_universe_character_url(@universe), class: 'btn btn-primary' %></h2>
-    <% if @universe.characters.empty? %>
-      <span>This universe has no characters.</span>
-    <% else %>
-      <div class="row">
-        <% @universe.characters.each do | character | %>
-          <div class="col-md-3">
-            <%= link_to render(:partial => 'shared/card', locals: { title: character.name, body: character.description }), character_url(character) %>
-          </div>
-        <% end%>
-      </div>
-    <% end %>
-  </div>
+  <%= render partial: "universes/card_list", locals: {
+    collection: @universe.characters,
+    collection_url: ->(x) { character_url(x) },
+    new_url: new_universe_character_url(@universe),
+    name: "Characters"
+  } %>
 
-  <div class="cards">
-    <h2>Locations <%= link_to "New", new_universe_location_url(@universe), class: 'btn btn-primary' %></h2>
-    <% if @universe.locations.empty? %>
-      <span>This universe has no locations.</span>
-    <% else %>
-      <div class="row">
-        <% @universe.locations.each do | location | %>
-          <div class="col-md-3">
-            <%= link_to render(:partial => 'shared/card', locals: { title: location.name, body: location.description }), location_url(location) %>
-          </div>
-        <% end %>
-      </div>
-    <% end %>
-  </div>
+  <%= render partial: "universes/card_list", locals: {
+    collection: @universe.locations,
+    collection_url: ->(x) { location_url(x) },
+    new_url: new_universe_location_url(@universe),
+    name: "Locations"
+  } %>
+
+  <%= render partial: "universes/image_list", locals: {
+    images: @images,
+    universe: @universe
+  } %>
 
   <div class="controls">
     <%= link_to "Edit #{@universe.name}", edit_universe_url(@universe), class: 'btn btn-primary' %>
     <%= link_to 'Back to Home', universes_url(), class: 'btn btn-primary' %>
   </div>
+
+  <footer>
+    <span class="owner-collaborators">Owner: <%= @universe.owner.display_name %>
+    <% unless @universe.collaborators.empty? %>
+         | Collaborators:
+        <% @universe.collaborators.each do | collaborator | %>
+          <%= collaborator.display_name %>
+        <% end %>
+    <% end %>
+    </span>
+  </footer>
 </section>
+
+
+

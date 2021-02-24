@@ -22,6 +22,8 @@ class UniversesController < ApplicationController
     unless @universe.visible_to_user?(current_user)
       raise ForbiddenUniverseAction.new("viewed", true)
     end
+
+    @images = Image.where(universe_id: @universe.id).paginate(page: params[:page], per_page: 12)
   end
 
   def create
@@ -68,6 +70,8 @@ class UniversesController < ApplicationController
     params.require(:universe).permit(
       :name,
       :owner_id,
+      :content,
+      :page,
       collaborator_ids: [],
     )
   end

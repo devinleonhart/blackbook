@@ -41,6 +41,7 @@ class CharacterTraitsController < ApplicationController
         character_id: params[:character_id], trait: trait
       )
     end
+    redirect_to @character_trait.character
   end
 
   def update
@@ -74,7 +75,7 @@ class CharacterTraitsController < ApplicationController
     )
 
     @character_trait.destroy!
-    head :no_content
+    redirect_to @character_trait.character
   end
 
   private

@@ -1,0 +1,38 @@
+<div class="image-list">
+  <h2>Images</h2>
+  <div class="row">
+    <div class="col-md-4 mx-auto">
+      <%= form_with model: Image.new(universe_id: universe.id), url: universe_images_url(universe), method: "post", class: "file-form" do | form | %>
+        <div class="form-group">
+          <div class="input-group">
+            <%= form.file_field :image_file, class: "form-control" %>
+            <%= form.submit "Add", class: "btn btn-primary" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <hr />
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="row">
+        <% if images.empty? %>
+          <div class="col-md-4 mx-auto">
+            <ul class="list-group list-group-flush rounded">
+              <li class="list-group-item list-group-item-danger">This universe has no images.</li>
+            </ul>
+          </div>
+        <% else %>
+          <% images.reverse.each do | image | %>
+            <div class="col-md-2 image">
+              <%= link_to edit_universe_image_url(universe, image) do %>
+                <%= image_tag(image.image_file.variant(resize_to_limit: [250, nil]), class: "img-thumbnail") %>
+              <% end %>
+            </div>
+          <% end %>
+          <%= will_paginate images %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

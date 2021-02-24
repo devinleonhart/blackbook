@@ -10,7 +10,19 @@ class ImagesController < ApplicationController
   end
 
   def create
-    @image = Image.create!(allowed_image_create_params)
+    properties =
+      allowed_image_create_params.merge(universe_id: params[:universe_id])
+    @image = Image.create!(properties)
+    redirect_to universe_url(params[:universe_id])
+  end
+
+  def edit
+    @select_options = ["Cheese?", "Please!"]
+    @image =
+      Image
+      .includes(image_tags: { character: :universe })
+      .find_by(id: params[:id])
+    raise MissingResource.new("image", params[:id]) if @image.nil?
   end
 
   def update
@@ -21,6 +33,7 @@ class ImagesController < ApplicationController
     raise MissingResource.new("image", params[:id]) if @image.nil?
 
     @image.update!(allowed_image_update_params)
+    redirect_to edit_universe_image_url(@image)
   end
 
   def destroy
@@ -28,7 +41,7 @@ class ImagesController < ApplicationController
     raise MissingResource.new("image", params[:id]) if @image.nil?
 
     @image.destroy!
-    head :no_content
+    redirect_to universe_url(@image.universe)
   end
 
   private
@@ -38,6 +51,6 @@ class ImagesController < ApplicationController
   end
 
   def allowed_image_update_params
-    params.require(:image).permit(:caption)
+    params.require(:image).permit(:caption, :avatar)
   end
 end

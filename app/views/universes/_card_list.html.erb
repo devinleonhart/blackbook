@@ -1,0 +1,27 @@
+<div class="card-list cards">
+  <h2><%= name %></h2>
+
+  <div class="row">
+    <div class="col-md-10">
+      <div class="row">
+        <% if collection.empty? %>
+          <div class="col-md-4 mx-auto">
+            <ul class="list-group list-group-flush rounded">
+              <li class="list-group-item list-group-item-danger">This universe has no <%= name.downcase %>.</li>
+            </ul>
+          </div>
+        <% else %>
+          <% collection.each do | item | %>
+            <div class="col-md-3">
+              <%= link_to render(:partial => "shared/card", locals: { name: item.name, avatar: get_avatar_image(item.try(:images)) }), collection_url.call(item) %>
+            </div>
+          <% end %>
+        <% end %>
+
+      </div>
+    </div>
+    <div class="col-md-2">
+      <%= link_to render(partial: "shared/new_button_card"), new_url %>
+    </div>
+  </div>
+</div>

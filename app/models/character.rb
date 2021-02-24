@@ -16,9 +16,10 @@
 class Character < ApplicationRecord
   include PgSearch::Model
 
-  multisearchable against: [:name, :description]
+  multisearchable against: [:name, :content]
 
-  validates :name, :description, presence: true
+  has_rich_text :content
+
   validates :name, uniqueness: { scope: :universe_id, case_sensitive: false }
 
   belongs_to :universe, inverse_of: :characters

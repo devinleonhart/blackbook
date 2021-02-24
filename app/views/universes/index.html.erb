@@ -1,8 +1,8 @@
 <section class="universe-index">
   <div class="row">
     <% @universes.each do | universe | %>
-      <div class="col-sm-3">
-        <%= link_to render(:partial => 'shared/card', locals: { title: universe.name, body: universe.description }), universe_url(universe) %>
+      <div class="col-md-3">
+        <%= link_to render(:partial => 'shared/card', locals: { name: universe.name, avatar: nil }), universe_url(universe) %>
       </div>
     <% end %>
   </div>

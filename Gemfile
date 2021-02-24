@@ -15,6 +15,11 @@ gem 'pg_search', '~> 2.3.0'
 gem 'discard', '~> 1.1.0'
 gem 'devise'
 gem 'webpacker', '~> 6.0.0.beta.4'
+gem "view_component", require: "view_component/engine"
+gem 'stimulus-rails'
+gem 'image_processing', '~> 1.2'
+gem 'securerandom'
+gem 'will_paginate', '~> 3.1.0'
 
 group :development, :test do
   gem 'awesome_print', '~> 1.8.0'
@@ -22,6 +27,7 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.8.0'
   gem 'rubocop-rspec'
   gem 'rubocop-rails'
+  gem 'pry-rails', :group => :development
 end
 
 group :development do

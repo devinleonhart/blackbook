@@ -1,0 +1,51 @@
+<div class="image-edit">
+  <div class="row">
+    <h2>Image Tags</h2>
+    <div class="col-md-8">
+      <%= link_to rails_blob_path(@image.image_file, disposition: "attachment") do %>
+        <%= image_tag(@image.image_file.variant(resize_to_limit: [1000, nil]), class: "img-thumbnail") %>
+      <% end %>
+    </div>
+    <div class="col-md-4 character-select">
+      <h3>This image has...</h3>
+      <% if @image.image_tags.empty? %>
+        <ul class="list-group list-group-flush rounded">
+          <li class="list-group-item list-group-item-danger">There are no characters in this image.</li>
+        </ul>
+      <% else %>
+        <ul class="list-group list-group-flush rounded">
+          <% @image.image_tags.each do | tag | %>
+            <li class="list-group-item list-group-item-info">
+              <span><%= tag.character.name %></span>
+              <%= link_to image_tag_url(tag), method: "delete" do %>
+                <button type="button" class="btn-close" aria-label="Close"></button>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
+      <% end %>
+
+      <% if @image.universe.characters.empty? %>
+        <ul class="list-group list-group-flush rounded">
+          <li class="list-group-item list-group-item-danger">There are no characters in this universe to link to this image.</li>
+        </ul>
+      <% else %>
+        <h3>You could add...</h3>
+        <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post" do |form| %>
+          <%= form.select :character_id, generate_character_names(@image.universe.characters, @image.image_tags), {include_blank: true}, {class: "form-control form-select form-select-lg mb-3"} %>
+          <%= form.submit "Add", class: "btn btn-primary" %>
+        <% end %>
+      <% end %>
+      <h3>Edit this image...</h3>
+        <%= form_with model: @image, url: universe_image_url(@image.universe, @image), method: "patch" do |form| %>
+        <div class="form-check">
+          <%= form.label :avatar, "Use as Avatar:", class: "form-check-label" %>
+          <%= form.check_box :avatar, class: "form-check-input" %>
+        </div>
+        <%= form.submit "Update", class: "btn btn-primary" %>
+        <% end %>
+      <h3>Delete this image?</h3>
+      <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger" %>
+    </div>
+  </div>
+</div>

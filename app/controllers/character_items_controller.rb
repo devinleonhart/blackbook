@@ -40,6 +40,7 @@ class CharacterItemsController < ApplicationController
       @character_item =
         CharacterItem.create!(character_id: params[:character_id], item: item)
     end
+    redirect_to @character_item.character
   end
 
   def update
@@ -72,7 +73,7 @@ class CharacterItemsController < ApplicationController
     )
 
     @character_item.destroy!
-    head :no_content
+    redirect_to @character_item.character
   end
 
   private

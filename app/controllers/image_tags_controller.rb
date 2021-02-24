@@ -29,6 +29,7 @@ class ImageTagsController < ApplicationController
     )
 
     @image_tag = ImageTag.create! properties
+    redirect_to edit_universe_image_url(character.universe.id, params[:image_id])
   end
 
   def destroy
@@ -41,7 +42,7 @@ class ImageTagsController < ApplicationController
     )
 
     @image_tag.destroy!
-    head :no_content
+    redirect_to edit_universe_image_url(@image_tag.character.universe.id, @image_tag.image.id)
   end
 
   private

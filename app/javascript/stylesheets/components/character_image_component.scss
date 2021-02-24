@@ -1,0 +1,13 @@
+.character-image-component {
+  img {
+    margin-bottom: 1em;
+  }
+
+  .pagination {
+    justify-content: center;
+
+    & > * {
+      margin: 0 .5em;
+    }
+  }
+}

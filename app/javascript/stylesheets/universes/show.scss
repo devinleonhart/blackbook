@@ -1,11 +1,30 @@
 .universe-show {
-  header, .cards {
+  header, img, .cards {
     margin-bottom: 1em;
   }
 
-  td {
-    align-items: center;
-    display: flex;
-    justify-content: space-around;
+  header, footer {
+    text-align: center;
+  }
+
+  footer {
+    margin-top: 3em;
+    padding: 1em;
+  }
+
+  .file-form {
+    margin-bottom: 1em;
+  }
+
+  .image {
+    text-align: center;
+  }
+
+  .pagination {
+    justify-content: center;
+
+    & > * {
+      margin: 0 .5em;
+    }
   }
 }

@@ -15,9 +15,10 @@
 class Location < ApplicationRecord
   include PgSearch::Model
 
-  multisearchable against: [:name, :description]
+  has_rich_text :content
 
-  validates :name, :description, presence: true
+  multisearchable against: [:name, :content]
+
   validates :name, uniqueness: { scope: :universe_id, case_sensitive: false }
 
   belongs_to :universe, inverse_of: :locations
