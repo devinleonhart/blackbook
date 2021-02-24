@@ -1,5 +1,5 @@
 set :rbenv_type, :user
-set :rbenv_ruby, '2.7.2'
+set :rbenv_ruby, '3.0.0'
 
 lock "~> 3.15.0"
 
