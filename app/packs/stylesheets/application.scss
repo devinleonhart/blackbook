@@ -1,16 +1,17 @@
+@import "bootstrap/scss/bootstrap";
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css");
 @import './palette.scss';
 @import './shared/_card.scss';
 @import './shared/_new_button_card.scss';
-@import './components/character_image_component.scss';
-@import './components/character_item_component.scss';
-@import './components/character_trait_component.scss';
+@import './characters/_image_list.scss';
+@import './characters/_item_list.scss';
+@import './characters/_trait_list.scss';
 @import './characters/show.scss';
 @import './images/edit.scss';
 @import './universes/_card_list.scss';
 @import './universes/_image_list.scss';
 @import './universes/index.scss';
 @import './universes/show.scss';
-
 
 html, body {
   box-sizing: border-box;

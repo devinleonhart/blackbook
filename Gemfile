@@ -14,12 +14,10 @@ gem 'factory_bot_rails', '~> 6.1'
 gem 'rack-cors', '~> 1.1', '>= 1.1.1'
 gem 'discard', '~> 1.2'
 gem 'devise', '~> 4.7', '>= 4.7.3'
-gem 'webpacker', '~> 5.2', '>= 5.2.1'
-gem 'view_component', '~> 2.26', '>= 2.26.1', require: "view_component/engine"
-gem 'stimulus-rails', '~> 0.2.3'
 gem 'image_processing', '~> 1.12', '>= 1.12.1'
 gem 'securerandom', '~> 0.1.0'
 gem 'will_paginate', '~> 3.3'
+gem 'webpacker', '~> 6.0.0.beta.5'
 
 group :development, :test do
   gem 'awesome_print', '~> 1.8'
