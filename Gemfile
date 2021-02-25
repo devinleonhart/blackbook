@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '>=3.0.0'
 
 gem 'rails', '~> 6.1.2.1'
-gem 'puma', '~> 5.2', '>= 5.2.1'
+gem 'puma', '~> 4.3', '>= 4.3.7'
 gem 'pg', '~> 1.2', '>= 1.2.3'
 gem 'pg_search', '~> 2.3', '>= 2.3.5'
 gem 'irb', '~> 1.3', '>= 1.3.3'
@@ -33,10 +33,11 @@ group :development do
   gem 'listen', '~> 3.4', '>= 3.4.1'
   gem 'spring', '~> 2.1', '>= 2.1.1'
   gem 'spring-watcher-listen', '~> 2.0', '>= 2.0.1'
-  gem 'capistrano', '~> 3.15'
-  gem 'capistrano-rails', '~> 1.6', '>= 1.6.1'
-  gem 'capistrano-rbenv', '~> 2.2'
-  gem 'capistrano3-puma', '~> 5.0', '>= 5.0.3'
+  gem 'capistrano',         require: false
+  gem 'capistrano-rbenv',     require: false
+  gem 'capistrano-rails',   require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano3-puma',   require: false
 end
 
 group :test do
