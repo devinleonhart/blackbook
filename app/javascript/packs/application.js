@@ -1,4 +1,6 @@
 /* eslint no-console:0 */
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
 
 import Rails from "@rails/ujs"
 import Turbolinks from "turbolinks"
