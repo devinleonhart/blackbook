@@ -1,0 +1,14 @@
+@import '../palette.scss';
+
+.character-item-component {
+  .badge {
+    align-items: center;
+    border: 1px solid $gray;
+    display: flex;
+    margin-bottom: 1em;
+
+    a {
+      margin-left: 1em;
+    }
+  }
+}

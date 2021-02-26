@@ -1,0 +1,12 @@
+@import '../palette.scss';
+
+.new-button-card {
+
+  outline-style: dashed;
+  outline-offset: -5px;
+
+  h5 {
+    color: $light-blue;
+    text-align: center;
+  }
+}
