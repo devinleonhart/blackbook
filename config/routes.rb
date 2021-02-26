@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :users, only: [:show, :update]
 
   resources :universes do
+    resources :collaborations, except: [:update], shallow: true
     resources :locations, shallow: true
     resources :characters, shallow: true do
       resources :character_items, shallow: true

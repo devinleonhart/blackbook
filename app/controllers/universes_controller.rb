@@ -26,8 +26,13 @@ class UniversesController < ApplicationController
     @images = Image.where(universe_id: @universe.id).paginate(page: params[:page], per_page: 12)
   end
 
+  def new
+    @universe = Universe.new()
+  end
+
   def create
-    @universe = Universe.create!(allowed_universe_params)
+    params = allowed_universe_params.merge(owner_id: current_user.id)
+    @universe = Universe.create!(params)
     flash[:success] = "Universe created!"
     redirect_to universes_url()
   end
