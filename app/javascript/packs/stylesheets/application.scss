@@ -1,5 +1,6 @@
 @import './palette.scss';
 @import './shared/_card.scss';
+@import './shared/_navbar.scss';
 @import './shared/_new_button_card.scss';
 @import './characters/_image_list.scss';
 @import './characters/_item_list.scss';
@@ -37,11 +38,6 @@ div.alert {
   ul {
     margin: 0 !important;
   }
-}
-
-// Navbar
-nav.navbar {
-  margin-bottom: 2em;
 }
 
 // Forms
