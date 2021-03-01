@@ -267,8 +267,6 @@ GEM
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
     semantic_range (2.3.1)
-    shoulda-matchers (4.5.1)
-      activesupport (>= 4.2.0)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -330,7 +328,7 @@ DEPENDENCIES
   capistrano-rails
   capistrano-rbenv
   capistrano3-puma
-  capybara (>= 3.26)
+  capybara (~> 3.35, >= 3.35.3)
   devise (~> 4.7, >= 4.7.3)
   discard (~> 1.2)
   factory_bot_rails (~> 6.1)
@@ -343,13 +341,12 @@ DEPENDENCIES
   puma (~> 4.3, >= 4.3.7)
   rack-mini-profiler (~> 2.0)
   rails (~> 6.1.2, >= 6.1.2.1)
-  rspec-rails (~> 4.0, >= 4.0.2)
+  rspec-rails (~> 4.0.2)
   rubocop-rails (~> 2.9, >= 2.9.1)
   rubocop-rspec (~> 2.2)
   sass-rails (>= 6)
   securerandom (~> 0.1.0)
   selenium-webdriver
-  shoulda-matchers (~> 4.5, >= 4.5.1)
   spring (~> 2.1, >= 2.1.1)
   spring-watcher-listen (~> 2.0, >= 2.0.1)
   turbolinks (~> 5)

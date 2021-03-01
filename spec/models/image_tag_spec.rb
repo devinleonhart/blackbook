@@ -14,16 +14,4 @@
 require "rails_helper"
 
 RSpec.describe ImageTag, type: :model do
-  describe "validations" do
-    describe "for uniqueness" do
-      subject { create(:image_tag) }
-
-      it { should validate_uniqueness_of(:character).scoped_to(:image_id) }
-    end
-  end
-
-  it { should belong_to(:character).required.inverse_of(:image_tags) }
-  it { should belong_to(:image).required.inverse_of(:image_tags) }
-
-  it { should delegate_method(:universe).to(:character).allow_nil }
 end

@@ -23,7 +23,7 @@ group :development, :test do
   gem 'awesome_print', '~> 1.8'
   gem 'byebug', '~> 11.1', '>= 11.1.3', platforms: [:mri, :mingw, :x64_mingw]
   gem 'pry-rails', '~> 0.3.9', :group => :development
-  gem 'rspec-rails', '~> 4.0', '>= 4.0.2'
+  gem 'rspec-rails', '~> 4.0.2'
   gem 'rubocop-rails', '~> 2.9', '>= 2.9.1'
   gem 'rubocop-rspec', '~> 2.2'
 end
@@ -43,9 +43,8 @@ group :development do
 end
 
 group :test do
-  gem 'capybara', '>= 3.26'
+  gem 'capybara', '~> 3.35', '>= 3.35.3'
   gem 'selenium-webdriver'
-  gem 'shoulda-matchers', '~> 4.5', '>= 4.5.1'
   gem 'webdrivers'
 end
 

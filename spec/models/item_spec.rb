@@ -13,31 +13,20 @@
 require "rails_helper"
 
 RSpec.describe Item, type: :model do
-  describe "validations" do
-    subject { build(:item) }
-
-    it { should validate_presence_of(:name) }
-
-    describe "for uniqueness" do
-      subject { create(:item) }
-
-      it { should validate_uniqueness_of(:name).ignoring_case_sensitivity }
-    end
+  it "is valid with valid attributes" do
+    @item = build(:item, name: "Max's Sword");
+    expect(@item).to be_valid
   end
 
-  it {
-    should(
-      have_many(:character_items)
-      .dependent(:restrict_with_error)
-      .inverse_of(:item)
-    )
-  }
-  it {
-    should(
-      have_many(:characters)
-      .through(:character_items)
-      .dependent(:restrict_with_error)
-      .inverse_of(:items)
-    )
-  }
+  it "is invalid when name is missing" do
+    @item = build(:item, name: nil);
+    expect(@item).to be_invalid
+  end
+
+  it "is invalid when name is already taken" do
+    @item1 = create(:item, name: "Max's Sword");
+    @item2 = build(:item, name: "Max's Sword");
+    expect(@item1).to be_valid
+    expect(@item2).to be_invalid
+  end
 end
