@@ -9,6 +9,7 @@ AllCops:
   - 'spec/spec_helper.rb'
   - 'spec/rails_helper.rb'
   - 'bin/**/*'
+  - 'node_modules/**/*'
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
@@ -22,15 +23,6 @@ Layout/FirstArrayElementIndentation:
 Layout/CaseIndentation:
   EnforcedStyle: end
 
-# I'd like to turn this cop on, but I can't find a way to write the following
-# rspec test code in a way that satisfies this cop, the cop that requires
-# multiline blocks to use do...end instead of {}, and the line length cop
-# without also being hideously ugly:
-#
-# expect { subject }.not_to change {
-#   long_condition_that_exceeds_line_length
-# }
-#
 Lint/AmbiguousBlockAssociation:
   Enabled: false
 
@@ -49,7 +41,7 @@ Metrics/ClassLength:
   Enabled: false
 
 Metrics/LineLength:
-  Max: 80
+  Max: 120
   IgnoredPatterns:
   - "^\\s*describe"
   - "^\\s*context"

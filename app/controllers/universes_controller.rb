@@ -2,7 +2,6 @@
 
 class UniversesController < ApplicationController
   def index
-
     owned_universes =
       Universe.kept.where(owner: current_user)
 
@@ -13,28 +12,27 @@ class UniversesController < ApplicationController
       .where(collaborations: { user: current_user })
 
     @universes = (owned_universes + collaborated_universes).uniq
-
   end
 
   def show
     @universe = Universe.kept.find_by(id: params[:id])
     raise MissingResource.new("universe", params[:id]) if @universe.nil?
-    unless @universe.visible_to_user?(current_user)
-      raise ForbiddenUniverseAction.new("viewed", true)
-    end
+    raise ForbiddenUniverseAction.new("viewed", true) unless @universe.visible_to_user?(current_user)
 
-    @images = Image.where(universe_id: @universe.id).paginate(page: params[:page], per_page: 12)
+    @images = Image.where(universe_id: @universe.id).paginate(
+page: params[:page], per_page: 12
+)
   end
 
   def new
-    @universe = Universe.new()
+    @universe = Universe.new
   end
 
   def create
     params = allowed_universe_params.merge(owner_id: current_user.id)
     @universe = Universe.create!(params)
     flash[:success] = "Universe created!"
-    redirect_to universes_url()
+    redirect_to universes_url
   end
 
   def edit
@@ -53,20 +51,18 @@ class UniversesController < ApplicationController
 
     @universe.update!(allowed_universe_params)
     flash[:success] = "Universe updated!"
-    redirect_to universes_url()
+    redirect_to universes_url
   end
 
   def destroy
     @universe = Universe.kept.find_by(id: params[:id])
     raise MissingResource.new("universe", params[:id]) if @universe.nil?
 
-    if @universe.owner != current_user
-      raise ForbiddenUniverseAction.new("deleted", false)
-    end
+    raise ForbiddenUniverseAction.new("deleted", false) if @universe.owner != current_user
 
     @universe.discard!
     flash[:success] = "Universe deleted!"
-    redirect_to universes_url()
+    redirect_to universes_url
   end
 
   private

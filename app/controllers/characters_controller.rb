@@ -73,7 +73,9 @@ class CharactersController < ApplicationController
 
     require_universe_visible_to_user("character", @character.universe.id)
 
-    @images = Image.joins(:image_tags).where(image_tags: { character: @character }).paginate(page: params[:page], per_page: 12)
+    @images = Image.joins(:image_tags).where(image_tags: { character: @character }).paginate(
+page: params[:page], per_page: 12
+)
   end
 
   def edit

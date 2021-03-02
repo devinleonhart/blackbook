@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CustomSpecHelpers
   def login_user(user)
     before(:each) do

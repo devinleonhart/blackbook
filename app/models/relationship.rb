@@ -49,8 +49,6 @@ class Relationship < ApplicationRecord
   def no_self_relationships
     return if originating_character.nil? || target_character.nil?
 
-    if originating_character == target_character
-      errors.add(:base, "A character can't have a relationship with itself.")
-    end
+    errors.add(:base, "A character can't have a relationship with itself.") if originating_character == target_character
   end
 end

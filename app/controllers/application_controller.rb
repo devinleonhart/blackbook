@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
-
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!
 
@@ -62,9 +61,7 @@ class ApplicationController < ActionController::Base
     universe = Universe.kept.find_by(id: universe_id)
     raise MissingResource.new("universe", universe_id) if universe.nil?
 
-    unless universe.visible_to_user?(current_user)
-      raise ForbiddenUniverseResource.new(universe.id, model_name)
-    end
+    raise ForbiddenUniverseResource.new(universe.id, model_name) unless universe.visible_to_user?(current_user)
   end
 
   def require_resource_be_in_universe(

@@ -3,9 +3,7 @@
 class MutualRelationshipsController < ApplicationController
   before_action lambda {
     character = Character.find_by(id: params[:character_id])
-    if character.nil?
-      raise MissingResource.new("character", params[:character_id])
-    end
+    raise MissingResource.new("character", params[:character_id]) if character.nil?
 
     require_universe_visible_to_user("relationships", character&.universe_id)
   }, only: [:index, :create]
@@ -23,9 +21,7 @@ class MutualRelationshipsController < ApplicationController
       .includes(relationships: [:originating_character, :target_character])
       .find_by(id: params[:id])
 
-    if @mutual_relationship.nil?
-      raise MissingResource.new("MutualRelationship", params[:id])
-    end
+    raise MissingResource.new("MutualRelationship", params[:id]) if @mutual_relationship.nil?
 
     require_universe_visible_to_user(
       "relationships",
@@ -62,9 +58,7 @@ class MutualRelationshipsController < ApplicationController
       .includes(relationships: [:originating_character, :target_character])
       .find_by(id: params[:id])
 
-    if @mutual_relationship.nil?
-      raise MissingResource.new("MutualRelationship", params[:id])
-    end
+    raise MissingResource.new("MutualRelationship", params[:id]) if @mutual_relationship.nil?
 
     require_universe_visible_to_user(
       "relationships",
@@ -105,9 +99,7 @@ class MutualRelationshipsController < ApplicationController
 
   def destroy
     @mutual_relationship = MutualRelationship.find_by(id: params[:id])
-    if @mutual_relationship.nil?
-      raise MissingResource.new("MutualRelationship", params[:id])
-    end
+    raise MissingResource.new("MutualRelationship", params[:id]) if @mutual_relationship.nil?
 
     require_universe_visible_to_user(
       "relationships",

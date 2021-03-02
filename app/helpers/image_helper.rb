@@ -1,13 +1,12 @@
+# frozen_string_literal: true
+
 module ImageHelper
   def get_avatar_image(images)
-    unless images.nil?
-      unless images.empty?
-        image = images.find { | image | image.avatar == true }
-        if image == nil
-          return images.first
-        end
-        return image
-      end
+    if images.present?
+      image = images.find { |i| i.avatar == true }
+      return images.first if image.nil?
+
+      image
     end
   end
 end

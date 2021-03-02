@@ -3,9 +3,7 @@
 class CharacterItemsController < ApplicationController
   before_action lambda {
     character = Character.find_by(id: params[:character_id])
-    if character.nil?
-      raise MissingResource.new("character", params[:character_id])
-    end
+    raise MissingResource.new("character", params[:character_id]) if character.nil?
 
     require_universe_visible_to_user(
       "characters' items",
@@ -22,9 +20,7 @@ class CharacterItemsController < ApplicationController
 
   def show
     @character_item = CharacterItem.includes(:item).find_by(id: params[:id])
-    if @character_item.nil?
-      raise MissingResource.new("CharacterItem", params[:id])
-    end
+    raise MissingResource.new("CharacterItem", params[:id]) if @character_item.nil?
 
     require_universe_visible_to_user(
       "characters' items",
@@ -45,9 +41,7 @@ class CharacterItemsController < ApplicationController
 
   def update
     @character_item = CharacterItem.includes(:item).find_by(id: params[:id])
-    if @character_item.nil?
-      raise MissingResource.new("CharacterItem", params[:id])
-    end
+    raise MissingResource.new("CharacterItem", params[:id]) if @character_item.nil?
 
     require_universe_visible_to_user(
       "characters' items",
@@ -63,9 +57,7 @@ class CharacterItemsController < ApplicationController
 
   def destroy
     @character_item = CharacterItem.find_by(id: params[:id])
-    if @character_item.nil?
-      raise MissingResource.new("CharacterItem", params[:id])
-    end
+    raise MissingResource.new("CharacterItem", params[:id]) if @character_item.nil?
 
     require_universe_visible_to_user(
       "characters' items",

@@ -24,16 +24,12 @@ class Image < ApplicationRecord
   private
 
   def requires_image_attached
-    unless image_file.attached?
-      errors.add(:image_file, "must have an attached file")
-    end
+    errors.add(:image_file, "must have an attached file") unless image_file.attached?
   rescue ActiveSupport::MessageVerifier::InvalidSignature => error
     errors.add(:image_file, "has invalid data (#{error.message})")
   end
 
   def set_filename
-    if image_file.attached?
-      image_file.blob.update(filename: "#{SecureRandom.uuid}.#{image_file.filename.extension}")
-    end
+    image_file.blob.update!(filename: "#{SecureRandom.uuid}.#{image_file.filename.extension}") if image_file.attached?
   end
 end

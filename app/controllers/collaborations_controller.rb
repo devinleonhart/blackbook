@@ -7,7 +7,10 @@ class CollaborationsController < ApplicationController
       .includes(:user, :universe)
       .find_by(id: params[:id])
 
-    raise MissingResource.new("collaboration", params[:id]) if @collaboration.nil?
+    if @collaboration.nil?
+      raise MissingResource.new("collaboration",
+        params[:id])
+    end
   end
 
   def create
@@ -23,7 +26,10 @@ class CollaborationsController < ApplicationController
 
   def destroy
     @collaboration = Collaboration.find_by(id: params[:id])
-    raise MissingResource.new("collaboration", params[:id]) if @collaboration.nil?
+    if @collaboration.nil?
+      raise MissingResource.new("collaboration",
+        params[:id])
+    end
 
     @collaboration.destroy!
     redirect_to edit_universe_url(@collaboration.universe.id)
