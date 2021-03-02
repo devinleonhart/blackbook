@@ -25,7 +25,7 @@ page: params[:page], per_page: 12
   end
 
   def new
-    @universe = Universe.new
+    @new_universe = Universe.new
   end
 
   def create

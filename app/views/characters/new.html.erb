@@ -2,7 +2,7 @@
   <div class="col-md-6 mx-auto">
     <h1>New Character</h1>
 
-    <%= form_with model: @character, url: universe_characters_url(universe_id: @character.universe_id), html: { class: "bbform border border-dark border-2 rounded" } do |form| %>
+    <%= form_with model: @new_character, url: universe_characters_url(universe_id: @new_character.universe_id), html: { class: "bbform border border-dark border-2 rounded" } do |form| %>
       <div class="mb-3">
         <%= form.label :name, class: "form-label" %>
         <%= form.text_field :name, class: "form-control" %>
@@ -12,7 +12,7 @@
         <%= form.rich_text_area :content %>
       </div>
       <%= form.submit "Save", class: "btn btn-primary" %>
-      <%= link_to "Cancel", universe_url(@character.universe_id), class: "btn btn-primary" %>
+      <%= link_to "Cancel", universe_url(@new_character.universe_id), class: "btn btn-primary" %>
     <% end %>
   </div>
 </div>

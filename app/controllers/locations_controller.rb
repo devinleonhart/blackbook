@@ -16,7 +16,7 @@ class LocationsController < ApplicationController
   end
 
   def new
-    @location = Location.new(universe_id: params[:universe_id])
+    @new_location = Location.new(universe_id: params[:universe_id])
   end
 
   def create

@@ -57,7 +57,7 @@ class CharactersController < ApplicationController
   end
 
   def new
-    @character = Character.new(universe_id: params[:universe_id])
+    @new_character = Character.new(universe_id: params[:universe_id])
   end
 
   def show
