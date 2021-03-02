@@ -27,16 +27,11 @@
     <%= link_to 'Back to Home', universes_url(), class: 'btn btn-primary' %>
   </div>
 
-  <footer>
-    <span class="owner-collaborators">Owner: <%= @universe.owner.display_name %>
-    <% unless @universe.collaborators.empty? %>
-         | Collaborators:
-        <% @universe.collaborators.each do | collaborator | %>
-          <%= collaborator.display_name %>
-        <% end %>
-    <% end %>
-    </span>
-  </footer>
+  <%= render partial: "universes/universe_footer", locals: {
+    owner: @universe.owner,
+    collaborators: @universe.collaborators
+  } %>
+
 </section>
 
 

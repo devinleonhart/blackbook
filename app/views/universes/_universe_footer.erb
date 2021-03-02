@@ -1,0 +1,14 @@
+  <footer>
+    <span class="owner-collaborators">Owner: <%= owner.display_name %>
+      <% unless collaborators.empty? %>
+          | Collaborators:
+          <% collaborators.each_with_index do | collaborator, index | %>
+            <% if index == collaborators.length-1 %>
+              <%= collaborator.display_name %>
+            <% else %>
+              <%= collaborator.display_name %>,
+            <% end %>
+          <% end %>
+      <% end %>
+    </span>
+  </footer>
