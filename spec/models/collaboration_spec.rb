@@ -15,9 +15,9 @@ require "rails_helper"
 
 RSpec.describe Collaboration, type: :model do
   it "is valid with valid attached models" do
-      @universe = create(:universe)
-      @user = create(:user)
-      @collaboration = build(:collaboration, universe: @universe, user: @user)
+    @universe = create(:universe)
+    @user = create(:user)
+    @collaboration = build(:collaboration, universe: @universe, user: @user)
     expect(@collaboration).to be_valid
   end
 
