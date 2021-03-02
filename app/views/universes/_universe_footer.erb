@@ -1,14 +1,18 @@
-  <footer>
-    <span class="owner-collaborators">Owner: <%= owner.display_name %>
+<footer class="universe-footer">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      Owner: <%= owner.display_name %>
+      <br />
       <% unless collaborators.empty? %>
-          | Collaborators:
-          <% collaborators.each_with_index do | collaborator, index | %>
-            <% if index == collaborators.length-1 %>
-              <%= collaborator.display_name %>
-            <% else %>
-              <%= collaborator.display_name %>,
-            <% end %>
+      Collaborators:
+        <% collaborators.each_with_index do | collaborator, index | %>
+          <% if index == collaborators.length-1 %>
+            <%= collaborator.display_name %>
+          <% else %>
+            <%= collaborator.display_name %>,
           <% end %>
+        <% end %>
       <% end %>
-    </span>
-  </footer>
+    </div>
+  </div>
+</footer>
