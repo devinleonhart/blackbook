@@ -4,50 +4,51 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <% unless @universe.nil? %>
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <%= link_to "Back to #{@universe.name}", universe_url(@universe), class: "nav-link"%>
-        </li>
-      </ul>
-    <% end %>
-    <% unless @character.nil? %>
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <%= link_to "Back to #{@character.universe.name}", universe_url(@character.universe), class: "nav-link"%>
-        </li>
-      </ul>
-    <% end %>
-    <% unless @image.nil? %>
     <ul class="navbar-nav">
-        <li class="nav-item">
-          <%= link_to "Back to #{@image.universe.name}", universe_url(@image.universe), class: "nav-link"%>
-        </li>
-      </ul>
-    <% end %>
-    <% unless @location.nil? %>
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <%= link_to "Back to #{@location.universe.name}", universe_url(@location.universe), class: "nav-link"%>
-        </li>
-      </ul>
-    <% end %>
+      <% unless @universe.nil? %>
+        <%= render partial: "shared/navbar_link", locals: {
+          label: "Back to #{@universe.name}",
+          url: universe_url(@universe),
+        } %>
+      <% end %>
+      <% unless @character.nil? %>
+        <%= render partial: "shared/navbar_link", locals: {
+          label: "Back to #{@character.universe.name}",
+          url: universe_url(@character.universe),
+        } %>
+      <% end %>
+      <% unless @image.nil? %>
+        <%= render partial: "shared/navbar_link", locals: {
+          label: "Back to #{@image.universe.name}",
+          url: universe_url(@image.universe),
+        } %>
+      <% end %>
+      <% unless @location.nil? %>
+        <%= render partial: "shared/navbar_link", locals: {
+          label: "Back to #{@location.universe.name}",
+          url: universe_url(@location.universe),
+        } %>
+      <% end %>
+    </ul>
     <div class="collapse navbar-collapse flex-row-reverse" id="navbarNav">
       <ul class="navbar-nav">
         <% unless @universe.nil? %>
-          <li class="nav-item">
-            <%= link_to "Edit Universe", edit_universe_url(@universe), class: "nav-link"%>
-          </li>
+          <%= render partial: "shared/navbar_link", locals: {
+            label: "Edit Universe",
+            url: edit_universe_url(@universe),
+          } %>
         <% end %>
         <% unless @character.nil? %>
-          <li class="nav-item">
-            <%= link_to "Edit Character", edit_character_url(@character), class: "nav-link"%>
-          </li>
+          <%= render partial: "shared/navbar_link", locals: {
+            label: "Edit Character",
+            url: edit_character_url(@character),
+          } %>
         <% end %>
         <% unless @location.nil? %>
-          <li class="nav-item">
-            <%= link_to "Edit Location", edit_location_url(@location), class: "nav-link"%>
-          </li>
+          <%= render partial: "shared/navbar_link", locals: {
+            label: "Edit Location",
+            url: edit_location_url(@location),
+          } %>
         <% end %>
         <% if user_signed_in? %>
           <li class="nav-item">
