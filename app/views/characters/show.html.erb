@@ -3,6 +3,8 @@
   <p><%= @character.content %></p>
 </div>
 
+<% render partial: "shared/capture_navbar" %>
+
 <%= render partial: "characters/image_list", locals: {
   character: @character,
   images: @images,
@@ -17,7 +19,3 @@
 <%= render partial: "characters/item_list", locals: {
   character: @character,
 } %>
-
-
-<%= link_to "Edit #{@character.name}", edit_character_url(@character), class: "btn btn-primary" %>
-<%= link_to "Back to #{@character.universe.name}", universe_url(@character.universe), class: "btn btn-primary" %>

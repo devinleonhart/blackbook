@@ -1,5 +1,4 @@
 <h1><%= @location.name %></h1>
 <p><%= @location.content %></p>
 
-<%= link_to "Edit #{@location.name}", edit_location_url(@location), class: "btn btn-primary" %>
-<%= link_to "Back to #{@location.universe.name}", universe_url(@location.universe), class: "btn btn-primary" %>
+<% render partial: "shared/capture_navbar" %>

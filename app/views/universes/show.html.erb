@@ -3,6 +3,8 @@
     <h1><%= @universe.name %></h1>
   </header>
 
+  <% render partial: "shared/capture_navbar" %>
+
   <%= render partial: "universes/card_list", locals: {
     collection: @universe.characters,
     collection_url: ->(x) { character_url(x) },
@@ -21,11 +23,6 @@
     images: @images,
     universe: @universe
   } %>
-
-  <div class="controls">
-    <%= link_to "Edit #{@universe.name}", edit_universe_url(@universe), class: 'btn btn-primary' %>
-    <%= link_to 'Back to Home', universes_url(), class: 'btn btn-primary' %>
-  </div>
 
   <%= render partial: "universes/universe_footer", locals: {
     owner: @universe.owner,
