@@ -1,20 +1,5 @@
 <div class="character-trait-component container" data-controller="character-trait">
   <div class="row">
-    <div class="col-md-4 mx-auto">
-      <%= form_with model: CharacterTrait.new(), url: character_character_traits_url(@character), method: "post" do | form | %>
-        <div class="form-group">
-          <div class="input-group">
-              <%= form.text_field :trait_name, class: "form-control" %>
-            <div class="input-group-append">
-              <%= form.submit "Add", class: "btn btn-primary" %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </div>
-  <hr />
-  <div class="row">
       <% if @character.traits.empty? %>
       <div class="col-md-10 mx-auto">
         <ul class="list-group list-group-flush rounded">
@@ -33,5 +18,21 @@
         </div>
       <% end %>
     <% end %>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-md-4 mx-auto">
+      <%= form_with model: CharacterTrait.new(), url: character_character_traits_url(@character), method: "post" do | form | %>
+        <div class="form-group">
+          <%= form.label "New Trait", class: "form-label" %>
+          <div class="input-group">
+              <%= form.text_field :trait_name, class: "form-control" %>
+            <div class="input-group-append">
+              <%= form.submit "Add", class: "btn btn-primary" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>

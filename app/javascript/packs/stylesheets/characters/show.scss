@@ -1,19 +1,27 @@
 @import '../palette.scss';
 
 .characters-show {
+
+  h2 {
+    border-radius: 5px 5px 0 0;
+    padding: .25em;
+  }
+
+  section {
+    margin-bottom: 1em;
+  }
+
+  section.character-traits, section.character-items {
+    border: 1px solid $light-gray;
+    border-radius: 5px;
+    padding-bottom: 2em;
+  }
+
   .pagination {
     justify-content: center;
 
     & > * {
       margin: 0 .5em;
-    }
-  }
-
-  ul {
-    margin: 1em;
-
-    li.list-group-item {
-      text-align: center;
     }
   }
 }

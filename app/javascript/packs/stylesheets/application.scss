@@ -34,6 +34,14 @@ pre {
   color: $dark-gray !important;
 }
 
+ul.list-group {
+  margin: 1em;
+
+  li.list-group-item {
+    text-align: center;
+  }
+}
+
 .bb-dark {
   background-color: $dark-gray;
   color: $light-gray;
