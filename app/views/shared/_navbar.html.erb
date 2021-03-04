@@ -5,12 +5,6 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <ul class="navbar-nav">
-      <% unless @universe.nil? %>
-        <%= render partial: "shared/navbar_link", locals: {
-          label: "Back to #{@universe.name}",
-          url: universe_url(@universe),
-        } %>
-      <% end %>
       <% unless @character.nil? %>
         <%= render partial: "shared/navbar_link", locals: {
           label: "Back to #{@character.universe.name}",
