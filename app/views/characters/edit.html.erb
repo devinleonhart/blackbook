@@ -1,20 +1,22 @@
-<div class="row">
-  <div class="col-md-10 mx-auto">
-    <h2>Edit Character</h2>
+<div class="characters-edit">
+  <div class="row">
+    <div class="col-md-10 mx-auto">
+      <h2>Edit Character</h2>
 
-    <%= form_with model: @character, url: character_url(@character), method: "patch", class: "bbform border border-dark border-2 rounded" do |form| %>
-      <div class="mb-3">
-        <%= form.label :name, class: "form-label" %>
-        <%= form.text_field :name, class: "form-control" %>
-      </div>
-      <div class="mb-3">
-        <%= form.label :content, class: "form-label" %>
-        <%= form.rich_text_area :content %>
-      </div>
-      <%= form.submit "Save", class: "btn btn-primary" %>
-      <%= link_to "Cancel", character_path(@character), class: "btn btn-primary" %>
-      <%= link_to "Delete", character_path(@character), method: "delete", :data => {:confirm => "Are you sure?"}, class: "btn btn-danger" %>
-    <% end %>
+      <%= form_with model: @character, url: character_url(@character), method: "patch", class: "bbform border border-dark border-2 rounded trix-editor-custom" do |form| %>
+        <div class="mb-3">
+          <%= form.label :name, class: "form-label" %>
+          <%= form.text_field :name, class: "form-control" %>
+        </div>
+        <div class="mb-3">
+          <%= form.label :content, class: "form-label" %>
+          <%= form.rich_text_area :content %>
+        </div>
+        <%= form.submit "Save", class: "btn btn-primary" %>
+        <%= link_to "Cancel", character_path(@character), class: "btn btn-primary" %>
+        <%= link_to "Delete", character_path(@character), method: "delete", :data => {:confirm => "Are you sure?"}, class: "btn btn-danger" %>
+      <% end %>
 
+    </div>
   </div>
 </div>

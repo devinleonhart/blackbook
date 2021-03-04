@@ -2,6 +2,7 @@
 @import './shared/_card.scss';
 @import './shared/_navbar.scss';
 @import './shared/_new_button_card.scss';
+@import './shared/_trix_editor_custom.scss';
 @import './characters/_image_list.scss';
 @import './characters/_item_list.scss';
 @import './characters/_trait_list.scss';
@@ -25,7 +26,12 @@ html, body {
 }
 
 a {
+  color: $light-cyan;
   text-decoration: none;
+}
+
+pre {
+  color: $dark-gray !important;
 }
 
 .bb-dark {

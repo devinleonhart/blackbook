@@ -1,0 +1,11 @@
+@import '../palette.scss';
+
+.trix-editor-custom {
+  trix-editor {
+    border-radius: 5px;
+    min-height: 400px;
+  }
+  .trix-button {
+    background-color: $light-gray;
+  }
+}

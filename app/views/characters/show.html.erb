@@ -1,21 +1,32 @@
-<h1><%= @character.name %></h1>
-<div class="container">
-  <p><%= @character.content %></p>
+<div class="characters-show">
+
+  <section class="character-content">
+    <h1><%= @character.name %></h1>
+    <div class="container">
+      <p><%= @character.content %></p>
+    </div>
+  </section>
+
+  <% render partial: "shared/capture_navbar" %>
+
+  <section class="character-images">
+    <%= render partial: "characters/image_list", locals: {
+      character: @character,
+      images: @images,
+    } %>
+  </section>
+
+  <h2>Traits</h2>
+  <section class="character-traits">
+    <%= render partial: "characters/trait_list", locals: {
+      character: @character,
+    } %>
+  </section>
+
+  <h2>Items</h2>
+  <section class="character-items">
+    <%= render partial: "characters/item_list", locals: {
+      character: @character,
+    } %>
+  </section>
 </div>
-
-<% render partial: "shared/capture_navbar" %>
-
-<%= render partial: "characters/image_list", locals: {
-  character: @character,
-  images: @images,
-} %>
-
-<h2>Traits</h2>
-<%= render partial: "characters/trait_list", locals: {
-  character: @character,
-} %>
-
-<h2>Items</h2>
-<%= render partial: "characters/item_list", locals: {
-  character: @character,
-} %>
