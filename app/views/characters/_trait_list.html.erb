@@ -15,15 +15,23 @@
   </div>
   <hr />
   <div class="row">
-    <% @character.traits.sort_by{ |e| e.name.downcase }.each do | trait | %>
-      <div class="col-md-auto">
-        <span class="badge bg-dark">
-          <span><%= trait.name %></span>
-          <%= link_to character_trait_url(trait), method: "delete" do %>
-            <button type="button" class="btn-close btn-close-white" aria-label="Close"></button>
-          <% end %>
-        </span>
+      <% if @character.traits.empty? %>
+      <div class="col-md-10 mx-auto">
+        <ul class="list-group list-group-flush rounded">
+          <li class="list-group-item list-group-item-danger">This character has no traits.</li>
+        </ul>
       </div>
+    <% else %>
+      <% @character.traits.sort_by{ |e| e.name.downcase }.each do | trait | %>
+        <div class="col-md-auto">
+          <span class="badge bg-dark">
+            <span><%= trait.name %></span>
+            <%= link_to character_trait_url(trait), method: "delete" do %>
+              <button type="button" class="btn-close btn-close-white" aria-label="Close"></button>
+            <% end %>
+          </span>
+        </div>
+      <% end %>
     <% end %>
   </div>
 </div>
