@@ -26,7 +26,7 @@
                   <%= relationship.name %>
                 </td>
                 <td>
-                  <%= relationship.target_character.name %>
+                  <%= link_to "#{relationship.target_character.name}", character_url(relationship.target_character.id)%>
                 </td>
                 <td>
                   <%= form_with model: MutualRelationship.new(), url: mutual_relationship_url(relationship.mutual_relationship), method: "delete" do | form | %>
