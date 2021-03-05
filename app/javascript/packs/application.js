@@ -26,5 +26,9 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 const images = require.context('./images', true);
 const imagePath = name => images(name, true)
 
+// Fonts
+const fonts = require.context('./fonts', true);
+const fontPath = name => fonts(name, true)
+
 // Custom Styling
 import './stylesheets/application.scss';

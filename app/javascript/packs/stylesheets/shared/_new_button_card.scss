@@ -1,12 +1,13 @@
 @import '../palette.scss';
 
 .new-button-card {
-
+  min-height: 150px;
   outline-style: dashed;
   outline-offset: -5px;
 
   h5 {
     color: $light-blue;
+    min-height: 150px;
     text-align: center;
   }
 }
