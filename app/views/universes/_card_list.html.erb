@@ -11,12 +11,12 @@
           </div>
         <% else %>
           <% collection.sort_by{ |e| e.name.downcase }.each do | item | %>
-            <div class="col-md-2">
+            <div class="col-md-3">
               <%= link_to render(:partial => "shared/card", locals: { name: item.name, avatar: get_avatar_image(item.try(:images)) }), collection_url.call(item) %>
             </div>
           <% end %>
         <% end %>
-        <div class="col-md-2">
+        <div class="col-md-3">
           <%= link_to render(partial: "shared/new_button_card"), new_url %>
         </div>
       </div>

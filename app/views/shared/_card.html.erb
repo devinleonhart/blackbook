@@ -1,7 +1,7 @@
 <div class="card">
   <%# <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Image cap" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#868e96"></rect><text x="50%" y="50%" fill="#dee2e6" dy=".3em">Image cap</text></svg> %>
   <% unless avatar.nil? %>
-    <%= image_tag(avatar.image_file.variant(resize_to_limit: [250, nil]), class: "card-img-top") %>
+    <%= image_tag(avatar.image_file.variant(resize_to_limit: [350, nil]), class: "card-img-top") %>
   <% else %>
     <%= image_pack_tag "media/packs/images/card_placeholder.png", class: "card-img-top" %>
   <% end %>
