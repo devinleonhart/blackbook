@@ -1,0 +1,61 @@
+<div class="character-relationsips container">
+  <div class="row">
+    <div class="col-md-12 mx-auto">
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Originating Character</th>
+            <th scope="col">Relationship Name</th>
+            <th scope="col">Target Character</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <% if @character.relationships.empty? %>
+          <tbody>
+            <tr class="table-danger">
+              <td colspan=4>This character has no relationships.</td>
+            </tr>
+        <% else %>
+          <tbody>
+            <% @character.originating_relationships.each do | relationship | %>
+              <tr>
+                <td>
+                  <%= relationship.originating_character.name %>
+                </td>
+                <td>
+                  <%= relationship.name %>
+                </td>
+                <td>
+                  <%= relationship.target_character.name %>
+                </td>
+                <td>
+                  <%= form_with model: MutualRelationship.new(), url: mutual_relationship_url(relationship.mutual_relationship), method: "delete" do | form | %>
+                    <%= form.hidden_field :redirecting_character_id, :value => @character.id, class: "form-control" %>
+                    <%= form.submit "", class: "btn-close btn-close-white" %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+        <% end %>
+          <tr class="table-primary">
+            <%= form_with model: MutualRelationship.new(), url: character_mutual_relationships_url(@character), method: "post" do | form | %>
+            <td><%= @character.name %></td>
+            <td>
+              <div class="mb-3">
+                <%= label_tag :forward_name, "What is #{@character.name}'s relationship to the target character?", class: "form-label" %>
+                <%= form.text_field :forward_name, placeholder: "Ex. Father", class: "form-control" %>
+              </div>
+              <div class="mb-3">
+                <%= label_tag :forward_name, "What is the target character's relationship to this #{@character.name}?", class: "form-label" %>
+                <%= form.text_field :reverse_name, placeholder: "Ex. Son", class: "form-control" %>
+              </div>
+            </td>
+            <td><%= form.select :target_character_id, generate_relationship_names(@character.universe.characters, [@character]), {include_blank: true}, {class: "form-control form-select form-select-lg mb-3"} %></td>
+            <td><%= form.submit "Add", class: "btn btn-primary" %></td>
+            <% end %>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

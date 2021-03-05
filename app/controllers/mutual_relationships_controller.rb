@@ -50,6 +50,7 @@ class MutualRelationshipsController < ApplicationController
       )
       @mutual_relationship.reload
     end
+    redirect_to character_url(params[:character_id])
   end
 
   def update
@@ -107,7 +108,7 @@ class MutualRelationshipsController < ApplicationController
     )
 
     @mutual_relationship.destroy!
-    head :no_content
+    redirect_to character_url(allowed_mutual_relationship_delete_params[:redirecting_character_id])
   end
 
   private
@@ -124,8 +125,16 @@ class MutualRelationshipsController < ApplicationController
     params.require(:mutual_relationship).require(:originating_character_id)
     params.require(:mutual_relationship).permit(
       :originating_character_id,
+      :redirecting_character_id,
       :forward_name,
       :reverse_name,
+    )
+  end
+
+  def allowed_mutual_relationship_delete_params
+    params.require(:mutual_relationship).require(:redirecting_character_id)
+    params.require(:mutual_relationship).permit(
+      :redirecting_character_id,
     )
   end
 end

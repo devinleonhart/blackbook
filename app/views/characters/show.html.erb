@@ -30,6 +30,13 @@
     } %>
   </section>
 
+  <section class="character-relationships">
+    <h2>Relationships</h2>
+    <%= render partial: "characters/relationship_table", locals: {
+      character: @character,
+    } %>
+  </section>
+
   <section class="character-facts">
     <h2>Facts</h2>
     <%= render partial: "characters/fact_list", locals: {

@@ -22,4 +22,12 @@ module SelectOptionHelper
     end
     names
   end
+
+    def generate_relationship_names(characters, existing_characters)
+      names = []
+      characters.each do |character|
+        names.push([character.name, character.id]) unless existing_characters.any? { |echaracter| echaracter.id == character.id }
+      end
+      names
+    end
 end
