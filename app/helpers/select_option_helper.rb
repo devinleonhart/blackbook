@@ -6,7 +6,7 @@ module SelectOptionHelper
     characters.each do |character|
       names.push([character.name, character.id]) unless existing_tags.any? { |tag| tag.character.id == character.id }
     end
-    names
+    names.sort_by {|pair| pair[0].downcase }
   end
 
   def generate_collaborator_names(users, existing_collaborators, owner)
@@ -20,7 +20,7 @@ module SelectOptionHelper
 
       names.push([user.display_name, user.id])
     end
-    names
+    names.sort_by {|pair| pair[0] }
   end
 
     def generate_relationship_names(characters, existing_characters)
@@ -28,6 +28,6 @@ module SelectOptionHelper
       characters.each do |character|
         names.push([character.name, character.id]) unless existing_characters.any? { |echaracter| echaracter.id == character.id }
       end
-      names
+      names.sort_by {|pair| pair[0] }
     end
 end
