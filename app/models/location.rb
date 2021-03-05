@@ -22,4 +22,6 @@ class Location < ApplicationRecord
   validates :name, uniqueness: { scope: :universe_id, case_sensitive: false }
 
   belongs_to :universe, inverse_of: :locations
+
+  has_many :facts, inverse_of: :character, dependent: :destroy
 end

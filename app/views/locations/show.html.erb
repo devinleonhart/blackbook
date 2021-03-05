@@ -2,3 +2,10 @@
 <p><%= @location.content %></p>
 
 <% render partial: "shared/capture_navbar" %>
+
+<section class="location-facts">
+  <h2>Facts</h2>
+  <%= render partial: "locations/fact_list", locals: {
+    location: @location,
+  } %>
+</section>

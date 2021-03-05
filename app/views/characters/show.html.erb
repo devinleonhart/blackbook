@@ -29,4 +29,12 @@
       character: @character,
     } %>
   </section>
+
+  <section class="character-facts">
+    <h2>Facts</h2>
+    <%= render partial: "characters/fact_list", locals: {
+      character: @character,
+    } %>
+  </section>
+
 </div>

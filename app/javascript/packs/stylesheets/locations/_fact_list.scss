@@ -1,0 +1,13 @@
+.location-fact {
+  .fact {
+    display: flex;
+    align-items: center;
+
+    a {
+      padding: 0 0 3px 1em;
+    }
+  }
+  .fact-group {
+    margin-bottom: 1em;
+  }
+}

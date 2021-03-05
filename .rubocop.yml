@@ -10,6 +10,7 @@ AllCops:
   - 'spec/rails_helper.rb'
   - 'bin/**/*'
   - 'node_modules/**/*'
+  - 'db/schema.rb'
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation

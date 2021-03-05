@@ -11,8 +11,8 @@
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
-# rubocop:disable Metrics/BlockLength
-ActiveRecord::Schema.define(version: 20_210_224_000_436) do
+
+ActiveRecord::Schema.define(version: 20_210_304_215_113) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "fuzzystrmatch"
@@ -26,8 +26,7 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.bigint "record_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["record_type", "record_id", "name"],
-      name: "index_action_text_rich_texts_uniqueness", unique: true
+    t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
   end
 
   create_table "active_storage_attachments", force: :cascade do |t|
@@ -37,8 +36,8 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"],
-      name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness",
+                                                             unique: true
   end
 
   create_table "active_storage_blobs", force: :cascade do |t|
@@ -56,8 +55,7 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
   create_table "active_storage_variant_records", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
-    t.index ["blob_id", "variation_digest"],
-      name: "index_active_storage_variant_records_uniqueness", unique: true
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "character_items", force: :cascade do |t|
@@ -65,8 +63,7 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.bigint "item_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["character_id", "item_id"],
-      name: "index_character_items_on_character_id_and_item_id", unique: true
+    t.index ["character_id", "item_id"], name: "index_character_items_on_character_id_and_item_id", unique: true
     t.index ["character_id"], name: "index_character_items_on_character_id"
     t.index ["item_id"], name: "index_character_items_on_item_id"
   end
@@ -76,8 +73,7 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.bigint "trait_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["character_id", "trait_id"],
-      name: "index_character_traits_on_character_id_and_trait_id", unique: true
+    t.index ["character_id", "trait_id"], name: "index_character_traits_on_character_id_and_trait_id", unique: true
     t.index ["character_id"], name: "index_character_traits_on_character_id"
     t.index ["trait_id"], name: "index_character_traits_on_trait_id"
   end
@@ -89,8 +85,7 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.datetime "updated_at", precision: 6, null: false
     t.datetime "discarded_at"
     t.index ["discarded_at"], name: "index_characters_on_discarded_at"
-    t.index ["name", "universe_id"],
-      name: "index_characters_on_name_and_universe_id", unique: true
+    t.index ["name", "universe_id"], name: "index_characters_on_name_and_universe_id", unique: true
     t.index ["universe_id"], name: "index_characters_on_universe_id"
   end
 
@@ -100,9 +95,19 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["universe_id"], name: "index_collaborations_on_universe_id"
-    t.index ["user_id", "universe_id"],
-      name: "index_collaborations_on_user_id_and_universe_id", unique: true
+    t.index ["user_id", "universe_id"], name: "index_collaborations_on_user_id_and_universe_id", unique: true
     t.index ["user_id"], name: "index_collaborations_on_user_id"
+  end
+
+  create_table "facts", force: :cascade do |t|
+    t.text "content", null: false
+    t.string "fact_type", null: false
+    t.bigint "character_id"
+    t.bigint "location_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["character_id"], name: "index_facts_on_character_id"
+    t.index ["location_id"], name: "index_facts_on_location_id"
   end
 
   create_table "image_tags", force: :cascade do |t|
@@ -110,8 +115,7 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.bigint "image_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["character_id", "image_id"],
-      name: "index_image_tags_on_character_id_and_image_id", unique: true
+    t.index ["character_id", "image_id"], name: "index_image_tags_on_character_id_and_image_id", unique: true
     t.index ["character_id"], name: "index_image_tags_on_character_id"
     t.index ["image_id"], name: "index_image_tags_on_image_id"
   end
@@ -137,8 +141,7 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.bigint "universe_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["name", "universe_id"],
-      name: "index_locations_on_name_and_universe_id", unique: true
+    t.index ["name", "universe_id"], name: "index_locations_on_name_and_universe_id", unique: true
     t.index ["universe_id"], name: "index_locations_on_universe_id"
   end
 
@@ -153,8 +156,7 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.bigint "searchable_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["searchable_type", "searchable_id"],
-      name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
+    t.index ["searchable_type", "searchable_id"], name: "index_pg_search_documents_on_searchable_type_and_searchable_id"
   end
 
   create_table "relationships", force: :cascade do |t|
@@ -164,16 +166,12 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.citext "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["mutual_relationship_id"],
-      name: "index_relationships_on_mutual_relationship_id"
-    t.index ["originating_character_id", "target_character_id", "name"],
-      name: "relationships_unique_constraint", unique: true
-    t.index ["originating_character_id"],
-      name: "index_relationships_on_originating_character_id"
-    t.index ["target_character_id"],
-      name: "index_relationships_on_target_character_id"
-    t.check_constraint "originating_character_id <> target_character_id",
-      name: "relationships_no_self_relationships"
+    t.index ["mutual_relationship_id"], name: "index_relationships_on_mutual_relationship_id"
+    t.index ["originating_character_id", "target_character_id", "name"], name: "relationships_unique_constraint",
+                                                                         unique: true
+    t.index ["originating_character_id"], name: "index_relationships_on_originating_character_id"
+    t.index ["target_character_id"], name: "index_relationships_on_target_character_id"
+    t.check_constraint "originating_character_id <> target_character_id", name: "relationships_no_self_relationships"
   end
 
   create_table "traits", force: :cascade do |t|
@@ -205,23 +203,20 @@ ActiveRecord::Schema.define(version: 20_210_224_000_436) do
     t.datetime "remember_created_at"
     t.index ["display_name"], name: "index_users_on_display_name", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"],
-      name: "index_users_on_reset_password_token", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "active_storage_attachments", "active_storage_blobs",
-    column: "blob_id"
-  add_foreign_key "active_storage_variant_records", "active_storage_blobs",
-    column: "blob_id"
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "character_items", "characters"
   add_foreign_key "character_items", "items"
   add_foreign_key "character_traits", "characters"
   add_foreign_key "character_traits", "traits"
   add_foreign_key "characters", "universes"
+  add_foreign_key "facts", "characters"
+  add_foreign_key "facts", "locations"
   add_foreign_key "locations", "universes"
-  add_foreign_key "relationships", "characters",
-    column: "originating_character_id"
+  add_foreign_key "relationships", "characters", column: "originating_character_id"
   add_foreign_key "relationships", "characters", column: "target_character_id"
   add_foreign_key "universes", "users", column: "owner_id"
 end
-# rubocop:enable Metrics/BlockLength
