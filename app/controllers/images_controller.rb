@@ -51,6 +51,6 @@ class ImagesController < ApplicationController
   end
 
   def allowed_image_update_params
-    params.require(:image).permit(:caption, :avatar)
+    params.require(:image).permit(:caption, :avatar, :universe_avatar)
   end
 end

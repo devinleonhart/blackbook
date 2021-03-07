@@ -46,8 +46,14 @@
         </div>
         <div class="mb-3">
           <div class="form-check">
-            <%= form.label :avatar, "Use as Card Avatar", class: "form-check-label", for: "avatarCheckbox" %>
+            <%= form.label :avatar, "Use as Character Avatar", class: "form-check-label", for: "avatarCheckbox" %>
             <%= form.check_box :avatar, class: "form-check-input", id: "avatarCheckbox" %>
+          </div>
+        </div>
+        <div class="mb-3">
+          <div class="form-check">
+            <%= form.label :universe_avatar, "Use as Universe Avatar", class: "form-check-label", for: "universeAvatarCheckbox" %>
+            <%= form.check_box :universe_avatar, class: "form-check-input", id: "universeAvatarCheckbox" %>
           </div>
         </div>
 
