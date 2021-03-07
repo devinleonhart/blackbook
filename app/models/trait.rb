@@ -16,7 +16,7 @@ class Trait < ApplicationRecord
   multisearchable against: [:name]
 
   validates :name, presence: true
-  validates :name, uniqueness: { case_sensitive: false }
+  validates :name, uniqueness: true
 
   has_many :character_traits, dependent: :restrict_with_error, inverse_of:
     :trait

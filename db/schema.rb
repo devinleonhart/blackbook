@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_07_221021) do
+ActiveRecord::Schema.define(version: 2021_03_07_230538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -129,7 +129,7 @@ ActiveRecord::Schema.define(version: 2021_03_07_221021) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.string "name", null: false
+    t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_items_on_name", unique: true
@@ -173,7 +173,7 @@ ActiveRecord::Schema.define(version: 2021_03_07_221021) do
   end
 
   create_table "traits", force: :cascade do |t|
-    t.citext "name", null: false
+    t.text "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_traits_on_name", unique: true
