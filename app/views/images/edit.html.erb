@@ -40,14 +40,21 @@
       <% end %>
       <h3>Edit this image...</h3>
         <%= form_with model: @image, url: universe_image_url(@image.universe, @image), method: "patch" do |form| %>
-        <div class="form-check">
-          <%= form.label :avatar, "Use as Avatar:", class: "form-check-label" %>
-          <%= form.check_box :avatar, class: "form-check-input" %>
+        <div class="mb-3">
+          <%= form.label :caption, "Caption", class: "form-label" %>
+          <%= form.text_field :caption, class: "form-control" %>
         </div>
+        <div class="mb-3">
+          <div class="form-check">
+            <%= form.label :avatar, "Use as Card Avatar", class: "form-check-label", for: "avatarCheckbox" %>
+            <%= form.check_box :avatar, class: "form-check-input", id: "avatarCheckbox" %>
+          </div>
+        </div>
+
         <%= form.submit "Update", class: "btn btn-primary" %>
         <% end %>
       <h3>Delete this image?</h3>
-      <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger" %>
+      <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger delete-button" %>
     </div>
   </div>
 </div>
