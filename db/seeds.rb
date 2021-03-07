@@ -21,10 +21,12 @@ end
 
 def relate_characters(characters)
   characters.each_with_index do |character, index|
-    if(index == 0)
-      FactoryBot.create(:mutual_relationship, character_universe: character.universe, character1: character, character2: characters[characters.length-1])
+    if index.zero?
+      FactoryBot.create(:mutual_relationship, character_universe: character.universe, character1: character,
+                                              character2: characters[characters.length - 1])
     else
-      FactoryBot.create(:mutual_relationship, character_universe: character.universe, character1: character, character2: characters[index-1])
+      FactoryBot.create(:mutual_relationship, character_universe: character.universe, character1: character,
+                                              character2: characters[index - 1])
     end
   end
 end
@@ -57,7 +59,7 @@ ActiveRecord::Base.transaction do
     locations: create_locations(5)
   )
 
-  relate_characters(universe1.characters);
+  relate_characters(universe1.characters)
 
   universe2 = FactoryBot.build(
     :universe,
