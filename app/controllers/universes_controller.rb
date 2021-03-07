@@ -19,7 +19,7 @@ class UniversesController < ApplicationController
     raise MissingResource.new("universe", params[:id]) if @universe.nil?
     raise ForbiddenUniverseAction.new("viewed", true) unless @universe.visible_to_user?(current_user)
 
-    @images = Image.where(universe_id: @universe.id).paginate(
+    @images = Image.where(universe_id: @universe.id).order(created_at: :desc).paginate(
 page: params[:page], per_page: 12
 )
   end
