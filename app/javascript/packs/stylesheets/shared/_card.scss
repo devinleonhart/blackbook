@@ -1,6 +1,7 @@
 @import '../palette.scss';
 
 .card {
+
   background-color: $gray;
   color: $light-gray;
   margin-bottom: 1em;
@@ -23,4 +24,5 @@
     align-items: center;
     justify-content: center;
   }
+
 }

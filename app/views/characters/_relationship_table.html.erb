@@ -1,4 +1,6 @@
-<div class="character-relationsips container">
+<section class="character-relationships-table">
+
+  <h2>Relationships</h2>
   <div class="row">
     <div class="col-md-12 mx-auto">
       <table class="table table-dark table-striped">
@@ -7,7 +9,9 @@
             <th scope="col">Originating Character</th>
             <th scope="col">Relationship Name</th>
             <th scope="col">Target Character</th>
-            <th scope="col"></th>
+            <% if view == 'edit' %>
+              <th scope="col"></th>
+            <% end %>
           </tr>
         </thead>
         <% if @character.relationships.empty? %>
@@ -28,15 +32,18 @@
                 <td>
                   <%= link_to "#{relationship.target_character.name}", character_url(relationship.target_character.id)%>
                 </td>
-                <td>
-                  <%= form_with model: MutualRelationship.new(), url: mutual_relationship_url(relationship.mutual_relationship), method: "delete" do | form | %>
-                    <%= form.hidden_field :redirecting_character_id, :value => @character.id, class: "form-control" %>
-                    <%= form.submit "", class: "btn-close btn-close-white" %>
-                  <% end %>
-                </td>
+                <% if view == 'edit' %>
+                  <td>
+                    <%= form_with model: MutualRelationship.new(), url: mutual_relationship_url(relationship.mutual_relationship), method: "delete" do | form | %>
+                      <%= form.hidden_field :redirecting_character_id, :value => @character.id, class: "form-control" %>
+                      <%= form.submit "", class: "btn-close btn-close-white" %>
+                    <% end %>
+                  </td>
+                <% end %>
               </tr>
             <% end %>
         <% end %>
+        <% if view == 'edit' %>
           <tr class="table-primary">
             <%= form_with model: MutualRelationship.new(), url: character_mutual_relationships_url(@character), method: "post" do | form | %>
             <td><%= @character.name %></td>
@@ -46,7 +53,7 @@
                 <%= form.text_field :forward_name, placeholder: "Ex. Father", class: "form-control" %>
               </div>
               <div class="mb-3">
-                <%= label_tag :forward_name, "What is the target character's relationship to this #{@character.name}?", class: "form-label" %>
+                <%= label_tag :forward_name, "What is the target character's relationship to #{@character.name}?", class: "form-label" %>
                 <%= form.text_field :reverse_name, placeholder: "Ex. Son", class: "form-control" %>
               </div>
             </td>
@@ -54,8 +61,10 @@
             <td><%= form.submit "Add", class: "btn btn-primary" %></td>
             <% end %>
           </tr>
+        <% end %>
         </tbody>
       </table>
     </div>
   </div>
-</div>
+
+</section>

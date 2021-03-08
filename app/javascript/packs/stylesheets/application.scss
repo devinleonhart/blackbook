@@ -1,28 +1,28 @@
 @import './palette.scss';
+@import './shared/trix.scss';
+@import './shared/_app_footer.scss';
 @import './shared/_card.scss';
+@import './shared/_empty_banner.scss';
 @import './shared/_navbar.scss';
 @import './shared/_new_button_card.scss';
-@import './shared/_trix_editor_custom.scss';
-@import './characters/_fact_list.scss';
 @import './characters/_image_list.scss';
 @import './characters/_item_list.scss';
 @import './characters/_relationship_table.scss';
 @import './characters/_trait_list.scss';
 @import './characters/show.scss';
 @import './images/edit.scss';
-@import './locations/_fact_list.scss';
 @import './universes/_card_list.scss';
 @import './universes/_image_list.scss';
-@import './universes/universe_footer.scss';
 @import './universes/edit.scss';
-@import './universes/index.scss';
 @import './universes/show.scss';
 
 html, body {
+  background-color: $dark-gray;
   box-sizing: border-box;
+  color: $light-gray;
+  font-family: 'Montserrat', sans-serif;
   margin: 0;
   padding: 0;
-  font-family: 'Montserrat', sans-serif;
 }
 
 *, *:before, *:after {
@@ -36,61 +36,4 @@ a {
 
 pre {
   color: $dark-gray !important;
-}
-
-ul.list-group {
-  margin: 1em;
-
-  li.list-group-item {
-    text-align: center;
-  }
-}
-
-.bb-dark {
-  background-color: $dark-gray;
-  color: $light-gray;
-}
-
-// Flash alerts
-div.alert {
-  line-height: 1.3;
-  margin-top: 1em;
-  ul {
-    margin: 0 !important;
-  }
-}
-
-// Forms
-.bbform {
-  padding: 1.5rem;
-  margin-right: 0;
-  margin-left: 0;
-}
-
-// Trix
-.trix-content {
-  .attachment-gallery {
-    > action-text-attachment,
-    > .attachment {
-      flex: 1 0 33%;
-      padding: 0 0.5em;
-      max-width: 33%;
-    }
-
-    &.attachment-gallery--2,
-    &.attachment-gallery--4 {
-      > action-text-attachment,
-      > .attachment {
-        flex-basis: 50%;
-        max-width: 50%;
-      }
-    }
-  }
-
-  action-text-attachment {
-    .attachment {
-      padding: 0 !important;
-      max-width: 100% !important;
-    }
-  }
 }

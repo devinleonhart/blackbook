@@ -5,18 +5,13 @@ require "factory_bot_rails"
 
 def create_characters(number_of_characters)
   FactoryBot.create_list(:character, number_of_characters) do |character|
-    character.facts = FactoryBot.create_list(:fact, 3,
-      fact_type: "Type 1") + FactoryBot.create_list(:fact, 3, fact_type: "Type 2")
     character.traits = FactoryBot.create_list(:trait, 50)
     character.items = FactoryBot.create_list(:item, 10)
   end
 end
 
 def create_locations(number_of_locations)
-  FactoryBot.create_list(:location, number_of_locations) do |location|
-    location.facts = FactoryBot.create_list(:fact, 3,
-      fact_type: "Type 1") + FactoryBot.create_list(:fact, 3, fact_type: "Type 2")
-  end
+  FactoryBot.create_list(:location, number_of_locations)
 end
 
 def relate_characters(characters)

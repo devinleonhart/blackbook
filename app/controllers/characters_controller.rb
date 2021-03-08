@@ -74,7 +74,7 @@ class CharactersController < ApplicationController
     require_universe_visible_to_user("character", @character.universe.id)
 
     @images = Image.joins(:image_tags).where(image_tags: { character: @character }).order(created_at: :desc).paginate(
-page: params[:page], per_page: 12
+page: params[:page], per_page: 18
 )
   end
 
@@ -87,6 +87,7 @@ page: params[:page], per_page: 12
         image_tags: [:image],
       )
       .find_by(id: params[:id])
+
     raise MissingResource.new("character", params[:id]) if @character.nil?
   end
 
@@ -111,6 +112,7 @@ page: params[:page], per_page: 12
     require_universe_visible_to_user("character", @character.universe.id)
 
     @character.update!(allowed_character_params)
+    flash[:success] = "Character updated!"
     redirect_to character_url(@character)
   end
 

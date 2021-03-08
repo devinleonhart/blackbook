@@ -1,4 +1,6 @@
-<div class="character-item container">
+<section class="character-item-list">
+
+  <h2>Items</h2>
   <div class="row">
     <% if @character.character_items.empty? %>
       <div class="col-md-10 mx-auto">
@@ -11,28 +13,33 @@
         <div class="col-md-auto">
           <span class="badge bg-dark">
             <span><%= character_item.item.name %></span>
-            <%= link_to character_item_url(character_item), method: "delete" do %>
-              <button type="button" class="btn-close btn-close-white" aria-label="Close"></button>
+            <% if view == 'edit' %>
+              <%= link_to character_item_url(character_item), method: "delete" do %>
+                <button type="button" class="btn-close btn-close-white" aria-label="Close"></button>
+              <% end %>
             <% end %>
           </span>
         </div>
       <% end %>
     <% end %>
   </div>
-  <hr />
-  <div class="row">
-    <div class="col-md-4 mx-auto">
-      <%= form_with model: CharacterItem.new(), url: character_character_items_url(@character), method: "post" do | form | %>
-        <div class="form-group">
-          <%= form.label "New Item", class: "form-label" %>
-          <div class="input-group">
-              <%= form.text_field :item_name, class: "form-control" %>
-            <div class="input-group-append">
-              <%= form.submit "Add", class: "btn btn-primary" %>
+  <% if view == 'edit' %>
+    <hr />
+    <div class="row">
+      <div class="col-md-4 mx-auto">
+        <%= form_with model: CharacterItem.new(), url: character_character_items_url(@character), method: "post" do | form | %>
+          <div class="form-group">
+            <%= form.label "New Item", class: "form-label" %>
+            <div class="input-group">
+                <%= form.text_field :item_name, class: "form-control" %>
+              <div class="input-group-append">
+                <%= form.submit "Add", class: "btn btn-primary" %>
+              </div>
             </div>
           </div>
-        </div>
-      <% end %>
+        <% end %>
+      </div>
     </div>
-  </div>
-</div>
+  <% end %>
+
+</section>

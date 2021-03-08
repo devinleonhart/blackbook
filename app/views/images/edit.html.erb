@@ -1,6 +1,7 @@
 <% render partial: "shared/capture_navbar" %>
 
-<div class="image-edit">
+<section class="images-edit-view">
+
   <div class="row">
     <h2>Image Tags</h2>
     <div class="col-md-8">
@@ -63,4 +64,11 @@
       <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger delete-button" %>
     </div>
   </div>
-</div>
+
+  <%= render partial: "shared/app_footer", locals: {
+    owner: @image.universe.owner,
+    collaborators: @image.universe.collaborators
+  } %>
+
+</section>
+

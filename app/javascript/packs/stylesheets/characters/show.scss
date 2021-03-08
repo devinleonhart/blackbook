@@ -1,11 +1,6 @@
 @import '../palette.scss';
 
-.characters-show {
-
-  h2 {
-    border-radius: 5px 5px 0 0;
-    padding: .25em;
-  }
+.characters-show-view {
 
   section {
     margin-bottom: 1em;
@@ -26,4 +21,5 @@
       margin: 0 .5em;
     }
   }
+
 }

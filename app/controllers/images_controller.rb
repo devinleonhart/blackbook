@@ -13,6 +13,7 @@ class ImagesController < ApplicationController
     properties =
       allowed_image_create_params.merge(universe_id: params[:universe_id])
     @image = Image.create!(properties)
+    flash[:success] = "Image created!"
     redirect_to universe_url(params[:universe_id])
   end
 
@@ -41,6 +42,7 @@ class ImagesController < ApplicationController
     raise MissingResource.new("image", params[:id]) if @image.nil?
 
     @image.destroy!
+    flash[:success] = "Image deleted!"
     redirect_to universe_url(@image.universe)
   end
 

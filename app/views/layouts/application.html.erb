@@ -11,19 +11,17 @@
     <link rel="prefetch" href="<%= asset_pack_path 'media/packs/fonts/Montserrat-BoldItalic.ttf' %>" />
   </head>
 
-  <body class="bb-dark">
+  <body>
+
     <% if content_for?(:navbar) %>
       <%= yield(:navbar) %>
     <% else %>
       <%= render "shared/navbar" %>
     <% end %>
     <div class="container">
-      <% flash.each do |key, value| %>
-        <div class="<%= flash_class(key) %>">
-          <%= value %>
-        </div>
-      <% end %>
+      <%= render "shared/flashbar" %>
       <%= yield%>
     </div>
+
   </body>
 </html>

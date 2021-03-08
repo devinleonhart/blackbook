@@ -1,8 +1,9 @@
-<div class="universe-edit">
+<section class="universes-edit-view">
+
   <div class="row">
     <div class="col-md-8">
     <h2>Edit Universe</h2>
-      <%= form_with model: @universe, url: universe_url(@universe), method: "patch", class: "bbform border border-dark border-2 rounded" do |form| %>
+      <%= form_with model: @universe, url: universe_url(@universe), method: "patch", class: "border border-dark border-2 rounded" do |form| %>
         <div class="mb-3">
           <%= form.label :name, class: "form-label" %>
           <%= form.text_field :name, class: "form-control" %>
@@ -39,4 +40,10 @@
       <%= link_to "Delete", universe_url(@universe), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger" %>
     </div>
   </div>
-</div>
+
+  <%= render partial: "shared/app_footer", locals: {
+    owner: @universe.owner,
+    collaborators: @universe.collaborators
+  } %>
+
+</section>

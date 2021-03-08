@@ -15,20 +15,6 @@ class MutualRelationshipsController < ApplicationController
       .where(originating_character_id: params[:character_id])
   end
 
-  def show
-    @mutual_relationship =
-      MutualRelationship
-      .includes(relationships: [:originating_character, :target_character])
-      .find_by(id: params[:id])
-
-    raise MissingResource.new("MutualRelationship", params[:id]) if @mutual_relationship.nil?
-
-    require_universe_visible_to_user(
-      "relationships",
-      @mutual_relationship.universe.id,
-    )
-  end
-
   def create
     this_character_id = params[:character_id]
     target_character_id =
@@ -50,52 +36,7 @@ class MutualRelationshipsController < ApplicationController
       )
       @mutual_relationship.reload
     end
-    redirect_to character_url(params[:character_id])
-  end
-
-  def update
-    @mutual_relationship =
-      MutualRelationship
-      .includes(relationships: [:originating_character, :target_character])
-      .find_by(id: params[:id])
-
-    raise MissingResource.new("MutualRelationship", params[:id]) if @mutual_relationship.nil?
-
-    require_universe_visible_to_user(
-      "relationships",
-      @mutual_relationship.universe.id,
-    )
-
-    originating_character_id =
-      allowed_mutual_relationship_update_params[:originating_character_id]
-      .to_i
-
-    character_ids_in_relationship = @mutual_relationship.characters.map(&:id)
-    unless character_ids_in_relationship.include?(originating_character_id)
-      raise InvalidCharacterIdForRelationship.new(
-        @mutual_relationship.id,
-        originating_character_id,
-      )
-    end
-
-    ActiveRecord::Base.transaction do
-      @mutual_relationship.relationships.each do |relationship|
-        forward_direction =
-          relationship.originating_character.id == originating_character_id
-        new_name = if forward_direction
-          allowed_mutual_relationship_update_params[:forward_name]
-        else
-          allowed_mutual_relationship_update_params[:reverse_name]
-        end
-
-        unless new_name.nil?
-          relationship.name = new_name
-          relationship.save!
-        end
-      end
-    end
-
-    @mutual_relationship
+    redirect_to edit_character_url(params[:character_id])
   end
 
   def destroy
@@ -108,7 +49,7 @@ class MutualRelationshipsController < ApplicationController
     )
 
     @mutual_relationship.destroy!
-    redirect_to character_url(allowed_mutual_relationship_delete_params[:redirecting_character_id])
+    redirect_to edit_character_url(allowed_mutual_relationship_delete_params[:redirecting_character_id])
   end
 
   private
@@ -118,16 +59,6 @@ class MutualRelationshipsController < ApplicationController
       :forward_name,
       :reverse_name,
       :target_character_id,
-    )
-  end
-
-  def allowed_mutual_relationship_update_params
-    params.require(:mutual_relationship).require(:originating_character_id)
-    params.require(:mutual_relationship).permit(
-      :originating_character_id,
-      :redirecting_character_id,
-      :forward_name,
-      :reverse_name,
     )
   end
 

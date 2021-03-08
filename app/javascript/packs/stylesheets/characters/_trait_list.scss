@@ -1,6 +1,7 @@
 @import '../palette.scss';
 
-.character-trait {
+.character-trait-list {
+
   .badge {
     align-items: center;
     border: 1px solid $gray;
@@ -11,4 +12,5 @@
       margin-left: 1em;
     }
   }
+
 }

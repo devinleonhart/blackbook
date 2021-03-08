@@ -1,9 +1,10 @@
-<div class="characters-edit">
+<section class="characters-edit-view">
+
   <div class="row">
     <div class="col-md-10 mx-auto">
       <h2>Edit Character</h2>
 
-      <%= form_with model: @character, url: character_url(@character), method: "patch", class: "bbform border border-dark border-2 rounded trix-editor-custom" do |form| %>
+      <%= form_with model: @character, url: character_url(@character), method: "patch", class: "border border-dark border-2 rounded trix-editor-custom" do |form| %>
         <div class="mb-3">
           <%= form.label :name, class: "form-label" %>
           <%= form.text_field :name, class: "form-control" %>
@@ -18,5 +19,26 @@
       <% end %>
 
     </div>
+
+    <%= render partial: "characters/trait_list", locals: {
+      character: @character,
+      view: 'edit'
+    } %>
+
+    <%= render partial: "characters/item_list", locals: {
+      character: @character,
+      view: 'edit'
+    } %>
+
+    <%= render partial: "characters/relationship_table", locals: {
+      character: @character,
+      view: 'edit'
+    } %>
   </div>
-</div>
+
+  <%= render partial: "shared/app_footer", locals: {
+    owner: @character.universe.owner,
+    collaborators: @character.universe.collaborators
+  } %>
+
+</section>

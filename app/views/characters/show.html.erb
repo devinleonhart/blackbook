@@ -1,4 +1,4 @@
-<div class="characters-show">
+<section class="characters-show-view">
 
   <section class="character-content">
     <h1><%= @character.name %></h1>
@@ -9,39 +9,29 @@
 
   <% render partial: "shared/capture_navbar" %>
 
-  <section class="character-images">
-    <%= render partial: "characters/image_list", locals: {
-      character: @character,
-      images: @images,
-    } %>
-  </section>
+  <%= render partial: "characters/trait_list", locals: {
+    character: @character,
+    view: 'show'
+  } %>
 
-  <section class="character-traits">
-    <h2>Traits</h2>
-    <%= render partial: "characters/trait_list", locals: {
-      character: @character,
-    } %>
-  </section>
+  <%= render partial: "characters/item_list", locals: {
+    character: @character,
+    view: 'show'
+  } %>
 
-  <section class="character-items">
-    <h2>Items</h2>
-    <%= render partial: "characters/item_list", locals: {
-      character: @character,
-    } %>
-  </section>
+  <%= render partial: "characters/relationship_table", locals: {
+    character: @character,
+    view: 'show'
+  } %>
 
-  <section class="character-relationships">
-    <h2>Relationships</h2>
-    <%= render partial: "characters/relationship_table", locals: {
-      character: @character,
-    } %>
-  </section>
+  <%= render partial: "characters/image_list", locals: {
+    character: @character,
+    images: @images,
+  } %>
 
-  <section class="character-facts">
-    <h2>Facts</h2>
-    <%= render partial: "characters/fact_list", locals: {
-      character: @character,
-    } %>
-  </section>
+  <%= render partial: "shared/app_footer", locals: {
+    owner: @character.universe.owner,
+    collaborators: @character.universe.collaborators
+  } %>
 
-</div>
+</section>

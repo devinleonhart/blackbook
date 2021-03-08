@@ -1,4 +1,5 @@
-<section class="universe-show">
+<section class="universes-show-view">
+
   <header>
     <h1><%= @universe.name %></h1>
   </header>
@@ -26,7 +27,7 @@
     universe: @universe
   } %>
 
-  <%= render partial: "universes/universe_footer", locals: {
+  <%= render partial: "shared/app_footer", locals: {
     owner: @universe.owner,
     collaborators: @universe.collaborators
   } %>

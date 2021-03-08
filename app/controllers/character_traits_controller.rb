@@ -18,16 +18,6 @@ class CharacterTraitsController < ApplicationController
       .where(character_id: params[:character_id])
   end
 
-  def show
-    @character_trait = CharacterTrait.includes(:trait).find_by(id: params[:id])
-    raise MissingResource.new("CharacterTrait", params[:id]) if @character_trait.nil?
-
-    require_universe_visible_to_user(
-      "characters' traits",
-      @character_trait.universe.id,
-    )
-  end
-
   def create
     ActiveRecord::Base.transaction do
       trait = Trait.find_or_create_by!(
@@ -37,24 +27,7 @@ class CharacterTraitsController < ApplicationController
         character_id: params[:character_id], trait: trait
       )
     end
-    redirect_to @character_trait.character
-  end
-
-  def update
-    @character_trait = CharacterTrait.includes(:trait).find_by(id: params[:id])
-    raise MissingResource.new("CharacterTrait", params[:id]) if @character_trait.nil?
-
-    require_universe_visible_to_user(
-      "characters' traits",
-      @character_trait.universe.id,
-    )
-
-    ActiveRecord::Base.transaction do
-      trait = Trait.find_or_create_by!(
-        name: allowed_character_trait_params[:trait_name]
-      )
-      @character_trait.update!(trait: trait)
-    end
+    redirect_to edit_character_url(@character_trait.character)
   end
 
   def destroy
@@ -67,7 +40,7 @@ class CharacterTraitsController < ApplicationController
     )
 
     @character_trait.destroy!
-    redirect_to @character_trait.character
+    redirect_to edit_character_url(@character_trait.character)
   end
 
   private

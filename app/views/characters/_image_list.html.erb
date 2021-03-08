@@ -1,4 +1,5 @@
-<div class="character-image container">
+<section class="character-image-list">
+
   <div class="row">
     <% @images.each do | image | %>
       <div class="col-md-2">
@@ -10,4 +11,5 @@
     <% end %>
     <%= will_paginate @images %>
   </div>
-</div>
+
+</section>

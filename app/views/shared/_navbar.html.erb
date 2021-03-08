@@ -6,43 +6,37 @@
     </button>
     <ul class="navbar-nav">
       <% unless @character.nil? %>
-        <%= render partial: "shared/navbar_link", locals: {
-          label: "Back to #{@character.universe.name}",
-          url: universe_url(@character.universe),
-        } %>
+        <li class="nav-item">
+          <%= link_to "Back to #{@character.universe.name}", universe_url(@character.universe), class: "nav-link"%>
+        </li>
       <% end %>
       <% unless @image.nil? %>
-        <%= render partial: "shared/navbar_link", locals: {
-          label: "Back to #{@image.universe.name}",
-          url: universe_url(@image.universe),
-        } %>
+        <li class="nav-item">
+          <%= link_to "Back to #{@image.universe.name}", universe_url(@image.universe), class: "nav-link"%>
+        </li>
       <% end %>
       <% unless @location.nil? %>
-        <%= render partial: "shared/navbar_link", locals: {
-          label: "Back to #{@location.universe.name}",
-          url: universe_url(@location.universe),
-        } %>
+        <li class="nav-item">
+          <%= link_to "Back to #{@location.universe.name}", universe_url(@location.universe), class: "nav-link"%>
+        </li>
       <% end %>
     </ul>
     <div class="collapse navbar-collapse flex-row-reverse" id="navbarNav">
       <ul class="navbar-nav">
         <% unless @universe.nil? %>
-          <%= render partial: "shared/navbar_link", locals: {
-            label: "Edit Universe",
-            url: edit_universe_url(@universe),
-          } %>
+          <li class="nav-item">
+            <%= link_to "Edit Universe", edit_universe_url(@universe), class: "nav-link"%>
+          </li>
         <% end %>
         <% unless @character.nil? %>
-          <%= render partial: "shared/navbar_link", locals: {
-            label: "Edit Character",
-            url: edit_character_url(@character),
-          } %>
+          <li class="nav-item">
+            <%= link_to "Edit Character", edit_character_url(@character), class: "nav-link"%>
+          </li>
         <% end %>
         <% unless @location.nil? %>
-          <%= render partial: "shared/navbar_link", locals: {
-            label: "Edit Location",
-            url: edit_location_url(@location),
-          } %>
+          <li class="nav-item">
+            <%= link_to "Edit Location", edit_location_url(@location), class: "nav-link"%>
+          </li>
         <% end %>
         <% if user_signed_in? %>
           <li class="nav-item">

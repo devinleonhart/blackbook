@@ -1,4 +1,5 @@
-<section class="universe-index">
+<section class="universes-index-view">
+
   <%= render partial: "universes/card_list", locals: {
     collection: @universes,
     collection_url: ->(x) { universe_url(x) },
@@ -6,4 +7,5 @@
     new_url: new_universe_url(@universe),
     name: "Universes"
   } %>
+
 </section>
