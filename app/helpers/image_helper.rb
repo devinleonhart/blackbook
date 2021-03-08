@@ -13,4 +13,12 @@ module ImageHelper
   def get_universe_avatar_image(images)
     images.find { |i| i.universe_avatar == true } if images.present?
   end
+
+  def generate_image_tag(image, size)
+    if image.image_file.filename.extension == 'gif'
+      image_tag(image.image_file, class: "img-thumbnail")
+    else
+      image_tag(image.image_file.variant(resize_to_limit: size), class: "img-thumbnail")
+    end
+  end
 end
