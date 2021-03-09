@@ -4,11 +4,9 @@
     <div class="col-md-12">
       <div class="row card-row">
         <% if collection.empty? %>
-          <div class="col-md-10 mx-auto">
-            <ul class="list-group list-group-flush rounded">
-              <li class="list-group-item list-group-item-danger">There are no <%= name.downcase %> yet, create some!</li>
-            </ul>
-          </div>
+          <%= render partial: "shared/empty_banner", locals: {
+            message: "There are no #{name.downcase} yet, create some!"
+          } %>
         <% else %>
           <% collection.sort_by{ |e| e.name.downcase }.each do | item | %>
             <div class="col-md-3">

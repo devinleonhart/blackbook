@@ -17,11 +17,9 @@
     <div class="col-md-12">
       <div class="row">
         <% if images.empty? %>
-          <div class="col-md-10 mx-auto">
-            <ul class="list-group list-group-flush rounded">
-              <li class="list-group-item list-group-item-danger">This universe has no images.</li>
-            </ul>
-          </div>
+          <%= render partial: "shared/empty_banner", locals: {
+            message: "There are no images yet, create some!"
+          } %>
         <% else %>
           <% images.each do | image | %>
             <div class="col-md-2 image">

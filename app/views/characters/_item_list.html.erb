@@ -3,11 +3,9 @@
   <h2>Items</h2>
   <div class="row">
     <% if @character.character_items.empty? %>
-      <div class="col-md-10 mx-auto">
-        <ul class="list-group list-group-flush rounded">
-          <li class="list-group-item list-group-item-danger">This character has no items.</li>
-        </ul>
-      </div>
+      <%= render partial: "shared/empty_banner", locals: {
+        message: "This character has no items!"
+      } %>
     <% else %>
       <% @character.character_items.sort_by{ |e| e.item.name.downcase }.each do | character_item | %>
         <div class="col-md-auto">

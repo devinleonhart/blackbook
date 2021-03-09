@@ -1,4 +1,4 @@
-.character-relationsips-table {
+.character-relationships-table {
 
   table {
     text-align: center;
@@ -6,6 +6,13 @@
 
     select {
       margin: 0 !important;
+    }
+
+    tr.empty-row {
+      td {
+        padding: .5em;
+        text-align: center;
+      }
     }
   }
 

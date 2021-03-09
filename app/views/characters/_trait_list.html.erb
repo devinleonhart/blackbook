@@ -3,11 +3,9 @@
   <h2>Traits</h2>
   <div class="row">
     <% if @character.character_traits.empty? %>
-      <div class="col-md-10 mx-auto">
-        <ul class="list-group list-group-flush rounded">
-          <li class="list-group-item list-group-item-danger">This character has no traits.</li>
-        </ul>
-      </div>
+      <%= render partial: "shared/empty_banner", locals: {
+        message: "This character has no traits!"
+      } %>
     <% else %>
       <% @character.character_traits.sort_by{ |e| e.trait.name.downcase }.each do | character_trait | %>
         <div class="col-md-auto">
