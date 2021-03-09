@@ -1,8 +1,10 @@
 <div class="card">
-  <% unless avatar.nil? %>
-    <%= image_tag(avatar.image_file.variant(resize_to_limit: [350, nil]), class: "card-img-top") %>
-  <% else %>
-    <%= image_pack_tag "media/packs/images/card_placeholder.png", class: "card-img-top" %>
+  <% if show_avatar %>
+    <% unless avatar.nil? %>
+      <%= image_tag(avatar.image_file.variant(resize_to_limit: [350, nil]), class: "card-img-top") %>
+    <% else %>
+      <%= image_pack_tag "media/packs/images/card_placeholder.png", class: "card-img-top" %>
+    <% end %>
   <% end %>
   <div class="card-body">
     <h5 class="card-title"><%= name %></h5>

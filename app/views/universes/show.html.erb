@@ -11,7 +11,8 @@
     collection_url: ->(x) { character_url(x) },
     image_helper: ->(x) { get_character_avatar_image(x) },
     new_url: new_universe_character_url(@universe),
-    name: "Characters"
+    name: "Characters",
+    show_avatar: true
   } %>
 
   <%= render partial: "universes/card_list", locals: {
@@ -19,7 +20,8 @@
     collection_url: ->(x) { location_url(x) },
     image_helper: ->(x) { get_character_avatar_image(x) },
     new_url: new_universe_location_url(@universe),
-    name: "Locations"
+    name: "Locations",
+    show_avatar: false
   } %>
 
   <%= render partial: "universes/image_list", locals: {
