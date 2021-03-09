@@ -2,26 +2,16 @@
 
 class UniversesController < ApplicationController
   def index
-    owned_universes =
-      Universe.kept.where(owner: current_user)
-
-    collaborated_universes =
-      Universe
-      .kept
-      .joins(:collaborations)
-      .where(collaborations: { user: current_user })
-
+    owned_universes = Universe.kept.where(owner: current_user)
+    collaborated_universes = Universe.kept.joins(:collaborations).where(collaborations: { user: current_user })
     @universes = (owned_universes + collaborated_universes).uniq
   end
 
   def show
     @universe = Universe.kept.find_by(id: params[:id])
-    raise MissingResource.new("universe", params[:id]) if @universe.nil?
-    raise ForbiddenUniverseAction.new("viewed", true) unless @universe.visible_to_user?(current_user)
-
-    @images = Image.where(universe_id: @universe.id).order(created_at: :desc).paginate(
-page: params[:page], per_page: 12
-)
+    return unless model_found?(@universe, "Universe", params[:id], universes_url)
+    return unless universe_visible_to_user?(@universe)
+    @images = Image.where(universe_id: @universe.id).order(created_at: :desc).paginate(page: params[:page], per_page: 12)
   end
 
   def new
@@ -37,31 +27,15 @@ page: params[:page], per_page: 12
 
   def edit
     @universe = Universe.kept.find_by(id: params[:id])
-    raise MissingResource.new("universe", params[:id]) if @universe.nil?
+    return unless model_found?(@universe, "Universe", params[:id], universes_url)
   end
 
   def update
     @universe = Universe.kept.find_by(id: params[:id])
-    raise MissingResource.new("universe", params[:id]) if @universe.nil?
-
-    if @universe.owner != current_user
-      flash[:alert] = "You are not the owner of this universe."
-      raise ForbiddenUniverseAction.new("changed", false)
-    end
-
+    return unless model_found?(@universe, "Universe", params[:id], universes_url)
+    return unless universe_visible_to_user?(@universe)
     @universe.update!(allowed_universe_params)
     flash[:success] = "Universe updated!"
-    redirect_to universes_url
-  end
-
-  def destroy
-    @universe = Universe.kept.find_by(id: params[:id])
-    raise MissingResource.new("universe", params[:id]) if @universe.nil?
-
-    raise ForbiddenUniverseAction.new("deleted", false) if @universe.owner != current_user
-
-    @universe.discard!
-    flash[:success] = "Universe deleted!"
     redirect_to universes_url
   end
 

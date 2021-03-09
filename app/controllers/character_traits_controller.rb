@@ -1,16 +1,6 @@
 # frozen_string_literal: true
 
 class CharacterTraitsController < ApplicationController
-  before_action lambda {
-    character = Character.find_by(id: params[:character_id])
-    raise MissingResource.new("character", params[:character_id]) if character.nil?
-
-    require_universe_visible_to_user(
-      "characters' traits",
-      character&.universe_id,
-    )
-  }, only: [:index, :create]
-
   def index
     @character_traits =
       CharacterTrait
@@ -32,13 +22,8 @@ class CharacterTraitsController < ApplicationController
 
   def destroy
     @character_trait = CharacterTrait.find_by(id: params[:id])
-    raise MissingResource.new("CharacterTrait", params[:id]) if @character_trait.nil?
-
-    require_universe_visible_to_user(
-      "characters' traits",
-      @character_trait.universe.id,
-    )
-
+    return unless model_found?(@character_trait, "Character Trait", params[:id], universes_url)
+    return unless universe_visible_to_user?(@character_trait.universe)
     @character_trait.destroy!
     redirect_to edit_character_url(@character_trait.character)
   end

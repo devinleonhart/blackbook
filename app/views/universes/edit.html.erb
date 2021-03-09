@@ -36,8 +36,6 @@
         <%= form.select :user_id, generate_collaborator_names(User.all, @universe.collaborators, @universe.owner), {include_blank: true}, {class: "form-control form-select form-select-lg mb-3"} %>
         <%= form.submit "Add", class: "btn btn-primary" %>
       <% end %>
-      <h3>Delete this universe?</h3>
-      <%= link_to "Delete", universe_url(@universe), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger" %>
     </div>
   </div>
 

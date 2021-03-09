@@ -1,18 +1,14 @@
 # frozen_string_literal: true
 
 class LocationsController < ApplicationController
-  before_action -> { require_universe_visible_to_user("location") },
-    only: [:index, :create]
-
   def index
     @locations = Location.where(universe_id: params[:universe_id])
   end
 
   def show
     @location = Location.find_by(id: params[:id])
-    raise MissingResource.new("location", params[:id]) if @location.nil?
-
-    require_universe_visible_to_user("location", @location.universe.id)
+    return unless model_found?(@location, "Location", params[:id], universes_url)
+    return unless universe_visible_to_user?(@location.universe)
   end
 
   def new
@@ -29,15 +25,13 @@ class LocationsController < ApplicationController
 
   def edit
     @location = Location.find_by(id: params[:id])
-    raise MissingResource.new("location", params[:id]) if @location.nil?
+    return unless model_found?(@location, "Location", params[:id], universes_url)
   end
 
   def update
     @location = Location.find_by(id: params[:id])
-    raise MissingResource.new("location", params[:id]) if @location.nil?
-
-    require_universe_visible_to_user("location", @location.universe.id)
-
+    return unless model_found?(@location, "Location", params[:id], universes_url)
+    return unless universe_visible_to_user?(@location.universe)
     flash[:success] = "Location updated!"
     @location.update!(allowed_location_params)
     redirect_to location_url(@location)
@@ -45,10 +39,8 @@ class LocationsController < ApplicationController
 
   def destroy
     @location = Location.find_by(id: params[:id])
-    raise MissingResource.new("location", params[:id]) if @location.nil?
-
-    require_universe_visible_to_user("location", @location.universe.id)
-
+    return unless model_found?(@location, "Location", params[:id], universes_url)
+    return unless universe_visible_to_user?(@location.universe)
     @location.destroy!
     flash[:success] = "Location deleted!"
     redirect_to universe_url(@location.universe)

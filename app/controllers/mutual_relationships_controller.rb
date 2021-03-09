@@ -1,13 +1,6 @@
 # frozen_string_literal: true
 
 class MutualRelationshipsController < ApplicationController
-  before_action lambda {
-    character = Character.find_by(id: params[:character_id])
-    raise MissingResource.new("character", params[:character_id]) if character.nil?
-
-    require_universe_visible_to_user("relationships", character&.universe_id)
-  }, only: [:index, :create]
-
   def index
     @mutual_relationships =
       Relationship
@@ -19,6 +12,16 @@ class MutualRelationshipsController < ApplicationController
     this_character_id = params[:character_id]
     target_character_id =
       allowed_mutual_relationship_create_params[:target_character_id]
+
+    this_character = Character.find_by(id: this_character_id)
+    target_character = Character.find_by(id: target_character_id)
+
+    if this_character.nil? or target_character.nil?
+      error_and_redirect("One of the two characters you are trying to relate does not exist.", universes_url)
+      return
+    end
+
+    return unless universe_visible_to_user?(this_character.universe) and universe_visible_to_user?(target_character.universe)
 
     ActiveRecord::Base.transaction do
       @mutual_relationship = MutualRelationship.create!
@@ -36,19 +39,17 @@ class MutualRelationshipsController < ApplicationController
       )
       @mutual_relationship.reload
     end
+
+    flash[:success] = "Mutual Relationship created!"
     redirect_to edit_character_url(params[:character_id])
   end
 
   def destroy
     @mutual_relationship = MutualRelationship.find_by(id: params[:id])
-    raise MissingResource.new("MutualRelationship", params[:id]) if @mutual_relationship.nil?
-
-    require_universe_visible_to_user(
-      "relationships",
-      @mutual_relationship.universe.id,
-    )
-
+    return unless model_found?(@mutual_relationship, "Mutual Relationship", params[:id], universes_url)
+    return unless universe_visible_to_user?(@mutual_relationship.universe)
     @mutual_relationship.destroy!
+    flash[:success] = "Mutual Relationship deleted!"
     redirect_to edit_character_url(allowed_mutual_relationship_delete_params[:redirecting_character_id])
   end
 
