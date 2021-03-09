@@ -30,6 +30,7 @@ class ImagesController < ApplicationController
   def update
     @image = Image.includes(image_tags: { character: :universe }).find_by(id: params[:id])
     return unless model_found?(@image, "Image", params[:id], universes_url)
+
     @image.update!(allowed_image_update_params)
     redirect_to edit_universe_image_url(@image)
   end
@@ -37,6 +38,7 @@ class ImagesController < ApplicationController
   def destroy
     @image = Image.find_by(id: params[:id])
     return unless model_found?(@image, "Image", params[:id], universes_url)
+
     @image.destroy!
     flash[:success] = "Image deleted!"
     redirect_to universe_url(@image.universe)

@@ -20,6 +20,7 @@ class CharacterItemsController < ApplicationController
     @character_item = CharacterItem.find_by(id: params[:id])
     return unless model_found?(@character_item, "Character Item", params[:id], universes_url)
     return unless universe_visible_to_user?(@character_item.universe)
+
     @character_item.destroy!
     redirect_to edit_character_url(@character_item.character)
   end

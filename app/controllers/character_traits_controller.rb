@@ -24,6 +24,7 @@ class CharacterTraitsController < ApplicationController
     @character_trait = CharacterTrait.find_by(id: params[:id])
     return unless model_found?(@character_trait, "Character Trait", params[:id], universes_url)
     return unless universe_visible_to_user?(@character_trait.universe)
+
     @character_trait.destroy!
     redirect_to edit_character_url(@character_trait.character)
   end

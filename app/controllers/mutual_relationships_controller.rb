@@ -16,12 +16,14 @@ class MutualRelationshipsController < ApplicationController
     this_character = Character.find_by(id: this_character_id)
     target_character = Character.find_by(id: target_character_id)
 
-    if this_character.nil? or target_character.nil?
+    if this_character.nil? || target_character.nil?
       error_and_redirect("One of the two characters you are trying to relate does not exist.", universes_url)
       return
     end
 
-    return unless universe_visible_to_user?(this_character.universe) and universe_visible_to_user?(target_character.universe)
+    unless universe_visible_to_user?(this_character.universe) && universe_visible_to_user?(target_character.universe)
+      return
+    end
 
     ActiveRecord::Base.transaction do
       @mutual_relationship = MutualRelationship.create!
@@ -48,6 +50,7 @@ class MutualRelationshipsController < ApplicationController
     @mutual_relationship = MutualRelationship.find_by(id: params[:id])
     return unless model_found?(@mutual_relationship, "Mutual Relationship", params[:id], universes_url)
     return unless universe_visible_to_user?(@mutual_relationship.universe)
+
     @mutual_relationship.destroy!
     flash[:success] = "Mutual Relationship deleted!"
     redirect_to edit_character_url(allowed_mutual_relationship_delete_params[:redirecting_character_id])

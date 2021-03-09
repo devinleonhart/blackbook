@@ -32,6 +32,7 @@ class LocationsController < ApplicationController
     @location = Location.find_by(id: params[:id])
     return unless model_found?(@location, "Location", params[:id], universes_url)
     return unless universe_visible_to_user?(@location.universe)
+
     flash[:success] = "Location updated!"
     @location.update!(allowed_location_params)
     redirect_to location_url(@location)
@@ -41,6 +42,7 @@ class LocationsController < ApplicationController
     @location = Location.find_by(id: params[:id])
     return unless model_found?(@location, "Location", params[:id], universes_url)
     return unless universe_visible_to_user?(@location.universe)
+
     @location.destroy!
     flash[:success] = "Location deleted!"
     redirect_to universe_url(@location.universe)
