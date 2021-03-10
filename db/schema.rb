@@ -97,17 +97,6 @@ ActiveRecord::Schema.define(version: 2021_03_08_191038) do
     t.index ["user_id"], name: "index_collaborations_on_user_id"
   end
 
-  create_table "facts", force: :cascade do |t|
-    t.text "content", null: false
-    t.string "fact_type", null: false
-    t.bigint "character_id"
-    t.bigint "location_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["character_id"], name: "index_facts_on_character_id"
-    t.index ["location_id"], name: "index_facts_on_location_id"
-  end
-
   create_table "image_tags", force: :cascade do |t|
     t.bigint "character_id", null: false
     t.bigint "image_id", null: false
@@ -129,7 +118,7 @@ ActiveRecord::Schema.define(version: 2021_03_08_191038) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.text "name", null: false
+    t.string "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_items_on_name", unique: true
@@ -173,7 +162,7 @@ ActiveRecord::Schema.define(version: 2021_03_08_191038) do
   end
 
   create_table "traits", force: :cascade do |t|
-    t.text "name", null: false
+    t.citext "name", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["name"], name: "index_traits_on_name", unique: true
@@ -211,8 +200,6 @@ ActiveRecord::Schema.define(version: 2021_03_08_191038) do
   add_foreign_key "character_traits", "characters"
   add_foreign_key "character_traits", "traits"
   add_foreign_key "characters", "universes"
-  add_foreign_key "facts", "characters"
-  add_foreign_key "facts", "locations"
   add_foreign_key "locations", "universes"
   add_foreign_key "relationships", "characters", column: "originating_character_id"
   add_foreign_key "relationships", "characters", column: "target_character_id"
