@@ -22,6 +22,7 @@ gem 'will_paginate', '~> 3.3'
 group :development, :test do
   gem 'awesome_print', '~> 1.8'
   gem 'byebug', '~> 11.1', '>= 11.1.3', platforms: [:mri, :mingw, :x64_mingw]
+  gem "database_cleaner"
   gem 'pry-rails', '~> 0.3.9', :group => :development
   gem 'rspec-rails', '~> 4.0.2'
   gem 'rubocop-rails', '~> 2.9', '>= 2.9.1'
