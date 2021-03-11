@@ -1,9 +1,9 @@
 require "rails_helper"
 
-RSpec.feature "Universe", :type => :feature do
+RSpec.feature "Universe#New", :type => :feature do
 
   background {
-    login_as(FactoryBot.create(:user, {email: "test@test.com", password: "abc123"}))
+    login_as(FactoryBot.create(:user, {email: "user@test.com", password: "abc123"}))
     visit new_universe_url
   }
 
