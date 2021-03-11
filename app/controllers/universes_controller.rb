@@ -22,9 +22,14 @@ class UniversesController < ApplicationController
 
   def create
     params = allowed_universe_params.merge(owner_id: current_user.id)
-    @universe = Universe.create!(params)
-    flash[:success] = "Universe created!"
-    redirect_to universes_url
+    @universe = Universe.new(params)
+    if @universe.save
+      flash[:success] = "Universe created!"
+      redirect_to universes_url
+    else
+      flash[:error] = @universe.errors.full_messages.join("\n")
+      redirect_to new_universe_url
+    end
   end
 
   def edit
