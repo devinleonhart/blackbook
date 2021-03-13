@@ -22,9 +22,14 @@ class UniversesController < ApplicationController
 
   def create
     params = allowed_universe_params.merge(owner_id: current_user.id)
-    @universe = Universe.create!(params)
-    flash[:success] = "Universe created!"
-    redirect_to universes_url
+    @universe = Universe.new(params)
+    if @universe.save
+      flash[:success] = "Universe created!"
+      redirect_to universes_url
+    else
+      flash[:error] = @universe.errors.full_messages.join("\n")
+      redirect_to new_universe_url
+    end
   end
 
   def edit
@@ -37,9 +42,15 @@ class UniversesController < ApplicationController
     return unless model_found?(@universe, "Universe", params[:id], universes_url)
     return unless universe_visible_to_user?(@universe)
 
-    @universe.update!(allowed_universe_params)
-    flash[:success] = "Universe updated!"
-    redirect_to universes_url
+    @universe.update(allowed_universe_params)
+
+    if @universe.save
+      flash[:success] = "Universe updated!"
+      redirect_to universes_url
+    else
+      flash[:error] = @universe.errors.full_messages.join("\n")
+      redirect_to edit_universe_url(@universe)
+    end
   end
 
   private

@@ -6,10 +6,18 @@
 #
 #  id          :bigint           not null, primary key
 #  name        :citext           not null
-#  description :string           not null
-#  universe_id :bigint           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  universe_id :bigint           not null
+#
+# Indexes
+#
+#  index_locations_on_name_and_universe_id  (name,universe_id) UNIQUE
+#  index_locations_on_universe_id           (universe_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (universe_id => universes.id)
 #
 
 require "rails_helper"

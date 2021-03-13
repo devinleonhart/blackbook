@@ -1,24 +1,25 @@
 <div class="row">
   <div class="col-md-6 mx-auto">
     <h2>Log in</h2>
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "border border-dark border-2 rounded" }) do |f| %>
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "border border-dark border-2 rounded" }) do |form| %>
       <div class="mb-3">
-        <label class="form-label">Email</label>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control' %>
+        <%= form.label :email, for: "newUserSessionEmail", class: "form-label" %>
+        <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserSessionEmail", class: 'form-control' %>
       </div>
 
       <div class="mb-3">
-        <label class="form-label">Password</label>
-        <%= f.password_field :password, autocomplete: "current-password", class: 'form-control' %>
+        <%= form.label :password, for: "newUserSessionPassword", class: "form-label" %>
+        <%= form.password_field :password, autocomplete: "current-password", id: "newUserSessionPassword", class: 'form-control' %>
       </div>
 
       <% if devise_mapping.rememberable? %>
         <div class="mb-3 form-check">
-          <%= f.check_box :remember_me, class: 'form-check-input' %>
+          <%= form.check_box :remember_me, class: 'form-check-input' %>
           <label class="form-check-label" for="exampleCheck1">Remember Me</label>
         </div>
       <% end %>
-      <button class="btn btn-primary" type="submit">Sign In</button>
+
+      <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "btn btn-primary" %>
     <% end %>
   </div>
 </div>

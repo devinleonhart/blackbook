@@ -16,7 +16,10 @@ class ApplicationController < ActionController::Base
   end
 
   def model_found?(model, name, id, path)
-    error_and_redirect("No #{name} was found with ID: #{id}", path) if model.nil?
+    if model.nil?
+      error_and_redirect("No #{name} was found with ID: #{id}", path)
+      return false
+    end
     true
   end
 
@@ -24,6 +27,7 @@ class ApplicationController < ActionController::Base
     unless universe.visible_to_user?(current_user)
       error_and_redirect("You are not an owner or collaborator of this universe.",
         universes_url)
+      return false
     end
     true
   end

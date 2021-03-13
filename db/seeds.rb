@@ -68,12 +68,14 @@ ActiveRecord::Base.transaction do
   universe3 = FactoryBot.build(
     :universe,
     name: "universe3",
+    characters: create_characters(5),
     owner: user1
   )
 
   universe4 = FactoryBot.build(
     :universe,
     name: "universe4",
+    characters: create_characters(5),
     owner: user2
   )
 

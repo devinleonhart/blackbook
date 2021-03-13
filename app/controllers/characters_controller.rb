@@ -9,6 +9,19 @@ class CharactersController < ApplicationController
     @new_character = Character.new(universe_id: params[:universe_id])
   end
 
+  def create
+    properties = allowed_character_params.merge(universe_id: params[:universe_id])
+    @character = Character.new(properties)
+
+    if @character.save
+      flash[:success] = "Character created!"
+      redirect_to character_url(@character)
+    else
+      flash[:error] = @character.errors.full_messages.join("\n")
+      redirect_to new_universe_character_url(params[:universe_id])
+    end
+  end
+
   def show
     @character =
       Character
@@ -41,13 +54,6 @@ page: params[:page], per_page: 18
     return unless universe_visible_to_user?(@character.universe)
   end
 
-  def create
-    properties = allowed_character_params.merge(universe_id: params[:universe_id])
-    @character = Character.create!(properties)
-    flash[:success] = "Character created!"
-    redirect_to character_url(@character)
-  end
-
   def update
     @character =
       Character
@@ -61,9 +67,15 @@ page: params[:page], per_page: 18
     return unless model_found?(@character, "Character", params[:id], universes_url)
     return unless universe_visible_to_user?(@character.universe)
 
-    @character.update!(allowed_character_params)
-    flash[:success] = "Character updated!"
-    redirect_to character_url(@character)
+    @character.update(allowed_character_params)
+
+    if @character.save
+      flash[:success] = "Character updated!"
+      redirect_to character_url(@character)
+    else
+      flash[:error] = @character.errors.full_messages.join("\n")
+      redirect_to edit_character_url(params[:id])
+    end
   end
 
   def destroy

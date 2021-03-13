@@ -5,10 +5,10 @@
 
       <%= form_with model: @new_universe, url: universes_url(@new_universe), method: "post", class: "border border-dark border-2 rounded" do |form| %>
         <div class="mb-3">
-          <%= form.label :name, class: "form-label" %>
-          <%= form.text_field :name, class: "form-control" %>
+          <%= form.label :name, for: "newUniverseNameField", class: "form-label" %>
+          <%= form.text_field :name, id: "newUniverseNameField", class: "form-control" %>
         </div>
-        <%= form.submit "Save", class: "btn btn-primary" %>
+        <%= form.submit "Save", id: "newUniverseSaveButton", class: "btn btn-primary" %>
         <%= link_to "Cancel", universes_url(), class: "btn btn-primary" %>
       <% end %>
 

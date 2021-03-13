@@ -18,9 +18,15 @@ class LocationsController < ApplicationController
   def create
     properties =
       allowed_location_params.merge(universe_id: params[:universe_id])
-    @location = Location.create!(properties)
-    flash[:success] = "Location created!"
-    redirect_to location_url(@location)
+    @location = Location.new(properties)
+
+    if @location.save
+      flash[:success] = "Location created!"
+      redirect_to location_url(@location)
+    else
+      flash[:error] = @location.errors.full_messages.join("\n")
+      redirect_to new_universe_location_url(params[:universe_id])
+    end
   end
 
   def edit
@@ -33,9 +39,15 @@ class LocationsController < ApplicationController
     return unless model_found?(@location, "Location", params[:id], universes_url)
     return unless universe_visible_to_user?(@location.universe)
 
-    flash[:success] = "Location updated!"
-    @location.update!(allowed_location_params)
-    redirect_to location_url(@location)
+    @location.update(allowed_location_params)
+
+    if @location.save
+      flash[:success] = "Location updated!"
+      redirect_to location_url(@location)
+    else
+      flash[:error] = @location.errors.full_messages.join("\n")
+      redirect_to edit_location_url(params[:id])
+    end
   end
 
   def destroy

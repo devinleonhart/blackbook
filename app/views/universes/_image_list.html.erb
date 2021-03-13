@@ -4,8 +4,9 @@
     <div class="col-md-4 mx-auto">
       <%= form_with model: Image.new(universe_id: universe.id), url: universe_images_url(universe), method: "post", class: "file-form" do | form | %>
         <div class="form-group">
+          <%= form.label :image_file, class: "form-label" %>
           <div class="input-group">
-            <%= form.file_field :image_file, class: "form-control" %>
+            <%= form.file_field :image_file, class: "form-control", required: true %>
             <%= form.submit "Add", class: "btn btn-primary" %>
           </div>
         </div>

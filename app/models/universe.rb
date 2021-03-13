@@ -5,11 +5,21 @@
 # Table name: universes
 #
 #  id           :bigint           not null, primary key
-#  name         :citext           not null
-#  owner_id     :bigint           not null
 #  discarded_at :datetime
+#  name         :citext           not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  owner_id     :bigint           not null
+#
+# Indexes
+#
+#  index_universes_on_discarded_at  (discarded_at)
+#  index_universes_on_name          (name) UNIQUE
+#  index_universes_on_owner_id      (owner_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (owner_id => users.id)
 #
 
 class Universe < ApplicationRecord

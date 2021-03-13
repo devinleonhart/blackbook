@@ -12,9 +12,14 @@ class ImagesController < ApplicationController
 
   def create
     properties = allowed_image_create_params.merge(universe_id: params[:universe_id])
-    @image = Image.create!(properties)
-    flash[:success] = "Image created!"
-    redirect_to universe_url(params[:universe_id])
+    @image = Image.new(properties)
+    if @image.save
+      flash[:success] = "Image created!"
+      redirect_to universe_url(params[:universe_id])
+    else
+      flash[:error] = @image.errors.full_messages.join("\n")
+      redirect_to universe_url(params[:universe_id])
+    end
   end
 
   def edit

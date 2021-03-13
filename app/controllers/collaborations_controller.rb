@@ -11,8 +11,14 @@ class CollaborationsController < ApplicationController
     universe = Universe.find_by(id: params[:universe_id])
     return unless model_found?(universe, "Universe", params[:universe_id], universes_url)
 
-    @collaboration = Collaboration.create!(properties)
-    redirect_to edit_universe_url(params[:universe_id])
+    @collaboration = Collaboration.new(properties)
+
+    if(@collaboration).save
+      redirect_to edit_universe_url(universe)
+    else
+      flash[:error] = @collaboration.errors.full_messages.join("\n")
+      redirect_to edit_universe_url(universe)
+    end
   end
 
   def destroy
