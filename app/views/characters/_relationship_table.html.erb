@@ -14,56 +14,42 @@
             <% end %>
           </tr>
         </thead>
+        <tbody>
         <% if @character.relationships.empty? %>
-          <tbody>
-            <tr class="table-info empty-row">
-              <td colspan=4>This character has no relationships.</td>
-            </tr>
-        <% else %>
-          <tbody>
-            <% @character.originating_relationships.each do | relationship | %>
-              <tr>
-                <td>
-                  <%= relationship.originating_character.name %>
-                </td>
-                <td>
-                  <%= relationship.name %>
-                </td>
-                <td>
-                  <%= link_to "#{relationship.target_character.name}", character_url(relationship.target_character.id)%>
-                </td>
-                <% if view == 'edit' %>
-                  <td>
-                    <%= form_with model: MutualRelationship.new(), url: mutual_relationship_url(relationship.mutual_relationship), method: "delete" do | form | %>
-                      <%= form.hidden_field :redirecting_character_id, :value => @character.id, class: "form-control" %>
-                      <%= form.submit "", class: "btn-close btn-close-white" %>
-                    <% end %>
-                  </td>
-                <% end %>
-              </tr>
-            <% end %>
-        <% end %>
-        <% if view == 'edit' %>
-          <tr class="table-primary">
-            <%= form_with model: MutualRelationship.new(), url: character_mutual_relationships_url(@character), method: "post" do | form | %>
-            <td><%= @character.name %></td>
-            <td>
-              <div class="mb-3">
-                <%= label_tag :forward_name, "What is #{@character.name}'s relationship to the target character?", class: "form-label" %>
-                <%= form.text_field :forward_name, placeholder: "Ex. Father", class: "form-control" %>
-              </div>
-              <div class="mb-3">
-                <%= label_tag :forward_name, "What is the target character's relationship to #{@character.name}?", class: "form-label" %>
-                <%= form.text_field :reverse_name, placeholder: "Ex. Son", class: "form-control" %>
-              </div>
-            </td>
-            <td><%= form.select :target_character_id, generate_relationship_names(@character.universe.characters, [@character]), {include_blank: true}, {class: "form-control form-select form-select-lg mb-3"} %></td>
-            <td><%= form.submit "Add", class: "btn btn-primary" %></td>
-            <% end %>
+          <tr class="table-info empty-row">
+            <td colspan=4>This character has no relationships.</td>
           </tr>
+        <% else %>
+          <% @character.originating_relationships.each do | relationship | %>
+            <tr>
+              <td>
+                <%= relationship.originating_character.name %>
+              </td>
+              <td>
+                <%= relationship.name %>
+              </td>
+              <td>
+                <%= link_to "#{relationship.target_character.name}", character_url(relationship.target_character.id)%>
+              </td>
+              <% if view == 'edit' %>
+                <td>
+                  <%= form_with model: MutualRelationship.new(), url: mutual_relationship_url(relationship.mutual_relationship), method: "delete" do | form | %>
+                    <%= form.hidden_field :redirecting_character_id, :value => character.id, class: "form-control" %>
+                    <%= form.submit "", class: "btn-close btn-close-white" %>
+                  <% end %>
+                </td>
+              <% end %>
+            </tr>
+          <% end %>
         <% end %>
         </tbody>
       </table>
+      <% if view == 'edit' %>
+        <%= render partial: "characters/new_relationship_form", locals: {
+          character: character,
+          view: 'edit'
+        } %>
+      <% end %>
     </div>
   </div>
 

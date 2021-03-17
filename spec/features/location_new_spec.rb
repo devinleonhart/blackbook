@@ -1,13 +1,14 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-RSpec.feature "Location#New", :type => :feature do
-
-  background {
-    @user1 = FactoryBot.create(:user, {display_name: "User1", email: "user1@test.com", password: "abc123"})
-    @universe1 = FactoryBot.create(:universe, {name: "Universe1", owner: @user1})
+RSpec.feature "Location#New", type: :feature do
+  background do
+    @user1 = FactoryBot.create(:user, { display_name: "User1", email: "user1@test.com", password: "abc123" })
+    @universe1 = FactoryBot.create(:universe, { name: "Universe1", owner: @user1 })
     login_as(@user1)
     visit new_universe_location_url(@universe1)
-  }
+  end
 
   scenario "should allow the creation of a new location with required fields." do
     fill_in "Name", with: "Seraph"

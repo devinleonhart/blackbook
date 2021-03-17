@@ -11,6 +11,7 @@ AllCops:
   - 'bin/**/*'
   - 'node_modules/**/*'
   - 'db/schema.rb'
+  - 'lib/tasks/auto_annotate_models.rake'
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation

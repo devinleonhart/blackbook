@@ -13,12 +13,8 @@ class CollaborationsController < ApplicationController
 
     @collaboration = Collaboration.new(properties)
 
-    if(@collaboration).save
-      redirect_to edit_universe_url(universe)
-    else
-      flash[:error] = @collaboration.errors.full_messages.join("\n")
-      redirect_to edit_universe_url(universe)
-    end
+    flash[:error] = @collaboration.errors.full_messages.join("\n") unless @collaboration.save
+    redirect_to edit_universe_url(universe)
   end
 
   def destroy

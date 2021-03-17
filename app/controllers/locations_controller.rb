@@ -39,9 +39,7 @@ class LocationsController < ApplicationController
     return unless model_found?(@location, "Location", params[:id], universes_url)
     return unless universe_visible_to_user?(@location.universe)
 
-    @location.update(allowed_location_params)
-
-    if @location.save
+    if @location.update(allowed_location_params)
       flash[:success] = "Location updated!"
       redirect_to location_url(@location)
     else

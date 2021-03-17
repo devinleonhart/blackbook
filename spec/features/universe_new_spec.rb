@@ -1,11 +1,12 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-RSpec.feature "Universe#New", :type => :feature do
-
-  background {
-    login_as(FactoryBot.create(:user, {email: "user@test.com", password: "abc123"}))
+RSpec.feature "Universe#New", type: :feature do
+  background do
+    login_as(FactoryBot.create(:user, { email: "user@test.com", password: "abc123" }))
     visit new_universe_url
-  }
+  end
 
   scenario "should allow the creation of a universe with correct fields." do
     fill_in "Name", with: "A Brand New Universe"

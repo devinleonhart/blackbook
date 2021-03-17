@@ -42,9 +42,7 @@ class UniversesController < ApplicationController
     return unless model_found?(@universe, "Universe", params[:id], universes_url)
     return unless universe_visible_to_user?(@universe)
 
-    @universe.update(allowed_universe_params)
-
-    if @universe.save
+    if @universe.update(allowed_universe_params)
       flash[:success] = "Universe updated!"
       redirect_to universes_url
     else

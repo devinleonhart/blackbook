@@ -67,9 +67,7 @@ page: params[:page], per_page: 18
     return unless model_found?(@character, "Character", params[:id], universes_url)
     return unless universe_visible_to_user?(@character.universe)
 
-    @character.update(allowed_character_params)
-
-    if @character.save
+    if @character.update(allowed_character_params)
       flash[:success] = "Character updated!"
       redirect_to character_url(@character)
     else
