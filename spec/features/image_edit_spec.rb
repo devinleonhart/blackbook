@@ -10,9 +10,9 @@ RSpec.feature "Image#Edit", type: :feature do
     @universe2 = FactoryBot.create(:universe, { name: "Universe2", owner: @user2 })
     @character1 = FactoryBot.create(:character, { name: "Max Lionheart", universe: @universe1 })
     @character2 = FactoryBot.create(:character, { name: "Lise Awen", universe: @universe1 })
-    @image1 = FactoryBot.create(:image, {universe: @universe1})
-    @image2 = FactoryBot.create(:image, {universe: @universe2})
-    @image_tag = FactoryBot.create(:image_tag, {character: @character1, image: @image1})
+    @image1 = FactoryBot.create(:image, { universe: @universe1 })
+    @image2 = FactoryBot.create(:image, { universe: @universe2 })
+    @image_tag = FactoryBot.create(:image_tag, { character: @character1, image: @image1 })
     login_as(@user)
     visit edit_universe_image_url(@universe1, @image1)
   end
@@ -63,5 +63,4 @@ RSpec.feature "Image#Edit", type: :feature do
     find_link("Delete").click
     expect(Image.count).to eq(1)
   end
-
 end
