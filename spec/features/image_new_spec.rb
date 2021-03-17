@@ -2,17 +2,15 @@
 
 require "rails_helper"
 
-RSpec.feature "Universe#Show", type: :feature do
+RSpec.feature "Image#New", type: :feature do
   background do
     @user = FactoryBot.create(:user, { email: "user@test.com", password: "abc123" })
-    @other_user = FactoryBot.create(:user, { email: "other_user@test.com", password: "abc123" })
-    @universe1 = FactoryBot.create(:universe, { name: "Universe1", owner: @user })
-    @universe2 = FactoryBot.create(:universe, { name: "Universe2", owner: @other_user })
+    @universe = FactoryBot.create(:universe, { name: "Universe1", owner: @user })
     login_as(@user)
   end
 
   scenario "should allow the upload of an image." do
-    visit universe_url(@universe1)
+    visit universe_url(@universe)
 
     within(".image-list") do
       expect(all(".img-thumbnail").count).to eq(0)
@@ -31,7 +29,7 @@ RSpec.feature "Universe#Show", type: :feature do
   end
 
   scenario "should not allow the upload of an image with no image given." do
-    visit universe_url(@universe1)
+    visit universe_url(@universe)
     within(".image-list form") do
       expect { find_button("Add").click }.to raise_error(/param is missing or the value is empty: image/)
     end

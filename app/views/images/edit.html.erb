@@ -3,20 +3,17 @@
 <section class="images-edit-view">
 
   <div class="row">
-    <h2>Image Tags</h2>
-    <div class="col-md-8">
+    <div class="col-md-8 justify-content-center">
       <%= link_to rails_blob_path(@image.image_file, disposition: "attachment") do %>
         <%= generate_image_tag(@image, [1000, nil]) %>
       <% end %>
     </div>
     <div class="col-md-4 character-select">
       <h3>This image has...</h3>
-      <% if @image.image_tags.empty? %>
-        <ul class="list-group list-group-flush rounded">
+      <ul class="list-group list-group-flush rounded image-tags">
+        <% if @image.image_tags.empty? %>
           <li class="list-group-item list-group-item-danger">There are no characters in this image.</li>
-        </ul>
-      <% else %>
-        <ul class="list-group list-group-flush rounded">
+        <% else %>
           <% @image.image_tags.each do | tag | %>
             <li class="list-group-item list-group-item-info">
               <span><%= tag.character.name %></span>
@@ -25,8 +22,8 @@
               <% end %>
             </li>
           <% end %>
-        </ul>
-      <% end %>
+        <% end %>
+      </ul>
 
       <% if @image.universe.characters.empty? %>
         <ul class="list-group list-group-flush rounded">
