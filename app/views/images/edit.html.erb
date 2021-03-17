@@ -3,13 +3,12 @@
 <section class="images-edit-view">
 
   <div class="row">
-    <div class="col-md-8 justify-content-center">
+    <div class="col-md-8 image-column">
       <%= link_to rails_blob_path(@image.image_file, disposition: "attachment") do %>
         <%= generate_image_tag(@image, [1000, nil]) %>
       <% end %>
     </div>
     <div class="col-md-4 character-select">
-      <h3>This image has...</h3>
       <ul class="list-group list-group-flush rounded image-tags">
         <% if @image.image_tags.empty? %>
           <li class="list-group-item list-group-item-danger">There are no characters in this image.</li>
@@ -36,8 +35,7 @@
           <%= form.submit "Add", class: "btn btn-primary" %>
         <% end %>
       <% end %>
-      <h3>Edit this image...</h3>
-        <%= form_with model: @image, url: universe_image_url(@image.universe, @image), method: "patch" do |form| %>
+      <%= form_with model: @image, url: universe_image_url(@image.universe, @image), method: "patch" do |form| %>
         <div class="mb-3">
           <%= form.label :caption, "Caption", class: "form-label" %>
           <%= form.text_field :caption, class: "form-control" %>
@@ -56,9 +54,8 @@
         </div>
 
         <%= form.submit "Update", class: "btn btn-primary" %>
-        <% end %>
-      <h3>Delete this image?</h3>
-      <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger delete-button" %>
+        <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger delete-button" %>
+      <% end %>
     </div>
   </div>
 

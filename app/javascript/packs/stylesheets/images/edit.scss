@@ -18,16 +18,14 @@
     form {
       margin-bottom: 1em;
       overflow: hidden;
-
-      input[type=submit] {
-        float: right;
-        clear: both;
-      }
     }
+  }
 
-    .delete-button {
-      float: right;
-      clear: both;
+  .image-column {
+    text-align: center;
+
+    img {
+      margin-bottom: 1em;
     }
   }
 
