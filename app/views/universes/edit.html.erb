@@ -8,8 +8,10 @@
           <%= form.label :name, class: "form-label" %>
           <%= form.text_field :name, class: "form-control" %>
         </div>
-        <%= form.submit "Save", class: "btn btn-primary" %>
-        <%= link_to "Cancel", universe_url(@universe), class: "btn btn-primary" %>
+        <div class="text-end">
+          <%= form.submit "Save", class: "btn btn-primary" %>
+          <%= link_to "Cancel", universe_url(@universe), class: "btn btn-primary" %>
+        </div>
       <% end %>
     </div>
     <div class="col-md-4 collaborator-select">
@@ -31,8 +33,10 @@
 
       <h3>You could add...</h3>
       <%= form_with model: Collaboration.new(), url: universe_collaborations_url(@universe), method: "post" do |form| %>
-        <%= form.select :user_id, generate_collaborator_names(User.all, @universe.collaborators, @universe.owner), {include_blank: true}, {class: "form-control form-select form-select-lg mb-3"} %>
-        <%= form.submit "Add", class: "btn btn-primary" %>
+        <div class="text-end">
+          <%= form.select :user_id, generate_collaborator_names(User.all, @universe.collaborators, @universe.owner), {include_blank: true}, {class: "form-control form-select form-select-lg mb-3"} %>
+          <%= form.submit "Add", class: "btn btn-primary" %>
+        </div>
       <% end %>
     </div>
   </div>

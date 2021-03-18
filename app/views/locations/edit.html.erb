@@ -13,9 +13,11 @@
           <%= form.label :content, class: "form-label" %>
           <%= form.rich_text_area :content %>
         </div>
-        <%= form.submit "Save", class: "btn btn-primary" %>
-        <%= link_to "Cancel", location_url(@location), class: "btn btn-primary" %>
-        <%= link_to "Delete", location_url(@location), method: "delete", :data => {:confirm => "Are you sure?"}, class: "btn btn-danger" %>
+        <div class="text-end">
+          <%= form.submit "Save", class: "btn btn-primary" %>
+          <%= link_to "Cancel", location_url(@location), class: "btn btn-primary" %>
+          <%= link_to "Delete", location_url(@location), method: "delete", :data => {:confirm => "Are you sure?"}, class: "btn btn-danger" %>
+        </div>
       <% end %>
 
     </div>

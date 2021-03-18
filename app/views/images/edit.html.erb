@@ -34,7 +34,9 @@
         <h3>You could add...</h3>
         <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post" do |form| %>
           <%= form.select :character_id, generate_character_names(@image.universe.characters, @image.image_tags), {include_blank: true}, {class: "form-control form-select form-select-lg mb-3"} %>
-          <%= form.submit "Add", class: "btn btn-primary" %>
+          <div class="text-end">
+            <%= form.submit "Add", class: "btn btn-primary" %>
+          </div>
         <% end %>
       <% end %>
       <%= form_with model: @image, url: universe_image_url(@image.universe, @image), method: "patch" do |form| %>
@@ -54,9 +56,10 @@
             <%= form.check_box :universe_avatar, class: "form-check-input", id: "universeAvatarCheckbox" %>
           </div>
         </div>
-
-        <%= form.submit "Update", class: "btn btn-primary" %>
-        <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger delete-button" %>
+        <div class="text-end">
+          <%= form.submit "Update", class: "btn btn-primary" %>
+          <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger delete-button" %>
+        </div>
       <% end %>
     </div>
   </div>

@@ -2,7 +2,7 @@
 
   <div class="row">
     <% @images.each do | image | %>
-      <div class="col-md-2">
+      <div class="col-md-2 character-image-column">
         <%= link_to edit_universe_image_url(@character.universe, image) do %>
           <%= generate_image_tag(image, [250, nil]) %>
         <% end %>

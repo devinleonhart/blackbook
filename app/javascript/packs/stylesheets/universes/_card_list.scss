@@ -1,7 +1,15 @@
 .card-list {
 
+  align-items: flex-start;
+
   .card-row {
     align-items: center;
+  }
+
+  .new-column {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
 }

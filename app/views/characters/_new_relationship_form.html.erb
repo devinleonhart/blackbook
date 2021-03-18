@@ -11,7 +11,9 @@
       <%= label_tag :forward_name, "What is the target character's relationship to #{character.name}?", class: "form-label" %>
       <%= form.text_field :reverse_name, placeholder: "Ex. Son", class: "form-control mb-3" %>
 
-      <%= form.submit "Add", class: "btn btn-primary" %>
+      <div class="text-end">
+        <%= form.submit "Add", class: "btn btn-primary" %>
+      </div>
     </div>
 
   </div>

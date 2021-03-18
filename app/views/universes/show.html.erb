@@ -11,7 +11,7 @@
     collection_url: ->(x) { character_url(x) },
     image_helper: ->(x) { get_character_avatar_image(x) },
     new_url: new_universe_character_url(@universe),
-    name: "Characters",
+    name: "Character",
     show_avatar: true
   } %>
 
@@ -20,7 +20,7 @@
     collection_url: ->(x) { location_url(x) },
     image_helper: ->(x) { get_character_avatar_image(x) },
     new_url: new_universe_location_url(@universe),
-    name: "Locations",
+    name: "Location",
     show_avatar: false
   } %>
 

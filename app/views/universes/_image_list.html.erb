@@ -1,5 +1,4 @@
 <section class="image-list">
-  <h2>Images</h2>
   <div class="row">
     <div class="col-md-4 mx-auto">
       <%= form_with model: Image.new(universe_id: universe.id), url: universe_images_url(universe), method: "post", class: "file-form" do | form | %>
@@ -16,7 +15,7 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div class="row">
+      <div class="row align-items-center">
         <% if images.empty? %>
           <%= render partial: "shared/empty_banner", locals: {
             message: "There are no images yet, create some!"
