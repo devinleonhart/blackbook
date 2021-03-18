@@ -15,10 +15,11 @@ class ImagesController < ApplicationController
     @image = Image.new(properties)
     if @image.save
       flash[:success] = "Image created!"
+      redirect_to edit_universe_image_url(params[:universe_id], @image)
     else
       flash[:error] = @image.errors.full_messages.join("\n")
+      redirect_to universe_url(params[:universe_id])
     end
-    redirect_to universe_url(params[:universe_id])
   end
 
   def edit

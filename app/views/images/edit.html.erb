@@ -15,8 +15,10 @@
         <% else %>
           <% @image.image_tags.each do | tag | %>
             <li class="list-group-item list-group-item-info">
-              <span><%= tag.character.name %></span>
-              <%= link_to image_tag_url(tag), method: "delete" do %>
+              <span>
+                <%= link_to "#{tag.character.name}", character_url(tag.character) %>
+              </span>
+              <%= link_to image_tag_url(tag), method: "delete", class: "delete-tag" do %>
                 <button type="button" class="btn-close" aria-label="Close"></button>
               <% end %>
             </li>

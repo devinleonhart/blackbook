@@ -23,6 +23,8 @@ RSpec.feature "Image#New", type: :feature do
 
     expect(page).to have_text("Image created!")
     expect(Image.count).to eq(1)
+
+    visit universe_url(@universe)
     within(".image-list") do
       expect(all(".img-thumbnail").count).to eq(1)
     end

@@ -39,7 +39,7 @@ RSpec.feature "Image#Edit", type: :feature do
   end
 
   scenario "should allow the deletion of an image tag." do
-    find(".image-tags").find("li").find("a").click
+    find("a.delete-tag").click
     expect(find(".image-tags")).not_to have_text("Maximilian Lionheart")
     expect(find(".image-tags")).to have_text("There are no characters in this image.")
     within(".image-tags") do
