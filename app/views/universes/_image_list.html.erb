@@ -1,4 +1,4 @@
-<section class="image-list">
+<section id="image-list" class="image-list">
   <div class="row">
     <div class="col-md-4 mx-auto">
       <%= form_with model: Image.new(universe_id: universe.id), url: universe_images_url(universe), method: "post", class: "file-form" do | form | %>
