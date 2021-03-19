@@ -9,9 +9,19 @@ class CharacterTraitsController < ApplicationController
   end
 
   def create
+    name = allowed_character_trait_params[:trait_name]
+
+    if name.blank?
+      error_and_redirect(
+        "You must provide a name.",
+        edit_character_url(params[:character_id])
+      )
+      return
+    end
+
     ActiveRecord::Base.transaction do
       trait = Trait.find_or_create_by!(
-        name: allowed_character_trait_params[:trait_name]
+        name: name
       )
       @character_trait = CharacterTrait.create!(
         character_id: params[:character_id], trait: trait

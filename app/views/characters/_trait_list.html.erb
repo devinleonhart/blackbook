@@ -9,7 +9,7 @@
     <% else %>
       <% @character.character_traits.sort_by{ |e| e.trait.name.downcase }.each do | character_trait | %>
         <div class="col-md-auto">
-          <span class="badge bg-dark">
+          <span class="badge bg-dark trait">
             <span><%= character_trait.trait.name %></span>
             <% if view == 'edit' %>
               <%= link_to character_trait_url(character_trait), method: "delete" do %>

@@ -9,8 +9,18 @@ class CharacterItemsController < ApplicationController
   end
 
   def create
+    name = allowed_character_item_params[:item_name]
+
+    if name.blank?
+      error_and_redirect(
+        "You must provide a name.",
+        edit_character_url(params[:character_id])
+      )
+      return
+    end
+
     ActiveRecord::Base.transaction do
-      item = Item.find_or_create_by!(name: allowed_character_item_params[:item_name])
+      item = Item.find_or_create_by!(name: name)
       @character_item = CharacterItem.create!(character_id: params[:character_id], item: item)
     end
     redirect_to edit_character_url(@character_item.character)
