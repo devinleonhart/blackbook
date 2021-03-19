@@ -51,5 +51,4 @@ RSpec.feature "Session", type: :feature do
 
     expect(page).to have_text("Invalid Email or password.")
   end
-
 end

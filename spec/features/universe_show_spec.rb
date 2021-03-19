@@ -5,7 +5,8 @@ require "rails_helper"
 RSpec.feature "Universe#Show", type: :feature do
   background do
     @user = FactoryBot.create(:user, { email: "user@test.com", display_name: "User", password: "abc123" })
-    @other_user = FactoryBot.create(:user, { email: "other_user@test.com", display_name: "Other User", password: "abc123" })
+    @other_user = FactoryBot.create(:user,
+      { email: "other_user@test.com", display_name: "Other User", password: "abc123" })
     @universe1 = FactoryBot.create(:universe, { name: "Universe1", owner: @user })
     @universe2 = FactoryBot.create(:universe, { name: "Universe2", owner: @other_user })
     @collaboration = FactoryBot.create(:collaboration, { universe: @universe1, user: @other_user })
