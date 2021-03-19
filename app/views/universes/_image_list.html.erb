@@ -23,7 +23,7 @@
         <% else %>
           <% images.each do | image | %>
             <div class="col-md-2 image">
-              <%= link_to edit_universe_image_url(universe, image) do %>
+              <%= link_to edit_universe_image_url(universe, image), class: "image-link" do %>
                 <%= generate_image_tag(image, [250, nil]) %>
               <% end %>
             </div>
