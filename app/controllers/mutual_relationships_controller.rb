@@ -15,9 +15,16 @@ class MutualRelationshipsController < ApplicationController
 
     this_character = Character.find_by(id: this_character_id)
     target_character = Character.find_by(id: target_character_id)
+    forward_name = allowed_mutual_relationship_create_params[:forward_name]
+    reverse_name = allowed_mutual_relationship_create_params[:reverse_name]
 
     if this_character.nil? || target_character.nil?
       error_and_redirect("One of the two characters you are trying to relate does not exist.", universes_url)
+      return
+    end
+
+    if forward_name.blank? || reverse_name.blank?
+      error_and_redirect("Both directions of the relationship must be specified.", universes_url)
       return
     end
 
@@ -30,13 +37,13 @@ class MutualRelationshipsController < ApplicationController
       Relationship.create!(
         originating_character_id: this_character_id,
         target_character_id: target_character_id,
-        name: allowed_mutual_relationship_create_params[:forward_name],
+        name: forward_name,
         mutual_relationship: @mutual_relationship,
       )
       Relationship.create!(
         originating_character_id: target_character_id,
         target_character_id: this_character_id,
-        name: allowed_mutual_relationship_create_params[:reverse_name],
+        name: reverse_name,
         mutual_relationship: @mutual_relationship,
       )
       @mutual_relationship.reload
