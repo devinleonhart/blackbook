@@ -19,12 +19,18 @@ class MutualRelationshipsController < ApplicationController
     reverse_name = allowed_mutual_relationship_create_params[:reverse_name]
 
     if this_character.nil? || target_character.nil?
-      error_and_redirect("One of the two characters you are trying to relate does not exist.", universes_url)
+      error_and_redirect(
+        "One of the two characters you are trying to relate does not exist.",
+        edit_character_url(params[:character_id])
+      )
       return
     end
 
     if forward_name.blank? || reverse_name.blank?
-      error_and_redirect("Both directions of the relationship must be specified.", universes_url)
+      error_and_redirect(
+        "Both directions of the relationship must be specified.",
+        edit_character_url(params[:character_id])
+      )
       return
     end
 
