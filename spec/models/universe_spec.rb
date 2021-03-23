@@ -29,7 +29,9 @@ RSpec.describe Universe, type: :model do
   before do
     @user1 = FactoryBot.create(:user)
     @user2 = FactoryBot.create(:user)
+    @user3 = FactoryBot.create(:user)
     @universe1 = FactoryBot.create(:universe, { name: "Knighthood", owner: @user1 })
+    @collaboration_for_user2 = FactoryBot.create(:collaboration, { universe: @universe1, user: @user2 })
   end
 
   it "should not allow an empty universe name" do
@@ -50,5 +52,17 @@ RSpec.describe Universe, type: :model do
   it "should not allow a duplicate universe name with same owner" do
     @universe2 = FactoryBot.build(:universe, { name: "Knighthood", owner: @user1 })
     expect(@universe2).to be_invalid
+  end
+
+  it "should be visible to its owner" do
+    expect(@universe1.visible_to_user?(@user1)).to eq(true)
+  end
+
+  it "should be visible to a collaborator" do
+    expect(@universe1.visible_to_user?(@user2)).to eq(true)
+  end
+
+  it "should not be visible to its owner" do
+    expect(@universe1.visible_to_user?(@user3)).to eq(false)
   end
 end
