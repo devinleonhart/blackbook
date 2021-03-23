@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_08_191038) do
+ActiveRecord::Schema.define(version: 2021_03_23_180753) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -175,6 +175,7 @@ ActiveRecord::Schema.define(version: 2021_03_08_191038) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["discarded_at"], name: "index_universes_on_discarded_at"
+    t.index ["name", "owner_id"], name: "index_universes_on_name_and_owner_id", unique: true
     t.index ["name"], name: "index_universes_on_name", unique: true
     t.index ["owner_id"], name: "index_universes_on_owner_id"
   end

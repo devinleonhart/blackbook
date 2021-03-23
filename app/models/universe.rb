@@ -13,9 +13,10 @@
 #
 # Indexes
 #
-#  index_universes_on_discarded_at  (discarded_at)
-#  index_universes_on_name          (name) UNIQUE
-#  index_universes_on_owner_id      (owner_id)
+#  index_universes_on_discarded_at       (discarded_at)
+#  index_universes_on_name               (name) UNIQUE
+#  index_universes_on_name_and_owner_id  (name,owner_id) UNIQUE
+#  index_universes_on_owner_id           (owner_id)
 #
 # Foreign Keys
 #
@@ -28,7 +29,7 @@ class Universe < ApplicationRecord
   has_rich_text :content
 
   validates :name, presence: true
-  validates :name, uniqueness: { case_sensitive: false }
+  validates :name, uniqueness: { case_sensitive: false, scope: :owner_id }
 
   belongs_to :owner, class_name: "User", inverse_of: :owned_universes
 
