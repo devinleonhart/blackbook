@@ -12,29 +12,45 @@
 require "rails_helper"
 
 RSpec.describe MutualRelationship, type: :model do
-  it "is valid with valid relationships" do
-    @max = create(:character, name: "Max")
-    @lise = create(:character, name: "Lise")
-    @mutual_relationship = build(:mutual_relationship, character1: @max, character2: @lise, forward_name: "Boyfriend",
-                                                       reverse_name: "Girlfriend")
+  before do
+    @user1 = FactoryBot.create(:user)
+    @user2 = FactoryBot.create(:user)
+    @universe1 = FactoryBot.create(:universe, { owner: @user1, name: "Seraph" })
+    @universe2 = FactoryBot.create(:universe, { owner: @user1, name: "Knighthood" })
+    @universe3 = FactoryBot.create(:universe, { owner: @user2 })
+    @character1 = FactoryBot.create(:character, { name: "Max Lionheart", universe: @universe1})
+    @character2 = FactoryBot.create(:character, { name: "Lise Awen", universe: @universe1})
+    @character3 = FactoryBot.create(:character, { name: "Gina Sabatier", universe: @universe2})
+    @character4 = FactoryBot.create(:character, { name: "Dahlia Morgan", universe: @universe3})
+  end
+
+  it "should allow a relationship between characters in the same universe." do
+    @relationship1 = FactoryBot.build(:relationship, { name: "Boyfriend", originating_character: @character1, target_character: @character2, mutual_relationship: @mutual_relationship} )
+    @relationship2 = FactoryBot.build(:relationship, { name: "Girlfriend", originating_character: @character2, target_character: @character1, mutual_relationship: @mutual_relationship} )
+    @mutual_relationship = FactoryBot.build(:mutual_relationship, {relationships: [@relationship1, @relationship2]})
     expect(@mutual_relationship).to be_valid
   end
 
-  it "raises error when characters are related to themselves" do
-    @max = create(:character, name: "Max")
-    expect do
-      build(:mutual_relationship, character1: @max, character2: @max, forward_name: "Uhh...",
-                                  reverse_name: "Well...")
-    end.to raise_error("Validation failed: A character can't have a relationship with itself.")
+  it "should list the universe of the related characters." do
+    @relationship1 = FactoryBot.build(:relationship, { name: "Boyfriend", originating_character: @character1, target_character: @character2, mutual_relationship: @mutual_relationship} )
+    @relationship2 = FactoryBot.build(:relationship, { name: "Girlfriend", originating_character: @character2, target_character: @character1, mutual_relationship: @mutual_relationship} )
+    @mutual_relationship = FactoryBot.build(:mutual_relationship, {relationships: [@relationship1, @relationship2]})
+    expect(@mutual_relationship.universe).to eq(@character1.universe)
   end
 
-  it "raises error when related characters are not part of the same universe" do
-    @universe1 = create(:universe, name: "Universe1")
-    @universe2 = create(:universe, name: "Universe2")
-    @max = create(:character, name: "Max", universe: @universe1)
-    @apollo = create(:character, name: "Apollo", universe: @universe2)
-    @mutual_relationship = build(:mutual_relationship, character1: @max, character2: @apollo, forward_name: "Uhh...",
-                                                       reverse_name: "Well...")
-    expect(@mutual_relationship).to be_valid
+  it "should list the characters in the relationship." do
+    @relationship1 = FactoryBot.build(:relationship, { name: "Boyfriend", originating_character: @character1, target_character: @character2, mutual_relationship: @mutual_relationship} )
+    @relationship2 = FactoryBot.build(:relationship, { name: "Girlfriend", originating_character: @character2, target_character: @character1, mutual_relationship: @mutual_relationship} )
+    @mutual_relationship = FactoryBot.build(:mutual_relationship, {relationships: [@relationship1, @relationship2]})
+    expect(@mutual_relationship.characters.any? { |character| character.name == "Max Lionheart"}).to equal(true)
+    expect(@mutual_relationship.characters.any? { |character| character.name == "Lise Awen"}).to equal(true)
+    expect(@mutual_relationship.characters.count).to equal(2)
+  end
+
+  it "should not allow a relationship between characters in different universes." do
+    @relationship1 = FactoryBot.build(:relationship, { name: "Friend", originating_character: @character3, target_character: @character4, mutual_relationship: @mutual_relationship} )
+    @relationship2 = FactoryBot.build(:relationship, { name: "Friend", originating_character: @character4, target_character: @character3, mutual_relationship: @mutual_relationship} )
+    @mutual_relationship = FactoryBot.build(:mutual_relationship, { relationships: [@relationship1, @relationship2] })
+    expect(@mutual_relationship).to be_invalid
   end
 end

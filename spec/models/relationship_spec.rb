@@ -28,4 +28,5 @@
 require "rails_helper"
 
 RSpec.describe Relationship, type: :model do
+  # The Relationship model is never meant to be created alone. Test MutualRelationship instead.
 end

@@ -22,20 +22,22 @@ FactoryBot.define do
     end
 
     after(:build) do |mutual_relationship, evaluator|
-      create(
-        :relationship,
-        originating_character: evaluator.character1,
-        target_character: evaluator.character2,
-        name: evaluator.forward_name,
-        mutual_relationship: mutual_relationship,
-      )
-      create(
-        :relationship,
-        originating_character: evaluator.character2,
-        target_character: evaluator.character1,
-        name: evaluator.reverse_name,
-        mutual_relationship: mutual_relationship,
-      )
+      if mutual_relationship.relationships.blank?
+        create(
+          :relationship,
+          originating_character: evaluator.character1,
+          target_character: evaluator.character2,
+          name: evaluator.forward_name,
+          mutual_relationship: mutual_relationship,
+        )
+        create(
+          :relationship,
+          originating_character: evaluator.character2,
+          target_character: evaluator.character1,
+          name: evaluator.reverse_name,
+          mutual_relationship: mutual_relationship,
+        )
+      end
     end
   end
 end

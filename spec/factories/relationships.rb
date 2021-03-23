@@ -42,9 +42,11 @@ FactoryBot.define do
       next if relationship.originating_character.nil?
       next if relationship.target_character.nil?
 
-      universe = evaluator.character_universe
-      relationship.originating_character.universe = universe
-      relationship.target_character.universe = universe
+      if relationship.originating_character.universe.nil? || relationship.target_character.universe.nil?
+        universe = evaluator.character_universe
+        relationship.originating_character.universe = universe
+        relationship.target_character.universe = universe
+      end
     end
   end
 end
