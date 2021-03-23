@@ -25,32 +25,29 @@
 require "rails_helper"
 
 RSpec.describe CharacterItem, type: :model do
-  it "is valid with valid attached models" do
-    @character = create(:character, name: "Max")
-    @item = create(:item, name: "Max's Sword")
+  before do
+    @character = FactoryBot.create(:character)
+    @item = FactoryBot.create(:item)
+  end
+
+  it "should create a valid character_item" do
     @character_item = build(:character_item, character: @character, item: @item)
     expect(@character_item).to be_valid
   end
 
-  it "is invalid with missing character" do
-    @item = create(:item, name: "Max's Sword")
+  it "should create be invalid when character is missing" do
     @character_item = build(:character_item, character: nil, item: @item)
     expect(@character_item).to be_invalid
   end
 
-  it "is invalid with missing item" do
-    @character = create(:character, name: "Max")
-    @character_item = build(:character_item, character: @character, item: @item)
+  it "should create be invalid when item is missing" do
+    @character_item = build(:character_item, character: @character, item: nil)
     expect(@character_item).to be_invalid
   end
 
-  it "is invalid when attacking the same models twice" do
-    @character = create(:character, name: "Max")
-    @item = create(:item, name: "Max's Sword")
-    @character_item1 = create(:character_item, character: @character,
-                                               item: @item)
-    @character_item2 = build(:character_item, character: @character,
-                                              item: @item)
+  it "should not allow a duplicate item" do
+    @character_item1 = create(:character_item, character: @character, item: @item)
+    @character_item2 = build(:character_item, character: @character, item: @item)
     expect(@character_item1).to be_valid
     expect(@character_item2).to be_invalid
   end

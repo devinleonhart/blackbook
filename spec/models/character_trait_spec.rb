@@ -25,4 +25,31 @@
 require "rails_helper"
 
 RSpec.describe CharacterTrait, type: :model do
+
+  before do
+    @character = FactoryBot.create(:character)
+    @trait = FactoryBot.create(:trait)
+  end
+
+  it "should create a valid character_trait" do
+    @character_trait = build(:character_trait, character: @character, trait: @trait)
+    expect(@character_trait).to be_valid
+  end
+
+  it "should create be invalid when character is missing" do
+    @character_trait = build(:character_trait, character: nil, trait: @trait)
+    expect(@character_trait).to be_invalid
+  end
+
+  it "should create be invalid when trait is missing" do
+    @character_trait = build(:character_trait, character: @character, trait: nil)
+    expect(@character_trait).to be_invalid
+  end
+
+  it "should not allow a duplicate trait" do
+    @character_trait1 = create(:character_trait, character: @character, trait: @trait)
+    @character_trait2 = build(:character_trait, character: @character, trait: @trait)
+    expect(@character_trait1).to be_valid
+    expect(@character_trait2).to be_invalid
+  end
 end
