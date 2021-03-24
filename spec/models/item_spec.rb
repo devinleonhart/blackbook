@@ -18,7 +18,7 @@ require "rails_helper"
 
 RSpec.describe Item, type: :model do
   before do
-    @item1 = FactoryBot.create(:item, { name: "Max's Sword"} )
+    @item1 = FactoryBot.create(:item, { name: "Max's Sword" })
   end
 
   it "should not allow an empty item name" do

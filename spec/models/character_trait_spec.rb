@@ -25,7 +25,6 @@
 require "rails_helper"
 
 RSpec.describe CharacterTrait, type: :model do
-
   before do
     @character = FactoryBot.create(:character)
     @trait = FactoryBot.create(:trait)

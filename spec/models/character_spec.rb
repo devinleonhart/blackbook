@@ -29,7 +29,8 @@ RSpec.describe Character, type: :model do
     @universe = FactoryBot.create(:universe)
     @character = FactoryBot.build(:character, { universe: @universe })
     @other_character = FactoryBot.build(:character, { universe: @universe })
-    @mutual_relationship = FactoryBot.create(:mutual_relationship, { character1: @character, character2: @other_character })
+    @mutual_relationship = FactoryBot.create(:mutual_relationship,
+      { character1: @character, character2: @other_character })
   end
 
   it "should not allow a character to have a missing name" do
@@ -39,7 +40,7 @@ RSpec.describe Character, type: :model do
 
   it "should not allow a duplicate character name" do
     @character.name = "Max Lionheart"
-    @character.save
+    @character.save!
     @other_character.name = "Max Lionheart"
     expect(@other_character).to be_invalid
   end

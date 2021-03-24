@@ -24,7 +24,6 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-
   before do
     @user1 = FactoryBot.build(:user, { display_name: "Max Lionheart", email: "test@test.com" })
   end

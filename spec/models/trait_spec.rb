@@ -18,7 +18,7 @@ require "rails_helper"
 
 RSpec.describe Trait, type: :model do
   before do
-    @trait1 = FactoryBot.create(:trait, { name: "Strong"} )
+    @trait1 = FactoryBot.create(:trait, { name: "Strong" })
   end
 
   it "should not allow an empty trait name" do

@@ -32,8 +32,6 @@ class ImageTag < ApplicationRecord
   def character_must_be_from_same_universe_as_image
     return if character.nil? || image.nil?
 
-    if character.universe != image.universe
-      errors.add(:base, "The character and image must be from the same universe!")
-    end
+    errors.add(:base, "The character and image must be from the same universe!") if character.universe != image.universe
   end
 end

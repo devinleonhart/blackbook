@@ -24,7 +24,7 @@ require "rails_helper"
 
 RSpec.describe Location, type: :model do
   before do
-    @location1 = FactoryBot.create(:location, { name: "Arboria"} )
+    @location1 = FactoryBot.create(:location, { name: "Arboria" })
   end
 
   it "should not allow an empty location name" do
