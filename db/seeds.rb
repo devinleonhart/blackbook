@@ -31,7 +31,7 @@ ActiveRecord::Base.transaction do
   user1 = FactoryBot.build(
     :user,
     display_name: "user1",
-    email: "user1@lionheart.design",
+    email: "user1@devlion.me",
     password: "password1",
   )
   user1.save!
@@ -39,7 +39,7 @@ ActiveRecord::Base.transaction do
   user2 = FactoryBot.build(
     :user,
     display_name: "user2",
-    email: "user2@lionheart.design",
+    email: "user2@devlion.me",
     password: "password2",
   )
   user2.save!
