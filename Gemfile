@@ -18,6 +18,7 @@ gem 'securerandom', '~> 0.1.0'
 gem 'turbolinks', '~> 5'
 gem 'webpacker', '~> 5.0'
 gem 'will_paginate', '~> 3.3'
+gem "aws-sdk-s3", require: false
 
 group :development, :test do
   gem 'awesome_print', '~> 1.8'
