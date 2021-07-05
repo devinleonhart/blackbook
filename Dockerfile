@@ -5,6 +5,7 @@ RUN mkdir /blackbook-rails
 COPY . /blackbook-rails
 WORKDIR /blackbook-rails
 
+RUN gem update --system
 RUN bundle install
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
