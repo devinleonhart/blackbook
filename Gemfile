@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '3.0.0'
+ruby '3.0.1'
 
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'devise', '~> 4.7', '>= 4.7.3'
@@ -32,11 +32,6 @@ end
 
 group :development do
   gem 'annotate', '~> 3.1', '>= 3.1.1'
-  gem 'capistrano-bundler', require: false
-  gem 'capistrano-rails',   require: false
-  gem 'capistrano-rbenv',     require: false
-  gem 'capistrano',         require: false
-  gem 'capistrano3-puma',   require: false
   gem 'listen', '~> 3.4', '>= 3.4.1'
   gem 'rack-mini-profiler', '~> 2.0'
   gem 'spring-watcher-listen', '~> 2.0', '>= 2.0.1'
