@@ -8,10 +8,6 @@ ENV TMP_PATH /tmp/
 ENV RAILS_LOG_TO_STDOUT true
 ENV RAILS_PORT 3000
 
-# Copy Entrypoint scripts and make them executable.
-COPY ./entrypoints/prod.sh /usr/local/bin/prod-entrypoint.sh
-RUN chmod +x /usr/local/bin/prod-entrypoint.sh
-
 # Install Depencenices
 RUN apk -U add --no-cache \
 build-base \
@@ -28,11 +24,19 @@ less \
 && rm -rf /var/cache/apk/* \
 && mkdir -p $APP_PATH
 
+# Copy Project
+RUN mkdir $APP_PATH
+COPY . $APP_PATH
+WORKDIR $APP_PATH
+
 # Install Gems
 RUN gem install bundler --version "$BUNDLE_VERSION" \
 && rm -rf $GEM_HOME/cache/*
+RUN bundle install
 
-# Begin.
-WORKDIR $APP_PATH
+# Begin
+COPY ./entrypoints/prod.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["prod.sh"]
 EXPOSE $RAILS_PORT
-ENTRYPOINT [ "bundle", "exec" ]
+CMD ["rails", "server", "-b", "0.0.0.0"]
