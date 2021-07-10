@@ -1,4 +1,4 @@
-FROM ruby:3.0.2-alpine
+FROM ruby:3.0.1-alpine
 
 #  Docker-specific Environment Variables
 ENV APP_PATH /var/app
@@ -9,7 +9,7 @@ ENV RAILS_LOG_TO_STDOUT true
 ENV RAILS_PORT 3000
 
 # Copy Entrypoint scripts and make them executable.
-COPY ./prod-entrypoint.sh /usr/local/bin/dev-entrypoint.sh
+COPY ./entrypoints/prod.sh /usr/local/bin/prod-entrypoint.sh
 RUN chmod +x /usr/local/bin/prod-entrypoint.sh
 
 # Install Depencenices
