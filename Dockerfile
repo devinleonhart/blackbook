@@ -25,7 +25,6 @@ less \
 && mkdir -p $APP_PATH
 
 # Copy Project
-RUN mkdir $APP_PATH
 COPY . $APP_PATH
 WORKDIR $APP_PATH
 
@@ -35,8 +34,8 @@ RUN gem install bundler --version "$BUNDLE_VERSION" \
 RUN bundle install
 
 # Begin
-COPY ./entrypoints/prod.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
+COPY ./entrypoints/prod.sh /usr/local/bin/prod.sh
+RUN chmod +x /usr/local/bin/prod.sh
 ENTRYPOINT ["prod.sh"]
 EXPOSE $RAILS_PORT
 CMD ["rails", "server", "-b", "0.0.0.0"]
