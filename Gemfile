@@ -16,8 +16,8 @@ gem 'puma', '~> 4.3', '>= 4.3.7'
 gem 'rails', '~> 6.1.2', '>= 6.1.2.1'
 gem 'sass-rails', '>= 6'
 gem 'securerandom', '~> 0.1.0'
+gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'turbolinks', '~> 5'
-gem 'webpacker', '~> 5.0'
 gem 'will_paginate', '~> 3.3'
 gem "aws-sdk-s3", require: false
 

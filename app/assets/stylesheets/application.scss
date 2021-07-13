@@ -1,0 +1,41 @@
+// Styling Scopes
+@import "./characters/index.scss";
+@import "./images/index.scss";
+@import "./shared/index.scss";
+@import "./universes/index.scss";
+
+// Vendor
+@import "/vendor/assets/stylesheets/bootstrap.css";
+@import "/vendor/assets/stylesheets/bootstrap-icons/bootstrap-icons.css";
+@import "/vendor/assets/stylesheets/trix.css";
+
+$dark-gray: #212529;
+$gray: rgba(73, 80, 87, 1);
+$faded-gray: rgba(73, 80, 87, .6);
+$light-gray: #f8f9fa;
+$light-blue: #9ec5fe;
+$light-cyan: #6edff6;
+$light-blue: #6ea8fe;
+
+html, body {
+  background-color: $dark-gray;
+  box-sizing: border-box;
+  color: $light-gray;
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  min-width: 360px;
+  padding: 0;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+a {
+  color: $light-cyan;
+  text-decoration: none;
+}
+
+pre {
+  color: $dark-gray !important;
+}
