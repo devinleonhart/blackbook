@@ -5,6 +5,7 @@ ruby '3.0.1'
 
 gem 'bundler', '~> 2.2', '>= 2.2.21'
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'bootstrap', '~> 5.0.1'
 gem 'devise', '~> 4.7', '>= 4.7.3'
 gem 'discard', '~> 1.2'
 gem 'factory_bot_rails', '~> 6.1'
@@ -17,6 +18,7 @@ gem 'rails', '~> 6.1.2', '>= 6.1.2.1'
 gem 'sass-rails', '>= 6'
 gem 'securerandom', '~> 0.1.0'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'trix'
 gem 'turbolinks', '~> 5'
 gem 'will_paginate', '~> 3.3'
 gem "aws-sdk-s3", require: false

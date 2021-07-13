@@ -66,6 +66,8 @@ GEM
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 14.0)
     ast (2.4.2)
+    autoprefixer-rails (10.2.5.1)
+      execjs (> 0)
     awesome_print (1.9.2)
     aws-eventstream (1.1.1)
     aws-partitions (1.476.0)
@@ -87,6 +89,10 @@ GEM
     bindex (0.8.1)
     bootsnap (1.7.5)
       msgpack (~> 1.0)
+    bootstrap (5.0.1)
+      autoprefixer-rails (>= 9.1.0)
+      popper_js (>= 2.9.2, < 3)
+      sassc-rails (>= 2.0.0)
     builder (3.2.4)
     byebug (11.1.3)
     capybara (3.35.3)
@@ -117,6 +123,7 @@ GEM
     discard (1.2.0)
       activerecord (>= 4.2, < 7)
     erubi (1.10.0)
+    execjs (2.8.1)
     factory_bot (6.2.0)
       activesupport (>= 5.0.0)
     factory_bot_rails (6.2.0)
@@ -160,6 +167,7 @@ GEM
     pg_search (2.3.5)
       activerecord (>= 5.2)
       activesupport (>= 5.2)
+    popper_js (2.9.2)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -276,6 +284,8 @@ GEM
       sprockets (>= 3.0.0)
     thor (1.1.0)
     tilt (2.0.10)
+    trix (0.10.1)
+      rails
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -310,6 +320,7 @@ DEPENDENCIES
   awesome_print (~> 1.8)
   aws-sdk-s3
   bootsnap (>= 1.4.4)
+  bootstrap (~> 5.0.1)
   bundler (~> 2.2, >= 2.2.21)
   byebug (~> 11.1, >= 11.1.3)
   capybara (~> 3.35, >= 3.35.3)
@@ -335,6 +346,7 @@ DEPENDENCIES
   spring (~> 2.1, >= 2.1.1)
   spring-watcher-listen (~> 2.0, >= 2.0.1)
   sprockets-rails
+  trix
   turbolinks (~> 5)
   tzinfo-data
   web-console (>= 4.1.0)
