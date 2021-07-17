@@ -31,4 +31,11 @@ class ApplicationController < ActionController::Base
     end
     true
   end
+
+  rescue_from ActionController::InvalidAuthenticityToken do
+    logger.info "Compromised session found!"
+    reset_session
+    flash[:error] = "Your session has expired."
+    redirect_to root_path
+  end
 end
