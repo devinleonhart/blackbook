@@ -22,6 +22,7 @@ gem 'trix'
 gem 'turbolinks', '~> 5'
 gem 'will_paginate', '~> 3.3'
 gem "aws-sdk-s3", require: false
+gem 'jquery-rails', '~> 4.4'
 
 group :development, :test do
   gem 'awesome_print', '~> 1.8'
