@@ -17,6 +17,6 @@ digitalocean:
 
 production:
   service: Mirror
-  primary: local
+  primary: digitalocean
   mirrors:
-    - digitalocean
+    - local
