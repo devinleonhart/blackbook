@@ -19,9 +19,6 @@ libxslt-dev \
 nodejs \
 yarn \
 imagemagick \
-libpng-dev \
-libtiff-dev \
-libjpeg-dev \
 tzdata \
 less \
 && rm -rf /var/cache/apk/* \
