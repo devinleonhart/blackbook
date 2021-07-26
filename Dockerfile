@@ -38,4 +38,4 @@ COPY ./entrypoints/prod.sh /usr/local/bin/prod.sh
 RUN chmod +x /usr/local/bin/prod.sh
 ENTRYPOINT ["prod.sh"]
 EXPOSE $RAILS_PORT
-CMD ["rails", "server", "-b", "0.0.0.0"]
+CMD ["puma", "-C", "config/puma.rb"]
