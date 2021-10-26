@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_04_040914) do
+ActiveRecord::Schema.define(version: 2021_10_26_230204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -54,16 +54,6 @@ ActiveRecord::Schema.define(version: 2021_10_04_040914) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
-  end
-
-  create_table "character_items", force: :cascade do |t|
-    t.bigint "character_id", null: false
-    t.bigint "item_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["character_id", "item_id"], name: "index_character_items_on_character_id_and_item_id", unique: true
-    t.index ["character_id"], name: "index_character_items_on_character_id"
-    t.index ["item_id"], name: "index_character_items_on_item_id"
   end
 
   create_table "character_traits", force: :cascade do |t|
@@ -115,13 +105,6 @@ ActiveRecord::Schema.define(version: 2021_10_04_040914) do
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "universe_avatar"
     t.index ["universe_id"], name: "index_images_on_universe_id"
-  end
-
-  create_table "items", force: :cascade do |t|
-    t.string "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["name"], name: "index_items_on_name", unique: true
   end
 
   create_table "mutual_relationships", force: :cascade do |t|
@@ -187,8 +170,6 @@ ActiveRecord::Schema.define(version: 2021_10_04_040914) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "character_items", "characters"
-  add_foreign_key "character_items", "items"
   add_foreign_key "character_traits", "characters"
   add_foreign_key "character_traits", "traits"
   add_foreign_key "characters", "universes"

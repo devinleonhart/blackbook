@@ -26,7 +26,6 @@ class CharactersController < ApplicationController
     @character =
       Character
       .includes(
-        character_items: [:item],
         character_traits: [:trait],
         image_tags: [:image],
       )
@@ -44,7 +43,6 @@ page: params[:page], per_page: 18
     @character =
       Character
       .includes(
-        character_items: [:item],
         character_traits: [:trait],
         image_tags: [:image],
       )
@@ -58,7 +56,6 @@ page: params[:page], per_page: 18
     @character =
       Character
       .includes(
-        character_items: [:item],
         character_traits: [:trait],
         image_tags: [:image],
       )
