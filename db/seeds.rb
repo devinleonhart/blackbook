@@ -6,7 +6,6 @@ require "factory_bot_rails"
 def create_characters(number_of_characters)
   FactoryBot.create_list(:character, number_of_characters) do |character|
     character.traits = FactoryBot.create_list(:trait, 50)
-    character.items = FactoryBot.create_list(:item, 10)
   end
 end
 
