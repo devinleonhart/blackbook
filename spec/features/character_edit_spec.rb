@@ -35,37 +35,6 @@ RSpec.feature "Character#Edit", type: :feature do
     expect(Character.all.first.name).to eq("Maximilian Lionheart")
   end
 
-  scenario "should allow adding a trait." do
-    visit edit_character_url(@character1)
-    fill_in "character_trait[trait_name]", with: "Strong"
-    within(".character-trait-list") do
-      find_button("Add").click
-    end
-    expect(CharacterTrait.count).to eq(1)
-    expect(page).to have_text("Strong")
-  end
-
-  scenario "should not allow adding a trait without a name." do
-    visit edit_character_url(@character1)
-    fill_in "character_trait[trait_name]", with: ""
-    within(".character-trait-list") do
-      find_button("Add").click
-    end
-    expect(CharacterTrait.count).to eq(0)
-    expect(page).not_to have_text("Strong")
-    expect(page).to have_text("You must provide a name.")
-  end
-
-  scenario "should allow deleting a trait." do
-    trait = FactoryBot.create(:trait, name: "Strong")
-    FactoryBot.create(:character_trait, trait: trait, character: @character1)
-    visit edit_character_url(@character1)
-    within(".character-trait-list") do
-      find(".trait", match: :first).find("a").click
-    end
-    expect(CharacterTrait.count).to eq(0)
-  end
-
   scenario "should not allow a user to view the edit page of a character they do not own." do
     visit edit_character_url(@character3)
     expect(page).to have_text("You are not an owner or collaborator of this universe.")

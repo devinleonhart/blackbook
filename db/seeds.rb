@@ -4,9 +4,7 @@
 require "factory_bot_rails"
 
 def create_characters(number_of_characters)
-  FactoryBot.create_list(:character, number_of_characters) do |character|
-    character.traits = FactoryBot.create_list(:trait, 50)
-  end
+  FactoryBot.create_list(:character, number_of_characters)
 end
 
 def relate_characters(characters)

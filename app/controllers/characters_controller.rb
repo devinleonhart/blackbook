@@ -26,7 +26,6 @@ class CharactersController < ApplicationController
     @character =
       Character
       .includes(
-        character_traits: [:trait],
         image_tags: [:image],
       )
       .find_by(id: params[:id])
@@ -43,7 +42,6 @@ page: params[:page], per_page: 18
     @character =
       Character
       .includes(
-        character_traits: [:trait],
         image_tags: [:image],
       )
       .find_by(id: params[:id])
@@ -56,7 +54,6 @@ page: params[:page], per_page: 18
     @character =
       Character
       .includes(
-        character_traits: [:trait],
         image_tags: [:image],
       )
       .find_by(id: params[:id])
