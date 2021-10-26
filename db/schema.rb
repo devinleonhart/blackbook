@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_23_180753) do
+ActiveRecord::Schema.define(version: 2021_10_04_040914) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -124,15 +124,6 @@ ActiveRecord::Schema.define(version: 2021_03_23_180753) do
     t.index ["name"], name: "index_items_on_name", unique: true
   end
 
-  create_table "locations", force: :cascade do |t|
-    t.citext "name", null: false
-    t.bigint "universe_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["name", "universe_id"], name: "index_locations_on_name_and_universe_id", unique: true
-    t.index ["universe_id"], name: "index_locations_on_universe_id"
-  end
-
   create_table "mutual_relationships", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -201,7 +192,6 @@ ActiveRecord::Schema.define(version: 2021_03_23_180753) do
   add_foreign_key "character_traits", "characters"
   add_foreign_key "character_traits", "traits"
   add_foreign_key "characters", "universes"
-  add_foreign_key "locations", "universes"
   add_foreign_key "relationships", "characters", column: "originating_character_id"
   add_foreign_key "relationships", "characters", column: "target_character_id"
   add_foreign_key "universes", "users", column: "owner_id"

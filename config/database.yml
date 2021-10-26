@@ -15,7 +15,21 @@ production:
   <<: *default
 
 development:
-  <<: *default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  host: 127.0.0.1
+  port: 5432
+  database: blackbook_development
+  username: blackbook
+  password: password
 
 test:
-  <<: *default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  host: 127.0.0.1
+  port: 5432
+  database: blackbook_test
+  username: blackbook
+  password: password

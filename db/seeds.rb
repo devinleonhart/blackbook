@@ -10,10 +10,6 @@ def create_characters(number_of_characters)
   end
 end
 
-def create_locations(number_of_locations)
-  FactoryBot.create_list(:location, number_of_locations)
-end
-
 def relate_characters(characters)
   characters.each_with_index do |character, index|
     if index.zero?
@@ -50,8 +46,7 @@ ActiveRecord::Base.transaction do
     name: "universe1",
     owner: user1,
     collaborators: [user2],
-    characters: create_characters(5),
-    locations: create_locations(5)
+    characters: create_characters(5)
   )
 
   relate_characters(universe1.characters)
@@ -61,8 +56,7 @@ ActiveRecord::Base.transaction do
     name: "universe2",
     owner: user1,
     collaborators: [user2],
-    characters: create_characters(5),
-    locations: create_locations(5)
+    characters: create_characters(5)
   )
 
   universe3 = FactoryBot.build(

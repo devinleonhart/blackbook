@@ -40,8 +40,6 @@ class SearchController < ApplicationController
     case match.searchable_type
     when "Character"
       [match.searchable]
-    when "Location"
-      [match.searchable]
     when "Item"
       match.searchable.characters
     when "Trait"
