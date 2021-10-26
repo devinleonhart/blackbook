@@ -4,7 +4,6 @@
     <h1><%= @universe.name %></h1>
     <h6>
       <a href="#character-list">Characters</a> &middot;
-      <a href="#location-list">Locations</a> &middot;
       <a href="#image-list">Images</a>
     </h6>
   </header>
@@ -21,16 +20,6 @@
     show_avatar: true
   } %>
 
-  <%= render partial: "universes/card_list", locals: {
-    collection: @universe.locations,
-    collection_url: ->(x) { location_url(x) },
-    identifier: "location-list",
-    image_helper: ->(x) { get_character_avatar_image(x) },
-    new_url: new_universe_location_url(@universe),
-    name: "Location",
-    show_avatar: false
-  } %>
-
   <%= render partial: "universes/image_list", locals: {
     images: @images,
     universe: @universe
@@ -42,6 +31,3 @@
   } %>
 
 </section>
-
-
-

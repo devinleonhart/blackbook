@@ -39,7 +39,6 @@ class Universe < ApplicationRecord
     source: :user, inverse_of: :contributor_universes
 
   has_many :characters, inverse_of: :universe, dependent: :destroy
-  has_many :locations, inverse_of: :universe, dependent: :destroy
   has_many :images, inverse_of: :universe, dependent: :destroy
 
   # returns a boolean indicating whether the given User model is allowed to

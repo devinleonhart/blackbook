@@ -15,11 +15,6 @@
           <%= link_to "Back to #{@image.universe.name}", universe_url(@image.universe), class: "nav-link"%>
         </li>
       <% end %>
-      <% unless @location.nil? %>
-        <li class="nav-item">
-          <%= link_to "Back to #{@location.universe.name}", universe_url(@location.universe), class: "nav-link"%>
-        </li>
-      <% end %>
     </ul>
     <div class="collapse navbar-collapse flex-row-reverse" id="navbarNav">
       <ul class="navbar-nav">
@@ -31,11 +26,6 @@
         <% unless @character.nil? %>
           <li class="nav-item">
             <%= link_to "Edit Character", edit_character_url(@character), class: "nav-link"%>
-          </li>
-        <% end %>
-        <% unless @location.nil? %>
-          <li class="nav-item">
-            <%= link_to "Edit Location", edit_location_url(@location), class: "nav-link"%>
           </li>
         <% end %>
         <% if user_signed_in? %>
