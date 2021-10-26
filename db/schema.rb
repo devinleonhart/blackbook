@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_26_230204) do
+ActiveRecord::Schema.define(version: 2021_10_26_233757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -54,16 +54,6 @@ ActiveRecord::Schema.define(version: 2021_10_26_230204) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
-  end
-
-  create_table "character_traits", force: :cascade do |t|
-    t.bigint "character_id", null: false
-    t.bigint "trait_id", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["character_id", "trait_id"], name: "index_character_traits_on_character_id_and_trait_id", unique: true
-    t.index ["character_id"], name: "index_character_traits_on_character_id"
-    t.index ["trait_id"], name: "index_character_traits_on_trait_id"
   end
 
   create_table "characters", force: :cascade do |t|
@@ -135,13 +125,6 @@ ActiveRecord::Schema.define(version: 2021_10_26_230204) do
     t.check_constraint "originating_character_id <> target_character_id", name: "relationships_no_self_relationships"
   end
 
-  create_table "traits", force: :cascade do |t|
-    t.citext "name", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["name"], name: "index_traits_on_name", unique: true
-  end
-
   create_table "universes", force: :cascade do |t|
     t.citext "name", null: false
     t.bigint "owner_id", null: false
@@ -170,8 +153,6 @@ ActiveRecord::Schema.define(version: 2021_10_26_230204) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "character_traits", "characters"
-  add_foreign_key "character_traits", "traits"
   add_foreign_key "characters", "universes"
   add_foreign_key "relationships", "characters", column: "originating_character_id"
   add_foreign_key "relationships", "characters", column: "target_character_id"

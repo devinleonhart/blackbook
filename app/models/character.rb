@@ -34,9 +34,6 @@ class Character < ApplicationRecord
 
   belongs_to :universe, inverse_of: :characters
 
-  has_many :character_traits, inverse_of: :character, dependent: :destroy
-  has_many :traits, through: :character_traits, inverse_of: :characters
-
   has_many :image_tags, inverse_of: :character, dependent: :destroy
   has_many :images, through: :image_tags, inverse_of: :characters
 

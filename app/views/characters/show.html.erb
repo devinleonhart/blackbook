@@ -9,11 +9,6 @@
 
   <% render partial: "shared/capture_navbar" %>
 
-  <%= render partial: "characters/trait_list", locals: {
-    character: @character,
-    view: 'show'
-  } %>
-
   <%= render partial: "characters/relationship_table", locals: {
     character: @character,
     view: 'show'
