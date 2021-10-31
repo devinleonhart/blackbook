@@ -10,7 +10,13 @@
 
   <% render partial: "shared/capture_navbar" %>
 
-  <p>Render all characters here.</p>
+  <ul>
+  <% @universe.characters.each do | character | %>
+    <li>
+      <%= link_to character.name, character_path(character) %>
+    </li>
+  <% end %>
+  </ul>
 
   <%= render partial: "universes/image_list", locals: {
     images: @images,

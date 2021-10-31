@@ -1,5 +1,9 @@
 <section class="universes-index-view">
 
-  <p>Render all universes here.</p>
+  <ul>
+  <% @universes.each do | universe | %>
+    <li><%= link_to universe.name, universe_path(universe) %></li>
+  <% end %>
+  <ul>
 
 </section>
