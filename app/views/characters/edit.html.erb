@@ -9,10 +9,6 @@
           <%= form.label :name, class: "form-label" %>
           <%= form.text_field :name, class: "form-control" %>
         </div>
-        <div class="mb-3">
-          <%= form.label :content, class: "form-label" %>
-          <%= form.rich_text_area :content %>
-        </div>
         <div class="text-end">
           <%= form.submit "Save", class: "btn btn-primary" %>
           <%= link_to "Cancel", character_path(@character), class: "btn btn-primary" %>
