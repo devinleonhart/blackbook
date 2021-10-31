@@ -2,19 +2,23 @@
 <html lang="en">
   <head>
     <title>Blackbook</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => "reload" %>
-    <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
+    <%= stylesheet_link_tag    "application" %>
+    <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
   </head>
 
   <body>
+
     <% if content_for?(:navbar) %>
       <%= yield(:navbar) %>
     <% else %>
       <%= render "shared/navbar" %>
     <% end %>
+
     <div class="container">
       <%= render "shared/flashbar" %>
       <%= yield%>
