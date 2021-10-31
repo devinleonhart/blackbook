@@ -1,13 +1,9 @@
 <section class="universes-index-view">
 
-  <%= render partial: "universes/card_list", locals: {
-    collection: @universes,
-    collection_url: ->(x) { universe_url(x) },
-    identifier: "universe-list",
-    image_helper: ->(x) { get_universe_avatar_image(x) },
-    new_url: new_universe_url(@universe),
-    name: "Universe",
-    show_avatar: true
-  } %>
+  <ul>
+  <% @universes.each do | universe | %>
+    <li><%= link_to universe.name, universe_path(universe) %></li>
+  <% end %>
+  <ul>
 
 </section>

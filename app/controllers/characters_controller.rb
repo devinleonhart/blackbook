@@ -83,6 +83,6 @@ page: params[:page], per_page: 18
   private
 
   def allowed_character_params
-    params.require(:character).permit(:name, :content, :page, images: [])
+    params.require(:character).permit(:name, :page, images: [])
   end
 end

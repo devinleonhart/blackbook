@@ -10,15 +10,13 @@
 
   <% render partial: "shared/capture_navbar" %>
 
-  <%= render partial: "universes/card_list", locals: {
-    collection: @universe.characters,
-    collection_url: ->(x) { character_url(x) },
-    identifier: "character-list",
-    image_helper: ->(x) { get_character_avatar_image(x) },
-    new_url: new_universe_character_url(@universe),
-    name: "Character",
-    show_avatar: true
-  } %>
+  <ul>
+  <% @universe.characters.each do | character | %>
+    <li>
+      <%= link_to character.name, character_path(character) %>
+    </li>
+  <% end %>
+  </ul>
 
   <%= render partial: "universes/image_list", locals: {
     images: @images,

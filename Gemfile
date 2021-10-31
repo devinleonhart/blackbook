@@ -3,14 +3,15 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '3.0.1'
 
-gem 'bundler', '~> 2.2', '>= 2.2.21'
 gem 'bootsnap', '>= 1.4.4', require: false
 gem 'bootstrap', '~> 5.0.1'
+gem 'bundler', '~> 2.2', '>= 2.2.21'
 gem 'devise', '~> 4.7', '>= 4.7.3'
 gem 'discard', '~> 1.2'
 gem 'factory_bot_rails', '~> 6.1'
 gem 'image_processing', '~> 1.12', '>= 1.12.1'
 gem 'jbuilder', '~> 2.7'
+gem 'jquery-rails', '~> 4.4'
 gem 'pg_search', '~> 2.3', '>= 2.3.5'
 gem 'pg', '~> 1.2', '>= 1.2.3'
 gem 'puma', '~> 4.3', '>= 4.3.7'
@@ -18,11 +19,9 @@ gem 'rails', '~> 6.1.2', '>= 6.1.2.1'
 gem 'sass-rails', '>= 6'
 gem 'securerandom', '~> 0.1.0'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
-gem 'trix'
 gem 'turbolinks', '~> 5'
 gem 'will_paginate', '~> 3.3'
 gem "aws-sdk-s3", require: false
-gem 'jquery-rails', '~> 4.4'
 
 group :development, :test do
   gem 'awesome_print', '~> 1.8'

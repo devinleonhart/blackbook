@@ -1,11 +1,8 @@
-# frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: images
 #
 #  id              :bigint           not null, primary key
-#  avatar          :boolean          default(FALSE), not null
 #  caption         :text             default(""), not null
 #  universe_avatar :boolean
 #  created_at      :datetime         not null
@@ -16,7 +13,6 @@
 #
 #  index_images_on_universe_id  (universe_id)
 #
-
 class Image < ApplicationRecord
   after_create :set_filename
   validate :requires_image_attached
