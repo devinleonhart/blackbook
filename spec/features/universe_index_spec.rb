@@ -41,10 +41,4 @@ RSpec.feature "Universe#Index", type: :feature do
     expect(page).to have_text("Universe4")
     expect(Universe.count).to eq(4)
   end
-
-  scenario "should navigate to the universe show page when you click a universe." do
-    expect(find(".card", match: :first)).to have_text("Universe1")
-    find(".card-link", match: :first).click
-    expect(current_path).to eq(universe_path(@universe1))
-  end
 end

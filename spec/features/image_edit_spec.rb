@@ -47,18 +47,6 @@ RSpec.feature "Image#Edit", type: :feature do
     end
   end
 
-  scenario "should allow an image to be set as an avatar." do
-    check("avatarCheckbox")
-    find_button("Update").click
-    expect(Image.all.first.avatar).to eq(true)
-  end
-
-  scenario "should allow an image to be set as a universe avatar." do
-    check("universeAvatarCheckbox")
-    find_button("Update").click
-    expect(Image.all.first.universe_avatar).to eq(true)
-  end
-
   scenario "should allow an image to be deleted." do
     find_link("Delete").click
     expect(Image.count).to eq(1)

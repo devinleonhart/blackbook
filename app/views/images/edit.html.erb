@@ -44,18 +44,6 @@
           <%= form.label :caption, "Caption", class: "form-label" %>
           <%= form.text_field :caption, class: "form-control" %>
         </div>
-        <div class="mb-3">
-          <div class="form-check">
-            <%= form.label :avatar, "Use as Character Avatar", class: "form-check-label", for: "avatarCheckbox" %>
-            <%= form.check_box :avatar, class: "form-check-input", id: "avatarCheckbox" %>
-          </div>
-        </div>
-        <div class="mb-3">
-          <div class="form-check">
-            <%= form.label :universe_avatar, "Use as Universe Avatar", class: "form-check-label", for: "universeAvatarCheckbox" %>
-            <%= form.check_box :universe_avatar, class: "form-check-input", id: "universeAvatarCheckbox" %>
-          </div>
-        </div>
         <div class="text-end">
           <%= form.submit "Update", class: "btn btn-primary" %>
           <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger delete-button" %>
