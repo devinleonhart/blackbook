@@ -1,15 +1,14 @@
 <section class="character-image-list">
 
-  <div class="row">
+  <div class="grid-x grid-padding-x grid-padding-y">
     <% @images.each do | image | %>
-      <div class="col-md-2 character-image-column">
+      <div class="small-6 medium-4 large-2 cell">
         <%= link_to edit_universe_image_url(@character.universe, image), class: "image-link" do %>
           <%= generate_image_tag(image, [250, nil]) %>
         <% end %>
-        <span class="image-caption"><%= image.caption %></span>
       </div>
     <% end %>
-    <%= will_paginate @images %>
+    <%= will_paginate images %>
   </div>
 
 </section>

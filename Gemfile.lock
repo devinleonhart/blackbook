@@ -342,7 +342,7 @@ DEPENDENCIES
   devise (~> 4.7, >= 4.7.3)
   discard (~> 1.2)
   factory_bot_rails (~> 6.1)
-  foundation-rails
+  foundation-rails (~> 6.6, >= 6.6.2.0)
   image_processing (~> 1.12, >= 1.12.1)
   jbuilder (~> 2.7)
   jquery-rails (~> 4.4)

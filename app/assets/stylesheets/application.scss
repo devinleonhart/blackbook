@@ -1,32 +1,18 @@
 @import "foundation_and_overrides";
 
-// Variables
-@import "./variables.scss";
-
 // Styling Scopes
-@import "./characters/index.scss";
-@import "./images/index.scss";
-@import "./shared/index.scss";
-@import "./universes/index.scss";
+@import "./universe.scss";
 
 html, body {
-  background-color: $dark-gray;
   box-sizing: border-box;
-  color: $light-gray;
-  margin: 0;
-  min-width: 360px;
-  padding: 0;
+  min-width: 375px;
 }
 
 *, *:before, *:after {
   box-sizing: inherit;
 }
 
-a {
-  color: $light-cyan;
-  text-decoration: none;
-}
-
-pre {
-  color: $dark-gray !important;
+section {
+  margin-top: 3em;
+  text-align: center;
 }

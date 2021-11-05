@@ -19,9 +19,11 @@
       <%= render "shared/navbar" %>
     <% end %>
 
-    <div class="container">
+    <div class="grid-container">
+      <main>
+        <%= yield%>
+      </main>
       <%= render "shared/flashbar" %>
-      <%= yield%>
     </div>
 
   </body>
