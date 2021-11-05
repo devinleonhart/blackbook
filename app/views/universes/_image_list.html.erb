@@ -1,36 +1,37 @@
-<section id="image-list" class="image-list">
-  <div class="row">
-    <div class="col-md-4 mx-auto">
-      <%= form_with model: Image.new(universe_id: universe.id), url: universe_images_url(universe), method: "post", class: "file-form" do | form | %>
-        <div class="form-group">
-          <%= form.label :image_file, class: "form-label" %>
-          <div class="input-group">
-            <%= form.file_field :image_file, class: "form-control", required: true %>
-            <%= form.submit "Add", class: "btn btn-primary" %>
+<section class="image-list">
+
+  <h4>Add New Image</h4>
+
+    <%= form_with model: Image.new(universe_id: universe.id), url: universe_images_url(universe), method: "post" do | form | %>
+      <div class="grid-container">
+        <div class="grid-x grid-padding-x">
+          <div class="medium-4 medium-offset-2 cell">
+            <%= form.file_field :image_file, required: true %>
+          </div>
+          <div class="medium-3 medium-offset-1 cell">
+            <%= form.submit "Add", class: "button" %>
           </div>
         </div>
-      <% end %>
-    </div>
-    <hr />
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="row align-items-center">
-        <% if images.empty? %>
+      </div>
+    <% end %>
+
+    <div class="grid-x grid-padding-x grid-padding-y">
+      <% if images.empty? %>
+        <div class="small-12 cell">
           <%= render partial: "shared/empty_banner", locals: {
             message: "There are no images yet, create some!"
           } %>
-        <% else %>
-          <% images.each do | image | %>
-            <div class="col-md-2 image">
-              <%= link_to edit_universe_image_url(universe, image), class: "image-link" do %>
-                <%= generate_image_tag(image, [250, nil]) %>
-              <% end %>
-            </div>
-          <% end %>
-          <%= will_paginate images %>
+        </div>
+      <% else %>
+        <% images.each do | image | %>
+          <div class="small-6 medium-4 large-2 cell">
+            <%= link_to edit_universe_image_url(universe, image) do %>
+              <%= generate_image_tag(image, [250, nil]) %>
+            <% end %>
+          </div>
         <% end %>
-      </div>
+        <%= will_paginate images %>
+      <% end %>
     </div>
-  </div>
+
 </section>

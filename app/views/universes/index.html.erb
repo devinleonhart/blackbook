@@ -1,9 +1,17 @@
 <section class="universes-index-view">
 
-  <ul>
-  <% @universes.each do | universe | %>
-    <li><%= link_to universe.name, universe_path(universe) %></li>
-  <% end %>
-  <ul>
+    <div class="grid-x grid-padding-x">
+      <% @universes.each do | universe | %>
+        <div class="medium-4 cell">
+
+          <div class="card">
+            <div class="card-section">
+              <h4><%= link_to universe.name, universe_path(universe) %></h4>
+            </div>
+          </div>
+
+        </div>
+      <% end %>
+    </div>
 
 </section>
