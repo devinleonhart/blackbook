@@ -172,11 +172,7 @@ $paragraph-lineheight: 1.6;
 $paragraph-margin-bottom: 1rem;
 $paragraph-text-rendering: optimizeLegibility;
 $enable-code-inline: true;
-<<<<<<< HEAD
-$anchor-color: $cyan;
-=======
 $anchor-color: $white;
->>>>>>> foundation-redesign
 $anchor-color-hover: scale-color($anchor-color, $lightness: -14%);
 $anchor-text-decoration: none;
 $anchor-text-decoration-hover: none;
@@ -352,17 +348,10 @@ $callout-link-tint: 30%;
 // 14. Card
 // --------
 
-<<<<<<< HEAD
-$card-background: $black;
-$card-font-color: $body-font-color;
-$card-divider-background: $light-gray;
-$card-border: 1px solid $black;
-=======
 $card-background: $dark-gray;
 $card-font-color: $body-font-color;
 $card-divider-background: $light-gray;
 $card-border: 1px solid $dark-gray;
->>>>>>> foundation-redesign
 $card-shadow: none;
 $card-border-radius: $global-radius;
 $card-padding: $global-padding;
