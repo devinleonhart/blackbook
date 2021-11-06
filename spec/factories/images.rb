@@ -5,7 +5,6 @@
 # Table name: images
 #
 #  id              :bigint           not null, primary key
-#  avatar          :boolean          default(FALSE), not null
 #  caption         :text             default(""), not null
 #  universe_avatar :boolean
 #  created_at      :datetime         not null

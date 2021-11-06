@@ -2,21 +2,13 @@
 
   <section class="character-content">
     <h1><%= @character.name %></h1>
-    <div class="container">
-      <p><%= @character.content %></p>
-    </div>
   </section>
 
   <% render partial: "shared/capture_navbar" %>
 
-  <%= render partial: "characters/relationship_table", locals: {
-    character: @character,
-    view: 'show'
-  } %>
-
-  <%= render partial: "characters/image_list", locals: {
-    character: @character,
+  <%= render partial: "shared/image_list", locals: {
     images: @images,
+    universe: @character.universe,
   } %>
 
   <%= render partial: "shared/app_footer", locals: {

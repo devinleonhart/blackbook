@@ -1,30 +1,35 @@
-<div class="row">
-  <div class="col-md-6 mx-auto">
-    <h2>Log in</h2>
-    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "border border-dark border-2 rounded" }) do |form| %>
-      <div class="mb-3">
-        <%= form.label :email, for: "newUserSessionEmail", class: "form-label" %>
-        <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserSessionEmail", class: 'form-control' %>
-      </div>
+<section class="login">
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |form| %>
 
-      <div class="mb-3">
-        <%= form.label :password, for: "newUserSessionPassword", class: "form-label" %>
-        <%= form.password_field :password, autocomplete: "current-password", id: "newUserSessionPassword", class: 'form-control' %>
-      </div>
-
-      <% if devise_mapping.rememberable? %>
-        <div class="mb-3 form-check">
-          <%= form.check_box :remember_me, class: 'form-check-input' %>
-          <label class="form-check-label" for="exampleCheck1">Remember Me</label>
+    <div class="grid-container">
+      <div class="grid-x grid-padding-x">
+        <div class="small-12 cell">
+          <h2>Edit Character</h2>
         </div>
-      <% end %>
 
-      <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "btn btn-primary" %>
-    <% end %>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6 mx-auto">
-    <%= render "devise/shared/error_messages", resource: resource %>
-  </div>
-</div>
+        <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
+          <%= form.label :email, for: "newUserSessionEmail" %>
+          <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserSessionEmail", class: 'form-control' %>
+        </div>
+
+        <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
+          <%= form.label :password, for: "newUserSessionPassword" %>
+          <%= form.password_field :password, autocomplete: "current-password", id: "newUserSessionPassword", class: 'form-control' %>
+        </div>
+
+        <% if devise_mapping.rememberable? %>
+          <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
+            <%= form.check_box :remember_me, id: "rememberCheckBox" %><label for="rememberCheckBox">Remember Me</label>
+          </div>
+        <% end %>
+
+        <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
+          <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "button" %>
+        </div>
+
+      </div>
+    </div>
+  <% end %>
+
+  <%= render "devise/shared/error_messages", resource: resource %>
+</section>

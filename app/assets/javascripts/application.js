@@ -1,3 +1,8 @@
+//= require jquery
 //= require rails-ujs
 //= require turbolinks
-//= require trix
+//= require foundation
+
+$(document).on('turbolinks:load', function() {
+  $(function(){ $(document).foundation(); });
+});

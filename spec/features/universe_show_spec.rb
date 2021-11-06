@@ -32,13 +32,6 @@ RSpec.feature "Universe#Show", type: :feature do
     expect(find("#character-list")).not_to have_text("Simon Cooper")
   end
 
-  scenario "should navigate to the show page of the character when you click the characer card." do
-    visit universe_url(@universe1)
-    expect(find("#character-list").find(".card", match: :first)).to have_text("Lise Awen")
-    find("#character-list").find(".card-link", match: :first).click
-    expect(current_path).to eq(character_path(@character2))
-  end
-
   scenario "should not show a user someone else's universe." do
     visit universe_url(@universe2)
     expect(page).not_to have_text("Universe2")

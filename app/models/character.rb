@@ -25,9 +25,7 @@
 class Character < ApplicationRecord
   include PgSearch::Model
 
-  multisearchable against: [:name, :content]
-
-  has_rich_text :content
+  multisearchable against: [:name]
 
   validates :name, presence: true
   validates :name, uniqueness: { scope: :universe_id, case_sensitive: false }

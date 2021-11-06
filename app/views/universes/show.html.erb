@@ -2,25 +2,29 @@
 
   <header>
     <h1><%= @universe.name %></h1>
-    <h6>
-      <a href="#character-list">Characters</a> &middot;
-      <a href="#image-list">Images</a>
-    </h6>
   </header>
 
   <% render partial: "shared/capture_navbar" %>
 
-  <%= render partial: "universes/card_list", locals: {
-    collection: @universe.characters,
-    collection_url: ->(x) { character_url(x) },
-    identifier: "character-list",
-    image_helper: ->(x) { get_character_avatar_image(x) },
-    new_url: new_universe_character_url(@universe),
-    name: "Character",
-    show_avatar: true
+  <div class="grid-x grid-padding-x">
+    <% @universe.characters.each do | character | %>
+      <div class="medium-2 cell">
+
+        <div class="card">
+          <div class="card-section">
+            <h5><%= link_to character.name, character_path(character) %></h5>
+          </div>
+        </div>
+
+      </div>
+    <% end %>
+  </div>
+
+  <%= render partial: "shared/image_form", locals: {
+    universe: @universe
   } %>
 
-  <%= render partial: "universes/image_list", locals: {
+  <%= render partial: "shared/image_list", locals: {
     images: @images,
     universe: @universe
   } %>

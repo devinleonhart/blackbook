@@ -1,34 +1,25 @@
-// Variables
-@import "./variables.scss";
+@import "foundation_and_overrides";
 
-// Frameworks
-@import "bootstrap";
-@import "trix";
+@import "./image_list";
+@import "./universe.scss";
 
-// Styling Scopes
-@import "./characters/index.scss";
-@import "./images/index.scss";
-@import "./shared/index.scss";
-@import "./universes/index.scss";
 
 html, body {
-  background-color: $dark-gray;
   box-sizing: border-box;
-  color: $light-gray;
-  margin: 0;
-  min-width: 360px;
-  padding: 0;
+  min-width: 375px;
 }
 
 *, *:before, *:after {
   box-sizing: inherit;
 }
 
-a {
-  color: $light-cyan;
-  text-decoration: none;
+section {
+  margin-top: 3em;
+  text-align: center;
 }
 
-pre {
-  color: $dark-gray !important;
+form {
+  label {
+    text-align: left;
+  }
 }

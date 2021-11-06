@@ -57,7 +57,6 @@ class UniversesController < ApplicationController
     params.require(:universe).permit(
       :name,
       :owner_id,
-      :content,
       :page,
       collaborator_ids: [],
     )
