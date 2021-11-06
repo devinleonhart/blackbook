@@ -1,7 +1,8 @@
 @import "foundation_and_overrides";
 
-// Styling Scopes
+@import "./image_list";
 @import "./universe.scss";
+
 
 html, body {
   box-sizing: border-box;
@@ -15,4 +16,10 @@ html, body {
 section {
   margin-top: 3em;
   text-align: center;
+}
+
+form {
+  label {
+    text-align: left;
+  }
 }

@@ -8,11 +8,11 @@
 
   <div class="grid-x grid-padding-x">
     <% @universe.characters.each do | character | %>
-      <div class="medium-4 cell">
+      <div class="medium-2 cell">
 
         <div class="card">
           <div class="card-section">
-            <h4><%= link_to character.name, character_path(character) %></h4>
+            <h5><%= link_to character.name, character_path(character) %></h5>
           </div>
         </div>
 
@@ -20,7 +20,11 @@
     <% end %>
   </div>
 
-  <%= render partial: "universes/image_list", locals: {
+  <%= render partial: "shared/image_form", locals: {
+    universe: @universe
+  } %>
+
+  <%= render partial: "shared/image_list", locals: {
     images: @images,
     universe: @universe
   } %>

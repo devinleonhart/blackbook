@@ -1,0 +1,13 @@
+.image-list {
+  a {
+    img {
+      max-height: 200px;
+    }
+  }
+  .pagination {
+    a {
+      color: $white;
+      display: inline-block !important;
+    }
+  }
+}

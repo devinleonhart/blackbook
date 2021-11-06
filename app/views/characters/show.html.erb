@@ -6,14 +6,9 @@
 
   <% render partial: "shared/capture_navbar" %>
 
-  <%= render partial: "characters/image_list", locals: {
-    character: @character,
+  <%= render partial: "shared/image_list", locals: {
     images: @images,
-  } %>
-
-  <%= render partial: "characters/relationship_table", locals: {
-    character: @character,
-    view: 'show'
+    universe: @character.universe,
   } %>
 
   <%= render partial: "shared/app_footer", locals: {

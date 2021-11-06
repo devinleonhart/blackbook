@@ -2,11 +2,11 @@
 
     <div class="grid-x grid-padding-x">
       <% @universes.each do | universe | %>
-        <div class="medium-4 cell">
+        <div class="medium-2 cell">
 
           <div class="card">
             <div class="card-section">
-              <h4><%= link_to universe.name, universe_path(universe) %></h4>
+              <h5><%= link_to universe.name, universe_path(universe) %></h5>
             </div>
           </div>
 

@@ -4,35 +4,27 @@
     <div class="grid-container">
       <div class="grid-x grid-padding-x">
         <div class="small-12 cell">
-          <h2>Log in</h2>
+          <h2>Edit Character</h2>
         </div>
 
-        <div class="medium-12 cell">
-          <div class="medium-8 cell medium-offset-2">
-            <%= form.label :email, for: "newUserSessionEmail", class: "form-label" %>
-            <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserSessionEmail", class: 'form-control' %>
-          </div>
+        <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
+          <%= form.label :email, for: "newUserSessionEmail" %>
+          <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserSessionEmail", class: 'form-control' %>
         </div>
 
-        <div class="medium-12 cell">
-          <div class="medium-8 cell medium-offset-2">
-            <%= form.label :password, for: "newUserSessionPassword", class: "form-label" %>
-            <%= form.password_field :password, autocomplete: "current-password", id: "newUserSessionPassword", class: 'form-control' %>
-          </div>
+        <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
+          <%= form.label :password, for: "newUserSessionPassword" %>
+          <%= form.password_field :password, autocomplete: "current-password", id: "newUserSessionPassword", class: 'form-control' %>
         </div>
 
         <% if devise_mapping.rememberable? %>
-          <div class="medium-12 cell">
-              <div class="medium-8 cell medium-offset-2">
-                <%= form.check_box :remember_me, id: "rememberCheckBox" %><label for="rememberCheckBox">Remember Me</label>
-              </div>
+          <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
+            <%= form.check_box :remember_me, id: "rememberCheckBox" %><label for="rememberCheckBox">Remember Me</label>
           </div>
         <% end %>
 
-        <div class="medium-12 cell">
-          <div class="medium-8 cell medium-offset-2">
-            <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "button" %>
-          </div>
+        <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
+          <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "button" %>
         </div>
 
       </div>

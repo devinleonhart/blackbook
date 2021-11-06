@@ -1,28 +1,21 @@
 <section class="characters-edit-view">
 
-  <div class="row">
-    <div class="col-md-10 mx-auto">
-      <h2>Edit Character</h2>
+  <div class="grid-container">
+    <div class="grid-x grid-padding-x">
+      <div class="small-12 cell">
+        <h2>Edit Character</h2>
+      </div>
 
-      <%= form_with model: @character, url: character_url(@character), method: "patch", class: "border border-dark border-2 rounded trix-editor-custom" do |form| %>
-        <div class="mb-3">
-          <%= form.label :name, class: "form-label" %>
-          <%= form.text_field :name, class: "form-control" %>
-        </div>
-        <div class="text-end">
-          <%= form.submit "Save", class: "btn btn-primary" %>
-          <%= link_to "Cancel", character_path(@character), class: "btn btn-primary" %>
-          <%= link_to "Delete", character_path(@character), method: "delete", :data => {:confirm => "Are you sure?"}, class: "btn btn-danger" %>
-        </div>
-      <% end %>
-
+      <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
+        <%= form_with model: @character, url: character_url(@character), method: "patch" do |form| %>
+          <%= form.label :name %>
+          <%= form.text_field :name %>
+          <%= form.submit "Save", class: "button" %>
+          <%= link_to "Cancel", character_path(@character), class: "secondary button" %>
+          <%= link_to "Delete", character_path(@character), method: "delete", :data => {:confirm => "Are you sure?"}, class: "alert button" %>
+        <% end %>
+      </div>
     </div>
-
-    <%= render partial: "characters/relationship_table", locals: {
-      character: @character,
-      view: 'edit'
-    } %>
-
   </div>
 
   <%= render partial: "shared/app_footer", locals: {

@@ -2,53 +2,51 @@
 
 <section class="images-edit-view">
 
-  <div class="row">
-    <div class="col-md-8 image-column">
-      <%= link_to rails_blob_path(@image.image_file, disposition: "attachment")  do %>
-        <%= generate_image_tag(@image, [1000, nil]) %>
-      <% end %>
-    </div>
-    <div class="col-md-4 character-select">
-      <ul class="list-group list-group-flush rounded image-tags">
-        <% if @image.image_tags.empty? %>
-          <li class="list-group-item list-group-item-danger">There are no characters in this image.</li>
+  <div class="grid-container">
+    <div class="grid-x grid-padding-x">
+      <div class="small-12 medium-8 cell">
+        <%= link_to rails_blob_path(@image.image_file, disposition: "attachment")  do %>
+          <%= generate_image_tag(@image, [1000, nil]) %>
+        <% end %>
+      </div>
+
+      <div class="small-12 medium-4 cell">
+        <ul>
+          <% if @image.image_tags.empty? %>
+            <li>There are no characters in this image.</li>
+          <% else %>
+            <% @image.image_tags.each do | tag | %>
+              <li>
+                <span>
+                  <%= link_to "#{tag.character.name}", character_url(tag.character) %>
+                </span>
+                <%= link_to image_tag_url(tag), method: "delete" do %>
+                  <button class="alert button">X</button>
+                <% end %>
+              </li>
+            <% end %>
+          <% end %>
+        </ul>
+
+        <% if @image.universe.characters.empty? %>
+          <ul>
+            <li>There are no characters in this universe to link to this image.</li>
+          </ul>
         <% else %>
-          <% @image.image_tags.each do | tag | %>
-            <li class="list-group-item list-group-item-info">
-              <span>
-                <%= link_to "#{tag.character.name}", character_url(tag.character) %>
-              </span>
-              <%= link_to image_tag_url(tag), method: "delete", class: "delete-tag" do %>
-                <button type="button" class="btn-close" aria-label="Close"></button>
-              <% end %>
-            </li>
+          <h3>You could add...</h3>
+          <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post" do |form| %>
+            <%= form.select :character_id, generate_character_names(@image.universe.characters, @image.image_tags), {include_blank: true}  %>
+            <%= form.submit "Add", class: "button" %>
           <% end %>
         <% end %>
-      </ul>
-
-      <% if @image.universe.characters.empty? %>
-        <ul class="list-group list-group-flush rounded">
-          <li class="list-group-item list-group-item-danger">There are no characters in this universe to link to this image.</li>
-        </ul>
-      <% else %>
-        <h3>You could add...</h3>
-        <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post" do |form| %>
-          <%= form.select :character_id, generate_character_names(@image.universe.characters, @image.image_tags), {include_blank: true}, {class: "form-control form-select form-select-lg mb-3"} %>
-          <div class="text-end">
-            <%= form.submit "Add", class: "btn btn-primary" %>
-          </div>
+        <%= form_with model: @image, url: universe_image_url(@image.universe, @image), method: "patch" do |form| %>
+          <%= form.label :caption, "Caption" %>
+          <%= form.text_field :caption %>
+          <%= form.submit "Update", class: "button" %>
+          <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"alert button" %>
         <% end %>
-      <% end %>
-      <%= form_with model: @image, url: universe_image_url(@image.universe, @image), method: "patch" do |form| %>
-        <div class="mb-3">
-          <%= form.label :caption, "Caption", class: "form-label" %>
-          <%= form.text_field :caption, class: "form-control" %>
-        </div>
-        <div class="text-end">
-          <%= form.submit "Update", class: "btn btn-primary" %>
-          <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"btn btn-danger delete-button" %>
-        </div>
-      <% end %>
+      </div>
+
     </div>
   </div>
 
