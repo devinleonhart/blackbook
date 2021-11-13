@@ -8,14 +8,8 @@
 
   <div class="grid-x grid-padding-x">
     <% @universe.characters.sort_by {|c| c.name }.each do | character | %>
-      <div class="medium-2 cell">
-
-        <div class="card">
-          <div class="card-section">
-            <h5><%= link_to character.name, character_path(character) %></h5>
-          </div>
-        </div>
-
+      <div class="medium-3 cell">
+        <%= link_to character.name, character_path(character), class: "button secondary large" %>
       </div>
     <% end %>
 
@@ -31,11 +25,6 @@
   <%= render partial: "shared/image_list", locals: {
     images: @images,
     universe: @universe
-  } %>
-
-  <%= render partial: "shared/app_footer", locals: {
-    owner: @universe.owner,
-    collaborators: @universe.collaborators
   } %>
 
 </section>
