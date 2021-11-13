@@ -15,15 +15,14 @@
           <% if @image.image_tags.empty? %>
             <li>There are no characters in this image.</li>
           <% else %>
+            <h3>This image contains...</h3>
             <% @image.image_tags.each do | tag | %>
-              <li>
-                <span>
-                  <%= link_to "#{tag.character.name}", character_url(tag.character) %>
-                </span>
-                <%= link_to image_tag_url(tag), method: "delete" do %>
-                  <button class="alert button">X</button>
-                <% end %>
-              </li>
+              <div class="buttongroup">
+                <%= link_to "#{tag.character.name}", character_url(tag.character), class: "button" %>
+                  <%= link_to image_tag_url(tag), method: "delete" do %>
+                    <button class="alert button">X</button>
+                  <% end %>
+              </div>
             <% end %>
           <% end %>
         </ul>

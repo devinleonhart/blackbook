@@ -7,24 +7,24 @@
   <% render partial: "shared/capture_navbar" %>
 
   <div class="grid-x grid-padding-x">
-    <% @universe.characters.sort_by {|c| c.name }.each do | character | %>
-      <div class="medium-3 cell">
-        <%= link_to character.name, character_path(character), class: "button secondary large" %>
-      </div>
-    <% end %>
-
     <div class="small-12 cell">
-      <%= link_to "New Character", new_universe_character_url(@universe), class: "button" %>
+      <%= render partial: "shared/universe_controls", locals: {
+        universe: @universe
+      } %>
+    </div>
+    <div class="medium-4 cell">
+      <div class="buttongroup">
+        <% @universe.characters.sort_by {|c| c.name }.each do | character | %>
+          <%= link_to character.name, character_path(character), class: "button secondary large" %>
+        <% end %>
+      </div>
+    </div>
+    <div class="medium-8 cell">
+      <%= render partial: "shared/image_list", locals: {
+        images: @images,
+        universe: @universe
+      } %>
     </div>
   </div>
-
-  <%= render partial: "shared/image_form", locals: {
-    universe: @universe
-  } %>
-
-  <%= render partial: "shared/image_list", locals: {
-    images: @images,
-    universe: @universe
-  } %>
 
 </section>

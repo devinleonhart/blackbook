@@ -13,7 +13,7 @@ class UniversesController < ApplicationController
     return unless universe_visible_to_user?(@universe)
 
     @images = Image.where(universe_id: @universe.id).order(created_at: :desc).paginate(page: params[:page],
-                                                                                       per_page: 12)
+                                                                                       per_page: 36)
   end
 
   def new
