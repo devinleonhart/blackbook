@@ -1,9 +1,9 @@
 <section class="universes-index-view">
 
     <div class="buttongroup">
-      <% @universes.each do | universe | %>
-          <%= link_to universe.name, universe_path(universe), class: "button secondary large" %>
-      <% end %>
+      <%= render partial: "shared/universe_table", locals: {
+        universes: @universes.sort_by {|u| u.name }
+      } %>
     </div>
 
 </section>

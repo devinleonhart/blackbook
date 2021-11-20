@@ -1,0 +1,30 @@
+<table class="universe-table stack">
+  <thead>
+    <tr>
+      <th>Universe Name</th>
+      <th>Owner</th>
+      <th>Collaborator</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% universes.each do | u | %>
+      <tr>
+        <td><%= u.name %></td>
+        <td><%= u.owner.display_name %></td>
+        <td>
+          <% unless u.collaborators.empty? %>
+            <% u.collaborators.each_with_index do | collaborator, index | %>
+              <% if index == u.collaborators.length-1 %>
+                <%= collaborator.display_name %>
+              <% else %>
+                <%= collaborator.display_name %>,
+              <% end %>
+            <% end %>
+          <% end %>
+        </td>
+        <td><%= link_to u.name, universe_path(u), class: "button" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

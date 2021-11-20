@@ -11,8 +11,9 @@
       </div>
 
       <div class="small-12 medium-4 cell">
+        <ul>
           <% if @image.image_tags.empty? %>
-            <h3>There are no characters in this image.</h3>
+            <li>There are no characters in this image.</li>
           <% else %>
             <h3>This image contains...</h3>
             <% @image.image_tags.each do | tag | %>
@@ -24,15 +25,24 @@
               </div>
             <% end %>
           <% end %>
+        </ul>
 
         <% if @image.universe.characters.empty? %>
-          <h3>There are no characters in this universe to link to this image.<h3>
+          <ul>
+            <li>There are no characters in this universe to link to this image.</li>
+          </ul>
         <% else %>
           <h3>You could add...</h3>
           <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post" do |form| %>
             <%= form.select :character_id, generate_character_names(@image.universe.characters, @image.image_tags), {include_blank: true}  %>
             <%= form.submit "Add", class: "button" %>
           <% end %>
+        <% end %>
+        <%= form_with model: @image, url: universe_image_url(@image.universe, @image), method: "patch" do |form| %>
+          <%= form.label :caption, "Caption" %>
+          <%= form.text_field :caption %>
+          <%= form.submit "Update", class: "button" %>
+          <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"alert button" %>
         <% end %>
       </div>
 

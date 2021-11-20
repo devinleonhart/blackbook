@@ -13,11 +13,9 @@
       } %>
     </div>
     <div class="medium-4 cell">
-      <div class="buttongroup">
-        <% @universe.characters.sort_by {|c| c.name }.each do | character | %>
-          <%= link_to character.name, character_path(character), class: "button secondary large" %>
-        <% end %>
-      </div>
+      <%= render partial: "shared/character_table", locals: {
+        characters: @universe.characters.sort_by {|c| c.name }
+      } %>
     </div>
     <div class="medium-8 cell">
       <%= render partial: "shared/image_list", locals: {
