@@ -15,9 +15,9 @@
       <div class="medium-4 medium-offset-1 cell">
 
           <% if @universe.collaborators.empty? %>
-            <h3>There are no collaborators in this universe.<h3>
+            <h4>There are no collaborators in this universe.<h4>
           <% else %>
-            <h3>You are collaborating with...</h3>
+            <h4>You are collaborating with...</h4>
             <ul>
             <% @universe.collaborations.each do | collaboration | %>
               <li>
@@ -30,7 +30,7 @@
             </ul>
           <% end %>
 
-        <h3>You could add...</h3>
+        <h4>You could add...</h4>
         <%= form_with model: Collaboration.new(), url: universe_collaborations_url(@universe), method: "post" do |form| %>
           <%= form.select :user_id, generate_collaborator_names(User.all, @universe.collaborators, @universe.owner), {include_blank: true} %>
           <%= form.submit "Add", class: "button" %>
