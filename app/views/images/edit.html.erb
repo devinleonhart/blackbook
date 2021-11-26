@@ -34,6 +34,9 @@
             <%= form.submit "Add", class: "button" %>
           <% end %>
         <% end %>
+
+        <h3>Controls</h3>
+          <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"alert button" %>
       </div>
 
     </div>
