@@ -9,7 +9,7 @@ gem 'bundler', '~> 2.2', '>= 2.2.21'
 gem 'devise', '~> 4.7', '>= 4.7.3'
 gem 'discard', '~> 1.2'
 gem 'factory_bot_rails', '~> 6.1'
-gem 'foundation-rails', '~> 6.6', '>= 6.6.2.0'
+gem "bulma-rails", "~> 0.9.2"
 gem 'image_processing', '~> 1.12', '>= 1.12.1'
 gem 'jbuilder', '~> 2.7'
 gem 'jquery-rails', '~> 4.4'
