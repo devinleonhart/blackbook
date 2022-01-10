@@ -9,6 +9,7 @@
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag    "application" %>
     <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
+
   </head>
 
   <body>
@@ -19,12 +20,10 @@
       <%= render "shared/navbar" %>
     <% end %>
 
-    <div class="grid-container">
-      <main>
-        <%= yield%>
-      </main>
-      <%= render "shared/flashbar" %>
-    </div>
+    <main>
+      <%= yield%>
+    </main>
+    <%= render "shared/flashbar" %>
 
   </body>
 </html>

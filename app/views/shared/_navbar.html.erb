@@ -1,12 +1,19 @@
-<div class="navbar-menu">
+<nav class="navbar is-dark" role="navigation" aria-label="main navigation">
 
-  <div class="navbar-start">
+  <div class="navbar-brand">
     <a class="navbar-item" href="/">
       Blackbook 2.0
     </a>
+
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="blackbookNavBar">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
   </div>
 
-  <div class="navbar-end">
+  <div id="blackbookNavBar" class="navbar-menu">
+    <div class="navbar-end">
     <% unless @character.nil? %>
       <%= link_to "Back to #{@character.universe.name}", universe_url(@character.universe), class: "navbar-item" %>
     <% end %>
@@ -25,5 +32,7 @@
       <%= link_to "Register", new_user_registration_path, class: "navbar-item" %>
       <%= link_to "Sign in", new_user_session_path, class: "navbar-item" %>
     <% end %>
+    </div>
   </div>
-</div>
+
+</nav>

@@ -23,6 +23,7 @@ gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'turbolinks', '~> 5'
 gem 'will_paginate', '~> 3.3'
 gem "aws-sdk-s3", require: false
+gem 'font-awesome-rails', '~> 4.7', '>= 4.7.0.8'
 
 group :development, :test do
   gem 'awesome_print', '~> 1.8'
