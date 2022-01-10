@@ -1,16 +1,15 @@
-<table class="universe-table stack">
+<table class="table is-fullwidth is-striped has-text-centered">
   <thead>
     <tr>
-      <th>Universe Name</th>
+      <th>Name</th>
       <th>Owner</th>
-      <th>Collaborator</th>
-      <th></th>
+      <th>Collaborators</th>
     </tr>
   </thead>
   <tbody>
     <% universes.each do | u | %>
       <tr>
-        <td><%= u.name %></td>
+        <td><%= link_to u.name, universe_path(u), class: "button" %></td>
         <td><%= u.owner.display_name %></td>
         <td>
           <% unless u.collaborators.empty? %>
@@ -23,7 +22,6 @@
             <% end %>
           <% end %>
         </td>
-        <td><%= link_to u.name, universe_path(u), class: "button" %></td>
       </tr>
     <% end %>
   </tbody>
