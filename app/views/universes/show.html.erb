@@ -1,23 +1,25 @@
-<section class="universes-show-view">
-
-  <header>
-    <h1><%= @universe.name %></h1>
-  </header>
+<section id="universes-show-view" class="section">
 
   <% render partial: "shared/capture_navbar" %>
 
-  <div class="grid-x grid-padding-x">
-    <div class="small-12 cell">
-      <%= render partial: "shared/universe_controls", locals: {
-        universe: @universe
-      } %>
-    </div>
-    <div class="medium-4 cell">
+  <h1 class="title"><%= @universe.name %></h1>
+
+  <%= link_to "New Character", new_universe_character_url(@universe), class: "button is-link" %>
+
+  <%= form_with model: Image.new(universe_id: @universe.id), url: universe_images_url(@universe), method: "post" do | form | %>
+
+    <%= form.file_field :image_file, required: true %>
+    <%= form.submit "Save Image", class: "button is-primary" %>
+
+  <% end %>
+
+  <div class="columns is-centered">
+    <div class="column is-one-quarter">
       <%= render partial: "shared/character_table", locals: {
         characters: @universe.characters.sort_by {|c| c.name }
       } %>
     </div>
-    <div class="medium-8 cell">
+    <div class="column is-three-quarters">
       <%= render partial: "shared/image_list", locals: {
         images: @images,
         universe: @universe

@@ -1,29 +1,23 @@
 <section class="image-list">
 
-      <% if images.empty? %>
-        <div class="grid-x grid-padding-x grid-padding-y">
-          <div class="small-12 cell">
-            <%= render partial: "shared/empty_banner", locals: {
-              message: "There are no images yet, add some!"
-            } %>
-          </div>
-        </div>
-      <% else %>
-        <div class="grid-x grid-padding-x grid-padding-y">
-          <nav aria-label="Pagination" class="small-12 cell">
-            <%= will_paginate images %>
-          </nav>
-          <% images.each do | image | %>
-            <div class="small-6 medium-4 large-3 cell">
-              <%= link_to edit_universe_image_url(universe, image) do %>
-                <%= generate_image_tag(image, [250, nil]) %>
-              <% end %>
-            </div>
-          <% end %>
-          <nav aria-label="Pagination" class="small-12 cell">
-            <%= will_paginate images %>
-          </nav>
-        </div>
+  <% if images.empty? %>
+    <%= render partial: "shared/empty_banner", locals: {
+      message: "There are no images yet, add some!"
+    } %>
+  <% else %>
+    <nav aria-label="Pagination">
+      <%= will_paginate images %>
+    </nav>
+    <div class="image-grid">
+      <% images.each do | image | %>
+        <%= link_to edit_universe_image_url(universe, image), class:"image-tile" do %>
+          <%= generate_image_tag(image, [500, nil]) %>
+        <% end %>
       <% end %>
+    </div>
+    <nav aria-label="Pagination">
+      <%= will_paginate images %>
+    </nav>
+  <% end %>
 
 </section>
