@@ -13,6 +13,14 @@
   </div>
 
   <div id="blackbookNavBar" class="navbar-menu">
+    <div class="navbar-start">
+      <% unless @character.nil? %>
+        <span class="navbar-item"><%= @character.name %></span>
+      <% end %>
+      <% unless @universe.nil? %>
+        <span class="navbar-item"><%= @universe.name %></span>
+      <% end %>
+    </div>
     <div class="navbar-end">
     <% unless @character.nil? %>
       <%= link_to "Back to #{@character.universe.name}", universe_url(@character.universe), class: "navbar-item" %>
@@ -21,6 +29,7 @@
       <%= link_to "Back to #{@image.universe.name}", universe_url(@image.universe), class: "navbar-item" %>
     <% end %>
     <% unless @universe.nil? %>
+      <%= link_to "New Character", new_universe_character_url(@universe), class: "navbar-item" %>
       <%= link_to "Edit Universe", edit_universe_url(@universe), class: "navbar-item" %>
     <% end %>
     <% unless @character.nil? %>

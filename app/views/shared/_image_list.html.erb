@@ -5,17 +5,17 @@
       message: "There are no images yet, add some!"
     } %>
   <% else %>
-    <nav aria-label="Pagination">
+    <nav aria-label="Pagination" class="block">
       <%= will_paginate images %>
     </nav>
-    <div class="image-grid">
+    <div class="image-grid block">
       <% images.each do | image | %>
         <%= link_to edit_universe_image_url(universe, image), class:"image-tile" do %>
           <%= generate_image_tag(image, [500, nil]) %>
         <% end %>
       <% end %>
     </div>
-    <nav aria-label="Pagination">
+    <nav aria-label="Pagination" class="block">
       <%= will_paginate images %>
     </nav>
   <% end %>

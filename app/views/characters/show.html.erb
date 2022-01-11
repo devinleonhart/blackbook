@@ -1,14 +1,14 @@
-<section class="characters-show-view">
-
-  <section class="character-content">
-    <h1><%= @character.name %></h1>
-  </section>
+<section id="characters-show-view" class="section">
 
   <% render partial: "shared/capture_navbar" %>
 
-  <%= render partial: "shared/image_list", locals: {
-    images: @images,
-    universe: @character.universe,
-  } %>
+  <div class="columns is-centered">
+    <div class="column">
+      <%= render partial: "shared/image_list", locals: {
+        images: @images,
+        universe: @character.universe
+      } %>
+    </div>
+  </div>
 
 </section>

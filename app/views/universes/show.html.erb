@@ -2,22 +2,28 @@
 
   <% render partial: "shared/capture_navbar" %>
 
-  <h1 class="title"><%= @universe.name %></h1>
-
-  <%= link_to "New Character", new_universe_character_url(@universe), class: "button is-link" %>
-
-  <%= form_with model: Image.new(universe_id: @universe.id), url: universe_images_url(@universe), method: "post" do | form | %>
-
-    <%= form.file_field :image_file, required: true %>
-    <%= form.submit "Save Image", class: "button is-primary" %>
-
-  <% end %>
-
   <div class="columns is-centered">
-    <div class="column is-one-quarter">
-      <%= render partial: "shared/character_table", locals: {
-        characters: @universe.characters.sort_by {|c| c.name }
-      } %>
+    <div class="column is-one-quarter has-text-centered">
+
+      <%= form_with model: Image.new(universe_id: @universe.id), url: universe_images_url(@universe), method: "post" do | form | %>
+
+        <%= form.submit "Upload Image", class: "button is-primary block" %>
+        <%= form.file_field :image_file, required: true, class: "block has-text-centered" %>
+
+      <% end %>
+
+      <hr />
+
+      <table class="table is-fullwidth is-striped">
+        <% @universe.characters.sort_by {|c| c.name }.each do |character| %>
+          <tr>
+            <td>
+              <%= link_to character.name, character_path(character) %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+
     </div>
     <div class="column is-three-quarters">
       <%= render partial: "shared/image_list", locals: {
