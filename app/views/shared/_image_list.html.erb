@@ -11,7 +11,7 @@
     <div class="image-grid block">
       <% images.each do | image | %>
         <%= link_to edit_universe_image_url(universe, image), class:"image-tile" do %>
-          <%= generate_image_tag(image, [500, nil]) %>
+          <%= generate_image_tag(image, [250, nil]) %>
         <% end %>
       <% end %>
     </div>

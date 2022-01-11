@@ -12,21 +12,16 @@ html, body {
 
 .image-list {
   .image-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 1rem;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
 
-    .image-tile img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .image-tile:nth-child(3n){
-      grid-column: span 2;
-      grid-row: span 2;
-    }
-
+  .image-tile {
+    min-width: 250px;
+    padding: .25em;
   }
 
   @media screen and (max-width: 768px){
