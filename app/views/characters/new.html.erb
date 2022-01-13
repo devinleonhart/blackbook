@@ -1,21 +1,31 @@
-<section class="characters-new-view">
+<section id="characters-new-view" class="section is-fullheight">
 
-  <div class="grid-container">
-    <div class="grid-x grid-padding-x">
-      <div class="small-12 cell">
-        <h2>New Character</h2>
+    <div class="container">
+      <div class="columns is-centered">
+
+        <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+
+          <%= form_with model: @new_character, url: universe_characters_url(universe_id: @new_character.universe_id) do |form| %>
+
+            <div class="field">
+              <%= form.label :name, class: "label" %>
+              <div class="control has-icons-left">
+                <span class="icon is-small is-left">
+                    <%= fa_icon "user" %>
+                </span>
+                <%= form.text_field :name, class: 'input', placeholder: "Tangle", required: true %>
+              </div>
+            </div>
+
+            <div class="field">
+              <%= form.submit "Save", class: "button is-primary" %>
+              <%= link_to "Cancel", universe_url(@new_character.universe_id), class: "button" %>
+            </div>
+          <% end %>
+
+        </div>
+
       </div>
-
-      <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
-        <%= form_with model: @new_character, url: universe_characters_url(universe_id: @new_character.universe_id) do |form| %>
-          <%= form.label :name %>
-          <%= form.text_field :name %>
-          <%= form.submit "Save", class: "button" %>
-          <%= link_to "Cancel", universe_url(@new_character.universe_id), class: "alert button" %>
-        <% end %>
-      </div>
-
     </div>
-  </div>
 
 </section>
