@@ -1,41 +1,56 @@
-<section class="universes-edit-view">
+<section id="universes-edit-view" class="section is-fullheight">
 
-  <div class="grid-container">
-    <div class="grid-x grid-padding-x">
+  <div class="container">
+    <div class="columns is-centered">
 
-      <div class="medium-4 medium-offset-1 cell">
+      <div class="column is-6-tablet is-6-desktop is-4-widescreen">
         <%= form_with model: @universe, url: universe_url(@universe), method: "patch" do |form| %>
-          <%= form.label :name %>
-          <%= form.text_field :name %>
-          <%= form.submit "Save", class: "button" %>
-          <%= link_to "Cancel", universe_url(@universe), class: "secondary button" %>
+          <%= form.label :name, class: "label" %>
+          <div class="field">
+            <div class="control has-icons-left">
+              <span class="icon is-small is-left">
+                  <%= fa_icon "rocket" %>
+              </span>
+              <%= form.text_field :name, class: "input", placeholder: "Sonic the Hedgehog", required: true %>
+            </div>
+          </div>
+          <%= form.submit "Save", class: "button is-primary" %>
+          <%= link_to "Cancel", universe_url(@universe), class: "button" %>
         <% end %>
       </div>
 
-      <div class="medium-4 medium-offset-1 cell">
-
-          <% if @universe.collaborators.empty? %>
-            <h4>There are no collaborators in this universe.<h4>
+      <div class="column is-6-tablet is-6-desktop is-4-widescreen">
+        <% if @universe.collaborators.empty? %>
+            <h1>There are no collaborators in this universe.<h1>
           <% else %>
-            <h4>You are collaborating with...</h4>
-            <ul>
+            <h1>You are collaborating with...</h1>
             <% @universe.collaborations.each do | collaboration | %>
-              <li>
-                <span><%= collaboration.user.display_name %></span>
-                <%= link_to collaboration_url(collaboration), method: "delete" do %>
-                  <button class="alert button">X</button>
-                <% end %>
-              </li>
+              <div class="block">
+                <span class="icon-text">
+                  <%= link_to collaboration_url(collaboration), method: "delete" do %>
+                    <span class="icon">
+                      <%= fa_icon "times" %>
+                    </span>
+                  <% end %>
+                  <span><%= collaboration.user.display_name %></span>
+                </span>
+              </div>
             <% end %>
-            </ul>
           <% end %>
 
-        <h4>You could add...</h4>
         <%= form_with model: Collaboration.new(), url: universe_collaborations_url(@universe), method: "post" do |form| %>
-          <%= form.select :user_id, generate_collaborator_names(User.all, @universe.collaborators, @universe.owner), {include_blank: true} %>
-          <%= form.submit "Add", class: "button" %>
+          <%= form.label :user_id, class: "label" %>
+          <div class="field">
+            <div class="control">
+              <div class="select">
+                <%= form.select :user_id, generate_collaborator_names(User.all, @universe.collaborators, @universe.owner), {include_blank: true} %>
+              </div>
+            </div>
+          </div>
+          <%= form.submit "Add", class: "button is-primary" %>
         <% end %>
       </div>
+
     </div>
   </div>
 
