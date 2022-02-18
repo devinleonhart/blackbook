@@ -2,13 +2,13 @@
 
 class UniversesController < ApplicationController
   def index
-    owned_universes = Universe.kept.where(owner: current_user)
-    collaborated_universes = Universe.kept.joins(:collaborations).where(collaborations: { user: current_user })
+    owned_universes = Universe.where(owner: current_user)
+    collaborated_universes = Universe.joins(:collaborations).where(collaborations: { user: current_user })
     @universes = (owned_universes + collaborated_universes).uniq
   end
 
   def show
-    @universe = Universe.kept.find_by(id: params[:id])
+    @universe = Universe.find_by(id: params[:id])
     return unless model_found?(@universe, "Universe", params[:id], universes_url)
     return unless universe_visible_to_user?(@universe)
 
@@ -33,12 +33,12 @@ class UniversesController < ApplicationController
   end
 
   def edit
-    @universe = Universe.kept.find_by(id: params[:id])
+    @universe = Universe.find_by(id: params[:id])
     return unless model_found?(@universe, "Universe", params[:id], universes_url)
   end
 
   def update
-    @universe = Universe.kept.find_by(id: params[:id])
+    @universe = Universe.find_by(id: params[:id])
     return unless model_found?(@universe, "Universe", params[:id], universes_url)
     return unless universe_visible_to_user?(@universe)
 

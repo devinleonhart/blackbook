@@ -23,10 +23,6 @@
 #
 
 class Character < ApplicationRecord
-  include PgSearch::Model
-
-  multisearchable against: [:name]
-
   validates :name, presence: true
   validates :name, uniqueness: { scope: :universe_id, case_sensitive: false }
 

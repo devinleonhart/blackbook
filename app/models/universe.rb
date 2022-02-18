@@ -24,8 +24,6 @@
 #
 
 class Universe < ApplicationRecord
-  include Discard::Model
-
   validates :name, presence: true
   validates :name, uniqueness: { case_sensitive: false, scope: :owner_id }
 

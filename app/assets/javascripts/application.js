@@ -1,7 +1,3 @@
-//= require jquery
-//= require rails-ujs
-//= require turbolinks
-
 // Bulma Navbar Menu Toggle
 document.addEventListener('DOMContentLoaded', () => {
 
