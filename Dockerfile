@@ -16,9 +16,8 @@ postgresql-dev \
 postgresql-client \
 libxml2-dev \
 libxslt-dev \
-nodejs \
-yarn \
 imagemagick \
+vips \
 tzdata \
 less \
 && rm -rf /var/cache/apk/* \
