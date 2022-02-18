@@ -1,2 +1,3 @@
 # Blackbook
-Track everything about your fictional universes with ease.
+
+Track your fictional universes with ease.
