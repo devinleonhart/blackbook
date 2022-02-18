@@ -1,0 +1,15 @@
+<section id="universe_index" class="section">
+
+  <div class="container">
+    <div class="columns is-centered">
+
+      <div class="buttongroup">
+        <%= render partial: "shared/universe_table", locals: {
+          universes: @universes.sort_by {|u| u.name }
+        } %>
+      </div>
+
+    </div>
+  </div>
+
+</section>

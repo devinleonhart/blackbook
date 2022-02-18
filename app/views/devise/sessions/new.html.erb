@@ -1,0 +1,55 @@
+<section id="bb_login" class="section hero is-primary is-fullheight">
+
+  <div class="hero-body">
+
+    <div class="container">
+      <div class="columns is-centered">
+
+        <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+
+        <%= form_for(resource, as: resource_name, html: {class: "box"}, url: session_path(resource_name)) do |form| %>
+
+          <div class="field">
+            <%= form.label :email, for: "newUserSessionEmail", class: "label" %>
+            <div class="control has-icons-left">
+              <span class="icon is-small is-left">
+                <%= fa_icon "envelope" %>
+              </span>
+              <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserSessionEmail", class: 'input', placeholder: "your_email@gmail.com", required: true %>
+            </div>
+          </div>
+
+          <div class="field">
+            <%= form.label :password, for: "newUserSessionPassword", class: "label" %>
+            <div class="control has-icons-left">
+              <span class="icon is-small is-left">
+                <%= fa_icon "lock" %>
+              </span>
+              <%= form.password_field :password, autocomplete: "current-password", id: "newUserSessionPassword", class: 'input', placeholder: "*****", required: true  %>
+            </div>
+          </div>
+
+          <% if devise_mapping.rememberable? %>
+            <div class="field">
+              <label for="rememberCheckBox" class="checkbox">
+                <%= form.check_box :remember_me, id: "rememberCheckBox" %>
+                Remember Me
+              </label>
+            </div>
+          <% end %>
+
+          <div class="field">
+            <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "button is-primary" %>
+          </div>
+
+        <% end %>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <%= render "devise/shared/error_messages", resource: resource %>
+</section>

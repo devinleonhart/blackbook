@@ -1,0 +1,23 @@
+<section class="image-list">
+
+  <% if images.empty? %>
+    <%= render partial: "shared/empty_banner", locals: {
+      message: "There are no images yet, add some!"
+    } %>
+  <% else %>
+    <nav aria-label="Pagination" class="block">
+      <%= will_paginate images %>
+    </nav>
+    <div class="image-grid block">
+      <% images.each do | image | %>
+        <%= link_to edit_universe_image_url(universe, image), class:"image-tile" do %>
+          <%= generate_image_tag(image, [250, 400]) %>
+        <% end %>
+      <% end %>
+    </div>
+    <nav aria-label="Pagination" class="block">
+      <%= will_paginate images %>
+    </nav>
+  <% end %>
+
+</section>

@@ -1,0 +1,47 @@
+<nav id="bb_navbar" class="navbar is-dark" role="navigation" aria-label="main navigation">
+
+  <div class="navbar-brand">
+    <a class="navbar-item" href="/">
+      Blackbook 2.0
+    </a>
+
+    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="blackbookNavBar">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+
+  <div id="blackbookNavBar" class="navbar-menu">
+    <div class="navbar-start">
+      <% unless @character.nil? %>
+        <span class="navbar-item"><%= @character.name %></span>
+      <% end %>
+      <% unless @universe.nil? %>
+        <span class="navbar-item"><%= @universe.name %></span>
+      <% end %>
+    </div>
+    <div class="navbar-end">
+    <% unless @character.nil? %>
+      <%= link_to "Back to #{@character.universe.name}", universe_url(@character.universe), class: "navbar-item" %>
+    <% end %>
+    <% unless @image.nil? %>
+      <%= link_to "Back to #{@image.universe.name}", universe_url(@image.universe), class: "navbar-item" %>
+    <% end %>
+    <% unless @universe.nil? %>
+      <%= link_to "New Character", new_universe_character_url(@universe), class: "navbar-item" %>
+      <%= link_to "Edit Universe", edit_universe_url(@universe), class: "navbar-item" %>
+    <% end %>
+    <% unless @character.nil? %>
+      <%= link_to "Edit Character", edit_character_url(@character), class: "navbar-item" %>
+    <% end %>
+    <% if user_signed_in? %>
+      <%= link_to "Sign out", destroy_user_session_path, method: :delete, class: "navbar-item" %>
+    <% else %>
+      <%= link_to "Register", new_user_registration_path, class: "navbar-item" %>
+      <%= link_to "Sign in", new_user_session_path, class: "navbar-item" %>
+    <% end %>
+    </div>
+  </div>
+
+</nav>

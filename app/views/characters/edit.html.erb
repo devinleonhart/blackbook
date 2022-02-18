@@ -1,0 +1,21 @@
+<section class="characters-edit-view">
+
+  <div class="grid-container">
+    <div class="grid-x grid-padding-x">
+      <div class="small-12 cell">
+        <h2>Edit Character</h2>
+      </div>
+
+      <div class="large-6 medium-8 large-offset-3 medium-offset-2 cell">
+        <%= form_with model: @character, url: character_url(@character), method: "patch" do |form| %>
+          <%= form.label :name %>
+          <%= form.text_field :name %>
+          <%= form.submit "Save", class: "button" %>
+          <%= link_to "Cancel", character_path(@character), class: "secondary button" %>
+          <%= link_to "Delete", character_path(@character), method: "delete", :data => {:confirm => "Are you sure?"}, class: "alert button" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+</section>
