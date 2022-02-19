@@ -10,16 +10,9 @@ ENV RAILS_PORT 3000
 
 # Install Depencenices
 RUN apk -U add --no-cache \
-build-base \
-git \
 postgresql-dev \
 postgresql-client \
-libxml2-dev \
-libxslt-dev \
-imagemagick \
 vips \
-tzdata \
-less \
 && rm -rf /var/cache/apk/* \
 && mkdir -p $APP_PATH
 
