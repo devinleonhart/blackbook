@@ -1,0 +1,28 @@
+.image-list {
+  .img-thumbnail {
+    max-width: 250px;
+    max-height: 400px;
+  }
+
+  .image-grid {
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .image-tile {
+    min-width: 250px;
+    padding: .25em;
+  }
+
+  @media screen and (max-width: 768px){
+    .image-grid{
+        display: block;
+    }
+    .image-tile{
+        margin-bottom: 1rem;
+    }
+  }
+}
