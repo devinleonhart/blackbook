@@ -1,33 +1,63 @@
-<div class="row">
-  <div class="col-md-6 mx-auto">
-    <h2>Sign up</h2>
-    <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "border border-dark border-2 rounded" }) do |f| %>
-      <div class="mb-3">
-        <label class="form-label">Email</label>
-        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control' %>
+
+
+
+<section id="bb_register" class="section is-fullheight">
+  <div class="container">
+    <div class="columns is-centered">
+
+      <div class="column is-4-tablet is-5-desktop">
+
+      <%= form_for(resource, as: resource_name, html: {class: "box"}, url: registration_path(resource_name)) do |form| %>
+
+       <div class="field">
+          <%= form.label :email, for: "newUserRegisterEmail", class: "label" %>
+          <div class="control has-icons-left">
+            <span class="icon is-small is-left">
+              <%= fa_icon "envelope" %>
+            </span>
+            <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserRegisterEmail", class: 'input', placeholder: "your_email@gmail.com", required: true %>
+          </div>
+        </div>
+
+        <div class="field">
+          <%= form.label :display_name, for: "newUserRegisterDisplayname", class: "label" %>
+          <div class="control has-icons-left">
+            <span class="icon is-small is-left">
+              <%= fa_icon "user" %>
+            </span>
+            <%= form.text_field :display_name, autocomplete: "display name", id: "newUserRegisterDisplayname", class: 'input', placeholder: "CoolUser69", required: true %>
+          </div>
+        </div>
+
+        <div class="field">
+          <%= form.label :password, for: "newUserRegisterPassword", class: "label" %>
+          <div class="control has-icons-left">
+            <span class="icon is-small is-left">
+              <%= fa_icon "lock" %>
+            </span>
+            <%= form.password_field :password, id: "newUserRegisterPassword", class: 'input', required: true  %>
+          </div>
+        </div>
+
+        <div class="field">
+          <%= form.label :password_confirmation, for: "newUserRegisterPasswordconfirmation", class: "label" %>
+          <div class="control has-icons-left">
+            <span class="icon is-small is-left">
+              <%= fa_icon "lock" %>
+            </span>
+            <%= form.password_field :password_confirmation, id: "newUserRegisterPasswordconfirmation", class: 'input', required: true  %>
+          </div>
+        </div>
+
+        <div class="field">
+          <%= form.submit "Sign Up", id: "newUserRegisterSubmit", class: "button is-info" %>
+        </div>
+
+      <% end %>
+
       </div>
-      <div class="mb-3">
-        <label class="form-label">
-          Display Name
-          <em>(How you'd like to be seen)</em>
-        </label>
-        <%= f.text_field :display_name, autofocus: true, autocomplete: "display name", class: 'form-control' %>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">
-          Password
-          <% if @minimum_password_length %>
-          <em>(<%= @minimum_password_length %> characters minimum)</em>
-          <% end %><br />
-        </label>
-        <%= f.password_field :password, autocomplete: "current-password", class: 'form-control' %>
-      </div>
-      <button class="btn btn-primary" type="submit">Register</button>
-    <% end %>
+    </div>
   </div>
-</div>
-<div class="row">
-  <div class="col-md-6 mx-auto">
-    <%= render "devise/shared/error_messages", resource: resource %>
-  </div>
-</div>
+
+  <%= render "devise/shared/error_messages", resource: resource %>
+</section>
