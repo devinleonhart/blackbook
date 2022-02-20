@@ -10,6 +10,7 @@ ENV RAILS_PORT 3000
 
 # Install Depencenices
 RUN apk -U add --no-cache \
+build-base \
 postgresql-dev \
 postgresql-client \
 vips \
