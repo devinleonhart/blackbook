@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root to: "universes#index"
+  root to: 'universes#index'
 
   devise_for :users
 
@@ -14,6 +14,10 @@ Rails.application.routes.draw do
     end
 
     get 'search', to: 'search#multisearch', as: :search
+  end
+
+  if Rails.env.production?
+    get '404', :to => 'universes#index'
   end
 
 end
