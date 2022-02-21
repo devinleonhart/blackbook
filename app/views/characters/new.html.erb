@@ -3,7 +3,7 @@
     <div class="container">
       <div class="columns is-centered">
 
-        <div class="column is-5-tablet is-4-desktop is-3-widescreen">
+        <div class="column is-4-tablet is-5-desktop">
 
           <%= form_with model: @new_character, url: universe_characters_url(universe_id: @new_character.universe_id) do |form| %>
 
@@ -18,8 +18,8 @@
             </div>
 
             <div class="field">
-              <%= form.submit "Save", class: "button is-primary" %>
-              <%= link_to "Cancel", universe_url(@new_character.universe_id), class: "button" %>
+              <%= form.submit "Save", class: "button is-info" %>
+              <%= link_to "Cancel", universe_url(@new_character.universe_id), class: "button is-danger" %>
             </div>
           <% end %>
 
