@@ -1,46 +1,54 @@
 <% render partial: "shared/capture_navbar" %>
 
-<section id="images-edit-view" class="section">
+<section id="images-edit-view" class="section is-fullheight">
 
-<div class="columns is-centered">
-  <div class="column is-one-quarter has-text-centered">
-    <% if @image.image_tags.empty? %>
-      <h1>There are no characters in this image.</h1>
-    <% else %>
-      <h1>This image contains...</h1>
-      <% @image.image_tags.each do | tag | %>
-        <div class="block">
-          <%= link_to "#{tag.character.name}", character_url(tag.character), class: "button is-link" %>
-          <%= link_to image_tag_url(tag), method: "delete" do %>
-            <button class="button is-danger">X</button>
+  <div class="columns is-centered">
+
+    <div class="column is-4-tablet">
+
+      <% if @image.universe.characters.empty? %>
+        <h1>There are no characters in this universe.</h1>
+      <% else %>
+
+        <h1 class="is-size-3">Characters</h1>
+
+        <%# List Character Tags Associated with Image %>
+        <ul>
+          <% if @image.image_tags.empty? %>
+            <li>None</li>
+          <% else %>
+            <% @image.image_tags.each do | tag | %>
+              <li class="is-size-5 p-1">
+                <%= link_to "#{tag.character.name}", character_url(tag.character), class: "is-link" %>
+                <%= link_to image_tag_url(tag), method: "delete" do %>
+                  <span class="icon">
+                    <%= fa_icon "times", class: "has-text-danger-dark" %>
+                  </span>
+                <% end %>
+              </li>
+            <% end %>
           <% end %>
-        </div>
+        </ul>
+
+        <%# Add CharacterTag To Image %>
+        <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post", class: "mt-2" do |form| %>
+          <div class="select">
+            <%= form.select :character_id, generate_character_names(@image.universe.characters, @image.image_tags), {include_blank: true}  %>
+          </div>
+          <%= form.submit "Add", class: "button is-info" %>
+        <% end %>
+
       <% end %>
-    <% end %>
 
-    <hr />
+      <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"button is-danger mt-2" %>
+    </div>
 
-    <% if @image.universe.characters.empty? %>
-      <h1>There are no characters in this universe.</h1>
-    <% else %>
-      <h1>You could add...</h1>
-      <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post" do |form| %>
-        <div class="select">
-          <%= form.select :character_id, generate_character_names(@image.universe.characters, @image.image_tags), {include_blank: true}  %>
-        </div>
-        <%= form.submit "Add", class: "button" %>
+    <div class="column is-8-tablet">
+      <%= link_to rails_blob_path(@image.image_file, disposition: "attachment")  do %>
+        <%= generate_image_tag(@image, [1000, nil]) %>
       <% end %>
-    <% end %>
-
-    <hr />
-    <%= link_to "Delete Image", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"button is-danger" %>
+    </div>
 
   </div>
-  <div class="column is-three-quarters">
-    <%= link_to rails_blob_path(@image.image_file, disposition: "attachment")  do %>
-      <%= generate_image_tag(@image, [1000, nil]) %>
-    <% end %>
-  </div>
-</div>
 
 </section>
