@@ -23,6 +23,7 @@ ActiveRecord::Base.transaction do
   # Users
   user1 = FactoryBot.build(
     :user,
+    admin: true,
     display_name: "user1",
     email: "user1@devleo.org",
     password: "password1",
@@ -31,6 +32,7 @@ ActiveRecord::Base.transaction do
 
   user2 = FactoryBot.build(
     :user,
+    admin: false,
     display_name: "user2",
     email: "user2@devleo.org",
     password: "password2",

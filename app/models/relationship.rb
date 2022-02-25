@@ -8,9 +8,9 @@
 #  name                     :citext           not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  mutual_relationship_id   :bigint           not null
-#  originating_character_id :bigint           not null
-#  target_character_id      :bigint           not null
+#  mutual_relationship_id   :integer          not null
+#  originating_character_id :integer          not null
+#  target_character_id      :integer          not null
 #
 # Indexes
 #

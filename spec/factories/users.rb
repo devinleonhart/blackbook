@@ -5,6 +5,7 @@
 # Table name: users
 #
 #  id                     :bigint           not null, primary key
+#  admin                  :boolean          default(FALSE), not null
 #  display_name           :citext           not null
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
@@ -26,6 +27,7 @@ FactoryBot.define do
     sequence(:email) { |n| "user_#{n}@example.com" }
     sequence(:display_name) { |n| "User #{n}" }
     password { "password" }
+    admin { false }
 
     trait :with_blank_password do
       password { "" }

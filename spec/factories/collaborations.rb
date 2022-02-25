@@ -7,8 +7,8 @@
 #  id          :bigint           not null, primary key
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
-#  universe_id :bigint           not null
-#  user_id     :bigint           not null
+#  universe_id :integer          not null
+#  user_id     :integer          not null
 #
 # Indexes
 #

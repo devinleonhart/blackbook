@@ -9,7 +9,7 @@
 #  name         :citext           not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  owner_id     :bigint           not null
+#  owner_id     :integer          not null
 #
 # Indexes
 #

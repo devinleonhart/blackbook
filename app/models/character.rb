@@ -9,7 +9,7 @@
 #  name         :citext           not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
-#  universe_id  :bigint           not null
+#  universe_id  :integer          not null
 #
 # Indexes
 #
