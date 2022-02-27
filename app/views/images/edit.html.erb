@@ -20,7 +20,7 @@
             <% @image.image_tags.each do | tag | %>
               <li class="is-size-5 p-1">
                 <%= link_to "#{tag.character.name}", character_url(tag.character), class: "is-link" %>
-                <%= link_to image_tag_url(tag), method: "delete" do %>
+                <%= link_to image_tag_url(tag), data: { turbo_method: :delete } do %>
                   <span class="icon">
                     <%= fa_icon "times", class: "has-text-danger-dark" %>
                   </span>
@@ -40,7 +40,7 @@
 
       <% end %>
 
-      <%= link_to "Delete", universe_image_url(@image), method: "delete", :data => {:confirm => "Are you sure?"}, class:"button is-danger mt-2" %>
+      <%= link_to "Delete", universe_image_url(@image), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class:"button is-danger mt-2" %>
     </div>
 
     <div class="column is-8-tablet">

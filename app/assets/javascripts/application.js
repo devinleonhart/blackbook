@@ -1,3 +1,5 @@
+import "@hotwired/turbo-rails"
+
 // Bulma Navbar Menu Toggle
 document.addEventListener('DOMContentLoaded', () => {
 

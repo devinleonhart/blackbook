@@ -1,0 +1,17 @@
+<table class="table is-fullwidth is-striped has-text-centered">
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Display Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% users.each do | u | %>
+      <tr>
+        <td><%= u.email %></td>
+        <td><%= u.display_name %></td>
+        <td><%= link_to "Delete", user_path(u.id), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "button is-danger" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

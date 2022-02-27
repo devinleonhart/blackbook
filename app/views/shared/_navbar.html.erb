@@ -35,8 +35,11 @@
     <% unless @character.nil? %>
       <%= link_to "Edit Character", edit_character_url(@character), class: "navbar-item" %>
     <% end %>
+    <% if is_admin() %>
+      <%= link_to "Admin", users_path, class: "navbar-item" %>
+    <% end %>
     <% if user_signed_in? %>
-      <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "navbar-item" %>
+      <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "navbar-item" %>
     <% else %>
       <%= link_to "Register", new_user_registration_path, class: "navbar-item" %>
       <%= link_to "Sign in", new_user_session_path, class: "navbar-item" %>

@@ -10,4 +10,8 @@ module ApplicationHelper
     }
     levels[level]
   end
+
+  def is_admin
+    return current_user ? current_user.admin : false
+  end
 end

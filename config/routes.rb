@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  resources :users
+
   resources :universes do
     resources :collaborations, except: [:update], shallow: true
     resources :characters, shallow: true do
