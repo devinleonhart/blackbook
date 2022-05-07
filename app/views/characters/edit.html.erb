@@ -16,7 +16,7 @@
             <div class="field">
               <%= form.submit "Save", class: "button is-info" %>
               <%= link_to "Cancel", character_path(@character), class: "button is-danger" %>
-              <%= link_to "Delete", character_path(@character), method: "delete", :data => {:confirm => "Are you sure?"}, class: "alert button is-danger" %>
+              <%= link_to "Delete", character_path(@character), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class:"alert button is-danger" %>
             </div>
         <% end %>
       </div>
