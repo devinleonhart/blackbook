@@ -1,4 +1,4 @@
-FROM ruby:3.0.1-alpine
+FROM ruby:3.2.1-alpine
 
 #  Docker-specific Environment Variables
 ENV APP_PATH /var/app
