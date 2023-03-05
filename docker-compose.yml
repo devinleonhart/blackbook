@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+
+  postgres_db:
+    container_name: postgres_db
+    image: postgres:12.5-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - shared_data:/var/shared
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=test_pass
+    networks:
+      - blackbook_network
+    ports:
+      - 5433:5432
+    restart: unless-stopped
+
+  blackbook_app:
+    container_name: blackbook_app
+    build:
+      context: .
+      dockerfile: ./Dockerfile-Dev
+    depends_on:
+      - postgres_db
+    environment:
+      - NODE_ENV=development
+      - RAILS_ENV=development
+      - DATABASE_HOST=postgres_db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=blackbook_development
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=test_pass
+    volumes:
+      - .:/app
+      - shared_data:/var/shared
+      - gem_cache:/usr/local/bundle/gems
+    networks:
+      - blackbook_network
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+
+networks:
+  blackbook_network:
+
+volumes:
+  db_data:
+  gem_cache:
+  shared_data:
