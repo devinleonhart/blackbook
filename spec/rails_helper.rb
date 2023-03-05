@@ -9,6 +9,7 @@ require "rspec/rails"
 # Add additional requires below this line. Rails is not loaded until this point!
 require "capybara/rails"
 require "capybara/rspec"
+require "database_cleaner"
 require "support/devise.rb"
 require "support/factorybot.rb"
 
