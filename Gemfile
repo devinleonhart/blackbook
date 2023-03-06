@@ -6,7 +6,7 @@ ruby '3.2.1'
 gem 'rails', '~> 7.0.2', '>= 7.0.2.2'
 
 gem 'aws-sdk-s3', '~> 1.119', '>= 1.119.1'
-gem 'bootsnap', require: false
+gem 'bootsnap', '~> 1.16'
 gem 'bulma-rails', '~> 0.9.2'
 gem 'devise', '~> 4.7', '>= 4.7.3'
 gem 'factory_bot_rails', '~> 6.1'
