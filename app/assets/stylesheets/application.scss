@@ -1,6 +1,9 @@
 @import "bulma";
 @import "font-awesome";
 
+// Universe
+@import "../../views/universes/index-view.scss";
+
 // Character
 @import "../../views/characters/edit.scss";
 @import "../../views/characters/new.scss";

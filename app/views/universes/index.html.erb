@@ -1,15 +1,13 @@
-<section id="universe_index" class="section">
+<section id="universes-index-view" class="section">
 
   <div class="container">
-    <div class="columns is-centered">
 
-      <div class="buttongroup">
-        <%= render partial: "shared/universe_table", locals: {
-          universes: @universes.sort_by {|u| u.name }
-        } %>
-      </div>
+      <% @universes.each do | u | %>
+          <%= link_to universe_path(u), class: "box has-text-centered-mobile" do %>
+              <%= u.name %>
+          <% end %>
+      <% end %>
 
-    </div>
   </div>
 
 </section>
