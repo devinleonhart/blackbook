@@ -1,7 +1,6 @@
-version: '3'
+version: "3"
 
 services:
-
   postgres_db:
     container_name: postgres_db
     image: postgres:12.5-alpine
@@ -38,6 +37,8 @@ services:
       - gem_cache:/usr/local/bundle/gems
     networks:
       - blackbook_network
+    tty: true
+    stdin_open: true
     ports:
       - 3000:3000
     restart: unless-stopped
