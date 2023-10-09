@@ -27,16 +27,16 @@
         </div>
 
         <% if devise_mapping.rememberable? %>
-          <div class="field">
-            <label for="rememberCheckBox" class="checkbox">
-              <%= form.check_box :remember_me, id: "rememberCheckBox" %>
-              Remember Me
-            </label>
-          </div>
+          <label for="rememberCheckBox" class="checkbox">
+            Keep me logged in:
+            <%= form.check_box :remember_me, id: "rememberCheckBox" %>
+          </label>
         <% end %>
 
-        <div class="field">
-          <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "button is-info" %>
+        <div class="field is-grouped is-grouped-right">
+          <p class="control">
+            <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "button is-info" %>
+          </p>
         </div>
 
       <% end %>
