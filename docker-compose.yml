@@ -16,8 +16,8 @@ services:
       - 5433:5432
     restart: unless-stopped
 
-  blackbook_app:
-    container_name: blackbook_app
+  blackbook:
+    container_name: blackbook
     build:
       context: .
       dockerfile: ./Dockerfile-Dev
