@@ -2,18 +2,18 @@
 @import "font-awesome";
 
 // Universe
-@import "../../views/universes/index-view.scss";
+@import "../../views/universes/index-view";
 
 // Character
-@import "../../views/characters/edit.scss";
-@import "../../views/characters/new.scss";
+@import "../../views/characters/edit";
+@import "../../views/characters/new";
 
 // User
-@import "../../views/devise/registrations/new.scss";
-@import "../../views/devise/sessions/new.scss";
+@import "../../views/devise/registrations/new";
+@import "../../views/devise/sessions/new";
 
 // Shared
-@import "../../views/shared/_image_list.scss";
+@import "../../views/shared/image_list";
 
 // Global
 html, body {

@@ -17,12 +17,25 @@
     padding: .25em;
   }
 
+  .pagination {
+    max-width: 500px;
+    margin: 0 auto;
+    span, em, a {
+      margin: 0;
+    }
+  }
+
   @media screen and (max-width: 768px){
     .image-grid{
         display: block;
     }
     .image-tile{
         margin-bottom: 1rem;
+    }
+    .pagination {
+      span, em, a {
+        margin: 0 .5em;
+      }
     }
   }
 }
