@@ -52,10 +52,10 @@ class ImagesController < ApplicationController
   private
 
   def allowed_image_create_params
-    params.require(:image).permit(:caption, :image_file)
+    params.require(:image).permit(:image_file)
   end
 
   def allowed_image_update_params
-    params.require(:image).permit(:caption)
+    params.require(:image).permit(:favorite)
   end
 end

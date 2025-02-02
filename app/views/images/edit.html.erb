@@ -6,13 +6,17 @@
 
     <div class="column is-4-tablet">
 
+      <%# Favorite Image %>
+      <%= button_to universe_image_path(@image), method: :patch, params: { image: { favorite: !@image.favorite } }, class: @image.favorite ? "button is-warning" : "button is-primary" do %>
+        <%= @image.favorite ? "Unfavorite" : "Favorite" %>
+      <% end %>
+
+      <%# List Character Tags Associated with Image %>
       <% if @image.universe.characters.empty? %>
         <h1>There are no characters in this universe.</h1>
       <% else %>
 
         <h1 class="is-size-3">Characters</h1>
-
-        <%# List Character Tags Associated with Image %>
         <ul>
           <% if @image.image_tags.empty? %>
             <li>None</li>

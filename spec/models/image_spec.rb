@@ -4,6 +4,7 @@
 #
 #  id          :bigint           not null, primary key
 #  caption     :text             default(""), not null
+#  favorite    :boolean          default(FALSE), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  universe_id :integer          not null
