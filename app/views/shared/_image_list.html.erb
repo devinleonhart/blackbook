@@ -9,9 +9,7 @@
       <%= will_paginate images %>
     </nav>
     <div class="image-grid block">
-      <% sorted_images = images.sort_by { |image| [image.favorite ? 0 : 1, image.created_at] } %>
-
-      <% sorted_images.each do |image| %>
+      <% images.each do |image| %>
         <%= link_to edit_universe_image_url(universe, image), class:"image-tile" do %>
           <%= generate_image_tag(image, [250, 400]) %>
         <% end %>

@@ -33,9 +33,7 @@ class CharactersController < ApplicationController
     return unless model_found?(@character, "Character", params[:id], universes_url)
     return unless universe_visible_to_user?(@character.universe)
 
-    @images = Image.joins(:image_tags).where(image_tags: { character: @character }).order(created_at: :desc).paginate(
-page: params[:page], per_page: 18
-)
+    @images = Image.joins(:image_tags).where(image_tags: { character: @character }).order(favorite: :desc, created_at: :desc).paginate(page: params[:page], per_page: 20)
   end
 
   def edit
