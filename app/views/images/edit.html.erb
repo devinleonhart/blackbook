@@ -7,7 +7,7 @@
     <div class="column is-4-tablet">
 
       <%# Favorite Image %>
-      <%= button_to universe_image_path(@image), method: :patch, params: { image: { favorite: !@image.favorite } }, class: @image.favorite ? "button is-warning" : "button is-primary" do %>
+      <%= button_to universe_image_path(@image.universe, @image), method: :patch, params: { universe_id: @image.universe.id, image: { favorite: !@image.favorite } }, class: @image.favorite ? "button is-warning" : "button is-primary" do %>
         <%= @image.favorite ? "Unfavorite" : "Favorite" %>
       <% end %>
 

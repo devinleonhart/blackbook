@@ -37,7 +37,8 @@ class ImagesController < ApplicationController
     return unless model_found?(@image, "Image", params[:id], universes_url)
 
     @image.update!(allowed_image_update_params)
-    redirect_to edit_universe_image_url(@image)
+
+    redirect_to edit_universe_image_url(@image.universe, @image)
   end
 
   def destroy
