@@ -9,6 +9,7 @@ require "rspec/rails"
 # Add additional requires below this line. Rails is not loaded until this point!
 require "capybara/rails"
 require "capybara/rspec"
+require "shoulda-matchers"
 require "database_cleaner"
 require "support/devise.rb"
 require "support/factorybot.rb"
@@ -47,5 +48,12 @@ RSpec.configure do |config|
 
   config.after(:each) do
     DatabaseCleaner.clean
+  end
+end
+
+Shoulda::Matchers.configure do |config|
+  config.integrate do |with|
+    with.test_framework :rspec
+    with.library :rails
   end
 end
