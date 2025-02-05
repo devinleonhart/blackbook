@@ -12,7 +12,7 @@ class UniversesController < ApplicationController
     return unless model_found?(@universe, "Universe", params[:id], universes_url)
     return unless universe_visible_to_user?(@universe)
 
-    @images = Image.where(universe_id: @universe.id).order(favorite: :desc, created_at: :desc).paginate(page: params[:page], per_page: 20)
+    @images = Image.where(universe_id: @universe.id).order(created_at: :desc).paginate(page: params[:page], per_page: 20)
   end
 
   def new
