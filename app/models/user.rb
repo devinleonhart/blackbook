@@ -34,6 +34,5 @@ class User < ApplicationRecord
     dependent: :restrict_with_error
 
   has_many :collaborations, dependent: :destroy, inverse_of: :user
-  has_many :contributor_universes, through: :collaborations, class_name:
-    "Universe", inverse_of: :collaborators
+  has_many :contributor_universes, through: :collaborations, source: :universe
 end

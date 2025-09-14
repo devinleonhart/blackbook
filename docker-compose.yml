@@ -13,7 +13,7 @@ services:
     networks:
       - blackbook_network
     ports:
-      - 5433:5432
+      - 5434:5432
     restart: unless-stopped
 
   blackbook:
