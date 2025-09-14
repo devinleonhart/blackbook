@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Reset and seed database for development
+echo "Resetting development database..."
+
+# Stop containers if running
+docker compose down
+
+# Remove database volume to start fresh (optional - comment out to keep data)
+# docker volume rm blackbook_db_data
+
+# Start containers
+docker compose up -d
+
+# Wait for database to be ready
+echo "Waiting for database to be ready..."
+sleep 10
+
+# Reset and seed database
+docker compose exec blackbook bundle exec rails db:reset
+docker compose exec blackbook bundle exec rails db:seed
+
+echo "Database reset and seeded successfully!"
+echo "Admin login: admin@blackbook.dev / password123"

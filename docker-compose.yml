@@ -8,6 +8,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=test_pass
+      - POSTGRES_DB=blackbook_development
     networks:
       - blackbook_network
     ports:

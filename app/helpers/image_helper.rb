@@ -38,19 +38,7 @@ module ImageHelper
   end
 
   def fallback_url_for_blob(blob)
-    return nil unless blob
-
-    # Construct DigitalOcean Spaces URL directly as fallback
-    if Rails.env.production?
-      endpoint = Rails.application.credentials.dig(:digitalocean, :endpoint)
-      bucket = Rails.application.credentials.dig(:digitalocean, :bucket)
-
-      if endpoint && bucket
-        "#{endpoint}/#{bucket}/#{blob.key}"
-      end
-    end
-  rescue => e
-    Rails.logger.error("Failed to generate fallback URL: #{e.message}")
+    # No fallback URL available for local storage
     nil
   end
 

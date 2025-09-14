@@ -5,7 +5,6 @@ ruby '3.2.1'
 
 gem 'rails', '~> 7.0.2', '>= 7.0.2.2'
 
-gem 'aws-sdk-s3', '~> 1.119', '>= 1.119.1'
 gem 'bootsnap', '~> 1.16'
 gem 'bulma-rails', '~> 0.9.4'
 gem 'devise', '~> 4.7', '>= 4.7.3'
