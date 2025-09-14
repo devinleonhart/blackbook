@@ -27,9 +27,6 @@ class ImageTag < ApplicationRecord
 
   delegate :universe, to: :character, allow_nil: true
 
-  # Update image filename when character tags change
-  after_create :update_image_filename
-  after_destroy :update_image_filename
 
   private
 
@@ -39,15 +36,4 @@ class ImageTag < ApplicationRecord
     errors.add(:base, "The character and image must be from the same universe!") if character.universe != image.universe
   end
 
-  def update_image_filename
-    return unless image&.respond_to?(:update_local_filename!)
-
-    # Use a background job or delay to avoid blocking the main request
-    # For now, update synchronously
-    begin
-      image.update_local_filename!
-    rescue => e
-      Rails.logger.error("Failed to update image filename for image #{image.id}: #{e.message}")
-    end
-  end
 end

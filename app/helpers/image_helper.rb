@@ -40,9 +40,8 @@ module ImageHelper
   def fallback_url_for_blob(blob)
     return nil unless blob
 
-    # If we're using hybrid storage, try to construct cloud URL as fallback
-    if Rails.application.config.active_storage.service == :hybrid && Rails.env.production?
-      # Construct DigitalOcean Spaces URL directly
+    # Construct DigitalOcean Spaces URL directly as fallback
+    if Rails.env.production?
       endpoint = Rails.application.credentials.dig(:digitalocean, :endpoint)
       bucket = Rails.application.credentials.dig(:digitalocean, :bucket)
 

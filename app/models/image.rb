@@ -14,8 +14,6 @@
 #  index_images_on_universe_id  (universe_id)
 #
 class Image < ApplicationRecord
-  include ImageStorageConcern
-
   after_create :set_filename
   validate :requires_image_attached
 

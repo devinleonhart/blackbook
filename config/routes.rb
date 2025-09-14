@@ -21,18 +21,6 @@ Rails.application.routes.draw do
   # Custom image routes for cleaner URLs
   get '/images/:id/:filename', to: 'images#view', as: 'view_image', constraints: { filename: /.*/ }
 
-  # Admin routes (production only)
-  if Rails.env.production?
-    namespace :admin do
-      resources :image_migration, only: [:index] do
-        collection do
-          get :status
-          get :missing_images
-        end
-      end
-    end
-
-    get '404', :to => 'universes#index'
-  end
+  get '404', :to => 'universes#index'
 
 end
