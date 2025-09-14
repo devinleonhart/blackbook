@@ -43,7 +43,12 @@ class ImagesController < ApplicationController
 
   def view
     @image = Image.find(params[:id])
-    redirect_to rails_blob_path(@image.image_file, disposition: "inline")
+
+    # Stream the image directly without redirecting
+    send_data @image.image_file.download,
+              type: @image.image_file.content_type,
+              disposition: 'inline',
+              filename: @image.image_file.filename.to_s
   end
 
   def destroy
