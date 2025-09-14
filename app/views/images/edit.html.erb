@@ -48,7 +48,7 @@
     </div>
 
     <div class="column is-8-tablet">
-      <%= link_to view_image_path(@image) do %>
+      <%= link_to view_image_path(@image, @image.image_file.filename) do %>
         <%= generate_image_tag(@image, [1000, nil]) %>
       <% end %>
     </div>

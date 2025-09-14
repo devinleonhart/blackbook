@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   end
 
   # Custom image routes for cleaner URLs
-  get '/images/:id/view', to: 'images#view', as: 'view_image'
+  get '/images/:id/:filename', to: 'images#view', as: 'view_image', constraints: { filename: /.*/ }
 
   # Admin routes (production only)
   if Rails.env.production?
