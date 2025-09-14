@@ -45,7 +45,13 @@ class ImagesController < ApplicationController
     @image = Image.find(params[:id])
 
     # Stream the image directly without redirecting
-    send_data @image.image_file.download,
+    image_data = @image.image_file.download
+
+    response.headers['Content-Type'] = @image.image_file.content_type
+    response.headers['Content-Length'] = image_data.bytesize.to_s
+    response.headers['Cache-Control'] = 'public, max-age=31536000'
+
+    send_data image_data,
               type: @image.image_file.content_type,
               disposition: 'inline',
               filename: @image.image_file.filename.to_s
