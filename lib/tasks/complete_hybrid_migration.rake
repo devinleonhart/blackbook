@@ -66,14 +66,15 @@ namespace :images do
           puts "    ✓ Downloaded successfully"
           downloaded_count += 1
         else
-          puts "    ✗ Download failed"
+          puts "    ✗ Download failed (file missing from cloud storage)"
           download_failed_count += 1
           failed_downloads << {
             id: blob.id,
             filename: blob.filename.to_s,
             key: blob.key,
             service: blob.service_name,
-            size: blob.byte_size
+            size: blob.byte_size,
+            reason: "File not found in cloud storage"
           }
         end
 
@@ -388,6 +389,10 @@ namespace :images do
         return false
       end
 
+    rescue ActiveStorage::FileNotFoundError => e
+      # File doesn't exist in cloud storage - this is expected for some files
+      Rails.logger.warn("File not found in cloud storage for blob #{blob.id}: #{e.message}")
+      return false
     rescue => e
       # Clean up on failure
       File.delete(local_path) if File.exist?(local_path)
