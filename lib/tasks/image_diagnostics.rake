@@ -16,14 +16,18 @@ namespace :images do
     # Service details
     service_config = Rails.application.config.active_storage.service_configurations
     puts "\nConfigured Services:"
-    service_config.each do |name, config|
-      puts "  #{name}: #{config['service']}"
-      if config['service'] == 'Disk'
-        puts "    Root: #{config['root']}"
-      elsif config['service'] == 'S3'
-        puts "    Endpoint: #{config['endpoint']}"
-        puts "    Bucket: #{config['bucket']}"
+    if service_config
+      service_config.each do |name, config|
+        puts "  #{name}: #{config['service']}"
+        if config['service'] == 'Disk'
+          puts "    Root: #{config['root']}"
+        elsif config['service'] == 'S3'
+          puts "    Endpoint: #{config['endpoint']}"
+          puts "    Bucket: #{config['bucket']}"
+        end
       end
+    else
+      puts "  No service configurations found!"
     end
 
     # Check what service is actually being used
