@@ -18,7 +18,17 @@ Rails.application.routes.draw do
     get 'search', to: 'search#multisearch', as: :search
   end
 
+  # Admin routes (production only)
   if Rails.env.production?
+    namespace :admin do
+      resources :image_migration, only: [:index] do
+        collection do
+          get :status
+          get :missing_images
+        end
+      end
+    end
+
     get '404', :to => 'universes#index'
   end
 

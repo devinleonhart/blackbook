@@ -14,3 +14,8 @@ digitalocean:
   region: <%= Rails.application.credentials.dig(:digitalocean, :region) %>
   bucket: <%= Rails.application.credentials.dig(:digitalocean, :bucket) %>
   public: true
+
+# Local storage for production (used in hybrid mode)
+local_production:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>
