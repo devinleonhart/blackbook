@@ -41,6 +41,11 @@ class ImagesController < ApplicationController
     redirect_to edit_universe_image_url(@image.universe, @image)
   end
 
+  def view
+    @image = Image.find(params[:id])
+    redirect_to rails_blob_path(@image.image_file, disposition: "inline")
+  end
+
   def destroy
     @image = Image.find_by(id: params[:id])
     return unless model_found?(@image, "Image", params[:id], universes_url)

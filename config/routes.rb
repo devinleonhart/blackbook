@@ -18,6 +18,9 @@ Rails.application.routes.draw do
     get 'search', to: 'search#multisearch', as: :search
   end
 
+  # Custom image routes for cleaner URLs
+  get '/images/:id/view', to: 'images#view', as: 'view_image'
+
   # Admin routes (production only)
   if Rails.env.production?
     namespace :admin do
