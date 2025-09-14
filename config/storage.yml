@@ -19,3 +19,10 @@ digitalocean:
 local_production:
   service: Disk
   root: <%= Rails.root.join("storage") %>
+
+# Hybrid storage - saves to both local and cloud, reads local first
+hybrid:
+  service: Mirror
+  primary: local_production
+  mirrors:
+    - digitalocean
