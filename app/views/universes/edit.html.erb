@@ -1,56 +1,80 @@
-<section id="universes-edit-view" class="section is-fullheight">
+<section id="universes-edit-view" class="py-8 min-h-screen bg-gray-50">
 
-  <div class="container">
-    <div class="columns is-centered">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex justify-center">
+      <div class="w-full">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">Edit Universe</h1>
+          <p class="text-gray-600">Update your universe settings and collaborators</p>
+        </div>
 
-      <div class="column is-6-tablet is-6-desktop is-4-widescreen">
-        <%= form_with model: @universe, url: universe_url(@universe), method: "patch" do |form| %>
-          <%= form.label :name, class: "label" %>
-          <div class="field">
-            <div class="control has-icons-left">
-              <span class="icon is-small is-left">
-                  <%= fa_icon "rocket" %>
-              </span>
-              <%= form.text_field :name, class: "input", placeholder: "Sonic the Hedgehog", required: true %>
-            </div>
-          </div>
-          <%= form.submit "Save", class: "button is-primary" %>
-          <%= link_to "Cancel", universe_url(@universe), class: "button" %>
-        <% end %>
-      </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Universe Settings -->
+          <div class="bg-white rounded-lg px-8 pt-6 pb-8 shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">Universe Settings</h2>
 
-      <div class="column is-6-tablet is-6-desktop is-4-widescreen">
-        <% if @universe.collaborators.empty? %>
-            <h1>There are no collaborators in this universe.<h1>
-          <% else %>
-            <h1>You are collaborating with...</h1>
-            <% @universe.collaborations.each do | collaboration | %>
-              <div class="block">
-                <span class="icon-text">
-                  <%= link_to collaboration_url(collaboration), method: "delete" do %>
-                    <span class="icon">
-                      <%= fa_icon "times" %>
-                    </span>
-                  <% end %>
-                  <span><%= collaboration.user.display_name %></span>
-                </span>
+            <%= form_with model: @universe, url: universe_url(@universe), method: "patch" do |form| %>
+              <div class="mb-6">
+                <%= form.label :name, class: "block text-gray-700 text-sm font-bold mb-2" %>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <%= fa_icon "rocket", class: "text-gray-400" %>
+                  </span>
+                  <%= form.text_field :name, class: "w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg", placeholder: "Enter universe name", required: true %>
+                </div>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-3">
+                <%= form.submit "Save Changes", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors duration-200 flex-1" %>
+                <%= link_to "Cancel", universe_url(@universe), class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors duration-200 flex-1 text-center" %>
               </div>
             <% end %>
-          <% end %>
+          </div>
 
-        <%= form_with model: Collaboration.new(), url: universe_collaborations_url(@universe), method: "post" do |form| %>
-          <%= form.label :user_id, class: "label" %>
-          <div class="field">
-            <div class="control">
-              <div class="select">
-                <%= form.select :user_id, generate_collaborator_names(User.all, @universe.collaborators, @universe.owner), {include_blank: true} %>
+          <!-- Collaborators -->
+          <div class="bg-white rounded-lg px-8 pt-6 pb-8 shadow-lg">
+            <h2 class="text-xl font-semibold text-gray-800 mb-6">Collaborators</h2>
+
+            <% if @universe.collaborators.empty? %>
+              <div class="text-center py-8">
+                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <%= fa_icon "users", class: "text-2xl text-gray-400" %>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-600 mb-2">No collaborators yet</h3>
+                <p class="text-gray-500">Add collaborators to work together on this universe</p>
               </div>
+            <% else %>
+              <div class="space-y-3 mb-6">
+                <h3 class="text-sm font-medium text-gray-700 mb-3">Current Collaborators</h3>
+                <% @universe.collaborations.each do | collaboration | %>
+                  <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div class="flex items-center">
+                      <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                        <%= fa_icon "user", class: "text-blue-600 text-sm" %>
+                      </div>
+                      <span class="text-gray-900 font-medium"><%= collaboration.user.display_name %></span>
+                    </div>
+                    <%= link_to collaboration_url(collaboration), method: "delete", class: "text-red-600 hover:text-red-800 transition-colors duration-200" do %>
+                      <%= fa_icon "times" %>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+
+            <div class="border-t pt-6">
+              <h3 class="text-sm font-medium text-gray-700 mb-3">Add New Collaborator</h3>
+              <%= form_with model: Collaboration.new(), url: universe_collaborations_url(@universe), method: "post" do |form| %>
+                <div class="mb-4">
+                  <%= form.label :user_id, class: "block text-gray-700 text-sm font-bold mb-2" %>
+                  <%= form.select :user_id, generate_collaborator_names(User.all, @universe.collaborators, @universe.owner), {include_blank: true}, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+                </div>
+                <%= form.submit "Add Collaborator", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none transition-colors duration-200 w-full" %>
+              <% end %>
             </div>
           </div>
-          <%= form.submit "Add", class: "button is-primary" %>
-        <% end %>
+        </div>
       </div>
-
     </div>
   </div>
 

@@ -1,9 +1,10 @@
-<section id="characters-show-view" class="section">
+<section id="characters-show-view" class="py-8 min-h-screen">
 
   <% render partial: "shared/capture_navbar" %>
 
-  <div class="columns is-centered">
-    <div class="column">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-lg p-6">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center"><%= @character.name %></h1>
       <%= render partial: "shared/image_list", locals: {
         images: @images,
         universe: @character.universe

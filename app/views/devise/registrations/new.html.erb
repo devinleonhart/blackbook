@@ -1,53 +1,56 @@
-<section id="bb_register" class="section is-fullheight">
-  <div class="container">
-    <div class="columns is-centered">
+<section id="bb_register" class="py-8 min-h-screen bg-gray-50">
+  <div class="max-w-md mx-auto px-4">
+    <div class="flex justify-center">
+      <div class="w-full">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
+          <p class="text-gray-600">Join Blackbook to start creating</p>
+        </div>
 
-      <div class="column is-4-tablet is-5-desktop">
+        <%= form_for(resource, as: resource_name, html: {class: "bg-white rounded-lg px-8 pt-6 pb-8 shadow-lg"}, url: registration_path(resource_name)) do |form| %>
 
-      <%= form_for(resource, as: resource_name, html: {class: "box"}, url: registration_path(resource_name)) do |form| %>
-
-       <div class="field">
-          <%= form.label :email, for: "newUserRegisterEmail", class: "label" %>
-          <div class="control has-icons-left">
-            <span class="icon is-small is-left">
-              <%= fa_icon "envelope" %>
+       <div class="mb-4">
+          <%= form.label :email, for: "newUserRegisterEmail", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <%= fa_icon "envelope", class: "text-gray-400" %>
             </span>
-            <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserRegisterEmail", class: 'input', placeholder: "your_email@gmail.com", required: true %>
+            <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserRegisterEmail", class: 'w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500', placeholder: "your_email@gmail.com", required: true %>
           </div>
         </div>
 
-        <div class="field">
-          <%= form.label :display_name, for: "newUserRegisterDisplayname", class: "label" %>
-          <div class="control has-icons-left">
-            <span class="icon is-small is-left">
-              <%= fa_icon "user" %>
+        <div class="mb-4">
+          <%= form.label :display_name, for: "newUserRegisterDisplayname", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <%= fa_icon "user", class: "text-gray-400" %>
             </span>
-            <%= form.text_field :display_name, autocomplete: "display name", id: "newUserRegisterDisplayname", class: 'input', placeholder: "CoolUser69", required: true %>
+            <%= form.text_field :display_name, autocomplete: "display name", id: "newUserRegisterDisplayname", class: 'w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500', placeholder: "CoolUser69", required: true %>
           </div>
         </div>
 
-        <div class="field">
-          <%= form.label :password, for: "newUserRegisterPassword", class: "label" %>
-          <div class="control has-icons-left">
-            <span class="icon is-small is-left">
-              <%= fa_icon "lock" %>
+        <div class="mb-4">
+          <%= form.label :password, for: "newUserRegisterPassword", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <%= fa_icon "lock", class: "text-gray-400" %>
             </span>
-            <%= form.password_field :password, id: "newUserRegisterPassword", class: 'input', required: true  %>
+            <%= form.password_field :password, id: "newUserRegisterPassword", class: 'w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500', required: true  %>
           </div>
         </div>
 
-        <div class="field">
-          <%= form.label :password_confirmation, for: "newUserRegisterPasswordconfirmation", class: "label" %>
-          <div class="control has-icons-left">
-            <span class="icon is-small is-left">
-              <%= fa_icon "lock" %>
+        <div class="mb-6">
+          <%= form.label :password_confirmation, for: "newUserRegisterPasswordconfirmation", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <%= fa_icon "lock", class: "text-gray-400" %>
             </span>
-            <%= form.password_field :password_confirmation, id: "newUserRegisterPasswordconfirmation", class: 'input', required: true  %>
+            <%= form.password_field :password_confirmation, id: "newUserRegisterPasswordconfirmation", class: 'w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500', required: true  %>
           </div>
         </div>
 
-        <div class="field">
-          <%= form.submit "Sign Up", id: "newUserRegisterSubmit", class: "button is-info" %>
+        <div class="flex items-center justify-between">
+          <%= form.submit "Create Account", id: "newUserRegisterSubmit", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none w-full transition-colors duration-200" %>
         </div>
 
       <% end %>

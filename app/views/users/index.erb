@@ -1,3 +1,20 @@
-<%= render partial: "shared/user_table", locals: {
-  users: @users.sort_by {|u| u.email }
-} %>
+<section id="users-index-view" class="py-8 min-h-screen bg-gray-50">
+
+  <div class="max-w-4xl mx-auto px-4">
+    <div class="flex justify-center">
+      <div class="w-full">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">User Management</h1>
+          <p class="text-gray-600">Manage system users and permissions</p>
+        </div>
+
+        <div class="bg-white rounded-lg px-8 pt-6 pb-8 shadow-lg">
+          <%= render partial: "shared/user_table", locals: {
+            users: @users.sort_by {|u| u.email }
+          } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>

@@ -85,8 +85,6 @@ GEM
     bootsnap (1.16.0)
       msgpack (~> 1.2)
     builder (3.2.4)
-    bulma-rails (0.9.4)
-      sassc (~> 2.0)
     capybara (3.36.0)
       addressable
       matrix
@@ -312,6 +310,10 @@ GEM
     stimulus-rails (1.0.2)
       railties (>= 6.0.0)
     strscan (3.0.1)
+    tailwindcss-rails (2.7.9-aarch64-linux)
+      railties (>= 7.0.0)
+    tailwindcss-rails (2.7.9-arm64-darwin)
+      railties (>= 7.0.0)
     thor (1.2.1)
     tilt (2.0.10)
     timeout (0.2.0)
@@ -353,7 +355,6 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootsnap (~> 1.16)
-  bulma-rails (~> 0.9.4)
   capybara
   database_cleaner (~> 2.0, >= 2.0.1)
   debug
@@ -377,6 +378,7 @@ DEPENDENCIES
   solargraph
   sprockets-rails
   stimulus-rails
+  tailwindcss-rails (~> 2.0)
   turbo-rails
   tzinfo-data
   web-console

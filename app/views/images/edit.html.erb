@@ -1,13 +1,15 @@
 <% render partial: "shared/capture_navbar" %>
 
-<section id="images-edit-view" class="section is-fullheight">
+<section id="images-edit-view" class="py-8 min-h-screen">
 
-  <div class="columns is-centered">
-
-    <div class="column is-4-tablet">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Left Sidebar -->
+      <div class="w-full lg:w-1/3">
+        <div class="bg-white rounded-lg p-6 shadow-lg">
 
       <%# Favorite Image %>
-      <%= button_to universe_image_path(@image.universe, @image), method: :patch, params: { universe_id: @image.universe.id, image: { favorite: !@image.favorite } }, class: @image.favorite ? "button is-warning" : "button is-primary" do %>
+      <%= button_to universe_image_path(@image.universe, @image), method: :patch, params: { universe_id: @image.universe.id, image: { favorite: !@image.favorite } }, class: @image.favorite ? "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mb-4" : "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4" do %>
         <%= @image.favorite ? "Unfavorite" : "Favorite" %>
       <% end %>
 
@@ -16,17 +18,18 @@
         <h1>There are no characters in this universe.</h1>
       <% else %>
 
-        <h1 class="is-size-3">Characters</h1>
-        <ul>
+        <!-- Currently Tagged Characters -->
+        <h2 class="text-xl font-semibold mb-3">Tagged Characters</h2>
+        <ul class="space-y-2 mb-6">
           <% if @image.image_tags.empty? %>
-            <li>None</li>
+            <li class="text-gray-500">None</li>
           <% else %>
             <% @image.image_tags.each do | tag | %>
-              <li class="is-size-5 p-1">
-                <%= link_to "#{tag.character.name}", character_url(tag.character), class: "is-link" %>
-                <%= link_to image_tag_url(tag), data: { turbo_method: :delete } do %>
+              <li class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                <%= link_to "#{tag.character.name}", character_url(tag.character), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                <%= link_to image_tag_url(tag), data: { turbo_method: :delete }, class: "text-red-600 hover:text-red-800" do %>
                   <span class="icon">
-                    <%= fa_icon "times", class: "has-text-danger-dark" %>
+                    <%= fa_icon "times" %>
                   </span>
                 <% end %>
               </li>
@@ -34,25 +37,61 @@
           <% end %>
         </ul>
 
-        <%# Add CharacterTag To Image %>
-        <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post", class: "mt-2" do |form| %>
-          <div class="select">
-            <%= form.select :character_id, generate_character_names(@image.universe.characters, @image.image_tags), {include_blank: true}  %>
+        <!-- Add Character Tag -->
+        <h3 class="text-lg font-medium mb-3">Add Character Tag</h3>
+        <div class="mb-4">
+          <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" type="text" id="character-search-image-edit" placeholder="Search characters to add..." onkeyup="filterCharacters('image-edit')">
+        </div>
+        <div id="character-results-image-edit" class="character-results max-h-60 overflow-y-auto border border-gray-200 rounded-md bg-white mb-4">
+          <% available_characters = @image.universe.characters - @image.characters %>
+          <% available_characters.sort_by {|c| c.name }.each do |character| %>
+            <div class="character-item p-3 border-b border-gray-100 hover:bg-gray-50">
+              <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post", class: "inline" do |form| %>
+                <%= form.hidden_field :character_id, value: character.id %>
+                <%= form.submit "Add #{character.name}", class: "text-blue-600 hover:text-blue-800 hover:underline bg-transparent border-none cursor-pointer" %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+      <% end %>
+
+          <%= button_to "Delete", universe_image_url(@image), method: :delete, data: { confirm: 'Are you sure?' }, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4 w-full transition-colors duration-200" %>
+        </div>
+      </div>
+
+      <!-- Main Image Display -->
+      <div class="w-full lg:w-2/3">
+        <div class="bg-white rounded-lg p-6">
+          <div class="flex justify-center">
+            <%= link_to view_image_path(@image, @image.image_file.filename) do %>
+              <%= generate_image_tag(@image, [1000, nil]) %>
+            <% end %>
           </div>
-          <%= form.submit "Add", class: "button is-info" %>
-        <% end %>
-
-      <% end %>
-
-      <%= button_to "Delete", universe_image_url(@image), method: :delete, data: { confirm: 'Are you sure?' }, class: "button is-danger mt-2" %>
+        </div>
+      </div>
     </div>
-
-    <div class="column is-8-tablet">
-      <%= link_to view_image_path(@image, @image.image_file.filename) do %>
-        <%= generate_image_tag(@image, [1000, nil]) %>
-      <% end %>
-    </div>
-
   </div>
 
 </section>
+
+<script>
+if (typeof window.filterCharacters === 'undefined') {
+  window.filterCharacters = function(uniqueId) {
+    const searchTerm = document.getElementById(`character-search-${uniqueId}`).value.toLowerCase();
+    const characterItems = document.querySelectorAll(`#character-results-${uniqueId} .character-item`);
+
+    characterItems.forEach(item => {
+      // Get the character name from the submit button text, removing "Add " prefix
+      const submitButton = item.querySelector('input[type="submit"]');
+      const characterName = submitButton ? submitButton.value.replace('Add ', '').toLowerCase() : '';
+
+      if (characterName.includes(searchTerm)) {
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+  }
+}
+</script>

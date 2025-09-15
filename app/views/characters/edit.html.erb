@@ -1,22 +1,27 @@
-<section id="characters-edit-view" class="section is-fullheight">
+<section id="characters-edit-view" class="py-8 min-h-screen bg-gray-50">
 
-  <div class="container">
-    <div class="columns is-centered">
-      <div class="column is-4-tablet is-5-desktop">
-        <%= form_with model: @character, url: character_url(@character), method: "patch" do |form| %>
-            <div class="field">
-              <%= form.label :name, class: "label" %>
-              <div class="control has-icons-left">
-                <span class="icon is-small is-left">
-                    <%= fa_icon "user" %>
+  <div class="max-w-md mx-auto px-4">
+    <div class="flex justify-center">
+      <div class="w-full">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">Edit Character</h1>
+          <p class="text-gray-600">Update your character's information</p>
+        </div>
+
+          <%= form_with model: @character, url: character_url(@character), method: "patch", html: {class: "bg-white rounded-lg px-8 pt-6 pb-8 shadow-lg"} do |form| %>
+            <div class="mb-6">
+              <%= form.label :name, class: "block text-gray-700 text-sm font-bold mb-2" %>
+              <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <%= fa_icon "user", class: "text-gray-400" %>
                 </span>
-                <%= form.text_field :name, class: 'input', placeholder: "Tangle", required: true %>
+                <%= form.text_field :name, class: 'w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg', placeholder: "Enter character name", required: true %>
               </div>
             </div>
-            <div class="field">
-              <%= form.submit "Save", class: "button is-info" %>
-              <%= link_to "Cancel", character_path(@character), class: "button is-danger" %>
-              <%= link_to "Delete", character_path(@character), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class:"alert button is-danger" %>
+            <div class="flex flex-col sm:flex-row gap-3">
+              <%= form.submit "Save Changes", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors duration-200 flex-1" %>
+              <%= link_to "Cancel", character_path(@character), class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors duration-200 flex-1 text-center" %>
+              <%= link_to "Delete", character_path(@character), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors duration-200 flex-1 text-center" %>
             </div>
         <% end %>
       </div>

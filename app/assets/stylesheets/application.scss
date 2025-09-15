@@ -1,27 +1,27 @@
-@import "bulma";
 @import "font-awesome";
 
-// Universe
-@import "../../views/universes/index-view";
+// Character selector custom scrollbar
+.character-selector {
+  .character-quick-list {
+    margin-top: 1rem;
+  }
 
-// Character
-@import "../../views/characters/edit";
-@import "../../views/characters/new";
+  // Custom scrollbar for webkit browsers
+  .character-results::-webkit-scrollbar {
+    width: 6px;
+  }
 
-// User
-@import "../../views/devise/registrations/new";
-@import "../../views/devise/sessions/new";
+  .character-results::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
 
-// Shared
-@import "../../views/shared/image_list";
+  .character-results::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
 
-// Global
-html, body {
-  box-sizing: border-box;
-  min-width: 375px;
-  background-color: $light;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
 }

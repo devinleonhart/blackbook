@@ -1,49 +1,53 @@
-<nav id="bb_navbar" class="navbar is-dark" role="navigation" aria-label="main navigation">
+<nav id="bb_navbar" class="bg-gray-800 text-white" role="navigation" aria-label="main navigation">
 
-  <div class="navbar-brand">
-    <a class="navbar-item" href="/">
-      Blackbook
-    </a>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <div class="flex items-center">
+        <a class="text-xl font-bold text-white hover:text-gray-300 px-3 py-2" href="/">
+          Blackbook
+        </a>
+        <div class="ml-4 flex items-center">
+          <% unless @new_character.nil? || @new_character.universe.nil? %>
+            <span class="text-gray-400 mx-2">|</span>
+            <%= link_to "#{@new_character.universe.name}", universe_url(@new_character.universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+          <% end %>
+          <% unless @character.nil? %>
+            <span class="text-gray-400 mx-2">|</span>
+            <%= link_to "#{@character.universe.name}", universe_url(@character.universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+          <% end %>
+          <% unless @image.nil? %>
+            <span class="text-gray-400 mx-2">|</span>
+            <%= link_to "#{@image.universe.name}", universe_url(@image.universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+          <% end %>
+          <% unless @universe.nil? %>
+            <span class="text-gray-400 mx-2">|</span>
+            <%= link_to "#{@universe.name}", universe_url(@universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+          <% end %>
+        </div>
+      </div>
 
-    <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="blackbookNavBar">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-
-  <div id="blackbookNavBar" class="navbar-menu">
-    <div class="navbar-start">
-      <% unless @new_character.nil? || @new_character.universe.nil? %>
-        <%= link_to "#{@new_character.universe.name}", universe_url(@new_character.universe), class: "navbar-item" %>
-      <% end %>
-      <% unless @character.nil? %>
-        <%= link_to "#{@character.universe.name}", universe_url(@character.universe), class: "navbar-item" %>
-      <% end %>
-      <% unless @image.nil? %>
-        <%= link_to "#{@image.universe.name}", universe_url(@image.universe), class: "navbar-item" %>
-      <% end %>
-      <% unless @universe.nil? %>
-        <%= link_to "#{@universe.name}", universe_url(@universe), class: "navbar-item" %>
-      <% end %>
-    </div>
-    <div class="navbar-end">
-    <% unless @universe.nil? %>
-      <%= link_to "New Character", new_universe_character_url(@universe), class: "navbar-item" %>
-      <%= link_to "Edit Universe", edit_universe_url(@universe), class: "navbar-item" %>
-    <% end %>
-    <% unless @character.nil? %>
-      <%= link_to "Edit Character", edit_character_url(@character), class: "navbar-item" %>
-    <% end %>
-    <% if is_admin() %>
-      <%= link_to "Admin", users_path, class: "navbar-item" %>
-    <% end %>
-    <% if user_signed_in? %>
-      <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "navbar-item" %>
-    <% else %>
-      <%= link_to "Register", new_user_registration_path, class: "navbar-item" %>
-      <%= link_to "Sign in", new_user_session_path, class: "navbar-item" %>
-    <% end %>
+      <div class="hidden md:block">
+        <div class="ml-10 flex items-baseline space-x-4">
+          <div class="flex space-x-4">
+            <% unless @universe.nil? %>
+              <%= link_to "New Character", new_universe_character_url(@universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <%= link_to "Edit Universe", edit_universe_url(@universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+            <% end %>
+            <% unless @character.nil? %>
+              <%= link_to "Edit Character", edit_character_url(@character), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+            <% end %>
+            <% if is_admin() %>
+              <%= link_to "Admin", users_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+            <% end %>
+            <% if user_signed_in? %>
+              <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+            <% else %>
+              <%= link_to "Register", new_user_registration_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <%= link_to "Sign in", new_user_session_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
