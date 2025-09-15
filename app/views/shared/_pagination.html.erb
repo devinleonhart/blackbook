@@ -1,38 +1,13 @@
 <% if collection.respond_to?(:current_page) && collection.total_pages > 1 %>
   <nav aria-label="Pagination" class="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
-    <!-- Mobile: Show page info and navigation -->
-    <div class="flex items-center justify-between w-full sm:w-auto">
-      <div class="text-sm text-gray-600">
-        Page <%= collection.current_page %> of <%= collection.total_pages %>
-        <span class="hidden sm:inline">(<%= collection.total_entries %> total)</span>
-      </div>
-
-      <!-- Mobile navigation buttons -->
-      <div class="flex items-center space-x-4">
-        <% if collection.previous_page %>
-          <%= link_to "←", { page: collection.previous_page },
-              class: "flex items-center justify-center w-16 h-16 text-xl font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200",
-              title: "Previous page" %>
-        <% else %>
-          <span class="flex items-center justify-center w-16 h-16 text-xl font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed">
-            ←
-          </span>
-        <% end %>
-
-        <% if collection.next_page %>
-          <%= link_to "→", { page: collection.next_page },
-              class: "flex items-center justify-center w-16 h-16 text-xl font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200",
-              title: "Next page" %>
-        <% else %>
-          <span class="flex items-center justify-center w-16 h-16 text-xl font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed">
-            →
-          </span>
-        <% end %>
-      </div>
+    <!-- Page info (left on desktop, top on mobile) -->
+    <div class="text-sm text-gray-600 order-1 sm:order-1">
+      Page <%= collection.current_page %> of <%= collection.total_pages %>
+      <span class="hidden sm:inline">(<%= collection.total_entries %> total)</span>
     </div>
 
-    <!-- Desktop: Show full pagination -->
-    <div class="hidden sm:flex items-center space-x-1">
+    <!-- Page numbers (center on desktop, hidden on mobile) -->
+    <div class="hidden sm:flex items-center space-x-1 order-2">
       <!-- First page -->
       <% if collection.current_page > 3 %>
         <%= link_to "1", { page: 1 },
@@ -64,6 +39,31 @@
         <% end %>
         <%= link_to collection.total_pages.to_s, { page: collection.total_pages },
             class: "inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" %>
+      <% end %>
+    </div>
+
+    <!-- Previous/Next buttons (right on desktop, bottom on mobile) -->
+    <div class="flex items-center space-x-2 order-3 sm:order-3">
+      <!-- Previous button -->
+      <% if collection.previous_page %>
+        <%= link_to "← Previous", { page: collection.previous_page },
+            class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200",
+            title: "Previous page" %>
+      <% else %>
+        <span class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed">
+          ← Previous
+        </span>
+      <% end %>
+
+      <!-- Next button -->
+      <% if collection.next_page %>
+        <%= link_to "Next →", { page: collection.next_page },
+            class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200",
+            title: "Next page" %>
+      <% else %>
+        <span class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed">
+          Next →
+        </span>
       <% end %>
     </div>
   </nav>
