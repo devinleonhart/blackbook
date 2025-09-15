@@ -1,0 +1,70 @@
+<% if collection.respond_to?(:current_page) && collection.total_pages > 1 %>
+  <nav aria-label="Pagination" class="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
+    <!-- Mobile: Show page info and navigation -->
+    <div class="flex items-center justify-between w-full sm:w-auto">
+      <div class="text-sm text-gray-600">
+        Page <%= collection.current_page %> of <%= collection.total_pages %>
+        <span class="hidden sm:inline">(<%= collection.total_entries %> total)</span>
+      </div>
+
+      <!-- Mobile navigation buttons -->
+      <div class="flex items-center space-x-4">
+        <% if collection.previous_page %>
+          <%= link_to "←", { page: collection.previous_page },
+              class: "flex items-center justify-center w-16 h-16 text-xl font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200",
+              title: "Previous page" %>
+        <% else %>
+          <span class="flex items-center justify-center w-16 h-16 text-xl font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed">
+            ←
+          </span>
+        <% end %>
+
+        <% if collection.next_page %>
+          <%= link_to "→", { page: collection.next_page },
+              class: "flex items-center justify-center w-16 h-16 text-xl font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200",
+              title: "Next page" %>
+        <% else %>
+          <span class="flex items-center justify-center w-16 h-16 text-xl font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed">
+            →
+          </span>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Desktop: Show full pagination -->
+    <div class="hidden sm:flex items-center space-x-1">
+      <!-- First page -->
+      <% if collection.current_page > 3 %>
+        <%= link_to "1", { page: 1 },
+            class: "inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" %>
+        <% if collection.current_page > 4 %>
+          <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400">...</span>
+        <% end %>
+      <% end %>
+
+      <!-- Page numbers around current page -->
+      <% start_page = [collection.current_page - 2, 1].max %>
+      <% end_page = [collection.current_page + 2, collection.total_pages].min %>
+
+      <% (start_page..end_page).each do |page| %>
+        <% if page == collection.current_page %>
+          <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg">
+            <%= page %>
+          </span>
+        <% else %>
+          <%= link_to page.to_s, { page: page },
+              class: "inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" %>
+        <% end %>
+      <% end %>
+
+      <!-- Last page -->
+      <% if collection.current_page < collection.total_pages - 2 %>
+        <% if collection.current_page < collection.total_pages - 3 %>
+          <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400">...</span>
+        <% end %>
+        <%= link_to collection.total_pages.to_s, { page: collection.total_pages },
+            class: "inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" %>
+      <% end %>
+    </div>
+  </nav>
+<% end %>

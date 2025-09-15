@@ -5,9 +5,9 @@
       message: "There are no images yet, add some!"
     } %>
   <% else %>
-    <nav aria-label="Pagination" class="flex justify-center mb-6">
-      <%= will_paginate images %>
-    </nav>
+    <!-- Pagination at top -->
+    <%= render partial: "shared/mobile_pagination", locals: { collection: images } %>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center">
       <% images.each do |image| %>
         <%= link_to edit_universe_image_url(universe, image), class: "block p-1 transition-all duration-200" do %>
@@ -15,9 +15,9 @@
         <% end %>
       <% end %>
     </div>
-    <nav aria-label="Pagination" class="flex justify-center mt-6">
-      <%= will_paginate images %>
-    </nav>
+
+    <!-- Pagination at bottom -->
+    <%= render partial: "shared/mobile_pagination", locals: { collection: images } %>
   <% end %>
 
 </section>
