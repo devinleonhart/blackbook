@@ -8,7 +8,23 @@ module ImageHelper
       if image.image_file.filename.extension == "gif"
         image_tag(safe_url_for(image.image_file), class: "img-thumbnail", loading: "lazy")
       else
-        image_tag(safe_url_for(image.image_file.variant(resize_to_limit: size)), class: "img-thumbnail", loading: "lazy")
+        # Handle size parameter properly for resize_to_limit
+        resize_params = case size
+        when Array
+          if size.length == 1
+            [size.first, nil] # Width only, height scales proportionally
+          elsif size.length == 2
+            size # Use as-is if two dimensions provided
+          else
+            [size.first, nil] # Default to width-only if more than 2 dimensions
+          end
+        when Integer
+          [size, nil] # Width only, height scales proportionally
+        else
+          [1000, nil] # Default fallback - width only
+        end
+
+        image_tag(safe_url_for(image.image_file.variant(resize_to_limit: resize_params)), class: "img-thumbnail", loading: "lazy")
       end
     rescue => e
       Rails.logger.error("Failed to generate image tag for image #{image.id}: #{e.message}")
