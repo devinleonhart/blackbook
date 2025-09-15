@@ -29,7 +29,7 @@
                 <%= link_to "#{tag.character.name}", character_url(tag.character), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
                 <%= link_to image_tag_url(tag), data: { turbo_method: :delete }, class: "text-red-600 hover:text-red-800" do %>
                   <span class="icon">
-                    <%= fa_icon "times" %>
+                    <span>✕</span>
                   </span>
                 <% end %>
               </li>
@@ -65,7 +65,7 @@
         <div class="bg-white rounded-lg p-6">
           <div class="flex justify-center">
             <%= link_to view_image_path(@image, @image.image_file.filename) do %>
-              <%= generate_image_tag(@image, [1000, nil]) %>
+              <%= generate_image_tag(@image, [1000]) %>
             <% end %>
           </div>
         </div>

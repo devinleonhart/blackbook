@@ -6,7 +6,7 @@
     <div class="grid-x grid-padding-x">
       <div class="small-12 medium-8 cell">
         <%= link_to rails_blob_path(@image.image_file, disposition: "attachment")  do %>
-          <%= generate_image_tag(@image, [1000, nil]) %>
+          <%= generate_image_tag(@image, [1000]) %>
         <% end %>
       </div>
 
