@@ -15,7 +15,6 @@ Rails.application.routes.draw do
       resources :image_tags, except: [:update], shallow: true
     end
 
-    get 'search', to: 'search#multisearch', as: :search
   end
 
   # Custom image routes for cleaner URLs

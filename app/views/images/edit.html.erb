@@ -76,22 +76,20 @@
 </section>
 
 <script>
-if (typeof window.filterCharacters === 'undefined') {
-  window.filterCharacters = function(uniqueId) {
-    const searchTerm = document.getElementById(`character-search-${uniqueId}`).value.toLowerCase();
-    const characterItems = document.querySelectorAll(`#character-results-${uniqueId} .character-item`);
+window.filterCharacters = function(uniqueId) {
+  const searchTerm = document.getElementById(`character-search-${uniqueId}`).value.toLowerCase();
+  const characterItems = document.querySelectorAll(`#character-results-${uniqueId} .character-item`);
 
-    characterItems.forEach(item => {
-      // Get the character name from the submit button text, removing "Add " prefix
-      const submitButton = item.querySelector('input[type="submit"]');
-      const characterName = submitButton ? submitButton.value.replace('Add ', '').toLowerCase() : '';
+  characterItems.forEach(item => {
+    // Get the character name from the submit button text, removing "Add " prefix
+    const submitButton = item.querySelector('input[type="submit"]');
+    const characterName = submitButton ? submitButton.value.replace('Add ', '').toLowerCase() : '';
 
-      if (characterName.includes(searchTerm)) {
-        item.style.display = 'block';
-      } else {
-        item.style.display = 'none';
-      }
-    });
-  }
+    if (characterName.includes(searchTerm)) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
 }
 </script>

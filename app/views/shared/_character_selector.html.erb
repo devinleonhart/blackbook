@@ -15,19 +15,17 @@
 </div>
 
 <script>
-if (typeof window.filterCharacters === 'undefined') {
-  window.filterCharacters = function(uniqueId) {
-    const searchTerm = document.getElementById(`character-search-${uniqueId}`).value.toLowerCase();
-    const characterItems = document.querySelectorAll(`#character-results-${uniqueId} .character-item`);
+window.filterCharacters = function(uniqueId) {
+  const searchTerm = document.getElementById(`character-search-${uniqueId}`).value.toLowerCase();
+  const characterItems = document.querySelectorAll(`#character-results-${uniqueId} .character-item`);
 
-    characterItems.forEach(item => {
-      const characterName = item.textContent.toLowerCase();
-      if (characterName.includes(searchTerm)) {
-        item.style.display = 'block';
-      } else {
-        item.style.display = 'none';
-      }
-    });
-  }
+  characterItems.forEach(item => {
+    const characterName = item.textContent.toLowerCase();
+    if (characterName.includes(searchTerm)) {
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
 }
 </script>
