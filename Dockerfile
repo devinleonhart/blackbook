@@ -28,7 +28,7 @@ RUN bundle install
 COPY . .
 
 # Precompile assets (includes tailwind build)
-RUN bundle exec rails assets:precompile
+RUN SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
 
 # Entrypoint
 COPY ./entrypoints/prod.sh /usr/local/bin/prod.sh
