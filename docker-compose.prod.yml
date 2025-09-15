@@ -1,0 +1,50 @@
+services:
+  postgres_db:
+    container_name: postgres_db_prod
+    image: postgres:12.5-alpine
+    volumes:
+      - db_data_prod:/var/lib/postgresql/data
+      - shared_data_prod:/var/shared
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=test_pass
+      - POSTGRES_DB=blackbook_production
+    networks:
+      - blackbook_network_prod
+    ports:
+      - 5435:5432
+    restart: unless-stopped
+
+  blackbook:
+    container_name: blackbook_prod
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    depends_on:
+      - postgres_db
+    environment:
+      - NODE_ENV=production
+      - RAILS_ENV=production
+      - DATABASE_HOST=postgres_db
+      - DATABASE_PORT=5432
+      - DATABASE_NAME=blackbook_production
+      - DATABASE_USERNAME=postgres
+      - DATABASE_PASSWORD=test_pass
+      - RAILS_MASTER_KEY=${RAILS_MASTER_KEY}
+    volumes:
+      - shared_data_prod:/var/shared
+      - gem_cache_prod:/usr/local/bundle/gems
+      - ./storage:/var/app/storage
+    networks:
+      - blackbook_network_prod
+    ports:
+      - 3002:3000
+    restart: unless-stopped
+
+networks:
+  blackbook_network_prod:
+
+volumes:
+  db_data_prod:
+  gem_cache_prod:
+  shared_data_prod:

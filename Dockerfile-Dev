@@ -1,28 +1,30 @@
 FROM ruby:3.2.1-alpine
 
-#  Docker-specific Environment Variables
-ENV APP_PATH /app
-ENV BUNDLE_VERSION 2.2.21
-ENV BUNDLE_PATH /usr/local/bundle/gems
-ENV TMP_PATH /tmp/
-ENV RAILS_LOG_TO_STDOUT true
-ENV RAILS_PORT 3000
+ENV APP_PATH=/app \
+    BUNDLE_VERSION=2.2.21 \
+    BUNDLE_PATH=/usr/local/bundle/gems \
+    TMP_PATH=/tmp/ \
+    RAILS_LOG_TO_STDOUT=true \
+    RAILS_PORT=3000
 
-# Install Depencenices
+# Install system deps
 RUN apk -U add --no-cache \
-build-base \
-tzdata \
-postgresql-dev \
-postgresql-client \
-vips \
-&& rm -rf /var/cache/apk/*
+    build-base \
+    tzdata \
+    postgresql-dev \
+    postgresql-client \
+    vips \
+ && rm -rf /var/cache/apk/*
 
-RUN mkdir $APP_PATH
 WORKDIR $APP_PATH
 
-# Begin
+# Install bundler (gem install runs faster than copying Gemfile)
+RUN gem install bundler --version "$BUNDLE_VERSION"
+
+# Entrypoint
 COPY ./entrypoints/development.sh /usr/local/bin/development.sh
 RUN chmod +x /usr/local/bin/development.sh
 ENTRYPOINT ["development.sh"]
+
 EXPOSE $RAILS_PORT
 CMD ["puma", "-C", "config/puma.rb"]
