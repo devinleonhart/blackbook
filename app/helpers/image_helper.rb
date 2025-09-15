@@ -8,7 +8,6 @@ module ImageHelper
       if image.image_file.filename.extension == "gif"
         image_tag(safe_url_for(image.image_file), class: "img-thumbnail", loading: "lazy")
       else
-        # Handle size parameter properly for resize_to_limit
         resize_params = case size
         when Array
           if size.length == 1
