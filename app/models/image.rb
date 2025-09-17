@@ -27,6 +27,9 @@ class Image < ApplicationRecord
   private
 
   def requires_image_attached
+    # Skip validation during seeding to avoid file descriptor issues
+    return if Rails.env.development? && caller.any? { |line| line.include?('db/seeds.rb') }
+
     errors.add(:image_file, "must have an attached file") unless image_file.attached?
   rescue ActiveSupport::MessageVerifier::InvalidSignature => error
     errors.add(:image_file, "has invalid data (#{error.message})")

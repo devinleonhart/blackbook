@@ -1,24 +1,35 @@
 #!/bin/bash
 
 # Reset and seed database for development
-echo "Resetting development database..."
+# This script follows Rails conventions for database management
+
+set -e
+
+echo "🔄 Resetting development database..."
 
 # Stop containers if running
+echo "🛑 Stopping containers..."
 docker compose down
 
 # Remove database volume to start fresh (optional - comment out to keep data)
+# echo "🗑️  Removing database volume..."
 # docker volume rm blackbook_db_data
 
 # Start containers
+echo "🐳 Starting containers..."
 docker compose up -d
 
 # Wait for database to be ready
-echo "Waiting for database to be ready..."
+echo "⏳ Waiting for database to be ready..."
 sleep 10
 
 # Reset and seed database
+echo "🗄️  Resetting and seeding database..."
 docker compose exec blackbook bundle exec rails db:reset
-docker compose exec blackbook bundle exec rails db:seed
 
-echo "Database reset and seeded successfully!"
-echo "Admin login: admin@blackbook.dev / password123"
+echo "✅ Database reset and seeded successfully!"
+echo ""
+echo "🔐 Test accounts:"
+echo "  Admin: admin@blackbook.dev / password123"
+echo "  Writer: writer@blackbook.dev / password123"
+echo "  Collaborator: collaborator@blackbook.dev / password123"

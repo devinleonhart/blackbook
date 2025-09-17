@@ -1,37 +1,51 @@
 #!/bin/bash
 
-# Complete development environment setup
-echo "Setting up Blackbook development environment..."
+# Complete development environment setup for Blackbook
+# This script follows Rails conventions for development setup
+
+set -e
+
+echo "🚀 Setting up Blackbook development environment..."
+
+# Check if Docker is running
+if ! docker info > /dev/null 2>&1; then
+  echo "❌ Docker is not running. Please start Docker and try again."
+  exit 1
+fi
 
 # Start containers
-echo "Starting Docker containers..."
+echo "🐳 Starting Docker containers..."
 docker compose up -d
 
-# Wait for database
-echo "Waiting for database to be ready..."
+# Wait for database to be ready
+echo "⏳ Waiting for database to be ready..."
 sleep 10
 
 # Setup database
-echo "Setting up database..."
+echo "🗄️  Setting up database..."
 docker compose exec blackbook bundle exec rails db:create
 docker compose exec blackbook bundle exec rails db:migrate
 docker compose exec blackbook bundle exec rails db:seed
 
 # Setup test database
-echo "Setting up test database..."
+echo "🧪 Setting up test database..."
 docker compose exec blackbook bundle exec rails db:create RAILS_ENV=test
 docker compose exec blackbook bundle exec rails db:migrate RAILS_ENV=test
 docker compose exec blackbook bundle exec rails db:seed RAILS_ENV=test
 
 echo ""
 echo "🎉 Development environment ready!"
-echo "📱 Application: http://localhost:3001"
-echo "👤 Admin login: admin@blackbook.dev / password123"
-echo "👤 Writer login: writer@blackbook.dev / password123"
-echo "👤 Collaborator login: collaborator@blackbook.dev / password123"
+echo ""
+echo "🌐 Application: http://localhost:3001"
+echo ""
+echo "🔐 Test accounts:"
+echo "  Admin: admin@blackbook.dev / password123"
+echo "  Writer: writer@blackbook.dev / password123"
+echo "  Collaborator: collaborator@blackbook.dev / password123"
 echo ""
 echo "💡 Useful commands:"
-echo "  ./bin/reset-db        - Reset development database"
-echo "  ./bin/reset-test-db   - Reset test database"
-echo "  docker compose logs   - View application logs"
-echo "  docker compose down   - Stop containers"
+echo "  bin/rails db:dev_reset    - Reset development database"
+echo "  bin/rails db:test_reset   - Reset test database"
+echo "  bin/rails db:stats        - Show database statistics"
+echo "  docker compose logs       - View application logs"
+echo "  docker compose down       - Stop containers"

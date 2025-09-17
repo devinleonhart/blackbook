@@ -23,13 +23,4 @@ module SelectOptionHelper
     names.sort_by { |pair| pair[0] }
   end
 
-  def generate_relationship_names(characters, existing_characters)
-    names = []
-    characters.each do |character|
-      names.push([character.name, character.id]) unless existing_characters.any? do |echaracter|
-                                                          echaracter.id == character.id
-                                                        end
-    end
-    names.sort_by { |pair| pair[0] }
-  end
 end

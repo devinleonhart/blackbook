@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_02_02_214511) do
+ActiveRecord::Schema[7.0].define(version: 2025_09_17_050433) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_02_214511) do
     t.string "name", null: false
     t.text "body"
     t.string "record_type", null: false
-    t.integer "record_id", null: false
+    t.bigint "record_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
@@ -48,14 +48,14 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_02_214511) do
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.integer "blob_id", null: false
+    t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "characters", force: :cascade do |t|
     t.citext "name", null: false
-    t.integer "universe_id", null: false
+    t.bigint "universe_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at", precision: nil
@@ -65,8 +65,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_02_214511) do
   end
 
   create_table "collaborations", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "universe_id", null: false
+    t.bigint "user_id", null: false
+    t.bigint "universe_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["universe_id"], name: "index_collaborations_on_universe_id"
@@ -75,8 +75,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_02_214511) do
   end
 
   create_table "image_tags", force: :cascade do |t|
-    t.integer "character_id", null: false
-    t.integer "image_id", null: false
+    t.bigint "character_id", null: false
+    t.bigint "image_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["character_id", "image_id"], name: "index_image_tags_on_character_id_and_image_id", unique: true
@@ -86,35 +86,25 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_02_214511) do
 
   create_table "images", force: :cascade do |t|
     t.text "caption", default: "", null: false
-    t.integer "universe_id", null: false
+    t.bigint "universe_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "favorite", default: false, null: false
+    t.boolean "favorite"
     t.index ["universe_id"], name: "index_images_on_universe_id"
   end
 
-  create_table "mutual_relationships", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "relationships", force: :cascade do |t|
-    t.integer "mutual_relationship_id", null: false
-    t.integer "originating_character_id", null: false
-    t.integer "target_character_id", null: false
+  create_table "locations", force: :cascade do |t|
     t.citext "name", null: false
+    t.bigint "universe_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["mutual_relationship_id"], name: "index_relationships_on_mutual_relationship_id"
-    t.index ["originating_character_id", "target_character_id", "name"], name: "relationships_unique_constraint", unique: true
-    t.index ["originating_character_id"], name: "index_relationships_on_originating_character_id"
-    t.index ["target_character_id"], name: "index_relationships_on_target_character_id"
-    t.check_constraint "originating_character_id <> target_character_id", name: "relationships_no_self_relationships"
+    t.index ["name", "universe_id"], name: "index_locations_on_name_and_universe_id", unique: true
+    t.index ["universe_id"], name: "index_locations_on_universe_id"
   end
 
   create_table "universes", force: :cascade do |t|
     t.citext "name", null: false
-    t.integer "owner_id", null: false
+    t.bigint "owner_id", null: false
     t.datetime "discarded_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -142,7 +132,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_02_02_214511) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "characters", "universes"
-  add_foreign_key "relationships", "characters", column: "originating_character_id"
-  add_foreign_key "relationships", "characters", column: "target_character_id"
+  add_foreign_key "locations", "universes"
   add_foreign_key "universes", "users", column: "owner_id"
 end

@@ -7,9 +7,7 @@ Rails.application.routes.draw do
 
   resources :universes do
     resources :collaborations, except: [:update], shallow: true
-    resources :characters, shallow: true do
-      resources :mutual_relationships, shallow: true
-    end
+    resources :characters, shallow: true
 
     resources :images, except: [:index] do
       resources :image_tags, except: [:update], shallow: true
