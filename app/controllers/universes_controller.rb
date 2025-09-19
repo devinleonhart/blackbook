@@ -13,6 +13,19 @@ class UniversesController < ApplicationController
     return unless universe_visible_to_user?(@universe)
 
     @images = Image.where(universe_id: @universe.id).order(created_at: :desc).paginate(page: params[:page], per_page: 20)
+
+    # Load character tags for the tag browser
+    @character_tags = CharacterTag.joins(:character)
+                                 .where(characters: { universe_id: @universe.id })
+                                 .group(:name)
+                                 .count
+                                 .sort_by { |name, count| [-count, name] }
+
+    # Get the first character_tag ID for each tag name for linking
+    @tag_name_to_id = CharacterTag.joins(:character)
+                                 .where(characters: { universe_id: @universe.id })
+                                 .group(:name)
+                                 .minimum(:id)
   end
 
   def new
