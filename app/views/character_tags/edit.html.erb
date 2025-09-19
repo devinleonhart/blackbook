@@ -1,0 +1,38 @@
+<section id="character-tags-edit-view" class="py-8 min-h-screen">
+
+  <% render partial: "shared/capture_navbar" %>
+
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="bg-white rounded-lg p-8">
+      <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-3">Edit Tag</h1>
+        <p class="text-gray-600 text-lg">Edit the tag "<span class="font-semibold text-gray-800"><%= @character_tag.name %></span>" for <%= @character.name %></p>
+      </div>
+
+      <%= form_with model: [@character, @character_tag], url: character_tag_path(@character_tag), method: :patch, class: "space-y-8" do |form| %>
+        <% if @character_tag.errors.any? %>
+          <div class="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-lg">
+            <h4 class="font-bold text-lg mb-3">Please fix the following errors:</h4>
+            <ul class="list-disc list-inside space-y-1">
+              <% @character_tag.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="space-y-3">
+          <%= form.label :name, "Tag Name", class: "block text-lg font-medium text-gray-700" %>
+          <%= form.text_field :name, placeholder: "Enter tag name...", class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg" %>
+          <p class="text-sm text-gray-500">Tags will be automatically converted to lowercase</p>
+        </div>
+
+        <div class="flex gap-4 pt-4">
+          <%= form.submit "Update Tag", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md" %>
+          <%= link_to "Cancel", character_path(@character), class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+</section>
