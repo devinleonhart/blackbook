@@ -3,12 +3,81 @@
   <% render partial: "shared/capture_navbar" %>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-white rounded-lg p-6">
-      <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center"><%= @character.name %></h1>
-      <%= render partial: "shared/image_list", locals: {
-        images: @images,
-        universe: @character.universe
-      } %>
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Left Sidebar - Character Tags -->
+      <div class="w-full lg:w-1/4 order-2 lg:order-1">
+        <div class="bg-white rounded-lg p-6 shadow-lg">
+          <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Character Tags</h2>
+
+          <!-- Current Tags -->
+          <div class="mb-8">
+            <h3 class="text-lg font-medium mb-4">Current Tags</h3>
+            <% if @character.character_tags.empty? %>
+              <p class="text-gray-500 text-sm">No tags yet</p>
+            <% else %>
+              <div class="flex flex-wrap gap-2">
+                <% @character.character_tags.order(:name).each do |tag| %>
+                  <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                    <%= link_to tag.name, character_tag_path(tag), class: "hover:underline" %>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Manage Tags Link -->
+          <div class="mb-6">
+            <%= link_to "Manage Tags", character_character_tags_path(@character), class: "text-blue-600 hover:text-blue-800 text-sm font-medium hover:underline" %>
+          </div>
+
+          <!-- Add New Tag -->
+          <div>
+            <h3 class="text-lg font-medium mb-4">Add Tag</h3>
+            <%= form_with model: [@character, @character.character_tags.build], url: character_character_tags_path(@character), method: :post, class: "mb-6", local: true do |form| %>
+              <div class="space-y-3">
+                <%= form.text_field :name, placeholder: "Enter tag name...", class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm" %>
+                <%= form.submit "Add", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm transition-colors duration-200" %>
+              </div>
+            <% end %>
+
+            <!-- Existing Tags from Universe -->
+            <% universe_tags = @character.universe.characters.joins(:character_tags).distinct.pluck('character_tags.name').sort %>
+            <% available_tags = universe_tags.reject { |tag_name| @character.character_tags.exists?(name: tag_name) } %>
+            <% if available_tags.any? %>
+              <div class="mt-6">
+                <h4 class="text-sm font-medium text-gray-600 mb-3">Existing tags in universe:</h4>
+                <div class="flex flex-wrap gap-1">
+                  <% available_tags.each do |tag_name| %>
+                    <%= form_with model: [@character, @character.character_tags.build], url: character_character_tags_path(@character), method: :post, class: "inline", local: true do |form| %>
+                      <%= form.hidden_field :name, value: tag_name %>
+                      <%= form.submit tag_name, class: "text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition-colors duration-200 cursor-pointer" %>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            <% elsif universe_tags.any? %>
+              <div class="mt-6">
+                <p class="text-sm text-gray-500">All available tags in this universe have been added to this character.</p>
+              </div>
+            <% else %>
+              <div class="mt-6">
+                <p class="text-sm text-gray-500">No tags exist in this universe yet.</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content - Images -->
+      <div class="w-full lg:w-3/4 order-1 lg:order-2">
+        <div class="bg-white rounded-lg p-6">
+          <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center"><%= @character.name %></h1>
+          <%= render partial: "shared/image_list", locals: {
+            images: @images,
+            universe: @character.universe
+          } %>
+        </div>
+      </div>
     </div>
   </div>
 

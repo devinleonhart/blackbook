@@ -7,21 +7,26 @@
           Blackbook
         </a>
         <div class="ml-4 flex items-center">
-          <% unless @new_character.nil? || @new_character.universe.nil? %>
+          <%
+            # Determine which universe to show (prioritized order)
+            current_universe = nil
+            if @universe
+              current_universe = @universe
+            elsif @image && @image.universe
+              current_universe = @image.universe
+            elsif @new_character && @new_character.universe
+              current_universe = @new_character.universe
+            end
+          %>
+
+          <% unless current_universe.nil? %>
             <span class="text-gray-400 mx-2">|</span>
-            <%= link_to "#{@new_character.universe.name}", universe_url(@new_character.universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-          <% end %>
-          <% unless @character.nil? %>
-            <span class="text-gray-400 mx-2">|</span>
-            <%= link_to "#{@character.universe.name}", universe_url(@character.universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-          <% end %>
-          <% unless @image.nil? %>
-            <span class="text-gray-400 mx-2">|</span>
-            <%= link_to "#{@image.universe.name}", universe_url(@image.universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-          <% end %>
-          <% unless @universe.nil? %>
-            <span class="text-gray-400 mx-2">|</span>
-            <%= link_to "#{@universe.name}", universe_url(@universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+            <%= link_to "#{current_universe.name}", universe_url(current_universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+
+            <% unless @character_tag.nil? %>
+              <span class="text-gray-400 mx-2">|</span>
+              <span class="text-gray-300 px-3 py-2 text-sm font-medium">"<%= @character_tag.name %>"</span>
+            <% end %>
           <% end %>
         </div>
       </div>
@@ -30,11 +35,15 @@
         <div class="ml-10 flex items-baseline space-x-4">
           <div class="flex space-x-4">
             <% unless @universe.nil? %>
-              <%= link_to "New Character", new_universe_character_url(@universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-              <%= link_to "Edit Universe", edit_universe_url(@universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <% unless @character_tag %>
+                <%= link_to "New Character", new_universe_character_url(@universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+                <%= link_to "Edit Universe", edit_universe_url(@universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <% end %>
             <% end %>
             <% unless @character.nil? %>
-              <%= link_to "Edit Character", edit_character_url(@character), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <% unless @character_tag %>
+                <%= link_to "Edit Character", edit_character_url(@character), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <% end %>
             <% end %>
             <% if is_admin() %>
               <%= link_to "Admin", users_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
