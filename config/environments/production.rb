@@ -39,7 +39,6 @@ Rails.application.configure do
 
   # Use local storage for production
   config.active_storage.service = :local
-  config.active_storage.resolve_model_to_route = :direct
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
