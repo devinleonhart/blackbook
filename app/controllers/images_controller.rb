@@ -20,6 +20,7 @@ class ImagesController < ApplicationController
 
     image_data = image.image_file.download
 
+    response.headers["Turbo-Visit-Control"] = "reload"
     response.headers["Content-Type"] = image.image_file.content_type
     response.headers["Content-Length"] = image_data.bytesize.to_s
     response.headers["Cache-Control"] = "no-store"
