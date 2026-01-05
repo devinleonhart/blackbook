@@ -34,7 +34,17 @@ class CharactersController < ApplicationController
     return unless universe_visible_to_user?(@character.universe)
 
     @universe = @character.universe
-    @images = Image.joins(:image_tags).where(image_tags: { character: @character }).order(favorite: :desc, created_at: :desc).paginate(page: params[:page], per_page: 20)
+    @images =
+      Image
+      .joins(:image_tags)
+      .where(image_tags: { character: @character })
+      .joins(
+        Image.sanitize_sql_array(
+          ["LEFT JOIN image_favorites ON image_favorites.image_id = images.id AND image_favorites.user_id = ?", current_user.id],
+        ),
+      )
+      .order(Arel.sql("image_favorites.id IS NOT NULL DESC"), created_at: :desc)
+      .paginate(page: params[:page], per_page: 20)
   end
 
   def edit

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2025_09_17_054449) do
+ActiveRecord::Schema[7.0].define(version: 2026_01_05_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "plpgsql"
@@ -84,6 +84,16 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_17_054449) do
     t.index ["user_id"], name: "index_collaborations_on_user_id"
   end
 
+  create_table "image_favorites", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "image_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["image_id"], name: "index_image_favorites_on_image_id"
+    t.index ["user_id", "image_id"], name: "index_image_favorites_on_user_id_and_image_id", unique: true
+    t.index ["user_id"], name: "index_image_favorites_on_user_id"
+  end
+
   create_table "image_tags", force: :cascade do |t|
     t.bigint "character_id", null: false
     t.bigint "image_id", null: false
@@ -99,7 +109,6 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_17_054449) do
     t.bigint "universe_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "favorite"
     t.index ["universe_id"], name: "index_images_on_universe_id"
   end
 
@@ -143,6 +152,8 @@ ActiveRecord::Schema[7.0].define(version: 2025_09_17_054449) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "character_tags", "characters"
   add_foreign_key "characters", "universes"
+  add_foreign_key "image_favorites", "images"
+  add_foreign_key "image_favorites", "users"
   add_foreign_key "locations", "universes"
   add_foreign_key "universes", "users", column: "owner_id"
 end

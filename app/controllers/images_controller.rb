@@ -60,13 +60,21 @@ class ImagesController < ApplicationController
 
     return unless model_found?(@image, "Image", params[:id], universes_url)
     return unless universe_visible_to_user?(@image.universe)
+
+    @favorited = @image.favorited_by?(current_user)
   end
 
   def update
     @image = Image.includes(image_tags: { character: :universe }).find_by(id: params[:id])
     return unless model_found?(@image, "Image", params[:id], universes_url)
+    return unless universe_visible_to_user?(@image.universe)
 
-    @image.update!(allowed_image_update_params)
+    desired = ActiveModel::Type::Boolean.new.cast(allowed_image_update_params[:favorite])
+    if desired
+      ImageFavorite.find_or_create_by!(user: current_user, image: @image)
+    else
+      ImageFavorite.where(user: current_user, image: @image).destroy_all
+    end
 
     redirect_to edit_universe_image_url(@image.universe, @image)
   end
@@ -103,7 +111,7 @@ class ImagesController < ApplicationController
   end
 
   def allowed_image_update_params
-    params.require(:image).permit(:favorite)
+    params.fetch(:image, {}).permit(:favorite)
   end
 
   def accessible_universe_ids_for_user(user)

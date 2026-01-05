@@ -4,7 +4,6 @@
 #
 #  id          :bigint           not null, primary key
 #  caption     :text             default(""), not null
-#  favorite    :boolean          default(FALSE), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  universe_id :integer          not null
@@ -21,8 +20,16 @@ class Image < ApplicationRecord
 
   has_many :image_tags, inverse_of: :image, dependent: :destroy
   has_many :characters, through: :image_tags, inverse_of: :images
+  has_many :image_favorites, dependent: :destroy
+  has_many :favorited_by_users, through: :image_favorites, source: :user
 
   belongs_to :universe, inverse_of: :images
+
+  def favorited_by?(user)
+    return false if user.nil?
+
+    image_favorites.exists?(user_id: user.id)
+  end
 
   private
 
