@@ -29,6 +29,14 @@
                   <%= pluralize(groups.size, "duplicate group") %> found in this universe.
                 </p>
               </div>
+              <div class="shrink-0">
+                <%= form_with url: admin_dedupe_images_dedupe_universe_path, method: :post, local: true do %>
+                  <%= hidden_field_tag :universe_id, universe.id %>
+                  <%= submit_tag "Delete all duplicates in this universe",
+                                 data: { turbo_confirm: "Keep the earliest image in EACH duplicate group and delete the rest for “#{universe.name}”? This cannot be undone." },
+                                 class: "bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded transition-colors duration-200 cursor-pointer" %>
+                <% end %>
+              </div>
             </div>
 
             <div class="space-y-6">

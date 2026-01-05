@@ -51,4 +51,47 @@ RSpec.describe "Admin dedupe images", type: :request do
     expect(Image.exists?(img1.id)).to be(true)
     expect(Image.exists?(img2.id)).to be(false)
   end
+
+  it "dedupes all duplicate groups for a universe in one request" do
+    admin = create(:user, password: "password123", admin: true)
+    universe = create(:universe, owner: admin, name: "BulkDupes Universe")
+
+    # Create a 3-image duplicate group and a separate 2-image duplicate group
+    img_a1 = create(:image, universe: universe)
+    img_a2 = create(:image, universe: universe)
+    img_a3 = create(:image, universe: universe)
+
+    img_b1 = create(:image, universe: universe)
+    img_b2 = create(:image, universe: universe)
+
+    # Force groups A and B to have different blob checksums so we get 2 groups.
+    # (Factories may attach the same fixture by default.)
+    img_a1.image_file.blob.update!(checksum: "AAAAAAAAAAAAAAAAAAAAAA==")
+    img_a2.image_file.blob.update!(checksum: "AAAAAAAAAAAAAAAAAAAAAA==")
+    img_a3.image_file.blob.update!(checksum: "AAAAAAAAAAAAAAAAAAAAAA==")
+
+    img_b1.image_file.blob.update!(checksum: "BBBBBBBBBBBBBBBBBBBBBB==")
+    img_b2.image_file.blob.update!(checksum: "BBBBBBBBBBBBBBBBBBBBBB==")
+
+    # Make the first image in each group the earliest so we can assert it is kept.
+    img_a1.update_columns(created_at: 3.days.ago, updated_at: 3.days.ago)
+    img_a2.update_columns(created_at: 2.days.ago, updated_at: 2.days.ago)
+    img_a3.update_columns(created_at: 1.day.ago, updated_at: 1.day.ago)
+
+    img_b1.update_columns(created_at: 2.days.ago, updated_at: 2.days.ago)
+    img_b2.update_columns(created_at: 1.day.ago, updated_at: 1.day.ago)
+
+    sign_in_as(admin)
+
+    expect do
+      post admin_dedupe_images_dedupe_universe_path, params: { universe_id: universe.id }
+    end.to change { Image.where(universe_id: universe.id).count }.by(-3)
+
+    expect(Image.exists?(img_a1.id)).to be(true)
+    expect(Image.exists?(img_a2.id)).to be(false)
+    expect(Image.exists?(img_a3.id)).to be(false)
+
+    expect(Image.exists?(img_b1.id)).to be(true)
+    expect(Image.exists?(img_b2.id)).to be(false)
+  end
 end

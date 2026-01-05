@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     root to: "dashboard#index"
     get "dedupe/images", to: "dedupe#images", as: :dedupe_images
     post "dedupe/images/dedupe_group", to: "dedupe#dedupe_group", as: :dedupe_images_dedupe_group
+    post "dedupe/images/dedupe_universe", to: "dedupe#dedupe_universe", as: :dedupe_images_dedupe_universe
   end
 
   namespace :api do
