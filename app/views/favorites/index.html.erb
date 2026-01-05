@@ -5,6 +5,11 @@
   <% end %>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Your Favorites</h1>
+      <p class="text-gray-600">Your favorited images, grouped by universe.</p>
+    </div>
+
     <% if @favorites_by_universe.blank? %>
       <div class="bg-white rounded-lg p-6 shadow-lg">
         <%= render partial: "shared/empty_banner", locals: { message: "No favorites yet. Favorite an image to see it here." } %>

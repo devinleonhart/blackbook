@@ -30,4 +30,11 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  def require_admin!
+    return true if current_user&.admin
+
+    error_and_redirect("You must be an admin to access that page.", universes_url)
+    false
+  end
+
 end

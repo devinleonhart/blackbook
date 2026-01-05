@@ -3,6 +3,12 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  namespace :admin do
+    root to: "dashboard#index"
+    get "dedupe/images", to: "dedupe#images", as: :dedupe_images
+    post "dedupe/images/dedupe_group", to: "dedupe#dedupe_group", as: :dedupe_images_dedupe_group
+  end
+
   namespace :api do
     namespace :discord_imports do
       post '/images', to: 'images#create'

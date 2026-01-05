@@ -1,13 +1,22 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
+  before_action :require_admin!
+
   def index
     @users = User.all
   end
 
-  private
+  def destroy
+    user = User.find_by(id: params[:id])
+    return unless model_found?(user, "User", params[:id], users_url)
 
-  def allowed_universe_params
-    params.require(:user).permit()
+    if user.destroy
+      flash[:success] = "User deleted."
+    else
+      flash[:error] = user.errors.full_messages.join("\n")
+    end
+
+    redirect_to users_url
   end
 end

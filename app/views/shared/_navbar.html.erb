@@ -46,7 +46,7 @@
               <% end %>
             <% end %>
             <% if is_admin() %>
-              <%= link_to "Admin", users_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <%= link_to "Admin", admin_root_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
             <% end %>
             <% if user_signed_in? %>
               <%= link_to "Random", random_image_path, data: { turbo: false }, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
