@@ -17,6 +17,9 @@ Rails.application.routes.draw do
 
   end
 
+  # Random image from any universe the current user can access
+  get '/random', to: 'images#random', as: 'random_image'
+
   # Custom image routes for cleaner URLs
   get '/images/:id/:filename', to: 'images#view', as: 'view_image', constraints: { filename: /.*/ }
 

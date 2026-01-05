@@ -3,6 +3,33 @@
 class ImagesController < ApplicationController
   skip_before_action :authenticate_user!, only: [:view]
 
+  def random
+    universe_ids = accessible_universe_ids_for_user(current_user)
+
+    image =
+      Image
+      .with_attached_image_file
+      .where(universe_id: universe_ids)
+      .order(Arel.sql("RANDOM()"))
+      .first
+
+    unless image
+      render plain: "No images available.", status: :not_found
+      return
+    end
+
+    image_data = image.image_file.download
+
+    response.headers["Content-Type"] = image.image_file.content_type
+    response.headers["Content-Length"] = image_data.bytesize.to_s
+    response.headers["Cache-Control"] = "no-store"
+
+    send_data image_data,
+              type: image.image_file.content_type,
+              disposition: "inline",
+              filename: image.image_file.filename.to_s
+  end
+
   def show
     @image =
       Image
@@ -76,5 +103,16 @@ class ImagesController < ApplicationController
 
   def allowed_image_update_params
     params.require(:image).permit(:favorite)
+  end
+
+  def accessible_universe_ids_for_user(user)
+    owned_ids = Universe.where(owner: user).pluck(:id)
+    collaborated_ids =
+      Universe
+      .joins(:collaborations)
+      .where(collaborations: { user_id: user.id })
+      .pluck(:id)
+
+    (owned_ids + collaborated_ids).uniq
   end
 end
