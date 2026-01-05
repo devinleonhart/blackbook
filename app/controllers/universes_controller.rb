@@ -12,7 +12,24 @@ class UniversesController < ApplicationController
     return unless model_found?(@universe, "Universe", params[:id], universes_url)
     return unless universe_visible_to_user?(@universe)
 
-    @images = Image.where(universe_id: @universe.id).order(created_at: :desc).paginate(page: params[:page], per_page: 20)
+    @images_filter = params[:filter].presence
+
+    base_images =
+      Image
+      .with_attached_image_file
+      .where(universe_id: @universe.id)
+      .order(created_at: :desc)
+
+    @untagged_images_count = base_images.untagged.count
+
+    @images =
+      case @images_filter
+      when "untagged"
+        base_images.untagged
+      else
+        base_images
+      end
+      .paginate(page: params[:page], per_page: 20)
 
     # Load character tags for the tag browser
     @character_tags = CharacterTag.joins(:character)

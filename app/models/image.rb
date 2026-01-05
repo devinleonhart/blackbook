@@ -25,6 +25,8 @@ class Image < ApplicationRecord
 
   belongs_to :universe, inverse_of: :images
 
+  scope :untagged, -> { where.missing(:image_tags) }
+
   def favorited_by?(user)
     return false if user.nil?
 

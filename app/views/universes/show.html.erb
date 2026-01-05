@@ -32,7 +32,8 @@
         <div class="bg-white rounded-lg p-6">
           <%= render partial: "shared/image_list", locals: {
             images: @images,
-            universe: @universe
+            universe: @universe,
+            empty_message: (@images_filter == "untagged" ? "No untagged images — you’re all caught up." : nil)
           } %>
         </div>
       </div>

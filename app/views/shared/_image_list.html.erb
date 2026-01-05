@@ -2,7 +2,7 @@
 
   <% if images.empty? %>
     <%= render partial: "shared/empty_banner", locals: {
-      message: "There are no images yet, add some!"
+      message: (defined?(empty_message) && empty_message.present?) ? empty_message : "There are no images yet, add some!"
     } %>
   <% else %>
     <!-- Pagination at top -->
