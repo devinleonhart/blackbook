@@ -3,6 +3,12 @@ Rails.application.routes.draw do
 
   devise_for :users
 
+  namespace :api do
+    namespace :discord_imports do
+      post '/images', to: 'images#create'
+    end
+  end
+
   resources :users
 
   resources :universes do
