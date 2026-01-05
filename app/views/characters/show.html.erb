@@ -65,6 +65,14 @@
               </div>
             <% end %>
           </div>
+
+          <hr class="my-6" />
+
+          <%= render partial: "shared/filters", locals: {
+            universe: @universe,
+            images_filter: nil,
+            untagged_images_count: @untagged_images_count
+          } %>
         </div>
       </div>
 

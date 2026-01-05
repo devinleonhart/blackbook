@@ -34,6 +34,7 @@ class CharactersController < ApplicationController
     return unless universe_visible_to_user?(@character.universe)
 
     @universe = @character.universe
+    @untagged_images_count = Image.where(universe_id: @universe.id).untagged.count
     @images =
       Image
       .joins(:image_tags)
