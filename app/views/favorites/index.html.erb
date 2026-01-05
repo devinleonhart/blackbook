@@ -1,0 +1,33 @@
+<section id="favorites-index-view" class="py-8 min-h-screen bg-gray-50">
+  <% render partial: "shared/capture_navbar" %>
+  <% content_for :head do %>
+    <meta name="turbo-cache-control" content="no-cache">
+  <% end %>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <% if @favorites_by_universe.blank? %>
+      <div class="bg-white rounded-lg p-6 shadow-lg">
+        <%= render partial: "shared/empty_banner", locals: { message: "No favorites yet. Favorite an image to see it here." } %>
+      </div>
+    <% else %>
+      <div class="space-y-10">
+        <% @universes.each do |universe| %>
+          <% images = @favorites_by_universe[universe] || [] %>
+
+          <div class="bg-white rounded-lg p-6 shadow-lg">
+            <div class="flex items-center justify-between mb-6">
+              <div>
+                <h2 class="text-xl font-semibold text-gray-800">
+                  <%= link_to universe.name, universe_path(universe), class: "hover:underline text-blue-700" %>
+                </h2>
+                <p class="text-sm text-gray-500"><%= pluralize(images.size, "favorite") %></p>
+              </div>
+            </div>
+
+            <%= render partial: "shared/image_list", locals: { images: images, universe: universe } %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</section>

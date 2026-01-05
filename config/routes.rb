@@ -20,6 +20,9 @@ Rails.application.routes.draw do
   # Random image from any universe the current user can access
   get '/random', to: 'images#random', as: 'random_image'
 
+  # Favorites for the current user, grouped by universe
+  get '/favorites', to: 'favorites#index', as: 'favorites'
+
   # Custom image routes for cleaner URLs
   get '/images/:id/:filename', to: 'images#view', as: 'view_image', constraints: { filename: /.*/ }
 

@@ -50,6 +50,7 @@
             <% end %>
             <% if user_signed_in? %>
               <%= link_to "Random", random_image_path, data: { turbo: false }, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <%= link_to "Favorites", favorites_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
               <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
             <% else %>
               <%= link_to "Register", new_user_registration_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>

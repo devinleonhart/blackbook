@@ -9,12 +9,14 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 require "factory_bot_rails"
+require "stringio"
 
 puts "🌱 Starting Blackbook database seeding..."
 
 # Only clear data in development environment
 if Rails.env.development?
   puts "🧹 Clearing existing data..."
+  ImageFavorite.destroy_all
   ImageTag.destroy_all
   Image.destroy_all
   Character.destroy_all
@@ -24,6 +26,15 @@ if Rails.env.development?
 end
 
 ActiveRecord::Base.transaction do
+  seed_image_path = Rails.root.join("spec/fixtures/files/test_image.jpg")
+  seed_image_bytes =
+    if File.exist?(seed_image_path)
+      File.binread(seed_image_path)
+    else
+      puts "⚠️  Seed image not found at #{seed_image_path}; images will not have attachments."
+      nil
+    end
+
   # Create test users
   puts "👥 Creating users..."
   admin_user = FactoryBot.create(
@@ -138,7 +149,15 @@ ActiveRecord::Base.transaction do
   fantasy_images = []
   20.times do |i|
     caption = fantasy_captions[i % fantasy_captions.length]
-    image = FactoryBot.create(:image_for_seeding, universe: fantasy_universe, caption: caption)
+    image = Image.new(universe: fantasy_universe, caption: caption)
+    if seed_image_bytes
+      image.image_file.attach(
+        io: StringIO.new(seed_image_bytes),
+        filename: "seed_image.jpg",
+        content_type: "image/jpeg",
+      )
+    end
+    image.save!
     fantasy_images << image
 
     # Tag with 1-3 random characters
@@ -153,7 +172,15 @@ ActiveRecord::Base.transaction do
   scifi_images = []
   20.times do |i|
     caption = scifi_captions[i % scifi_captions.length]
-    image = FactoryBot.create(:image_for_seeding, universe: scifi_universe, caption: caption)
+    image = Image.new(universe: scifi_universe, caption: caption)
+    if seed_image_bytes
+      image.image_file.attach(
+        io: StringIO.new(seed_image_bytes),
+        filename: "seed_image.jpg",
+        content_type: "image/jpeg",
+      )
+    end
+    image.save!
     scifi_images << image
 
     # Tag with 1-2 random characters
@@ -168,7 +195,15 @@ ActiveRecord::Base.transaction do
   mythology_images = []
   20.times do |i|
     caption = mythology_captions[i % mythology_captions.length]
-    image = FactoryBot.create(:image_for_seeding, universe: collaborative_universe, caption: caption)
+    image = Image.new(universe: collaborative_universe, caption: caption)
+    if seed_image_bytes
+      image.image_file.attach(
+        io: StringIO.new(seed_image_bytes),
+        filename: "seed_image.jpg",
+        content_type: "image/jpeg",
+      )
+    end
+    image.save!
     mythology_images << image
 
     # Tag with 1-2 random characters
@@ -190,7 +225,15 @@ ActiveRecord::Base.transaction do
                  end
 
     caption = "Additional content #{i + 1} for #{universe.name}"
-    image = FactoryBot.create(:image_for_seeding, universe: universe, caption: caption)
+    image = Image.new(universe: universe, caption: caption)
+    if seed_image_bytes
+      image.image_file.attach(
+        io: StringIO.new(seed_image_bytes),
+        filename: "seed_image.jpg",
+        content_type: "image/jpeg",
+      )
+    end
+    image.save!
     additional_images << image
 
     # Tag with 1-2 random characters
@@ -200,6 +243,14 @@ ActiveRecord::Base.transaction do
     end
   end
 
+  # Create some per-user favorites to demonstrate the feature
+  puts "⭐ Creating per-user favorites..."
+  fantasy_images.sample(5).each { |img| ImageFavorite.find_or_create_by!(user: admin_user, image: img) }
+  fantasy_images.sample(3).each { |img| ImageFavorite.find_or_create_by!(user: creative_user, image: img) } # collaborator on fantasy_universe
+  scifi_images.sample(5).each { |img| ImageFavorite.find_or_create_by!(user: creative_user, image: img) }
+  mythology_images.sample(4).each { |img| ImageFavorite.find_or_create_by!(user: admin_user, image: img) }
+  mythology_images.sample(4).each { |img| ImageFavorite.find_or_create_by!(user: collaborator_user, image: img) }
+
   puts "✅ Seeding completed successfully!"
   puts ""
   puts "📊 Summary:"
@@ -208,6 +259,7 @@ ActiveRecord::Base.transaction do
   puts "  👤 Characters: #{Character.count}"
   puts "  🖼️  Images: #{Image.count}"
   puts "  🏷️  Image tags: #{ImageTag.count}"
+  puts "  ⭐ Image favorites: #{ImageFavorite.count}"
   puts "  🤝 Collaborations: #{Collaboration.count}"
   puts ""
   puts "🔐 Test accounts:"
