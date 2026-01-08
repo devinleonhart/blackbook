@@ -25,6 +25,7 @@ gem 'will_paginate', '~> 3.3'
 group :development do
   gem "rubocop", "1.82.1"
   gem "rubocop-rails", "2.34.3"
+  gem "rubocop-rake", "0.7.1"
   gem "rubocop-rspec", "3.9.0"
 end
 
