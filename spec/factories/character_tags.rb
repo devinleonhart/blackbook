@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: character_tags
@@ -44,4 +46,3 @@ FactoryBot.define do
     end
   end
 end
-

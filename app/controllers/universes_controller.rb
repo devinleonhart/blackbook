@@ -33,20 +33,25 @@ class UniversesController < ApplicationController
 
     # Load character tags for the tag browser
     @character_tags = CharacterTag.joins(:character)
-                                 .where(characters: { universe_id: @universe.id })
-                                 .group(:name)
-                                 .count
-                                 .sort_by { |name, count| [-count, name] }
+                                  .where(characters: { universe_id: @universe.id })
+                                  .group(:name)
+                                  .count
+                                  .sort_by { |name, count| [-count, name] }
 
     # Get the first character_tag ID for each tag name for linking
     @tag_name_to_id = CharacterTag.joins(:character)
-                                 .where(characters: { universe_id: @universe.id })
-                                 .group(:name)
-                                 .minimum(:id)
+                                  .where(characters: { universe_id: @universe.id })
+                                  .group(:name)
+                                  .minimum(:id)
   end
 
   def new
     @new_universe = Universe.new
+  end
+
+  def edit
+    @universe = Universe.find_by(id: params[:id])
+    nil unless model_found?(@universe, "Universe", params[:id], universes_url)
   end
 
   def create
@@ -59,11 +64,6 @@ class UniversesController < ApplicationController
       flash[:error] = @universe.errors.full_messages.join("\n")
       redirect_to new_universe_url
     end
-  end
-
-  def edit
-    @universe = Universe.find_by(id: params[:id])
-    return unless model_found?(@universe, "Universe", params[:id], universes_url)
   end
 
   def update

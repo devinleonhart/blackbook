@@ -10,19 +10,27 @@ class CharacterTagsController < ApplicationController
 
   def show
     @universe = @character.universe
-    @characters_with_tag = @universe.characters.joins(:character_tags).where(character_tags: { name: @character_tag.name }).distinct
+    @characters_with_tag =
+      @universe.characters
+               .joins(:character_tags)
+               .where(character_tags: { name: @character_tag.name })
+               .distinct
 
     # Get all images from characters that have this tag
     character_ids = @characters_with_tag.pluck(:id)
-    @images = @universe.images.joins(:image_tags)
-                      .where(image_tags: { character_id: character_ids })
-                      .distinct
-                      .order('images.created_at DESC')
+    @images =
+      @universe.images
+               .joins(:image_tags)
+               .where(image_tags: { character_id: character_ids })
+               .distinct
+               .order("images.created_at DESC")
   end
 
   def new
     @character_tag = @character.character_tags.build
   end
+
+  def edit; end
 
   def create
     @character_tag = @character.character_tags.build(character_tag_params)
@@ -34,9 +42,6 @@ class CharacterTagsController < ApplicationController
       flash[:error] = @character_tag.errors.full_messages.join(", ")
       render :new, status: :unprocessable_entity
     end
-  end
-
-  def edit
   end
 
   def update
@@ -66,7 +71,8 @@ class CharacterTagsController < ApplicationController
       @character_tag = CharacterTag.find(params[:id])
       @character = @character_tag.character
     end
-    return unless universe_visible_to_user?(@character.universe)
+    universe_visible_to_user?(@character.universe)
+    nil
   end
 
   def set_character_tag

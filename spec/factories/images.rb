@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: images
@@ -17,11 +19,11 @@ FactoryBot.define do
     universe
 
     after(:build) do |image|
-      file_path = Rails.root.join('spec/fixtures/files/test_image.jpg')
+      file_path = Rails.root.join("spec/fixtures/files/test_image.jpg")
       image.image_file.attach(
         io: File.open(file_path),
-        filename: 'test_image.jpg',
-        content_type: 'image/jpeg'
+        filename: "test_image.jpg",
+        content_type: "image/jpeg"
       )
     end
 

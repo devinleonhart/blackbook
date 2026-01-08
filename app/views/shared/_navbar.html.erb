@@ -45,7 +45,7 @@
                 <%= link_to "Edit Character", edit_character_url(@character), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
               <% end %>
             <% end %>
-            <% if is_admin() %>
+            <% if admin? %>
               <%= link_to "Admin", admin_root_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
             <% end %>
             <% if user_signed_in? %>

@@ -28,10 +28,8 @@ class Collaboration < ApplicationRecord
   private
 
   def owner_cannot_be_collaborator
-    if universe.owner == user
-      errors.add(:user, "cannot collaborate on their own universe!")
-      return false
-    end
-    true
+    return unless universe&.owner == user
+
+    errors.add(:user, "cannot collaborate on their own universe!")
   end
 end

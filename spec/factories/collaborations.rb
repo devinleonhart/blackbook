@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: collaborations
@@ -21,9 +23,7 @@ FactoryBot.define do
 
     # Ensure the user is not the owner of the universe
     after(:build) do |collaboration|
-      if collaboration.universe && collaboration.user == collaboration.universe.owner
-        collaboration.user = create(:user)
-      end
+      collaboration.user = create(:user) if collaboration.universe && collaboration.user == collaboration.universe.owner
     end
   end
 end

@@ -43,7 +43,7 @@ class CharacterTag < ApplicationRecord
     tag_names.each do |tag_name|
       # Count how many character tags exist with this name
       count = where(name: tag_name).count
-      if count == 0
+      if count.zero?
         Rails.logger.warn "Found orphaned tag '#{tag_name}' - this should not happen"
         cleaned_count += 1
       end
@@ -65,14 +65,14 @@ class CharacterTag < ApplicationRecord
 
   # Method to check if a tag name is used by any characters
   def self.tag_exists?(tag_name)
-    where(name: tag_name).exists?
+    exists?(name: tag_name)
   end
 
   # Instance method to clean up after this specific tag is destroyed
   def cleanup_orphaned_tags
     # This callback runs after a tag is destroyed
     # We can use this to log or perform additional cleanup if needed
-    Rails.logger.debug "CharacterTag '#{name}' (ID: #{id}) was destroyed for character #{character_id}"
+    Rails.logger.debug { "CharacterTag '#{name}' (ID: #{id}) was destroyed for character #{character_id}" }
   end
 
   private

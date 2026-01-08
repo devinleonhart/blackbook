@@ -4,7 +4,11 @@ class ImageTagsController < ApplicationController
   def show
     @image_tag = ImageTag.includes(:character, :image).find_by(id: params[:id])
     return unless model_found?(@image_tag, "Image Tag", params[:id], universes_url)
+
     return unless universe_visible_to_user?(@image_tag.universe)
+
+    # There is no HTML template for this action today.
+    head :not_acceptable
   end
 
   def create

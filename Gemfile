@@ -22,19 +22,10 @@ gem 'turbo-rails'
 gem 'tzinfo-data', platforms: %i[ mingw mswin x64_mingw jruby ]
 gem 'will_paginate', '~> 3.3'
 
-group :development, :test do
-  gem 'better_errors'
-  gem 'binding_of_caller'
-  gem 'debug', platforms: %i[ mri mingw x64_mingw ]
-  gem 'pry', '~> 0.14.1'
-  gem 'rubocop-rails', '~> 2.9', '>= 2.9.1'
-  gem 'rubocop-rspec', '~> 2.2'
-end
-
 group :development do
-  gem 'annotate', '~> 3.2'
-  gem 'solargraph'
-  gem 'web-console'
+  gem "rubocop", "1.82.1"
+  gem "rubocop-rails", "2.34.3"
+  gem "rubocop-rspec", "3.9.0"
 end
 
 group :test do

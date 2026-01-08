@@ -26,9 +26,9 @@ class ImagesController < ApplicationController
     response.headers["Cache-Control"] = "no-store"
 
     send_data image_data,
-              type: image.image_file.content_type,
-              disposition: "inline",
-              filename: image.image_file.filename.to_s
+      type: image.image_file.content_type,
+      disposition: "inline",
+      filename: image.image_file.filename.to_s
   end
 
   def show
@@ -37,19 +37,7 @@ class ImagesController < ApplicationController
       .includes(image_tags: { character: :universe })
       .find_by(id: params[:id])
 
-    return unless model_found?(@image, "Image", params[:id], universes_url)
-  end
-
-  def create
-    properties = allowed_image_create_params.merge(universe_id: params[:universe_id])
-    @image = Image.new(properties)
-    if @image.save
-      flash[:success] = "Image created!"
-      redirect_to edit_universe_image_url(params[:universe_id], @image)
-    else
-      flash[:error] = @image.errors.full_messages.join("\n")
-      redirect_to universe_url(params[:universe_id])
-    end
+    nil unless model_found?(@image, "Image", params[:id], universes_url)
   end
 
   def edit
@@ -62,6 +50,18 @@ class ImagesController < ApplicationController
     return unless universe_visible_to_user?(@image.universe)
 
     @favorited = @image.favorited_by?(current_user)
+  end
+
+  def create
+    properties = allowed_image_create_params.merge(universe_id: params[:universe_id])
+    @image = Image.new(properties)
+    if @image.save
+      flash[:success] = "Image created!"
+      redirect_to edit_universe_image_url(params[:universe_id], @image)
+    else
+      flash[:error] = @image.errors.full_messages.join("\n")
+      redirect_to universe_url(params[:universe_id])
+    end
   end
 
   def update
@@ -85,14 +85,14 @@ class ImagesController < ApplicationController
     # Stream the image directly without redirecting
     image_data = @image.image_file.download
 
-    response.headers['Content-Type'] = @image.image_file.content_type
-    response.headers['Content-Length'] = image_data.bytesize.to_s
-    response.headers['Cache-Control'] = 'public, max-age=31536000'
+    response.headers["Content-Type"] = @image.image_file.content_type
+    response.headers["Content-Length"] = image_data.bytesize.to_s
+    response.headers["Cache-Control"] = "public, max-age=31536000"
 
     send_data image_data,
-              type: @image.image_file.content_type,
-              disposition: 'inline',
-              filename: @image.image_file.filename.to_s
+      type: @image.image_file.content_type,
+      disposition: "inline",
+      filename: @image.image_file.filename.to_s
   end
 
   def destroy

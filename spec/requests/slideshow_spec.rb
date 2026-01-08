@@ -42,7 +42,7 @@ RSpec.describe "Slideshow", type: :request do
     get slideshow_images_path(mode: "all")
     expect(response).to have_http_status(:ok)
 
-    data = JSON.parse(response.body)
+    data = response.parsed_body
     ids = data.fetch("slides").map { |s| s.fetch("id") }
     expect(ids).to include(accessible_image.id)
     expect(ids).not_to include(inaccessible_image.id)
@@ -68,7 +68,7 @@ RSpec.describe "Slideshow", type: :request do
     get slideshow_images_path(mode: "favorites")
     expect(response).to have_http_status(:ok)
 
-    data = JSON.parse(response.body)
+    data = response.parsed_body
     ids = data.fetch("slides").map { |s| s.fetch("id") }
 
     expect(ids).to include(favorited_accessible.id)

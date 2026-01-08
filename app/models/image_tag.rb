@@ -27,7 +27,6 @@ class ImageTag < ApplicationRecord
 
   delegate :universe, to: :character, allow_nil: true
 
-
   private
 
   def character_must_be_from_same_universe_as_image
@@ -35,5 +34,4 @@ class ImageTag < ApplicationRecord
 
     errors.add(:base, "The character and image must be from the same universe!") if character.universe != image.universe
   end
-
 end

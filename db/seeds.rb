@@ -11,11 +11,11 @@
 require "factory_bot_rails"
 require "stringio"
 
-puts "🌱 Starting Blackbook database seeding..."
+Rails.logger.debug "🌱 Starting Blackbook database seeding..."
 
 # Only clear data in development environment
 if Rails.env.development?
-  puts "🧹 Clearing existing data..."
+  Rails.logger.debug "🧹 Clearing existing data..."
   ImageFavorite.destroy_all
   ImageTag.destroy_all
   Image.destroy_all
@@ -31,12 +31,12 @@ ActiveRecord::Base.transaction do
     if File.exist?(seed_image_path)
       File.binread(seed_image_path)
     else
-      puts "⚠️  Seed image not found at #{seed_image_path}; images will not have attachments."
+      Rails.logger.debug { "⚠️  Seed image not found at #{seed_image_path}; images will not have attachments." }
       nil
     end
 
   # Create test users
-  puts "👥 Creating users..."
+  Rails.logger.debug "👥 Creating users..."
   admin_user = FactoryBot.create(
     :user,
     admin: true,
@@ -62,7 +62,7 @@ ActiveRecord::Base.transaction do
   )
 
   # Create universes
-  puts "🌌 Creating universes..."
+  Rails.logger.debug "🌌 Creating universes..."
   fantasy_universe = FactoryBot.create(
     :universe,
     name: "The Realm of Aethermoor",
@@ -82,12 +82,12 @@ ActiveRecord::Base.transaction do
   )
 
   # Create collaborations
-  puts "🤝 Creating collaborations..."
+  Rails.logger.debug "🤝 Creating collaborations..."
   FactoryBot.create(:collaboration, user: creative_user, universe: fantasy_universe)
   FactoryBot.create(:collaboration, user: collaborator_user, universe: collaborative_universe)
 
   # Create characters
-  puts "👤 Creating characters..."
+  Rails.logger.debug "👤 Creating characters..."
   # Fantasy universe characters
   aragorn = FactoryBot.create(:character, name: "Aragorn", universe: fantasy_universe)
   legolas = FactoryBot.create(:character, name: "Legolas", universe: fantasy_universe)
@@ -104,7 +104,7 @@ ActiveRecord::Base.transaction do
   athena = FactoryBot.create(:character, name: "Athena", universe: collaborative_universe)
 
   # Create images with tags
-  puts "🖼️  Creating images and tags..."
+  Rails.logger.debug "🖼️  Creating images and tags..."
   fantasy_captions = [
     "The Fellowship of the Ring gathered at Rivendell",
     "Aragorn wielding Andúril, the Flame of the West",
@@ -115,7 +115,7 @@ ActiveRecord::Base.transaction do
     "The Mines of Moria entrance",
     "Rivendell's beautiful architecture",
     "The Shire's peaceful countryside",
-    "Mount Doom in the distance"
+    "Mount Doom in the distance",
   ]
 
   scifi_captions = [
@@ -128,7 +128,7 @@ ActiveRecord::Base.transaction do
     "The ship's mess hall",
     "Captain's quarters",
     "The ship's library",
-    "Space dock maintenance"
+    "Space dock maintenance",
   ]
 
   mythology_captions = [
@@ -141,7 +141,7 @@ ActiveRecord::Base.transaction do
     "Zeus's throne room",
     "The gods' banquet hall",
     "Athena's sacred olive tree",
-    "The pantheon's celestial realm"
+    "The pantheon's celestial realm",
   ]
 
   # Create fantasy images
@@ -214,15 +214,15 @@ ActiveRecord::Base.transaction do
   end
 
   # Create additional images for pagination testing
-  puts "📚 Creating additional content for testing..."
+  Rails.logger.debug "📚 Creating additional content for testing..."
   additional_images = []
   30.times do |i|
     universe = [fantasy_universe, scifi_universe, collaborative_universe].sample
     characters = case universe
-                 when fantasy_universe then fantasy_characters
-                 when scifi_universe then scifi_characters
-                 else mythology_characters
-                 end
+    when fantasy_universe then fantasy_characters
+    when scifi_universe then scifi_characters
+    else mythology_characters
+    end
 
     caption = "Additional content #{i + 1} for #{universe.name}"
     image = Image.new(universe: universe, caption: caption)
@@ -244,26 +244,31 @@ ActiveRecord::Base.transaction do
   end
 
   # Create some per-user favorites to demonstrate the feature
-  puts "⭐ Creating per-user favorites..."
+  Rails.logger.debug "⭐ Creating per-user favorites..."
   fantasy_images.sample(5).each { |img| ImageFavorite.find_or_create_by!(user: admin_user, image: img) }
-  fantasy_images.sample(3).each { |img| ImageFavorite.find_or_create_by!(user: creative_user, image: img) } # collaborator on fantasy_universe
+  # collaborator on fantasy_universe
+  fantasy_images.sample(3).each do |img|
+    ImageFavorite.find_or_create_by!(user: creative_user, image: img)
+  end
   scifi_images.sample(5).each { |img| ImageFavorite.find_or_create_by!(user: creative_user, image: img) }
-  mythology_images.sample(4).each { |img| ImageFavorite.find_or_create_by!(user: admin_user, image: img) }
-  mythology_images.sample(4).each { |img| ImageFavorite.find_or_create_by!(user: collaborator_user, image: img) }
+  mythology_images.sample(4).each do |img|
+    ImageFavorite.find_or_create_by!(user: admin_user, image: img)
+    ImageFavorite.find_or_create_by!(user: collaborator_user, image: img)
+  end
 
-  puts "✅ Seeding completed successfully!"
-  puts ""
-  puts "📊 Summary:"
-  puts "  👥 Users: #{User.count}"
-  puts "  🌌 Universes: #{Universe.count}"
-  puts "  👤 Characters: #{Character.count}"
-  puts "  🖼️  Images: #{Image.count}"
-  puts "  🏷️  Image tags: #{ImageTag.count}"
-  puts "  ⭐ Image favorites: #{ImageFavorite.count}"
-  puts "  🤝 Collaborations: #{Collaboration.count}"
-  puts ""
-  puts "🔐 Test accounts:"
-  puts "  Admin: admin@blackbook.dev / password123"
-  puts "  Writer: writer@blackbook.dev / password123"
-  puts "  Collaborator: collaborator@blackbook.dev / password123"
+  Rails.logger.debug "✅ Seeding completed successfully!"
+  Rails.logger.debug ""
+  Rails.logger.debug "📊 Summary:"
+  Rails.logger.debug { "  👥 Users: #{User.count}" }
+  Rails.logger.debug { "  🌌 Universes: #{Universe.count}" }
+  Rails.logger.debug { "  👤 Characters: #{Character.count}" }
+  Rails.logger.debug { "  🖼️  Images: #{Image.count}" }
+  Rails.logger.debug { "  🏷️  Image tags: #{ImageTag.count}" }
+  Rails.logger.debug { "  ⭐ Image favorites: #{ImageFavorite.count}" }
+  Rails.logger.debug { "  🤝 Collaborations: #{Collaboration.count}" }
+  Rails.logger.debug ""
+  Rails.logger.debug "🔐 Test accounts:"
+  Rails.logger.debug "  Admin: admin@blackbook.dev / password123"
+  Rails.logger.debug "  Writer: writer@blackbook.dev / password123"
+  Rails.logger.debug "  Collaborator: collaborator@blackbook.dev / password123"
 end

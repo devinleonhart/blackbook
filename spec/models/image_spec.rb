@@ -12,14 +12,14 @@ RSpec.describe Image, type: :model do
 
   it "favorited_by? returns false for nil user" do
     image = create(:image)
-    expect(image.favorited_by?(nil)).to eq(false)
+    expect(image.favorited_by?(nil)).to be(false)
   end
 
   it "favorited_by? returns true when an ImageFavorite exists" do
     user = create(:user)
     image = create(:image)
     create(:image_favorite, user: user, image: image)
-    expect(image.favorited_by?(user)).to eq(true)
+    expect(image.favorited_by?(user)).to be(true)
   end
 end
 
@@ -38,7 +38,6 @@ end
 #
 #  index_images_on_universe_id  (universe_id)
 #
-require 'rails_helper'
 
 RSpec.describe Image, type: :model do
   let(:user) { create(:user) }
@@ -46,10 +45,10 @@ RSpec.describe Image, type: :model do
   let(:image) { create(:image, universe: universe) }
 
   describe "associations" do
-    it { should belong_to(:universe).inverse_of(:images) }
-    it { should have_many(:image_tags).dependent(:destroy).inverse_of(:image) }
-    it { should have_many(:characters).through(:image_tags).inverse_of(:images) }
-    it { should have_one_attached(:image_file) }
+    it { is_expected.to belong_to(:universe).inverse_of(:images) }
+    it { is_expected.to have_many(:image_tags).dependent(:destroy).inverse_of(:image) }
+    it { is_expected.to have_many(:characters).through(:image_tags).inverse_of(:images) }
+    it { is_expected.to have_one_attached(:image_file) }
   end
 
   describe "validations" do

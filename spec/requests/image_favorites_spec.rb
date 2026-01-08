@@ -20,8 +20,8 @@ RSpec.describe "Image favorites", type: :request do
     patch universe_image_path(universe, image), params: { image: { favorite: true } }
     expect(response).to have_http_status(:found)
 
-    expect(image.reload.favorited_by?(owner)).to eq(true)
-    expect(image.favorited_by?(collaborator)).to eq(false)
+    expect(image.reload.favorited_by?(owner)).to be(true)
+    expect(image.favorited_by?(collaborator)).to be(false)
 
     # Collaborator favorites (independently)
     delete destroy_user_session_path
@@ -29,8 +29,8 @@ RSpec.describe "Image favorites", type: :request do
     patch universe_image_path(universe, image), params: { image: { favorite: true } }
     expect(response).to have_http_status(:found)
 
-    expect(image.reload.favorited_by?(owner)).to eq(true)
-    expect(image.favorited_by?(collaborator)).to eq(true)
+    expect(image.reload.favorited_by?(owner)).to be(true)
+    expect(image.favorited_by?(collaborator)).to be(true)
 
     # Owner unfavorites; collaborator stays favorited
     delete destroy_user_session_path
@@ -38,7 +38,7 @@ RSpec.describe "Image favorites", type: :request do
     patch universe_image_path(universe, image), params: { image: { favorite: false } }
     expect(response).to have_http_status(:found)
 
-    expect(image.reload.favorited_by?(owner)).to eq(false)
-    expect(image.favorited_by?(collaborator)).to eq(true)
+    expect(image.reload.favorited_by?(owner)).to be(false)
+    expect(image.favorited_by?(collaborator)).to be(true)
   end
 end

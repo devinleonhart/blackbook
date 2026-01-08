@@ -10,7 +10,7 @@ RSpec.describe "Universes", type: :request do
 
   it "lists owned + collaborated universes" do
     owner = create(:user)
-    collaborator = create(:user)
+    create(:user)
     owned = create(:universe, owner: owner, name: "Owned U")
     collaborated = create(:universe, owner: create(:user), name: "Collab U")
     create(:collaboration, universe: collaborated, user: owner)
@@ -40,7 +40,7 @@ RSpec.describe "Universes", type: :request do
 
     tagged = create(:image, universe: universe)
     create(:image_tag, image: tagged, character: character)
-    untagged = create(:image, universe: universe)
+    create(:image, universe: universe)
 
     sign_in_as(owner)
     get universe_path(universe, filter: "untagged")

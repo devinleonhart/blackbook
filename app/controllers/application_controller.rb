@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :authenticate_user!, unless: :devise_controller?
@@ -23,18 +25,18 @@ class ApplicationController < ActionController::Base
 
   def universe_visible_to_user?(universe)
     unless universe.visible_to_user?(current_user)
-      error_and_redirect("You are not an owner or collaborator of this universe.",
-        universes_url)
+      error_and_redirect(
+        "You are not an owner or collaborator of this universe.",
+        universes_url,
+      )
       return false
     end
     true
   end
 
   def require_admin!
-    return true if current_user&.admin
+    return if current_user&.admin
 
     error_and_redirect("You must be an admin to access that page.", universes_url)
-    false
   end
-
 end

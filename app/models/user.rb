@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: users
@@ -21,10 +23,10 @@
 #
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :validatable
+    :recoverable, :rememberable, :validatable
 
   validates :email, :display_name, :encrypted_password, presence: true
-  validates :admin, exclusion: {in: [nil]}
+  validates :admin, exclusion: { in: [nil] }
   validates :email, :display_name, uniqueness: { case_sensitive: false }
 
   has_many :owned_universes,

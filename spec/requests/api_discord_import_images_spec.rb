@@ -6,7 +6,7 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
   let(:headers) { { "ACCEPT" => "application/json" } }
 
   def with_env(key, value)
-    old = ENV[key]
+    old = ENV.fetch(key, nil)
     ENV[key] = value
     yield
   ensure
@@ -23,8 +23,8 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
   it "returns 401 when token is wrong" do
     with_env("DISCORD_IMPORT_TOKEN", "expected") do
       post "/api/discord_imports/images",
-           params: { universe_code: "KH" },
-           headers: headers.merge("Authorization" => "Bearer wrong")
+        params: { universe_code: "KH" },
+        headers: headers.merge("Authorization" => "Bearer wrong")
       expect(response).to have_http_status(:unauthorized)
     end
   end
@@ -32,10 +32,10 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
   it "returns 422 for invalid universe_code" do
     with_env("DISCORD_IMPORT_TOKEN", "expected") do
       post "/api/discord_imports/images",
-           params: { universe_code: "NOPE", image_file: "x" },
-           headers: headers.merge("Authorization" => "Bearer expected")
+        params: { universe_code: "NOPE", image_file: "x" },
+        headers: headers.merge("Authorization" => "Bearer expected")
       expect(response).to have_http_status(:unprocessable_entity)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["error"]).to include("universe_code")
       expect(json["allowed_universe_codes"]).to be_a(Array)
     end
@@ -45,10 +45,10 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
     with_env("DISCORD_IMPORT_TOKEN", "expected") do
       create(:universe, name: "Knighthood") # KH
       post "/api/discord_imports/images",
-           params: { universe_code: "KH" },
-           headers: headers.merge("Authorization" => "Bearer expected")
+        params: { universe_code: "KH" },
+        headers: headers.merge("Authorization" => "Bearer expected")
       expect(response).to have_http_status(:unprocessable_entity)
-      expect(JSON.parse(response.body)["error"]).to include("image_file")
+      expect(response.parsed_body["error"]).to include("image_file")
     end
   end
 
@@ -61,12 +61,12 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
 
       expect do
         post "/api/discord_imports/images",
-             params: { universe_code: "KH", caption: "hello", image_file: upload },
-             headers: headers.merge("Authorization" => "Bearer expected")
+          params: { universe_code: "KH", caption: "hello", image_file: upload },
+          headers: headers.merge("Authorization" => "Bearer expected")
       end.to change(Image, :count).by(1)
 
       expect(response).to have_http_status(:created)
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["image_id"]).to be_present
 
       image = Image.find(json["image_id"])

@@ -1,20 +1,32 @@
-require:
-- rubocop-rails
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
 
 AllCops:
+  TargetRubyVersion: 3.2
+  TargetRailsVersion: 7.0
+  NewCops: enable
   Exclude:
-  - 'Gemfile'
-  - 'config/**/*'
-  - 'config.ru'
-  - 'spec/spec_helper.rb'
-  - 'spec/rails_helper.rb'
-  - 'bin/**/*'
-  - 'node_modules/**/*'
-  - 'db/schema.rb'
-  - 'lib/tasks/auto_annotate_models.rake'
+    - "Gemfile"
+    - "config/**/*"
+    - "config.ru"
+    - "spec/spec_helper.rb"
+    - "spec/rails_helper.rb"
+    - "bin/**/*"
+    - "node_modules/**/*"
+    - "db/schema.rb"
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
+
+Layout/LineLength:
+  Max: 120
+  AllowedPatterns:
+    - "^\\s*describe"
+    - "^\\s*context"
+    - "^\\s*it"
+  Exclude:
+    - "db/migrate/*"
 
 Layout/EndAlignment:
   EnforcedStyleAlignWith: variable
@@ -36,25 +48,18 @@ Metrics/AbcSize:
 
 Metrics/BlockLength:
   Exclude:
-  - spec/**/*
-  - db/migrate/*
+    - "spec/**/*"
+    - "db/migrate/*"
+    - "db/seeds.rb"
+    - "lib/tasks/**/*"
 
 Metrics/ClassLength:
   Enabled: false
 
-Metrics/LineLength:
-  Max: 120
-  IgnoredPatterns:
-  - "^\\s*describe"
-  - "^\\s*context"
-  - "^\\s*it"
-  Exclude:
-  - db/migrate/20191011181410_devise_token_auth_create_users.rb
-
 Metrics/MethodLength:
   Enabled: false
   Exclude:
-  - "db/**/*"
+    - "db/**/*"
 
 Rails:
   Enabled: true
@@ -64,6 +69,28 @@ Rails/SaveBang:
 
 Rails/TimeZone:
   EnforcedStyle: strict
+
+Rails/I18nLocaleTexts:
+  Enabled: false
+
+Rails/ReversibleMigration:
+  Exclude:
+    - "db/migrate/*"
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/MultipleDescribes:
+  Enabled: false
+
+RSpec/RepeatedExampleGroupDescription:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
 
 Style/ClassAndModuleChildren:
   Enabled: false
@@ -91,4 +118,3 @@ Style/SymbolArray:
 
 Style/WordArray:
   Enabled: false
-

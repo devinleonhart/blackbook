@@ -32,8 +32,8 @@ RSpec.describe "Admin dedupe images", type: :request do
     sign_in_as(admin)
 
     # Make img1 the earliest so we can assert it is kept.
-    img1.update_columns(created_at: 2.days.ago, updated_at: 2.days.ago)
-    img2.update_columns(created_at: 1.day.ago, updated_at: 1.day.ago)
+    img1.update!(created_at: 2.days.ago, updated_at: 2.days.ago)
+    img2.update!(created_at: 1.day.ago, updated_at: 1.day.ago)
 
     checksum = img1.image_file.blob.checksum
     byte_size = img1.image_file.blob.byte_size
@@ -74,12 +74,12 @@ RSpec.describe "Admin dedupe images", type: :request do
     img_b2.image_file.blob.update!(checksum: "BBBBBBBBBBBBBBBBBBBBBB==")
 
     # Make the first image in each group the earliest so we can assert it is kept.
-    img_a1.update_columns(created_at: 3.days.ago, updated_at: 3.days.ago)
-    img_a2.update_columns(created_at: 2.days.ago, updated_at: 2.days.ago)
-    img_a3.update_columns(created_at: 1.day.ago, updated_at: 1.day.ago)
+    img_a1.update!(created_at: 3.days.ago, updated_at: 3.days.ago)
+    img_a2.update!(created_at: 2.days.ago, updated_at: 2.days.ago)
+    img_a3.update!(created_at: 1.day.ago, updated_at: 1.day.ago)
 
-    img_b1.update_columns(created_at: 2.days.ago, updated_at: 2.days.ago)
-    img_b2.update_columns(created_at: 1.day.ago, updated_at: 1.day.ago)
+    img_b1.update!(created_at: 2.days.ago, updated_at: 2.days.ago)
+    img_b2.update!(created_at: 1.day.ago, updated_at: 1.day.ago)
 
     sign_in_as(admin)
 

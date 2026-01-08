@@ -76,7 +76,7 @@ class CreateBaseTables < ActiveRecord::Migration[6.0]
       unique: true,
       name: "relationships_unique_constraint"
     )
-    execute <<-SQL
+    execute <<-SQL.squish
       ALTER TABLE relationships
       ADD CONSTRAINT relationships_no_self_relationships
       CHECK (originating_character_id <> target_character_id)

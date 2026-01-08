@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: image_tags
@@ -21,9 +23,7 @@ FactoryBot.define do
 
     # Ensure the image and character belong to the same universe
     after(:build) do |image_tag|
-      if image_tag.character && image_tag.image
-        image_tag.image.universe = image_tag.character.universe
-      end
+      image_tag.image.universe = image_tag.character.universe if image_tag.character && image_tag.image
     end
   end
 end

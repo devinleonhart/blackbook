@@ -13,10 +13,10 @@ class SlideshowsController < ApplicationController
 
     images =
       slideshow_images_scope(universe_ids)
-        .with_attached_image_file
-        .limit(5000)
-        .to_a
-        .shuffle
+      .with_attached_image_file
+      .limit(5000)
+      .to_a
+      .shuffle
 
     slides =
       images.map { |img| { id: img.id, url: view_image_path(img.id, img.image_file.filename.to_s) } }
@@ -51,9 +51,9 @@ class SlideshowsController < ApplicationController
     owned_ids = Universe.where(owner: user).pluck(:id)
     collaborated_ids =
       Universe
-        .joins(:collaborations)
-        .where(collaborations: { user_id: user.id })
-        .pluck(:id)
+      .joins(:collaborations)
+      .where(collaborations: { user_id: user.id })
+      .pluck(:id)
 
     (owned_ids + collaborated_ids).uniq
   end

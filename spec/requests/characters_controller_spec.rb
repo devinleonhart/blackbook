@@ -11,8 +11,8 @@ RSpec.describe "Characters", type: :request do
   it "lists characters for a universe" do
     owner = create(:user)
     universe = create(:universe, owner: owner)
-    c1 = create(:character, universe: universe, name: "A")
-    c2 = create(:character, universe: universe, name: "B")
+    create(:character, universe: universe, name: "A")
+    create(:character, universe: universe, name: "B")
 
     sign_in_as(owner)
     get universe_characters_path(universe)

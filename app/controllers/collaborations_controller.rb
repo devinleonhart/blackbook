@@ -4,6 +4,9 @@ class CollaborationsController < ApplicationController
   def show
     @collaboration = Collaboration.includes(:user, :universe).find_by(id: params[:id])
     return unless model_found?(@collaboration, "Collaboration", params[:id], universes_url)
+
+    # There is no HTML template for this action today.
+    head :not_acceptable
   end
 
   def create

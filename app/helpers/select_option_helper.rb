@@ -22,5 +22,4 @@ module SelectOptionHelper
     end
     names.sort_by { |pair| pair[0] }
   end
-
 end
