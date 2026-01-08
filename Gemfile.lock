@@ -277,6 +277,8 @@ GEM
       railties (>= 7.0.0)
     tailwindcss-rails (2.7.9-arm64-darwin)
       railties (>= 7.0.0)
+    tailwindcss-rails (2.7.9-x86_64-linux)
+      railties (>= 7.0.0)
     thor (1.2.1)
     timeout (0.2.0)
     turbo-rails (1.0.1)
@@ -305,6 +307,8 @@ PLATFORMS
   aarch64-linux-musl
   arm64-darwin-21
   arm64-darwin-22
+  x86_64-linux
+  x86_64-linux-musl
 
 DEPENDENCIES
   bootsnap (~> 1.16)
