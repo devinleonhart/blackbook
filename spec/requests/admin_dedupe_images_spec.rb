@@ -3,6 +3,33 @@
 require "rails_helper"
 
 RSpec.describe "Admin dedupe images", type: :request do
+  it "shows an error when deduping a universe that does not exist" do
+    admin = create(:user, admin: true)
+    sign_in(admin)
+
+    missing_universe_id = Universe.maximum(:id).to_i + 1
+    post admin_dedupe_images_dedupe_universe_path, params: { universe_id: missing_universe_id }
+
+    expect(response).to redirect_to(admin_dedupe_images_url)
+    expect(flash[:error]).to include("Universe not found")
+  end
+
+  it "shows an error when deduping a group that has no images" do
+    admin = create(:user, admin: true)
+    universe = create(:universe, owner: admin)
+    sign_in(admin)
+
+    post admin_dedupe_images_dedupe_group_path, params: {
+      universe_id: universe.id,
+      checksum: "does-not-exist",
+      byte_size: 123,
+      content_type: "image/jpeg",
+    }
+
+    expect(response).to redirect_to(admin_dedupe_images_url)
+    expect(flash[:error]).to include("No images found")
+  end
+
   it "shows duplicate groups for admins" do
     admin = create(:user, admin: true)
     universe = create(:universe, owner: admin, name: "Dupes Universe")

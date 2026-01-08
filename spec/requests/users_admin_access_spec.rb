@@ -8,7 +8,8 @@ RSpec.describe "User management access control", type: :request do
     sign_in(user)
 
     get users_path
-    expect(response).to have_http_status(:found)
+    expect(response).to redirect_to(universes_url)
+    expect(flash[:error]).to include("admin")
   end
 
   it "allows admins to view /users" do

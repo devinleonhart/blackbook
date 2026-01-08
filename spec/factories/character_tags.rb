@@ -13,7 +13,7 @@
 FactoryBot.define do
   factory :character_tag do
     character
-    name { Faker::Lorem.word.downcase }
+    sequence(:name) { |n| "tag#{n}" }
 
     trait :human do
       name { "human" }

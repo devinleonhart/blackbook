@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Slideshow", type: :request do
   it "redirects unauthenticated users from the slideshow page" do
     get slideshow_path
-    expect(response).to have_http_status(:found)
+    expect(response).to redirect_to(new_user_session_path)
   end
 
   it "renders the slideshow page for authenticated users" do
@@ -19,7 +19,7 @@ RSpec.describe "Slideshow", type: :request do
 
   it "redirects unauthenticated users from the slideshow images endpoint" do
     get slideshow_images_path(mode: "all")
-    expect(response).to have_http_status(:found)
+    expect(response).to redirect_to(new_user_session_path)
   end
 
   it "returns only accessible images for mode=all" do

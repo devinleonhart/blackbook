@@ -5,7 +5,7 @@ require "rails_helper"
 RSpec.describe "Favorites page", type: :request do
   it "requires authentication" do
     get favorites_path
-    expect(response).to have_http_status(:found)
+    expect(response).to redirect_to(new_user_session_path)
   end
 
   it "shows only the current user's favorites, grouped by universe" do

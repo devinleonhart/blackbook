@@ -13,7 +13,7 @@
 #
 FactoryBot.define do
   factory :universe do
-    name { "Test Universe" }
+    sequence(:name) { |n| "Test Universe #{n}" }
     association :owner, factory: :user
   end
 end

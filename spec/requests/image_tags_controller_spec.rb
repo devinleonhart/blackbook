@@ -6,8 +6,10 @@ RSpec.describe "ImageTags", type: :request do
   it "redirects unauthenticated users" do
     universe = create(:universe)
     image = create(:image, universe: universe)
-    post universe_image_image_tags_path(universe, image), params: { image_tag: { character_id: 123 } }
-    expect(response).to have_http_status(:found)
+    expect do
+      post universe_image_image_tags_path(universe, image), params: { image_tag: { character_id: 123 } }
+    end.not_to change(ImageTag, :count)
+    expect(response).to redirect_to(new_user_session_path)
   end
 
   it "creates an image tag and redirects to image edit" do

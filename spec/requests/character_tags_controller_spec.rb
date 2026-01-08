@@ -6,7 +6,7 @@ RSpec.describe "CharacterTags", type: :request do
   it "redirects unauthenticated users" do
     character = create(:character)
     get character_character_tags_path(character)
-    expect(response).to have_http_status(:found)
+    expect(response).to redirect_to(new_user_session_path)
   end
 
   it "lists tags for a character" do

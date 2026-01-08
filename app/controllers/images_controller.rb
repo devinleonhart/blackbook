@@ -53,14 +53,18 @@ class ImagesController < ApplicationController
   end
 
   def create
+    universe = Universe.find_by(id: params[:universe_id])
+    return unless model_found?(universe, "Universe", params[:universe_id], universes_url)
+    return unless universe_visible_to_user?(universe)
+
     properties = allowed_image_create_params.merge(universe_id: params[:universe_id])
     @image = Image.new(properties)
     if @image.save
       flash[:success] = "Image created!"
-      redirect_to edit_universe_image_url(params[:universe_id], @image)
+      redirect_to edit_universe_image_url(universe, @image)
     else
       flash[:error] = @image.errors.full_messages.join("\n")
-      redirect_to universe_url(params[:universe_id])
+      redirect_to universe_url(universe)
     end
   end
 
@@ -98,6 +102,7 @@ class ImagesController < ApplicationController
   def destroy
     @image = Image.find_by(id: params[:id])
     return unless model_found?(@image, "Image", params[:id], universes_url)
+    return unless universe_visible_to_user?(@image.universe)
 
     @image.destroy!
     flash[:success] = "Image deleted!"

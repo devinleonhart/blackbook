@@ -5,8 +5,10 @@ require "rails_helper"
 RSpec.describe "Collaborations", type: :request do
   it "redirects unauthenticated users from creating a collaboration" do
     universe = create(:universe)
-    post universe_collaborations_path(universe), params: { collaboration: { user_id: 123 } }
-    expect(response).to have_http_status(:found)
+    expect do
+      post universe_collaborations_path(universe), params: { collaboration: { user_id: 123 } }
+    end.not_to change(Collaboration, :count)
+    expect(response).to redirect_to(new_user_session_path)
   end
 
   it "creates a collaboration and redirects to universe edit" do
