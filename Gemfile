@@ -23,6 +23,7 @@ gem 'tzinfo-data', platforms: %i[ mingw mswin x64_mingw jruby ]
 gem 'will_paginate', '~> 3.3'
 
 group :development do
+  gem "annotate", "3.2.0"
   gem "rubocop", "1.82.1"
   gem "rubocop-rails", "2.34.3"
   gem "rubocop-rake", "0.7.1"
@@ -30,11 +31,7 @@ group :development do
 end
 
 group :test do
-  gem 'capybara'
-  gem 'simplecov', require: false
-  gem "shoulda-matchers", "~> 6.4"
-  gem 'database_cleaner', '~> 2.0', '>= 2.0.1'
-  gem 'rspec-rails', '~> 4.0.2'
-  gem 'selenium-webdriver'
-  gem 'webdrivers'
+  gem "rspec-rails", "4.0.2"
+  gem "shoulda-matchers", "6.5.0"
+  gem "simplecov", "0.22.0"
 end

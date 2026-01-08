@@ -3,14 +3,9 @@
 require "rails_helper"
 
 RSpec.describe "Character image ordering", type: :request do
-  def sign_in_as(user, password: "password123")
-    post user_session_path, params: { user: { email: user.email, password: password } }
-    expect(response).to have_http_status(:found)
-  end
-
   it "shows current_user favorited images first, without excluding images favorited by other users" do
-    owner = create(:user, password: "password123")
-    other_user = create(:user, password: "password123")
+    owner = create(:user)
+    other_user = create(:user)
 
     universe = create(:universe, owner: owner)
     character = create(:character, universe: universe)
@@ -26,7 +21,7 @@ RSpec.describe "Character image ordering", type: :request do
     # Owner favorites image_b
     create(:image_favorite, user: owner, image: image_b)
 
-    sign_in_as(owner)
+    sign_in(owner)
     get character_path(character)
 
     expect(response).to have_http_status(:ok)

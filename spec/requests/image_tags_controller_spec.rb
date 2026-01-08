@@ -3,11 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "ImageTags", type: :request do
-  def sign_in_as(user, password: "password123")
-    post user_session_path, params: { user: { email: user.email, password: password } }
-    expect(response).to have_http_status(:found)
-  end
-
   it "redirects unauthenticated users" do
     universe = create(:universe)
     image = create(:image, universe: universe)
@@ -21,7 +16,7 @@ RSpec.describe "ImageTags", type: :request do
     character = create(:character, universe: universe)
     image = create(:image, universe: universe)
 
-    sign_in_as(owner)
+    sign_in(owner)
 
     expect do
       post universe_image_image_tags_path(universe, image), params: { image_tag: { character_id: character.id } }
@@ -37,7 +32,7 @@ RSpec.describe "ImageTags", type: :request do
     image = create(:image, universe: universe)
     image_tag = create(:image_tag, image: image, character: character)
 
-    sign_in_as(owner)
+    sign_in(owner)
     get image_tag_path(image_tag)
 
     # There is no HTML template for this action today, so Rails returns 406.
@@ -52,7 +47,7 @@ RSpec.describe "ImageTags", type: :request do
     image = create(:image, universe: universe)
     image_tag = create(:image_tag, image: image, character: character)
 
-    sign_in_as(owner)
+    sign_in(owner)
 
     expect do
       delete image_tag_path(image_tag)

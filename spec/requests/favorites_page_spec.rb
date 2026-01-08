@@ -3,19 +3,14 @@
 require "rails_helper"
 
 RSpec.describe "Favorites page", type: :request do
-  def sign_in_as(user, password: "password123")
-    post user_session_path, params: { user: { email: user.email, password: password } }
-    expect(response).to have_http_status(:found)
-  end
-
   it "requires authentication" do
     get favorites_path
     expect(response).to have_http_status(:found)
   end
 
   it "shows only the current user's favorites, grouped by universe" do
-    user = create(:user, password: "password123")
-    other_user = create(:user, password: "password123")
+    user = create(:user)
+    other_user = create(:user)
 
     universe_a = create(:universe, owner: user, name: "Alpha")
     universe_b = create(:universe, owner: user, name: "Beta")
@@ -30,7 +25,7 @@ RSpec.describe "Favorites page", type: :request do
     # Other user's favorite should not show up
     create(:image_favorite, user: other_user, image: img_a2)
 
-    sign_in_as(user)
+    sign_in(user)
     get favorites_path
 
     expect(response).to have_http_status(:ok)

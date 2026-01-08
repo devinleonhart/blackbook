@@ -3,11 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "Slideshow", type: :request do
-  def sign_in_as(user, password: "password123")
-    post user_session_path, params: { user: { email: user.email, password: password } }
-    expect(response).to have_http_status(:found)
-  end
-
   it "redirects unauthenticated users from the slideshow page" do
     get slideshow_path
     expect(response).to have_http_status(:found)
@@ -15,7 +10,7 @@ RSpec.describe "Slideshow", type: :request do
 
   it "renders the slideshow page for authenticated users" do
     user = create(:user, email: "slideshow@example.com")
-    sign_in_as(user)
+    sign_in(user)
 
     get slideshow_path
     expect(response).to have_http_status(:ok)
@@ -37,7 +32,7 @@ RSpec.describe "Slideshow", type: :request do
     accessible_image = create(:image, universe: accessible_universe)
     inaccessible_image = create(:image, universe: inaccessible_universe)
 
-    sign_in_as(user)
+    sign_in(user)
 
     get slideshow_images_path(mode: "all")
     expect(response).to have_http_status(:ok)
@@ -63,7 +58,7 @@ RSpec.describe "Slideshow", type: :request do
     create(:image_favorite, user: user, image: favorited_inaccessible) # excluded by universe access
     create(:image_favorite, user: other_user, image: favorited_accessible) # other user's favorite doesn't matter
 
-    sign_in_as(user)
+    sign_in(user)
 
     get slideshow_images_path(mode: "favorites")
     expect(response).to have_http_status(:ok)

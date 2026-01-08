@@ -3,11 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "CharacterTags", type: :request do
-  def sign_in_as(user, password: "password123")
-    post user_session_path, params: { user: { email: user.email, password: password } }
-    expect(response).to have_http_status(:found)
-  end
-
   it "redirects unauthenticated users" do
     character = create(:character)
     get character_character_tags_path(character)
@@ -20,7 +15,7 @@ RSpec.describe "CharacterTags", type: :request do
     character = create(:character, universe: universe)
     create(:character_tag, character: character, name: "elf")
 
-    sign_in_as(owner)
+    sign_in(owner)
     get character_character_tags_path(character)
 
     expect(response).to have_http_status(:ok)
@@ -32,7 +27,7 @@ RSpec.describe "CharacterTags", type: :request do
     universe = create(:universe, owner: owner)
     character = create(:character, universe: universe)
 
-    sign_in_as(owner)
+    sign_in(owner)
     post character_character_tags_path(character), params: { character_tag: { name: "Elf" } }
 
     expect(response).to redirect_to(character_path(character))
@@ -48,7 +43,7 @@ RSpec.describe "CharacterTags", type: :request do
     image = create(:image, universe: universe)
     create(:image_tag, image: image, character: character)
 
-    sign_in_as(owner)
+    sign_in(owner)
     get character_tag_path(tag)
 
     expect(response).to have_http_status(:ok)
@@ -61,7 +56,7 @@ RSpec.describe "CharacterTags", type: :request do
     character = create(:character, universe: universe)
     tag = create(:character_tag, character: character, name: "human")
 
-    sign_in_as(owner)
+    sign_in(owner)
     patch character_tag_path(tag), params: { character_tag: { name: "noble" } }
 
     expect(response).to redirect_to(character_character_tags_path(character))
@@ -74,7 +69,7 @@ RSpec.describe "CharacterTags", type: :request do
     character = create(:character, universe: universe)
     tag = create(:character_tag, character: character, name: "warrior")
 
-    sign_in_as(owner)
+    sign_in(owner)
     delete character_tag_path(tag)
 
     expect(response).to redirect_to(character_character_tags_path(character))

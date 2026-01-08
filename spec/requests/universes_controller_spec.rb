@@ -3,11 +3,6 @@
 require "rails_helper"
 
 RSpec.describe "Universes", type: :request do
-  def sign_in_as(user, password: "password123")
-    post user_session_path, params: { user: { email: user.email, password: password } }
-    expect(response).to have_http_status(:found)
-  end
-
   it "lists owned + collaborated universes" do
     owner = create(:user)
     create(:user)
@@ -15,7 +10,7 @@ RSpec.describe "Universes", type: :request do
     collaborated = create(:universe, owner: create(:user), name: "Collab U")
     create(:collaboration, universe: collaborated, user: owner)
 
-    sign_in_as(owner)
+    sign_in(owner)
     get universes_path
 
     expect(response).to have_http_status(:ok)
@@ -27,7 +22,7 @@ RSpec.describe "Universes", type: :request do
     stranger = create(:user)
     universe = create(:universe, owner: owner)
 
-    sign_in_as(stranger)
+    sign_in(stranger)
     get universe_path(universe)
 
     expect(response).to redirect_to(universes_url)
@@ -42,7 +37,7 @@ RSpec.describe "Universes", type: :request do
     create(:image_tag, image: tagged, character: character)
     create(:image, universe: universe)
 
-    sign_in_as(owner)
+    sign_in(owner)
     get universe_path(universe, filter: "untagged")
 
     expect(response).to have_http_status(:ok)
@@ -52,7 +47,7 @@ RSpec.describe "Universes", type: :request do
 
   it "creates a universe with valid params" do
     user = create(:user)
-    sign_in_as(user)
+    sign_in(user)
 
     post universes_path, params: { universe: { name: "New Universe" } }
     expect(response).to redirect_to(universes_url)
@@ -61,7 +56,7 @@ RSpec.describe "Universes", type: :request do
 
   it "does not create a universe with invalid params" do
     user = create(:user)
-    sign_in_as(user)
+    sign_in(user)
 
     post universes_path, params: { universe: { name: "" } }
     expect(response).to redirect_to(new_universe_url)
@@ -73,7 +68,7 @@ RSpec.describe "Universes", type: :request do
     universe = create(:universe, owner: owner, name: "Old")
     create(:collaboration, universe: universe, user: collaborator)
 
-    sign_in_as(collaborator)
+    sign_in(collaborator)
     patch universe_path(universe), params: { universe: { name: "Updated" } }
 
     expect(response).to redirect_to(universes_url)

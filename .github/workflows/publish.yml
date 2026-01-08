@@ -20,6 +20,28 @@ jobs:
     name: Quality Checks
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:12.5-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: test_pass
+          POSTGRES_DB: blackbook_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      RAILS_ENV: test
+      DATABASE_HOST: 127.0.0.1
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: postgres
+      DATABASE_PASSWORD: test_pass
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,7 +49,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libpq-dev
+          sudo apt-get install -y libpq-dev libvips
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -37,6 +59,12 @@ jobs:
 
       - name: Run RuboCop
         run: bundle exec rubocop
+
+      - name: Prepare test database
+        run: bundle exec rails db:prepare
+
+      - name: Run tests
+        run: bundle exec rspec
 
   deploy:
     name: Build & Deploy

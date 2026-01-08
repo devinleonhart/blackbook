@@ -3,18 +3,13 @@
 require "rails_helper"
 
 RSpec.describe "Admin dedupe images", type: :request do
-  def sign_in_as(user, password: "password123")
-    post user_session_path, params: { user: { email: user.email, password: password } }
-    expect(response).to have_http_status(:found)
-  end
-
   it "shows duplicate groups for admins" do
-    admin = create(:user, password: "password123", admin: true)
+    admin = create(:user, admin: true)
     universe = create(:universe, owner: admin, name: "Dupes Universe")
     create(:image, universe: universe)
     create(:image, universe: universe)
 
-    sign_in_as(admin)
+    sign_in(admin)
     get admin_dedupe_images_path
 
     expect(response).to have_http_status(:ok)
@@ -24,12 +19,12 @@ RSpec.describe "Admin dedupe images", type: :request do
   end
 
   it "keeps the earliest image and deletes the others for a duplicate group" do
-    admin = create(:user, password: "password123", admin: true)
+    admin = create(:user, admin: true)
     universe = create(:universe, owner: admin)
     img1 = create(:image, universe: universe)
     img2 = create(:image, universe: universe)
 
-    sign_in_as(admin)
+    sign_in(admin)
 
     # Make img1 the earliest so we can assert it is kept.
     img1.update!(created_at: 2.days.ago, updated_at: 2.days.ago)
@@ -53,7 +48,7 @@ RSpec.describe "Admin dedupe images", type: :request do
   end
 
   it "dedupes all duplicate groups for a universe in one request" do
-    admin = create(:user, password: "password123", admin: true)
+    admin = create(:user, admin: true)
     universe = create(:universe, owner: admin, name: "BulkDupes Universe")
 
     # Create a 3-image duplicate group and a separate 2-image duplicate group
@@ -81,7 +76,7 @@ RSpec.describe "Admin dedupe images", type: :request do
     img_b1.update!(created_at: 2.days.ago, updated_at: 2.days.ago)
     img_b2.update!(created_at: 1.day.ago, updated_at: 1.day.ago)
 
-    sign_in_as(admin)
+    sign_in(admin)
 
     expect do
       post admin_dedupe_images_dedupe_universe_path, params: { universe_id: universe.id }
