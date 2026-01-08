@@ -15,6 +15,9 @@ AllCops:
     - "spec/rails_helper.rb"
     - "bin/**/*"
     - "node_modules/**/*"
+    - "vendor/**/*"
+    - "tmp/**/*"
+    - "coverage/**/*"
     - "db/schema.rb"
 
 Layout/ArgumentAlignment:
