@@ -1,3 +1,28 @@
+# frozen_string_literal: true
+
+require "rails_helper"
+
+RSpec.describe Image, type: :model do
+  it "is invalid without an attached file (in test env)" do
+    image = build(:image)
+    image.image_file.detach
+    expect(image).not_to be_valid
+    expect(image.errors[:image_file]).to be_present
+  end
+
+  it "favorited_by? returns false for nil user" do
+    image = create(:image)
+    expect(image.favorited_by?(nil)).to eq(false)
+  end
+
+  it "favorited_by? returns true when an ImageFavorite exists" do
+    user = create(:user)
+    image = create(:image)
+    create(:image_favorite, user: user, image: image)
+    expect(image.favorited_by?(user)).to eq(true)
+  end
+end
+
 # == Schema Information
 #
 # Table name: images

@@ -116,6 +116,7 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.5.0)
     digest (3.1.0)
+    docile (1.4.1)
     e2mmap (0.1.0)
     erubi (1.10.0)
     factory_bot (6.2.0)
@@ -277,6 +278,12 @@ GEM
       rubyzip (>= 1.2.2)
     shoulda-matchers (6.4.0)
       activesupport (>= 5.2.0)
+    simplecov (0.22.0)
+      docile (~> 1.1)
+      simplecov-html (~> 0.11)
+      simplecov_json_formatter (~> 0.1)
+    simplecov-html (0.13.2)
+    simplecov_json_formatter (0.1.4)
     solargraph (0.48.0)
       backport (~> 1.2)
       benchmark
@@ -366,6 +373,7 @@ DEPENDENCIES
   securerandom (~> 0.1.0)
   selenium-webdriver
   shoulda-matchers (~> 6.4)
+  simplecov
   solargraph
   sprockets-rails
   stimulus-rails

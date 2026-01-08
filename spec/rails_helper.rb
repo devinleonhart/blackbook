@@ -1,5 +1,15 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 
+require "simplecov"
+
+SimpleCov.start "rails" do
+  add_filter "/spec/"
+  enable_coverage :branch
+
+  # Keep reports stable for CI/Docker
+  track_files "{app,lib}/**/*.rb"
+end
+
 ENV["RAILS_ENV"] = "test" if ENV["RAILS_ENV"].to_s != "test"
 require File.expand_path("../config/environment", __dir__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?

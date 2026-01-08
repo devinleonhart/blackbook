@@ -11,11 +11,15 @@ class SlideshowsController < ApplicationController
     universe_ids = accessible_universe_ids_for_user(current_user)
     @mode = slideshow_mode
 
-    slides =
+    images =
       slideshow_images_scope(universe_ids)
         .with_attached_image_file
         .limit(5000)
-        .map { |img| { id: img.id, url: view_image_path(img.id, img.image_file.filename.to_s) } }
+        .to_a
+        .shuffle
+
+    slides =
+      images.map { |img| { id: img.id, url: view_image_path(img.id, img.image_file.filename.to_s) } }
 
     render json: { slides: slides }
   end
@@ -37,9 +41,8 @@ class SlideshowsController < ApplicationController
         .where(image_favorites: { user_id: current_user.id })
         .where(universe_id: universe_ids)
         .distinct
-        .order(created_at: :desc)
     else
-      Image.where(universe_id: universe_ids).order(created_at: :desc)
+      Image.where(universe_id: universe_ids)
     end
   end
 
