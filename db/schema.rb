@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_05_000001) do
     t.string "name", null: false
     t.text "body"
     t.string "record_type", null: false
-    t.bigint "record_id", null: false
+    t.integer "record_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["record_type", "record_id", "name"], name: "index_action_text_rich_texts_uniqueness", unique: true
@@ -48,7 +48,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_05_000001) do
   end
 
   create_table "active_storage_variant_records", force: :cascade do |t|
-    t.bigint "blob_id", null: false
+    t.integer "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
@@ -65,7 +65,7 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_05_000001) do
 
   create_table "characters", force: :cascade do |t|
     t.citext "name", null: false
-    t.bigint "universe_id", null: false
+    t.integer "universe_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "discarded_at", precision: nil
@@ -75,8 +75,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_05_000001) do
   end
 
   create_table "collaborations", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.bigint "universe_id", null: false
+    t.integer "user_id", null: false
+    t.integer "universe_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["universe_id"], name: "index_collaborations_on_universe_id"
@@ -95,8 +95,8 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_05_000001) do
   end
 
   create_table "image_tags", force: :cascade do |t|
-    t.bigint "character_id", null: false
-    t.bigint "image_id", null: false
+    t.integer "character_id", null: false
+    t.integer "image_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["character_id", "image_id"], name: "index_image_tags_on_character_id_and_image_id", unique: true
@@ -106,24 +106,15 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_05_000001) do
 
   create_table "images", force: :cascade do |t|
     t.text "caption", default: "", null: false
-    t.bigint "universe_id", null: false
+    t.integer "universe_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["universe_id"], name: "index_images_on_universe_id"
   end
 
-  create_table "locations", force: :cascade do |t|
-    t.citext "name", null: false
-    t.bigint "universe_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["name", "universe_id"], name: "index_locations_on_name_and_universe_id", unique: true
-    t.index ["universe_id"], name: "index_locations_on_universe_id"
-  end
-
   create_table "universes", force: :cascade do |t|
     t.citext "name", null: false
-    t.bigint "owner_id", null: false
+    t.integer "owner_id", null: false
     t.datetime "discarded_at", precision: nil
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -154,6 +145,5 @@ ActiveRecord::Schema[7.0].define(version: 2026_01_05_000001) do
   add_foreign_key "characters", "universes"
   add_foreign_key "image_favorites", "images"
   add_foreign_key "image_favorites", "users"
-  add_foreign_key "locations", "universes"
   add_foreign_key "universes", "users", column: "owner_id"
 end

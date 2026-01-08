@@ -1,0 +1,76 @@
+<section id="slideshows-show-view" class="py-8 min-h-screen bg-gray-50">
+  <% render partial: "shared/capture_navbar" %>
+
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">Slideshow</h1>
+      <p class="text-gray-600">Space = play/pause, ←/→ = prev/next.</p>
+    </div>
+
+    <% unless @has_images %>
+      <div class="bg-white rounded-lg p-6 shadow-lg">
+        <%= render partial: "shared/empty_banner", locals: { message: (@mode == "favorites" ? "No favorite images yet. Favorite an image to see it here." : "No images available for slideshow.") } %>
+      </div>
+    <% else %>
+      <div
+        class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-300"
+        data-controller="slideshow"
+        data-slideshow-slides-url-value="<%= slideshow_images_path(mode: @mode) %>"
+        data-slideshow-interval-ms-value="3000"
+      >
+        <!-- Top controls -->
+        <div class="p-4 bg-gray-100 text-gray-900 border-b border-gray-200" data-slideshow-target="controls">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <%= link_to(@mode == "favorites" ? "All Images" : "Favorites Only",
+                          slideshow_path(mode: (@mode == "favorites" ? "all" : "favorites")),
+                          class: "px-4 py-2 rounded bg-white hover:bg-gray-50 border border-gray-300 text-gray-900 text-sm font-medium") %>
+              <button type="button" class="px-4 py-2 rounded bg-white hover:bg-gray-50 border border-gray-300 text-gray-900 text-sm font-medium" data-action="slideshow#prev">Prev</button>
+              <button type="button" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 text-white text-sm font-medium" data-action="slideshow#togglePlay" data-slideshow-target="playButton">Play</button>
+              <button type="button" class="px-4 py-2 rounded bg-white hover:bg-gray-50 border border-gray-300 text-gray-900 text-sm font-medium" data-action="slideshow#next">Next</button>
+              <button type="button" class="px-4 py-2 rounded bg-white hover:bg-gray-50 border border-gray-300 text-gray-900 text-sm font-medium" data-action="slideshow#toggleFullscreen" data-slideshow-target="fullscreenButton">Fullscreen</button>
+            </div>
+
+            <span class="text-sm text-gray-700" data-slideshow-target="counter"></span>
+          </div>
+        </div>
+
+        <!-- Stage -->
+        <div
+          class="bg-black flex items-center justify-center relative"
+          style="min-height: 60vh;"
+          data-slideshow-target="stage"
+          tabindex="0"
+        >
+          <img
+            data-slideshow-target="image"
+            src=""
+            alt="Slideshow image"
+            class="max-h-[70vh] w-auto object-contain"
+          />
+
+          <div data-slideshow-target="loading" class="absolute inset-0 flex items-center justify-center text-white text-sm bg-black/40">
+            Loading…
+          </div>
+
+          <div data-slideshow-target="error" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-red-600/90 text-white text-sm px-3 py-2 rounded">
+            <span data-slideshow-target="errorText">Failed to load slideshow.</span>
+          </div>
+
+          <div data-slideshow-target="fullscreenHint" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-sm px-3 py-2 rounded">
+            Fullscreen — press Esc to exit
+          </div>
+        </div>
+
+        <!-- Bottom controls -->
+        <div class="p-4 bg-gray-100 text-gray-900 border-t border-gray-200" data-slideshow-target="controls">
+          <div class="flex items-center justify-between">
+            <label class="text-sm font-medium text-gray-700" for="slideshow_speed">Speed</label>
+            <span class="text-sm text-gray-700 w-16 text-right" data-slideshow-target="speedLabel">3.0s</span>
+          </div>
+          <input id="slideshow_speed" type="range" min="1" max="300" step="1" value="3" class="w-full mt-2" data-action="input->slideshow#speedChanged" data-slideshow-target="speed" />
+        </div>
+      </div>
+    <% end %>
+  </div>
+</section>

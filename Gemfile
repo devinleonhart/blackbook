@@ -6,6 +6,7 @@ ruby '3.2.1'
 gem 'rails', '~> 7.0.2', '>= 7.0.2.2'
 
 gem 'bootsnap', '~> 1.16'
+gem 'sassc', '~> 2.4'
 gem 'tailwindcss-rails', '~> 2.0'
 gem 'devise', '~> 4.7', '>= 4.7.3'
 gem 'factory_bot_rails', '~> 6.1'

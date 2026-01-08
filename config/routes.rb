@@ -36,6 +36,10 @@ Rails.application.routes.draw do
   # Favorites for the current user, grouped by universe
   get '/favorites', to: 'favorites#index', as: 'favorites'
 
+  # Slideshow
+  get '/slideshow', to: 'slideshows#show', as: 'slideshow'
+  get '/slideshow/images', to: 'slideshows#images', as: 'slideshow_images'
+
   # Custom image routes for cleaner URLs
   get '/images/:id/:filename', to: 'images#view', as: 'view_image', constraints: { filename: /.*/ }
 
