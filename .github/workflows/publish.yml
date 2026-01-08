@@ -60,6 +60,9 @@ jobs:
       - name: Run RuboCop
         run: bundle exec rubocop
 
+      - name: Build Tailwind CSS
+        run: bundle exec rails tailwindcss:build
+
       - name: Prepare test database
         run: bundle exec rails db:prepare
 
