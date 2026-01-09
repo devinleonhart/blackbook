@@ -1,51 +1,50 @@
 #!/bin/bash
 
-# Complete development environment setup for Blackbook
-# This script follows Rails conventions for development setup
+# Complete development environment setup for Blackbook (Docker).
 
 set -e
 
-echo "🚀 Setting up Blackbook development environment..."
+echo "Setting up Blackbook development environment..."
 
 # Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
-  echo "❌ Docker is not running. Please start Docker and try again."
+  echo "Docker is not running. Please start Docker and try again."
   exit 1
 fi
 
-# Start containers
-echo "🐳 Starting Docker containers..."
-docker compose up -d
+echo "Starting database..."
+docker compose up -d postgres_db
 
-# Wait for database to be ready
-echo "⏳ Waiting for database to be ready..."
-sleep 10
+echo "Waiting for database..."
+for i in $(seq 1 30); do
+  if docker compose exec -T postgres_db pg_isready -U postgres >/dev/null 2>&1; then
+    break
+  fi
+  sleep 1
+done
 
-# Setup database
-echo "🗄️  Setting up database..."
-docker compose exec blackbook bundle exec rails db:create
-docker compose exec blackbook bundle exec rails db:migrate
-docker compose exec blackbook bundle exec rails db:seed
+echo "Preparing development database..."
+docker compose run --rm -e RAILS_ENV=development blackbook bundle exec rails db:prepare
+docker compose run --rm -e RAILS_ENV=development blackbook bundle exec rails db:seed
 
-# Setup test database
-echo "🧪 Setting up test database..."
-docker compose exec blackbook bundle exec rails db:create RAILS_ENV=test
-docker compose exec blackbook bundle exec rails db:migrate RAILS_ENV=test
-docker compose exec blackbook bundle exec rails db:seed RAILS_ENV=test
+echo "Preparing test database..."
+docker compose run --rm -e RAILS_ENV=test blackbook bundle exec rails db:prepare
 
 echo ""
-echo "🎉 Development environment ready!"
+echo "Development environment ready."
 echo ""
-echo "🌐 Application: http://localhost:3001"
+echo "Application: http://localhost:3001"
 echo ""
-echo "🔐 Test accounts:"
+echo "Accounts:"
 echo "  Admin: admin@blackbook.dev / password123"
-echo "  Writer: writer@blackbook.dev / password123"
+echo "  Owner: owner@blackbook.dev / password123"
 echo "  Collaborator: collaborator@blackbook.dev / password123"
 echo ""
-echo "💡 Useful commands:"
-echo "  bin/rails db:dev_reset    - Reset development database"
-echo "  bin/rails db:test_reset   - Reset test database"
-echo "  bin/rails db:stats        - Show database statistics"
-echo "  docker compose logs       - View application logs"
-echo "  docker compose down       - Stop containers"
+echo "Useful commands:"
+echo "  bin/reset-db       - Reset development database"
+echo "  bin/reset-test-db  - Reset test database"
+echo "  docker compose logs - View application logs"
+echo "  docker compose down - Stop containers"
+
+echo "Starting app..."
+docker compose up -d blackbook

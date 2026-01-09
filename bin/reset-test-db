@@ -1,27 +1,23 @@
 #!/bin/bash
 
-# Reset and seed test database
-# This script follows Rails conventions for test database management
+# Reset the test database (Docker).
 
 set -e
 
-echo "🧪 Resetting test database..."
+echo "Resetting test database..."
 
-# Ensure containers are running
-echo "🐳 Starting containers..."
-docker compose up -d
+echo "Starting database..."
+docker compose up -d postgres_db
 
-# Wait for database to be ready
-echo "⏳ Waiting for database to be ready..."
-sleep 5
+echo "Waiting for database..."
+for i in $(seq 1 30); do
+  if docker compose exec -T postgres_db pg_isready -U postgres >/dev/null 2>&1; then
+    break
+  fi
+  sleep 1
+done
 
-# Reset and seed test database
-echo "🗄️  Resetting and seeding test database..."
-docker compose exec blackbook bundle exec rails db:reset RAILS_ENV=test
+echo "Recreating test database schema..."
+docker compose run --rm -e RAILS_ENV=test blackbook bundle exec rails db:drop db:create db:schema:load
 
-echo "✅ Test database reset and seeded successfully!"
-echo ""
-echo "🔐 Test accounts:"
-echo "  Admin: admin@blackbook.dev / password123"
-echo "  Writer: writer@blackbook.dev / password123"
-echo "  Collaborator: collaborator@blackbook.dev / password123"
+echo "Test database reset complete."

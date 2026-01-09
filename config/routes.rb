@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Health check endpoint for uptime monitoring
+  get "up" => "rails/health#show", as: :rails_health_check
+
   root to: 'universes#index'
 
   devise_for :users

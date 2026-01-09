@@ -1,0 +1,62 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+README.md
+CHANGELOG.md
+*.md
+
+# Development files
+.tool-versions
+.ruby-version
+
+# Test files
+spec/
+test/
+coverage/
+
+# Logs and temps
+log/*
+tmp/*
+*.log
+*.pid
+
+# Storage (use volumes)
+storage/*
+public/uploads
+
+# Node modules (if any)
+node_modules/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker files
+docker-compose*.yml
+Dockerfile*
+.dockerignore
+
+# CI/CD
+.github/
+
+# Vendor (gems should be installed, not copied)
+vendor/bundle
+
+# Database
+*.sqlite3
+db/*.sqlite3

@@ -22,7 +22,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:12.5-alpine
+        image: postgres:17.4-alpine
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: test_pass
@@ -54,7 +54,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.2.1"
+          ruby-version: "3.3.7"
           bundler-cache: true
 
       - name: Run RuboCop

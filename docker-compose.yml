@@ -1,7 +1,7 @@
 services:
   postgres_db:
     container_name: postgres_db
-    image: postgres:12.5-alpine
+    image: postgres:17.4-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
       - shared_data:/var/shared
@@ -14,6 +14,12 @@ services:
     ports:
       - 5434:5432
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   blackbook:
     container_name: blackbook
@@ -21,7 +27,8 @@ services:
       context: .
       dockerfile: ./Dockerfile-Dev
     depends_on:
-      - postgres_db
+      postgres_db:
+        condition: service_healthy
     environment:
       - NODE_ENV=development
       - RAILS_ENV=development
@@ -33,8 +40,7 @@ services:
     volumes:
       - .:/app
       - shared_data:/var/shared
-      - gem_cache:/usr/local/bundle/gems
-      - ./storage:/var/app/storage
+      - ./storage:/app/storage
     networks:
       - blackbook_network
     tty: true
@@ -42,11 +48,16 @@ services:
     ports:
       - 3001:3000
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 60s
 
 networks:
   blackbook_network:
 
 volumes:
   db_data:
-  gem_cache:
   shared_data:
