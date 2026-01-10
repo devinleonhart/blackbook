@@ -1,4 +1,8 @@
-<section class="image-list">
+<section
+  class="image-list"
+  data-controller="image-list"
+  data-action="turbo:load@window->image-list#refresh turbo:render@window->image-list#refresh pageshow@window->image-list#refresh"
+>
 
   <% if images.empty? %>
     <%= render partial: "shared/empty_banner", locals: {

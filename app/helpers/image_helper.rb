@@ -10,11 +10,21 @@ module ImageHelper
     return image_placeholder unless image&.image_file&.attached?
 
     if image.image_file.filename.extension.to_s.downcase == "gif"
-      image_tag(safe_url_for(image.image_file), class: "img-thumbnail", loading: "lazy")
+      image_tag(
+        safe_url_for(image.image_file),
+        class: "img-thumbnail",
+        loading: "lazy",
+        data: { reloadable_image: true },
+      )
     else
       resize_params = resize_to_limit_for(size)
       variant = image.image_file.variant(resize_to_limit: resize_params)
-      image_tag(safe_url_for(variant), class: "img-thumbnail", loading: "lazy")
+      image_tag(
+        safe_url_for(variant),
+        class: "img-thumbnail",
+        loading: "lazy",
+        data: { reloadable_image: true },
+      )
     end
   rescue StandardError => error
     Rails.logger.error("Failed to generate image tag for image #{image.id}: #{error.message}")
