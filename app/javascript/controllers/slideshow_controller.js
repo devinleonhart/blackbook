@@ -27,11 +27,17 @@ export default class extends Controller {
     this.playing = false
     this.timer = null
     this.hintTimer = null
+    this.pseudoFullscreen = false
 
     this.boundKeydown = (e) => this.onKeydown(e)
     this.boundFullscreenChange = () => this.onFullscreenChange()
+    this.boundResize = () => this.onResize()
     window.addEventListener("keydown", this.boundKeydown)
     document.addEventListener("fullscreenchange", this.boundFullscreenChange)
+    document.addEventListener("webkitfullscreenchange", this.boundFullscreenChange)
+    document.addEventListener("mozfullscreenchange", this.boundFullscreenChange)
+    document.addEventListener("MSFullscreenChange", this.boundFullscreenChange)
+    window.addEventListener("resize", this.boundResize)
 
     this.renderCounter()
     this.renderSpeedLabelFromInterval()
@@ -43,8 +49,13 @@ export default class extends Controller {
   disconnect() {
     this.stopTimer()
     this.clearHintTimer()
+    this.exitPseudoFullscreen()
     window.removeEventListener("keydown", this.boundKeydown)
     document.removeEventListener("fullscreenchange", this.boundFullscreenChange)
+    document.removeEventListener("webkitfullscreenchange", this.boundFullscreenChange)
+    document.removeEventListener("mozfullscreenchange", this.boundFullscreenChange)
+    document.removeEventListener("MSFullscreenChange", this.boundFullscreenChange)
+    window.removeEventListener("resize", this.boundResize)
   }
 
   togglePlay() {
@@ -131,14 +142,20 @@ export default class extends Controller {
     if (!this.hasStageTarget) return
 
     try {
+      if (this.pseudoFullscreen) {
+        this.exitPseudoFullscreen()
+        return
+      }
+
       if (this.currentFullscreenElement()) {
         await this.exitFullscreen()
       } else {
         await this.requestFullscreen(this.stageTarget)
       }
     } catch (e) {
-      // Mobile browsers may deny fullscreen; show a useful message instead of failing silently.
-      this.showError("Fullscreen is not available on this device/browser.")
+      // Fallback: pseudo fullscreen that works everywhere (including mobile browsers
+      // that block/deny the Fullscreen API).
+      this.enterPseudoFullscreen()
     }
   }
 
@@ -192,8 +209,12 @@ export default class extends Controller {
   }
 
   onFullscreenChange() {
-    if (this.hasControlsTarget) {
-      this.controlsTarget.classList.toggle("hidden", this.isStageFullscreen())
+    // Keep controls visible for pseudo fullscreen (mobile needs them).
+    if (this.hasControlsTarget && !this.pseudoFullscreen) {
+      const shouldHide = this.isStageFullscreen()
+      if (this.hasControlsTarget) {
+        this.controlsTargets.forEach((el) => el.classList.toggle("hidden", shouldHide))
+      }
     }
     this.renderFullscreenButton()
 
@@ -211,7 +232,8 @@ export default class extends Controller {
 
   renderFullscreenButton() {
     if (!this.hasFullscreenButtonTarget) return
-    this.fullscreenButtonTarget.textContent = this.currentFullscreenElement() ? "Exit fullscreen" : "Fullscreen"
+    this.fullscreenButtonTarget.textContent =
+      this.pseudoFullscreen || this.currentFullscreenElement() ? "Exit fullscreen" : "Fullscreen"
   }
 
   showFullscreenHint() {
@@ -272,6 +294,53 @@ export default class extends Controller {
 
   hideError() {
     if (this.hasErrorTarget) this.errorTarget.classList.add("hidden")
+  }
+
+  onResize() {
+    if (!this.pseudoFullscreen) return
+    // Trigger a repaint/layout update; some mobile browsers need this when the
+    // address bar collapses/expands.
+    this.stageTarget?.offsetHeight
+  }
+
+  enterPseudoFullscreen() {
+    if (this.pseudoFullscreen) return
+    this.pseudoFullscreen = true
+
+    document.documentElement.classList.add("bb-no-scroll")
+    document.body.classList.add("bb-no-scroll")
+
+    this.element.classList.add("bb-slideshow-shell--pseudo")
+    this.stageTarget.classList.add("bb-slideshow-stage--pseudo")
+    this.imageTarget.classList.remove("bb-slideshow-image--default")
+    this.imageTarget.classList.add("bb-slideshow-image--pseudo")
+
+    this.controlsTargets.forEach((el) => el.classList.add("bb-slideshow-controls--pseudo"))
+
+    this.showFullscreenHint()
+    this.renderFullscreenButton()
+    if (this.hasStageTarget) this.stageTarget.focus()
+  }
+
+  exitPseudoFullscreen() {
+    if (!this.pseudoFullscreen) return
+    this.pseudoFullscreen = false
+
+    document.documentElement.classList.remove("bb-no-scroll")
+    document.body.classList.remove("bb-no-scroll")
+
+    this.element.classList.remove("bb-slideshow-shell--pseudo")
+    if (this.hasStageTarget) this.stageTarget.classList.remove("bb-slideshow-stage--pseudo")
+
+    if (this.hasImageTarget) {
+      this.imageTarget.classList.remove("bb-slideshow-image--pseudo")
+      this.imageTarget.classList.add("bb-slideshow-image--default")
+    }
+
+    if (this.hasControlsTarget) this.controlsTargets.forEach((el) => el.classList.remove("bb-slideshow-controls--pseudo"))
+
+    this.hideFullscreenHint()
+    this.renderFullscreenButton()
   }
 
   currentFullscreenElement() {

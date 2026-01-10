@@ -84,4 +84,42 @@
   .bb-pill-gray {
     @apply bg-gray-100 text-gray-800;
   }
+
+  /* Slideshow fullscreen fallback (works everywhere, including mobile) */
+  .bb-no-scroll {
+    @apply overflow-hidden;
+  }
+
+  .bb-slideshow-shell {
+    @apply bg-white rounded-lg shadow-lg overflow-hidden border border-gray-300;
+  }
+
+  .bb-slideshow-shell--pseudo {
+    @apply fixed inset-0 z-50 rounded-none border-0 shadow-none bg-black flex flex-col;
+    height: 100dvh;
+  }
+
+  .bb-slideshow-controls--pseudo {
+    @apply bg-black/60 text-white border-0;
+  }
+
+  .bb-slideshow-stage {
+    @apply bg-black flex items-center justify-center relative;
+  }
+
+  .bb-slideshow-stage--pseudo {
+    @apply flex-1 min-h-0;
+  }
+
+  .bb-slideshow-image {
+    @apply w-auto object-contain;
+  }
+
+  .bb-slideshow-image--default {
+    @apply max-h-[70vh];
+  }
+
+  .bb-slideshow-image--pseudo {
+    @apply max-h-[100dvh];
+  }
 }
