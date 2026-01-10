@@ -126,11 +126,20 @@ export default class extends Controller {
     }
   }
 
-  async toggleFullscreen() {
+  async toggleFullscreen(event) {
+    event?.preventDefault?.()
     if (!this.hasStageTarget) return
 
-    if (document.fullscreenElement) await document.exitFullscreen()
-    else await this.stageTarget.requestFullscreen()
+    try {
+      if (this.currentFullscreenElement()) {
+        await this.exitFullscreen()
+      } else {
+        await this.requestFullscreen(this.stageTarget)
+      }
+    } catch (e) {
+      // Mobile browsers may deny fullscreen; show a useful message instead of failing silently.
+      this.showError("Fullscreen is not available on this device/browser.")
+    }
   }
 
   // --- internals ---
@@ -197,12 +206,12 @@ export default class extends Controller {
   }
 
   isStageFullscreen() {
-    return this.hasStageTarget && document.fullscreenElement === this.stageTarget
+    return this.hasStageTarget && this.currentFullscreenElement() === this.stageTarget
   }
 
   renderFullscreenButton() {
     if (!this.hasFullscreenButtonTarget) return
-    this.fullscreenButtonTarget.textContent = document.fullscreenElement ? "Exit fullscreen" : "Fullscreen"
+    this.fullscreenButtonTarget.textContent = this.currentFullscreenElement() ? "Exit fullscreen" : "Fullscreen"
   }
 
   showFullscreenHint() {
@@ -263,5 +272,33 @@ export default class extends Controller {
 
   hideError() {
     if (this.hasErrorTarget) this.errorTarget.classList.add("hidden")
+  }
+
+  currentFullscreenElement() {
+    return (
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement ||
+      null
+    )
+  }
+
+  exitFullscreen() {
+    const fn =
+      document.exitFullscreen ||
+      document.webkitExitFullscreen ||
+      document.mozCancelFullScreen ||
+      document.msExitFullscreen
+    return fn ? fn.call(document) : Promise.reject(new Error("fullscreen exit unsupported"))
+  }
+
+  requestFullscreen(element) {
+    const fn =
+      element.requestFullscreen ||
+      element.webkitRequestFullscreen ||
+      element.mozRequestFullScreen ||
+      element.msRequestFullscreen
+    return fn ? fn.call(element) : Promise.reject(new Error("fullscreen unsupported"))
   }
 }
