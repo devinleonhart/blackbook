@@ -4,7 +4,9 @@ Rails.application.routes.draw do
 
   root to: 'universes#index'
 
-  devise_for :users
+  Rails.application.deprecators.silence do
+    devise_for :users
+  end
 
   namespace :admin do
     root to: "dashboard#index"
@@ -46,6 +48,6 @@ Rails.application.routes.draw do
   # Custom image routes for cleaner URLs
   get '/images/:id/:filename', to: 'images#view', as: 'view_image', constraints: { filename: /.*/ }
 
-  get '404', :to => 'universes#index'
+  get "404", to: "universes#index"
 
 end

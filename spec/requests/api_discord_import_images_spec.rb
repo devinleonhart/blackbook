@@ -34,7 +34,7 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
       post "/api/discord_imports/images",
         params: { universe_code: "NOPE", image_file: "x" },
         headers: headers.merge("Authorization" => "Bearer expected")
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       json = response.parsed_body
       expect(json["error"]).to include("universe_code")
       expect(json["allowed_universe_codes"]).to be_a(Array)
@@ -47,7 +47,7 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
       post "/api/discord_imports/images",
         params: { universe_code: "KH" },
         headers: headers.merge("Authorization" => "Bearer expected")
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["error"]).to include("image_file")
     end
   end

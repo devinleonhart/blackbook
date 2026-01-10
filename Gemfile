@@ -24,9 +24,11 @@ gem 'will_paginate', '~> 4.0'
 group :development do
   gem "observer", "~> 0.1"
   gem "rubocop", "~> 1.82"
+  gem "rubocop-factory_bot", "~> 2.28"
   gem "rubocop-rails", "~> 2.34"
   gem "rubocop-rake", "~> 0.7"
   gem "rubocop-rspec", "~> 3.9"
+  gem "rubocop-rspec_rails", "~> 2.32"
 end
 
 group :test do

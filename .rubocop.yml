@@ -2,6 +2,8 @@ plugins:
   - rubocop-rails
   - rubocop-rake
   - rubocop-rspec
+  - rubocop-factory_bot
+  - rubocop-rspec_rails
 
 AllCops:
   TargetRubyVersion: 3.2
@@ -106,6 +108,15 @@ RSpec/RepeatedExampleGroupDescription:
   Enabled: false
 
 RSpec/VerifiedDoubles:
+  Enabled: false
+
+FactoryBot/AssociationStyle:
+  Enabled: false
+
+FactoryBot/ExcessiveCreateList:
+  Enabled: false
+
+RSpecRails/InferredSpecType:
   Enabled: false
 
 Style/ClassAndModuleChildren:
