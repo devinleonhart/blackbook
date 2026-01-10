@@ -1,15 +1,5 @@
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: image_tags
-#
-#  id           :bigint           not null, primary key
-#  character_id :integer          not null
-#  image_id     :integer          not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#
 FactoryBot.define do
   factory :image_tag do
     association :character

@@ -27,18 +27,18 @@ module Api
           render json: {
             error: "universe_code is invalid",
             allowed_universe_codes: UNIVERSE_CODE_TO_NAME.keys,
-          }, status: :unprocessable_entity
+          }, status: :unprocessable_content
           return
         end
 
         if file.blank?
-          render json: { error: "image_file is required" }, status: :unprocessable_entity
+          render json: { error: "image_file is required" }, status: :unprocessable_content
           return
         end
 
         universe = Universe.find_by(name: universe_name)
         if universe.nil?
-          render json: { error: "Universe not found: #{universe_name}" }, status: :unprocessable_entity
+          render json: { error: "Universe not found: #{universe_name}" }, status: :unprocessable_content
           return
         end
 
@@ -48,7 +48,7 @@ module Api
         if image.save
           render json: { image_id: image.id }, status: :created
         else
-          render json: { error: image.errors.full_messages.join(", ") }, status: :unprocessable_entity
+          render json: { error: image.errors.full_messages.join(", ") }, status: :unprocessable_content
         end
       end
 

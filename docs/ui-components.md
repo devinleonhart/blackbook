@@ -2,7 +2,7 @@
 
 We use Tailwind utility classes in views, but when a pattern repeats across the app, we extract it into a **small** set of component classes using `@apply`.
 
-- **Source of truth**: `app/assets/stylesheets/application.tailwind.css` (`@layer components`)
+- **Source of truth**: `app/assets/tailwind/application.css` (Tailwind v4 input; includes `@layer components`)
 - **Naming**: `bb-*` to avoid collisions with Tailwind or third-party CSS
 - **Rule of thumb**: don’t invent a component unless the same utility bundle appears repeatedly.
 

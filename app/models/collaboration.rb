@@ -1,15 +1,5 @@
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: collaborations
-#
-#  id          :bigint           not null, primary key
-#  user_id     :integer          not null
-#  universe_id :integer          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#
 class Collaboration < ApplicationRecord
   validates :user, uniqueness: { scope: :universe_id }
 

@@ -1,15 +1,5 @@
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: character_tags
-#
-#  id           :bigint           not null, primary key
-#  name         :string           not null
-#  character_id :bigint           not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#
 class CharacterTag < ApplicationRecord
   validates :name, presence: true, length: { minimum: 1 }
   validates :name, uniqueness: { scope: :character_id, case_sensitive: false }

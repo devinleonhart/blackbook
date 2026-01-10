@@ -17,6 +17,7 @@ require "spec_helper"
 require "rspec/rails"
 
 # Add additional requires below this line. Rails is not loaded until this point!
+Rails.application.reload_routes!
 Dir[Rails.root.join("spec/support/**/*.rb")].sort.each { |f| require f }
 
 begin
@@ -29,7 +30,7 @@ end
 RSpec.configure do |config|
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
+  config.fixture_paths = [Rails.root.join("spec", "fixtures").to_s]
   config.use_transactional_fixtures = true
   config.filter_rails_from_backtrace!
 end

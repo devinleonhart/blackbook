@@ -1,15 +1,5 @@
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: images
-#
-#  id          :bigint           not null, primary key
-#  caption     :text             default(""), not null
-#  universe_id :integer          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#
 class Image < ApplicationRecord
   after_create :set_filename
   validate :requires_image_attached

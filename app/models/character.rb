@@ -1,16 +1,5 @@
 # frozen_string_literal: true
 
-# == Schema Information
-#
-# Table name: characters
-#
-#  id           :bigint           not null, primary key
-#  name         :citext           not null
-#  universe_id  :integer          not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  discarded_at :datetime
-#
 class Character < ApplicationRecord
   validates :name, presence: true
   validates :name, uniqueness: { scope: :universe_id, case_sensitive: false }

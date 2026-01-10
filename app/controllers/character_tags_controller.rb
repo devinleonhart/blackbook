@@ -40,7 +40,7 @@ class CharacterTagsController < ApplicationController
       redirect_to character_path(@character)
     else
       flash[:error] = @character_tag.errors.full_messages.join(", ")
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 
@@ -50,7 +50,7 @@ class CharacterTagsController < ApplicationController
       redirect_to character_character_tags_path(@character)
     else
       flash[:error] = @character_tag.errors.full_messages.join(", ")
-      render :edit, status: :unprocessable_entity
+      render :edit, status: :unprocessable_content
     end
   end
 
