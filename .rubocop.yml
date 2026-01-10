@@ -44,6 +44,10 @@ Layout/CaseIndentation:
 Lint/AmbiguousBlockAssociation:
   Enabled: false
 
+Lint/DuplicateBranch:
+  Exclude:
+    - "db/seeds.rb"
+
 Naming/RescuedExceptionsVariableName:
   PreferredName: error
 
@@ -60,10 +64,18 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Enabled: false
 
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - "db/seeds.rb"
+
 Metrics/MethodLength:
   Enabled: false
   Exclude:
     - "db/**/*"
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - "db/seeds.rb"
 
 Rails:
   Enabled: true

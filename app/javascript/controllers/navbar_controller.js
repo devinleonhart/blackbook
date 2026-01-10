@@ -31,4 +31,3 @@ export default class extends Controller {
     if (this.hasButtonTarget) this.buttonTarget.setAttribute("aria-expanded", "false")
   }
 }
-

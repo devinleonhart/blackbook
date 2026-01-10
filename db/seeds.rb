@@ -12,6 +12,7 @@ end
 
 def seed_image_variants(bytes, count: 6)
   return [] if bytes.nil?
+
   (0...count).map do |i|
     bytes + "\nSEED_VARIANT=#{i}\n"
   end
@@ -88,15 +89,15 @@ def seed_sample_data!
 
   characters_by_universe = {}
   universes.each_with_index do |universe, idx|
-    count = universe.name == "Admin Universe" ? 6 : (12 + idx * 4)
-    names = character_name_pool.shuffle(random: rng).first(count)
+    count = universe.name == "Admin Universe" ? 6 : (12 + (idx * 4))
+    names = character_name_pool.sample(count, random: rng)
 
     characters = names.map { |name| Character.create!(universe: universe, name: name) }
     characters_by_universe[universe.id] = characters
 
     characters.each do |character|
       # Give each character a couple tags, with some overlap for the tag browser.
-      tags = tag_pool.shuffle(random: rng).first(2 + rng.rand(3))
+      tags = tag_pool.sample(2 + rng.rand(3), random: rng)
       tags.each { |t| character.character_tags.create!(name: t) }
     end
   end
@@ -113,15 +114,14 @@ def seed_sample_data!
       case universe.name
       when "Example Universe" then 180
       when "Cyber City" then 80
-      when "High Fantasy" then 80
-      when "Space Opera" then 80
+      when "High Fantasy", "Space Opera" then 80
       when "Admin Universe" then 180
       else 50
       end
 
     images = []
     image_count.times do |i|
-      caption = "#{universe.name} — #{caption_bits.sample(random: rng)} ##{format("%02d", i + 1)}"
+      caption = "#{universe.name} — #{caption_bits.sample(random: rng)} ##{format('%02d', i + 1)}"
       image = Image.new(universe: universe, caption: caption)
 
       if image_variants.any?
