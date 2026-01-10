@@ -8,7 +8,8 @@ export default class extends Controller {
     "speed",
     "speedLabel",
     "stage",
-    "controls",
+    "topControls",
+    "bottomControls",
     "fullscreenButton",
     "fullscreenHint",
     "loading",
@@ -32,12 +33,14 @@ export default class extends Controller {
     this.boundKeydown = (e) => this.onKeydown(e)
     this.boundFullscreenChange = () => this.onFullscreenChange()
     this.boundResize = () => this.onResize()
+    this.boundOrientationChange = () => this.onResize()
     window.addEventListener("keydown", this.boundKeydown)
     document.addEventListener("fullscreenchange", this.boundFullscreenChange)
     document.addEventListener("webkitfullscreenchange", this.boundFullscreenChange)
     document.addEventListener("mozfullscreenchange", this.boundFullscreenChange)
     document.addEventListener("MSFullscreenChange", this.boundFullscreenChange)
     window.addEventListener("resize", this.boundResize)
+    window.addEventListener("orientationchange", this.boundOrientationChange)
 
     this.renderCounter()
     this.renderSpeedLabelFromInterval()
@@ -56,6 +59,7 @@ export default class extends Controller {
     document.removeEventListener("mozfullscreenchange", this.boundFullscreenChange)
     document.removeEventListener("MSFullscreenChange", this.boundFullscreenChange)
     window.removeEventListener("resize", this.boundResize)
+    window.removeEventListener("orientationchange", this.boundOrientationChange)
   }
 
   togglePlay() {
@@ -159,6 +163,23 @@ export default class extends Controller {
     }
   }
 
+  stageTapped(event) {
+    // If the user taps the image/stage on mobile, exit pseudo fullscreen immediately.
+    // This guarantees an escape hatch even if controls are visually obstructed.
+    if (!this.pseudoFullscreen && !this.currentFullscreenElement()) return
+
+    // Don't treat taps on controls as stage taps.
+    if (event?.target?.closest?.("[data-slideshow-target='topControls'],[data-slideshow-target='bottomControls']")) return
+
+    if (this.pseudoFullscreen) {
+      this.exitPseudoFullscreen()
+      return
+    }
+
+    // Best-effort exit real fullscreen.
+    this.exitFullscreen().catch(() => {})
+  }
+
   // --- internals ---
 
   hasSlides() {
@@ -209,12 +230,11 @@ export default class extends Controller {
   }
 
   onFullscreenChange() {
-    // Keep controls visible for pseudo fullscreen (mobile needs them).
-    if (this.hasControlsTarget && !this.pseudoFullscreen) {
+    // In real fullscreen we hide chrome; in pseudo fullscreen we manage that ourselves.
+    if (this.hasTopControlsTarget && !this.pseudoFullscreen) {
       const shouldHide = this.isStageFullscreen()
-      if (this.hasControlsTarget) {
-        this.controlsTargets.forEach((el) => el.classList.toggle("hidden", shouldHide))
-      }
+      this.topControlsTarget.classList.toggle("hidden", shouldHide)
+      if (this.hasBottomControlsTarget) this.bottomControlsTarget.classList.toggle("hidden", shouldHide)
     }
     this.renderFullscreenButton()
 
@@ -298,9 +318,7 @@ export default class extends Controller {
 
   onResize() {
     if (!this.pseudoFullscreen) return
-    // Trigger a repaint/layout update; some mobile browsers need this when the
-    // address bar collapses/expands.
-    this.stageTarget?.offsetHeight
+    this.updatePseudoDimensions()
   }
 
   enterPseudoFullscreen() {
@@ -315,7 +333,11 @@ export default class extends Controller {
     this.imageTarget.classList.remove("bb-slideshow-image--default")
     this.imageTarget.classList.add("bb-slideshow-image--pseudo")
 
-    this.controlsTargets.forEach((el) => el.classList.add("bb-slideshow-controls--pseudo"))
+    // Hide all UI chrome in pseudo fullscreen so the image can be as large as possible.
+    if (this.hasTopControlsTarget) this.topControlsTarget.classList.add("hidden")
+    if (this.hasBottomControlsTarget) this.bottomControlsTarget.classList.add("hidden")
+
+    this.updatePseudoDimensions()
 
     this.showFullscreenHint()
     this.renderFullscreenButton()
@@ -329,6 +351,9 @@ export default class extends Controller {
     document.documentElement.classList.remove("bb-no-scroll")
     document.body.classList.remove("bb-no-scroll")
 
+    this.element.style.height = ""
+    if (this.hasStageTarget) this.stageTarget.style.height = ""
+
     this.element.classList.remove("bb-slideshow-shell--pseudo")
     if (this.hasStageTarget) this.stageTarget.classList.remove("bb-slideshow-stage--pseudo")
 
@@ -337,10 +362,24 @@ export default class extends Controller {
       this.imageTarget.classList.add("bb-slideshow-image--default")
     }
 
-    if (this.hasControlsTarget) this.controlsTargets.forEach((el) => el.classList.remove("bb-slideshow-controls--pseudo"))
+    if (this.hasTopControlsTarget) this.topControlsTarget.classList.remove("hidden")
+    if (this.hasBottomControlsTarget) this.bottomControlsTarget.classList.remove("hidden")
 
     this.hideFullscreenHint()
     this.renderFullscreenButton()
+  }
+
+  updatePseudoDimensions() {
+    if (!this.pseudoFullscreen) return
+    if (!this.hasStageTarget) return
+
+    const viewportHeight = window.visualViewport?.height || window.innerHeight
+    // Lock to the current viewport height so orientation/address-bar changes resize cleanly.
+    this.element.style.height = `${Math.round(viewportHeight)}px`
+    this.stageTarget.style.height = `${Math.round(viewportHeight)}px`
+
+    // Force a reflow for mobile browsers when the address bar collapses/expands.
+    this.stageTarget.offsetHeight
   }
 
   currentFullscreenElement() {

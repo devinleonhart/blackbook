@@ -85,7 +85,6 @@
     @apply bg-gray-100 text-gray-800;
   }
 
-  /* Slideshow fullscreen fallback (works everywhere, including mobile) */
   .bb-no-scroll {
     @apply overflow-hidden;
   }
@@ -99,12 +98,24 @@
     height: 100dvh;
   }
 
+  .bb-slideshow-controls {
+    @apply p-4;
+  }
+
+  .bb-slideshow-controls--top {
+    @apply bg-gray-100 text-gray-900 border-b border-gray-200;
+  }
+
+  .bb-slideshow-controls--bottom {
+    @apply bg-gray-100 text-gray-900 border-t border-gray-200;
+  }
+
   .bb-slideshow-controls--pseudo {
-    @apply bg-black/60 text-white border-0;
+    @apply bg-black/80 text-white border-0;
   }
 
   .bb-slideshow-stage {
-    @apply bg-black flex items-center justify-center relative;
+    @apply bg-black flex items-center justify-center relative overflow-hidden;
   }
 
   .bb-slideshow-stage--pseudo {
@@ -112,7 +123,7 @@
   }
 
   .bb-slideshow-image {
-    @apply w-auto object-contain;
+    @apply w-auto object-contain max-w-full;
   }
 
   .bb-slideshow-image--default {
@@ -120,6 +131,6 @@
   }
 
   .bb-slideshow-image--pseudo {
-    @apply max-h-[100dvh];
+    @apply max-h-full;
   }
 }

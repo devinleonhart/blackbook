@@ -19,7 +19,7 @@
         data-slideshow-interval-ms-value="3000"
       >
         <!-- Top controls -->
-        <div class="p-4 bg-gray-100 text-gray-900 border-b border-gray-200" data-slideshow-target="controls">
+        <div class="bb-slideshow-controls bb-slideshow-controls--top" data-slideshow-target="topControls">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex flex-wrap items-center gap-2">
               <%= form_with url: slideshow_path, method: :get, local: true, class: "flex items-center" do %>
@@ -60,6 +60,7 @@
         <div
           class="bb-slideshow-stage"
           data-slideshow-target="stage"
+          data-action="click->slideshow#stageTapped"
           tabindex="0"
         >
           <img
@@ -83,7 +84,7 @@
         </div>
 
         <!-- Bottom controls -->
-        <div class="p-4 bg-gray-100 text-gray-900 border-t border-gray-200" data-slideshow-target="controls">
+        <div class="bb-slideshow-controls bb-slideshow-controls--bottom" data-slideshow-target="bottomControls">
           <div class="flex items-center justify-between">
             <label class="text-sm font-medium text-gray-700" for="slideshow_speed">Speed</label>
             <span class="text-sm text-gray-700 w-16 text-right" data-slideshow-target="speedLabel">3.0s</span>
