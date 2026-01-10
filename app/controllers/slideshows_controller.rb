@@ -4,15 +4,21 @@ class SlideshowsController < ApplicationController
   def show
     universe_ids = accessible_universe_ids_for_user(current_user)
     @mode = slideshow_mode
-    @has_images = slideshow_images_scope(universe_ids).limit(1).exists?
+    @universe_id = selected_universe_id!(universe_ids)
+    @universes = Universe.where(id: universe_ids).order(Arel.sql("LOWER(universes.name) ASC"))
+
+    scoped_universe_ids = @universe_id ? [@universe_id] : universe_ids
+    @has_images = slideshow_images_scope(scoped_universe_ids).limit(1).exists?
   end
 
   def images
     universe_ids = accessible_universe_ids_for_user(current_user)
     @mode = slideshow_mode
+    universe_id = selected_universe_id!(universe_ids)
+    scoped_universe_ids = universe_id ? [universe_id] : universe_ids
 
     images =
-      slideshow_images_scope(universe_ids)
+      slideshow_images_scope(scoped_universe_ids)
       .with_attached_image_file
       .limit(5000)
       .to_a
@@ -31,6 +37,18 @@ class SlideshowsController < ApplicationController
     return "favorites" if mode == "favorites"
 
     "all"
+  end
+
+  def selected_universe_id!(allowed_universe_ids)
+    raw = params[:universe_id].to_s
+    return nil if raw.blank?
+
+    id = Integer(raw, 10)
+    raise ActiveRecord::RecordNotFound unless allowed_universe_ids.include?(id)
+
+    id
+  rescue ArgumentError
+    raise ActiveRecord::RecordNotFound
   end
 
   def slideshow_images_scope(universe_ids)
