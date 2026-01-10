@@ -21,7 +21,7 @@
 
           <% unless current_universe.nil? %>
             <span class="text-gray-400 mx-2">|</span>
-            <%= link_to "#{current_universe.name}", universe_url(current_universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+            <%= link_to "#{current_universe.name}", universe_url(current_universe), class: "bb-nav-link" %>
 
             <% unless @character_tag.nil? %>
               <span class="text-gray-400 mx-2">|</span>
@@ -36,26 +36,26 @@
           <div class="flex space-x-4">
             <% unless @universe.nil? %>
               <% unless @character_tag %>
-                <%= link_to "New Character", new_universe_character_url(@universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-                <%= link_to "Edit Universe", edit_universe_url(@universe), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+                <%= link_to "New Character", new_universe_character_url(@universe), class: "bb-nav-link" %>
+                <%= link_to "Edit Universe", edit_universe_url(@universe), class: "bb-nav-link" %>
               <% end %>
             <% end %>
             <% unless @character.nil? %>
               <% unless @character_tag %>
-                <%= link_to "Edit Character", edit_character_url(@character), class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+                <%= link_to "Edit Character", edit_character_url(@character), class: "bb-nav-link" %>
               <% end %>
             <% end %>
             <% if admin? %>
-              <%= link_to "Admin", admin_root_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <%= link_to "Admin", admin_root_path, class: "bb-nav-link" %>
             <% end %>
             <% if user_signed_in? %>
-              <%= link_to "Random", random_image_path, data: { turbo: false }, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-              <%= link_to "Slideshow", slideshow_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-              <%= link_to "Favorites", favorites_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-              <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <%= link_to "Random", random_image_path, data: { turbo: false }, class: "bb-nav-link" %>
+              <%= link_to "Slideshow", slideshow_path, class: "bb-nav-link" %>
+              <%= link_to "Favorites", favorites_path, class: "bb-nav-link" %>
+              <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "bb-nav-link" %>
             <% else %>
-              <%= link_to "Register", new_user_registration_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
-              <%= link_to "Sign in", new_user_session_path, class: "text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium" %>
+              <%= link_to "Register", new_user_registration_path, class: "bb-nav-link" %>
+              <%= link_to "Sign in", new_user_session_path, class: "bb-nav-link" %>
             <% end %>
           </div>
         </div>

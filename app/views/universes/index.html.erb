@@ -1,13 +1,13 @@
-<section id="universes-index-view" class="py-8 min-h-screen bg-gray-50">
+<section id="universes-index-view" class="bb-page">
 
   <div class="max-w-4xl mx-auto px-4">
     <div class="flex justify-center">
       <div class="w-full">
         <div class="text-center mb-8">
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Your Universes</h1>
+          <h1 class="bb-heading-xl">Your Universes</h1>
         </div>
 
-        <div class="bg-white rounded-lg px-8 pt-6 pb-8 shadow-lg">
+        <div class="bb-card bb-card--form">
           <% if @universes.empty? %>
             <div class="text-center py-8">
               <h3 class="text-lg font-semibold text-gray-600 mb-2">No universes yet</h3>

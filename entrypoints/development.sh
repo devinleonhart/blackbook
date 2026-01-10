@@ -13,5 +13,8 @@ fi
 # Remove pre-existing puma/passenger server.pid
 rm -f $APP_PATH/tmp/pids/server.pid
 
+echo "Building Tailwind CSS…"
+bundle exec rails tailwindcss:build
+
 # run passed commands
 bundle exec ${@}

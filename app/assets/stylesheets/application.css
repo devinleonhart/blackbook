@@ -1,23 +1,18 @@
-/* Character selector custom scrollbar */
-.character-selector .character-quick-list {
-  margin-top: 1rem;
-}
-
 /* Custom scrollbar for webkit browsers */
-.character-selector .character-results::-webkit-scrollbar {
+[data-character-results]::-webkit-scrollbar {
   width: 6px;
 }
 
-.character-selector .character-results::-webkit-scrollbar-track {
+[data-character-results]::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 3px;
 }
 
-.character-selector .character-results::-webkit-scrollbar-thumb {
+[data-character-results]::-webkit-scrollbar-thumb {
   background: #c1c1c1;
   border-radius: 3px;
 }
 
-.character-selector .character-results::-webkit-scrollbar-thumb:hover {
+[data-character-results]::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }

@@ -1,12 +1,12 @@
-<section id="characters-show-view" class="py-8 min-h-screen">
+<section id="characters-show-view" class="bb-page">
 
   <% render partial: "shared/capture_navbar" %>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="bb-container">
     <div class="flex flex-col lg:flex-row gap-8">
       <!-- Left Sidebar - Character Tags -->
       <div class="w-full lg:w-1/4 order-2 lg:order-1">
-        <div class="bg-white rounded-lg p-6 shadow-lg">
+        <div class="bb-card bb-card--panel">
           <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Character Tags</h2>
 
           <!-- Current Tags -->
@@ -17,7 +17,7 @@
             <% else %>
               <div class="flex flex-wrap gap-2">
                 <% @character.character_tags.order(:name).each do |tag| %>
-                  <div class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                  <div class="bb-pill bb-pill-blue">
                     <%= link_to tag.name, character_tag_path(tag), class: "hover:underline" %>
                   </div>
                 <% end %>
@@ -27,7 +27,7 @@
 
           <!-- Manage Tags Link -->
           <div class="mb-6">
-            <%= link_to "Manage Tags", character_character_tags_path(@character), class: "text-blue-600 hover:text-blue-800 text-sm font-medium hover:underline" %>
+            <%= link_to "Manage Tags", character_character_tags_path(@character), class: "bb-link text-sm font-medium" %>
           </div>
 
           <!-- Add New Tag -->
@@ -35,7 +35,7 @@
             <h3 class="text-lg font-medium mb-4">Add Tag</h3>
             <%= form_with model: [@character, @character.character_tags.build], url: character_character_tags_path(@character), method: :post, class: "mb-6", local: true do |form| %>
               <div class="space-y-3">
-                <%= form.text_field :name, placeholder: "Enter tag name...", class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm" %>
+                <%= form.text_field :name, placeholder: "Enter tag name...", class: "bb-input text-sm" %>
                 <%= form.submit "Add", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm transition-colors duration-200" %>
               </div>
             <% end %>
@@ -78,7 +78,7 @@
 
       <!-- Main Content - Images -->
       <div class="w-full lg:w-3/4 order-1 lg:order-2">
-        <div class="bg-white rounded-lg p-6">
+        <div class="bb-card bb-card--panel">
           <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center"><%= @character.name %></h1>
           <%= render partial: "shared/image_list", locals: {
             images: @images,

@@ -18,7 +18,7 @@
             <h3 class="text-lg font-semibold text-gray-900">This image contains...</h3>
             <% @image.image_tags.each do | tag | %>
               <li class="flex items-center justify-between gap-3">
-                <%= link_to "#{tag.character.name}", character_url(tag.character), class: "text-blue-600 hover:text-blue-800 hover:underline" %>
+                <%= link_to "#{tag.character.name}", character_url(tag.character), class: "bb-link" %>
                 <%= link_to image_tag_url(tag), method: "delete", class: "text-red-600 hover:text-red-800", aria: { label: "Remove tag" } do %>
                   ✕
                 <% end %>
@@ -34,14 +34,14 @@
         <% else %>
           <h3 class="text-lg font-semibold text-gray-900 mt-6">You could add...</h3>
           <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post", class: "mt-2 flex items-center gap-2" do |form| %>
-            <%= form.select :character_id, generate_character_names(@image.universe.characters, @image.image_tags), { include_blank: true }, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+            <%= form.select :character_id, generate_character_names(@image.universe.characters, @image.image_tags), { include_blank: true }, class: "bb-input" %>
             <%= form.submit "Add", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
           <% end %>
         <% end %>
 
         <%= form_with model: @image, url: universe_image_url(@image.universe, @image), method: "patch", class: "mt-6 space-y-2" do |form| %>
           <%= form.label :caption, "Caption", class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_field :caption, class: "w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+          <%= form.text_field :caption, class: "bb-input" %>
           <div class="flex items-center gap-2">
             <%= form.submit "Update", class: "bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold py-2 px-4 rounded border border-gray-200" %>
             <%= link_to "Delete", universe_image_url(@image), method: "delete", data: { confirm: "Are you sure?" }, class: "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" %>

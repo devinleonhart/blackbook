@@ -1,4 +1,4 @@
-<section id="users-index-view" class="py-8 min-h-screen bg-gray-50">
+<section id="users-index-view" class="bb-page">
 
   <div class="max-w-4xl mx-auto px-4">
     <div class="mb-6">
@@ -8,11 +8,11 @@
     <div class="flex justify-center">
       <div class="w-full">
         <div class="text-center mb-8">
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">User Management</h1>
-          <p class="text-gray-600">Manage system users and permissions</p>
+          <h1 class="bb-heading-xl">User Management</h1>
+          <p class="bb-subtitle">Manage system users and permissions</p>
         </div>
 
-        <div class="bg-white rounded-lg px-8 pt-6 pb-8 shadow-lg">
+        <div class="bb-card bb-card--form">
           <%= render partial: "shared/user_table", locals: {
             users: @users.sort_by {|u| u.email }
           } %>

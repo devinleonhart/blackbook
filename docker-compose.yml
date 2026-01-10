@@ -21,11 +21,30 @@ services:
       retries: 5
       start_period: 10s
 
+  css:
+    container_name: blackbook_css
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: dev
+    environment:
+      - NODE_ENV=development
+      - RAILS_ENV=development
+    volumes:
+      - .:/app
+    tty: true
+    stdin_open: true
+    command: bin/rails tailwindcss:watch[poll]
+    healthcheck:
+      disable: true
+    restart: unless-stopped
+
   blackbook:
     container_name: blackbook
     build:
       context: .
-      dockerfile: ./Dockerfile-Dev
+      dockerfile: ./Dockerfile
+      target: dev
     depends_on:
       postgres_db:
         condition: service_healthy

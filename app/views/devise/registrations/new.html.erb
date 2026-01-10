@@ -1,56 +1,56 @@
-<section id="bb_register" class="py-8 min-h-screen bg-gray-50">
-  <div class="max-w-md mx-auto px-4">
+<section id="bb_register" class="bb-page">
+  <div class="bb-container-md">
     <div class="flex justify-center">
       <div class="w-full">
         <div class="text-center mb-8">
-          <h1 class="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-          <p class="text-gray-600">Join Blackbook to start creating</p>
+          <h1 class="bb-heading-xl">Create Account</h1>
+          <p class="bb-subtitle">Join Blackbook to start creating</p>
         </div>
 
-        <%= form_for(resource, as: resource_name, html: {class: "bg-white rounded-lg px-8 pt-6 pb-8 shadow-lg"}, url: registration_path(resource_name)) do |form| %>
+        <%= form_for(resource, as: resource_name, html: {class: "bb-card bb-card--form"}, url: registration_path(resource_name)) do |form| %>
 
        <div class="mb-4">
-          <%= form.label :email, for: "newUserRegisterEmail", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <%= form.label :email, for: "newUserRegisterEmail", class: "bb-label" %>
           <div class="relative">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span class="text-gray-400">✉️</span>
             </span>
-            <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserRegisterEmail", class: 'w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500', placeholder: "your_email@gmail.com", required: true %>
+            <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserRegisterEmail", class: "bb-input pl-10 pr-3", placeholder: "your_email@gmail.com", required: true %>
           </div>
         </div>
 
         <div class="mb-4">
-          <%= form.label :display_name, for: "newUserRegisterDisplayname", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <%= form.label :display_name, for: "newUserRegisterDisplayname", class: "bb-label" %>
           <div class="relative">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span class="text-gray-400">👤</span>
             </span>
-            <%= form.text_field :display_name, autocomplete: "display name", id: "newUserRegisterDisplayname", class: 'w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500', placeholder: "CoolUser69", required: true %>
+            <%= form.text_field :display_name, autocomplete: "display name", id: "newUserRegisterDisplayname", class: "bb-input pl-10 pr-3", placeholder: "CoolUser69", required: true %>
           </div>
         </div>
 
         <div class="mb-4">
-          <%= form.label :password, for: "newUserRegisterPassword", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <%= form.label :password, for: "newUserRegisterPassword", class: "bb-label" %>
           <div class="relative">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span class="text-gray-400">🔒</span>
             </span>
-            <%= form.password_field :password, id: "newUserRegisterPassword", class: 'w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500', required: true  %>
+            <%= form.password_field :password, id: "newUserRegisterPassword", class: "bb-input pl-10 pr-3", required: true  %>
           </div>
         </div>
 
         <div class="mb-6">
-          <%= form.label :password_confirmation, for: "newUserRegisterPasswordconfirmation", class: "block text-gray-700 text-sm font-bold mb-2" %>
+          <%= form.label :password_confirmation, for: "newUserRegisterPasswordconfirmation", class: "bb-label" %>
           <div class="relative">
             <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span class="text-gray-400">🔒</span>
             </span>
-            <%= form.password_field :password_confirmation, id: "newUserRegisterPasswordconfirmation", class: 'w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500', required: true  %>
+            <%= form.password_field :password_confirmation, id: "newUserRegisterPasswordconfirmation", class: "bb-input pl-10 pr-3", required: true  %>
           </div>
         </div>
 
         <div class="flex items-center justify-between">
-          <%= form.submit "Create Account", id: "newUserRegisterSubmit", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none w-full transition-colors duration-200" %>
+          <%= form.submit "Create Account", id: "newUserRegisterSubmit", class: "bb-btn bb-btn-primary bb-btn--full" %>
         </div>
 
       <% end %>

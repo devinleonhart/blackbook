@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "stringio"
+require "securerandom"
 
 def seed_image_bytes
   path = Rails.root.join("spec/fixtures/files/test_image.jpg")
@@ -9,12 +10,19 @@ def seed_image_bytes
   File.binread(path)
 end
 
-def attach_seed_image!(image, bytes)
+def seed_image_variants(bytes, count: 6)
+  return [] if bytes.nil?
+  (0...count).map do |i|
+    bytes + "\nSEED_VARIANT=#{i}\n"
+  end
+end
+
+def attach_seed_image!(image, bytes, filename: "seed_image.jpg")
   return if bytes.nil?
 
   image.image_file.attach(
     io: StringIO.new(bytes),
-    filename: "seed_image.jpg",
+    filename: filename,
     content_type: "image/jpeg",
   )
 end
@@ -30,46 +38,127 @@ def create_user!(email:, display_name:, admin: false, password: "password123")
 end
 
 def seed_sample_data!
-  bytes = seed_image_bytes
+  rng = Random.new(42)
+
+  base_bytes = seed_image_bytes
+  image_variants = seed_image_variants(base_bytes, count: 8)
 
   admin = create_user!(email: "admin@blackbook.dev", display_name: "Admin", admin: true)
   owner = create_user!(email: "owner@blackbook.dev", display_name: "Owner")
   collaborator = create_user!(email: "collaborator@blackbook.dev", display_name: "Collaborator")
+  alice = create_user!(email: "alice@blackbook.dev", display_name: "Alice")
+  bob = create_user!(email: "bob@blackbook.dev", display_name: "Bob")
 
-  universe = Universe.create!(name: "Example Universe", owner: owner)
-  Collaboration.create!(universe: universe, user: collaborator)
+  users = [admin, owner, collaborator, alice, bob]
 
-  admin_universe = Universe.create!(name: "Admin Universe", owner: admin)
+  # --- Universes (mix of ownership + collaborations) ---
+  universe_specs = [
+    { name: "Example Universe", owner: owner, collaborators: [collaborator, alice] },
+    { name: "Cyber City", owner: owner, collaborators: [bob] },
+    { name: "High Fantasy", owner: alice, collaborators: [owner, collaborator] },
+    { name: "Space Opera", owner: bob, collaborators: [owner] },
+    { name: "Admin Universe", owner: admin, collaborators: [] },
+  ]
 
-  hero = Character.create!(universe: universe, name: "Hero")
-  guide = Character.create!(universe: universe, name: "Guide")
-  villain = Character.create!(universe: universe, name: "Villain")
+  universes =
+    universe_specs.map do |spec|
+      u = Universe.create!(name: spec[:name], owner: spec[:owner])
+      Array(spec[:collaborators]).each { |c| Collaboration.create!(universe: u, user: c) }
+      u
+    end
 
-  hero.character_tags.create!(name: "protagonist")
-  guide.character_tags.create!(name: "mentor")
-  villain.character_tags.create!(name: "antagonist")
+  # --- Characters + character tags ---
+  tag_pool = %w[
+    hero villain sidekick mentor rival antihero
+    mage warrior rogue cleric ranger
+    android hacker detective noble
+    leader outlaw scholar spy
+    protagonist antagonist
+    fire ice lightning shadow light
+    ally enemy neutral
+    healer tank dps
+    royal commoner merchant
+  ]
 
-  images =
-    [
-      Image.new(universe: universe, caption: "Hero portrait"),
-      Image.new(universe: universe, caption: "Villain reveal"),
-      Image.new(universe: universe, caption: "The meeting"),
-      Image.new(universe: admin_universe, caption: "Admin-only reference"),
-    ]
+  character_name_pool = [
+    "Astra", "Nova", "Ember", "Sable", "Orion", "Lyra", "Iris", "Vega", "Juno", "Echo",
+    "Rook", "Cipher", "Nyx", "Sol", "Zephyr", "Rowan", "Mira", "Kai", "Riven", "Arden",
+    "Morrigan", "Thorne", "Alaric", "Seraph", "Briar", "Cassia", "Vale", "Juniper",
+  ]
 
-  images.each do |image|
-    attach_seed_image!(image, bytes)
-    image.save!
+  characters_by_universe = {}
+  universes.each_with_index do |universe, idx|
+    count = universe.name == "Admin Universe" ? 6 : (12 + idx * 4)
+    names = character_name_pool.shuffle(random: rng).first(count)
+
+    characters = names.map { |name| Character.create!(universe: universe, name: name) }
+    characters_by_universe[universe.id] = characters
+
+    characters.each do |character|
+      # Give each character a couple tags, with some overlap for the tag browser.
+      tags = tag_pool.shuffle(random: rng).first(2 + rng.rand(3))
+      tags.each { |t| character.character_tags.create!(name: t) }
+    end
   end
 
-  ImageTag.create!(image: images[0], character: hero)
-  ImageTag.create!(image: images[1], character: villain)
-  ImageTag.create!(image: images[2], character: hero)
-  ImageTag.create!(image: images[2], character: guide)
+  # --- Images + image tags ---
+  caption_bits = [
+    "portrait", "action shot", "group scene", "concept art", "reference", "location study",
+    "dramatic lighting", "alternate costume", "battle", "quiet moment", "flashback",
+  ]
 
-  ImageFavorite.find_or_create_by!(user: owner, image: images[0])
-  ImageFavorite.find_or_create_by!(user: collaborator, image: images[2])
-  ImageFavorite.find_or_create_by!(user: admin, image: images[3])
+  images_by_universe = {}
+  universes.each do |universe|
+    image_count =
+      case universe.name
+      when "Example Universe" then 180
+      when "Cyber City" then 80
+      when "High Fantasy" then 80
+      when "Space Opera" then 80
+      when "Admin Universe" then 180
+      else 50
+      end
+
+    images = []
+    image_count.times do |i|
+      caption = "#{universe.name} — #{caption_bits.sample(random: rng)} ##{format("%02d", i + 1)}"
+      image = Image.new(universe: universe, caption: caption)
+
+      if image_variants.any?
+        bytes = image_variants.sample(random: rng)
+        attach_seed_image!(image, bytes, filename: "seed_#{universe.id}_#{i}.jpg")
+      end
+
+      image.save!
+      images << image
+    end
+
+    images_by_universe[universe.id] = images
+
+    universe_characters = characters_by_universe.fetch(universe.id)
+
+    images.each_with_index do |image, i|
+      # Ensure some untagged images for the "untagged" filter.
+      next if (i % 5).zero?
+
+      tag_count = 1 + rng.rand(3) # 1..3 characters tagged per image
+      universe_characters.sample(tag_count, random: rng).each do |character|
+        ImageTag.find_or_create_by!(image: image, character: character)
+      end
+    end
+  end
+
+  # --- Favorites ---
+  users.each do |user|
+    visible_universes = user.owned_universes + user.contributor_universes
+    visible_images = visible_universes.flat_map(&:images)
+
+    # Favorite ~15% of visible images, capped for sanity.
+    target = [(visible_images.size * 0.15).round, 25].min
+    visible_images.sample(target, random: rng).each do |image|
+      ImageFavorite.find_or_create_by!(user: user, image: image)
+    end
+  end
 end
 
 def clear_dev_data!
@@ -83,6 +172,7 @@ def clear_dev_data!
   User.delete_all
 
   ActiveStorage::Attachment.delete_all
+  ActiveStorage::VariantRecord.delete_all
   ActiveStorage::Blob.delete_all
 end
 
@@ -100,3 +190,5 @@ Rails.logger.info "Accounts:"
 Rails.logger.info "  Admin: admin@blackbook.dev / password123"
 Rails.logger.info "  Owner: owner@blackbook.dev / password123"
 Rails.logger.info "  Collaborator: collaborator@blackbook.dev / password123"
+Rails.logger.info "  Alice: alice@blackbook.dev / password123"
+Rails.logger.info "  Bob: bob@blackbook.dev / password123"

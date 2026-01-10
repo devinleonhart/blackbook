@@ -1,17 +1,17 @@
-<section id="characters-new-view" class="py-8 min-h-screen bg-gray-50">
+<section id="characters-new-view" class="bb-page">
 
-    <div class="max-w-md mx-auto px-4">
+    <div class="bb-container-md">
       <div class="flex justify-center">
         <div class="w-full">
           <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Create New Character</h1>
-            <p class="text-gray-600">Add a new character to your universe</p>
+            <h1 class="bb-heading-xl">Create New Character</h1>
+            <p class="bb-subtitle">Add a new character to your universe</p>
           </div>
 
-          <%= form_with model: @new_character, url: universe_characters_url(universe_id: @new_character.universe_id), html: {class: "bg-white rounded-lg px-8 pt-6 pb-8 shadow-lg"} do |form| %>
+          <%= form_with model: @new_character, url: universe_characters_url(universe_id: @new_character.universe_id), html: {class: "bb-card bb-card--form"} do |form| %>
 
             <div class="mb-6">
-              <%= form.label :name, class: "block text-gray-700 text-sm font-bold mb-2" %>
+              <%= form.label :name, class: "bb-label" %>
               <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <span class="text-gray-400">👤</span>

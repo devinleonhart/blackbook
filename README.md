@@ -1,5 +1,9 @@
 # Blackbook
 
+## UI / Tailwind conventions
+
+Reusable Tailwind component classes (minimal set) are documented in `docs/ui-components.md`.
+
 ## Setup
 ```bash
 ./bin/setup-dev
@@ -9,6 +13,11 @@
 ```bash
 docker compose up -d
 ```
+
+This starts:
+
+- `blackbook`: Rails server
+- `css`: Tailwind watcher (`tailwindcss:watch[poll]` for reliable updates on Docker/macOS)
 
 ## Database
 ```bash
