@@ -57,17 +57,8 @@ jobs:
           ruby-version: "3.3.7"
           bundler-cache: true
 
-      - name: Run RuboCop
-        run: bundle exec rubocop
-
-      - name: Build Tailwind CSS
-        run: bundle exec rails tailwindcss:build
-
-      - name: Prepare test database
-        run: bundle exec rails db:prepare
-
-      - name: Run tests
-        run: bundle exec rspec
+      - name: Run CI script
+        run: bin/ci
 
   deploy:
     name: Build & Deploy

@@ -15,6 +15,7 @@ rm -f $APP_PATH/tmp/pids/server.pid
 
 echo "Building Tailwind CSS…"
 bundle exec rails tailwindcss:build
+rm -rf $APP_PATH/public/assets || true
 
 # run passed commands
 bundle exec ${@}

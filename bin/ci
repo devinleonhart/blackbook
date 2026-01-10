@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+
+set -eu
+
+echo "==> rubocop"
+bundle exec rubocop
+
+echo "==> tailwindcss:build"
+bundle exec rails tailwindcss:build
+
+echo "==> db:prepare"
+bundle exec rails db:prepare
+
+echo "==> rspec"
+bundle exec rspec
+
+echo "OK"
+
