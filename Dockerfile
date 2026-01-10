@@ -4,6 +4,8 @@ ENV APP_PATH=/app \
     BUNDLE_VERSION=2.6.2 \
     BUNDLE_PATH=/usr/local/bundle/gems \
     BUNDLE_WITHOUT=development:test \
+    BUNDLE_DEPLOYMENT=1 \
+    BUNDLE_FROZEN=1 \
     RAILS_ENV=production \
     NODE_ENV=production
 
@@ -32,6 +34,9 @@ FROM ruby:3.3.7-alpine
 ENV APP_PATH=/app \
     BUNDLE_VERSION=2.6.2 \
     BUNDLE_PATH=/usr/local/bundle/gems \
+    BUNDLE_WITHOUT=development:test \
+    BUNDLE_DEPLOYMENT=1 \
+    BUNDLE_FROZEN=1 \
     RAILS_ENV=production \
     RAILS_LOG_TO_STDOUT=true \
     RAILS_SERVE_STATIC_FILES=true \
