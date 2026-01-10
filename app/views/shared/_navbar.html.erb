@@ -1,4 +1,4 @@
-<nav id="bb_navbar" class="bg-gray-800 text-white" role="navigation" aria-label="main navigation">
+<nav id="bb_navbar" class="bg-gray-800 text-white" role="navigation" aria-label="main navigation" data-controller="navbar">
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
@@ -31,6 +31,20 @@
         </div>
       </div>
 
+      <button
+        type="button"
+        class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+        aria-controls="bb_navbar_mobile"
+        aria-expanded="false"
+        data-navbar-target="button"
+        data-action="navbar#toggle"
+      >
+        <span class="sr-only">Open main menu</span>
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+
       <div class="hidden md:block">
         <div class="ml-10 flex items-baseline space-x-4">
           <div class="flex space-x-4">
@@ -60,6 +74,34 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div id="bb_navbar_mobile" class="md:hidden hidden border-t border-gray-700" data-navbar-target="menu">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+      <% unless @universe.nil? %>
+        <% unless @character_tag %>
+          <%= link_to "New Character", new_universe_character_url(@universe), class: "bb-nav-link block w-full" %>
+          <%= link_to "Edit Universe", edit_universe_url(@universe), class: "bb-nav-link block w-full" %>
+        <% end %>
+      <% end %>
+      <% unless @character.nil? %>
+        <% unless @character_tag %>
+          <%= link_to "Edit Character", edit_character_url(@character), class: "bb-nav-link block w-full" %>
+        <% end %>
+      <% end %>
+      <% if admin? %>
+        <%= link_to "Admin", admin_root_path, class: "bb-nav-link block w-full" %>
+      <% end %>
+      <% if user_signed_in? %>
+        <%= link_to "Random", random_image_path, data: { turbo: false }, class: "bb-nav-link block w-full" %>
+        <%= link_to "Slideshow", slideshow_path, class: "bb-nav-link block w-full" %>
+        <%= link_to "Favorites", favorites_path, class: "bb-nav-link block w-full" %>
+        <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "bb-nav-link block w-full" %>
+      <% else %>
+        <%= link_to "Register", new_user_registration_path, class: "bb-nav-link block w-full" %>
+        <%= link_to "Sign in", new_user_session_path, class: "bb-nav-link block w-full" %>
+      <% end %>
     </div>
   </div>
 
