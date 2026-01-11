@@ -14,7 +14,7 @@ module Api
         "ML" => "Mobius Legends",
         "FF" => "Final Fantasy",
         "MLP" => "My Little Pony",
-        "RPG" => "Roleplaying Games",
+        "RPG" => "Roleplaying Games"
       }.freeze
 
       def create
@@ -26,7 +26,7 @@ module Api
         if universe_name.blank?
           render json: {
             error: "universe_code is invalid",
-            allowed_universe_codes: UNIVERSE_CODE_TO_NAME.keys,
+            allowed_universe_codes: UNIVERSE_CODE_TO_NAME.keys
           }, status: :unprocessable_content
           return
         end

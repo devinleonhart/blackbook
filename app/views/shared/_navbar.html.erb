@@ -2,6 +2,8 @@
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
+
+      <!-- Logo and Breadcrumbs -->
       <div class="flex items-center">
         <a class="text-xl font-bold text-white hover:text-gray-300 px-3 py-2" href="/">
           Blackbook
@@ -31,6 +33,7 @@
         </div>
       </div>
 
+      <!-- Mobile Menu Button -->
       <button
         type="button"
         class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-200 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
@@ -45,9 +48,11 @@
         </svg>
       </button>
 
+      <!-- Desktop Navigation -->
       <div class="hidden md:block">
         <div class="ml-10 flex items-baseline space-x-4">
           <div class="flex space-x-4">
+            <!-- Context-specific Links -->
             <% unless @universe.nil? %>
               <% unless @character_tag %>
                 <%= link_to "New Character", new_universe_character_url(@universe), class: "bb-nav-link" %>
@@ -59,9 +64,13 @@
                 <%= link_to "Edit Character", edit_character_url(@character), class: "bb-nav-link" %>
               <% end %>
             <% end %>
+
+            <!-- Admin Link -->
             <% if admin? %>
               <%= link_to "Admin", admin_root_path, class: "bb-nav-link" %>
             <% end %>
+
+            <!-- User Links -->
             <% if user_signed_in? %>
               <%= link_to "Random", random_image_path, data: { turbo: false }, class: "bb-nav-link" %>
               <%= link_to "Slideshow", slideshow_path, class: "bb-nav-link" %>
@@ -74,11 +83,14 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 
+  <!-- Mobile Navigation Menu -->
   <div id="bb_navbar_mobile" class="md:hidden hidden border-t border-gray-700" data-navbar-target="menu">
     <div class="px-2 pt-2 pb-3 space-y-1">
+      <!-- Context-specific Links -->
       <% unless @universe.nil? %>
         <% unless @character_tag %>
           <%= link_to "New Character", new_universe_character_url(@universe), class: "bb-nav-link block w-full" %>
@@ -90,9 +102,13 @@
           <%= link_to "Edit Character", edit_character_url(@character), class: "bb-nav-link block w-full" %>
         <% end %>
       <% end %>
+
+      <!-- Admin Link -->
       <% if admin? %>
         <%= link_to "Admin", admin_root_path, class: "bb-nav-link block w-full" %>
       <% end %>
+
+      <!-- User Links -->
       <% if user_signed_in? %>
         <%= link_to "Random", random_image_path, data: { turbo: false }, class: "bb-nav-link block w-full" %>
         <%= link_to "Slideshow", slideshow_path, class: "bb-nav-link block w-full" %>

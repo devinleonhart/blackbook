@@ -2,25 +2,31 @@
   <div class="bb-container-xs">
     <div class="flex justify-center">
       <div class="w-full">
+
+        <!-- Page Header -->
         <div class="bb-page-header">
           <h1 class="bb-heading-xl">Account settings</h1>
           <p class="bb-subtitle">Update your email or password.</p>
         </div>
 
+        <!-- Account Settings Form -->
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "bb-card bb-card--form" }) do |f| %>
           <%= render "devise/shared/error_messages", resource: resource %>
 
+          <!-- Email Field -->
           <div class="bb-field">
             <%= f.label :email, class: "bb-label" %>
             <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "bb-input" %>
           </div>
 
+          <!-- Pending Reconfirmation Notice -->
           <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
             <div class="bb-field bb-alert bb-alert-warning text-sm">
               Currently waiting confirmation for: <span class="font-medium"><%= resource.unconfirmed_email %></span>
             </div>
           <% end %>
 
+          <!-- New Password Field -->
           <div class="bb-field">
             <%= f.label :password, class: "bb-label" do %>
               Password <span class="font-normal text-gray-500">(leave blank if you don't want to change it)</span>
@@ -31,11 +37,13 @@
             <%= f.password_field :password, autocomplete: "new-password", class: "bb-input" %>
           </div>
 
+          <!-- Password Confirmation Field -->
           <div class="bb-field">
             <%= f.label :password_confirmation, class: "bb-label" %>
             <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "bb-input" %>
           </div>
 
+          <!-- Current Password Field -->
           <div class="bb-field-lg">
             <%= f.label :current_password, class: "bb-label" do %>
               Current password <span class="font-normal text-gray-500">(required to confirm changes)</span>
@@ -43,11 +51,13 @@
             <%= f.password_field :current_password, autocomplete: "current-password", class: "bb-input" %>
           </div>
 
+          <!-- Submit Button -->
           <div class="flex items-center justify-between">
             <%= f.submit "Update account", class: "bb-btn bb-btn-primary bb-btn--full" %>
           </div>
         <% end %>
 
+        <!-- Danger Zone: Cancel Account -->
         <div class="mt-6 bb-card px-8 py-6">
           <h2 class="bb-section-heading--sm mb-2">Cancel my account</h2>
           <p class="bb-subtitle-sm mb-4">This action is permanent.</p>
@@ -55,6 +65,7 @@
         </div>
 
         <%= render "devise/shared/links" %>
+
       </div>
     </div>
   </div>

@@ -7,7 +7,6 @@ class ImageTagsController < ApplicationController
 
     return unless universe_visible_to_user?(@image_tag.universe)
 
-    # There is no HTML template for this action today.
     head :not_acceptable
   end
 
@@ -34,6 +33,6 @@ class ImageTagsController < ApplicationController
   private
 
   def allowed_image_tag_params
-    params.require(:image_tag).permit(:character_id)
+    params.expect(image_tag: [:character_id])
   end
 end

@@ -1,5 +1,4 @@
 RSpec.configure do |config|
-
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true
   end
@@ -13,9 +12,7 @@ RSpec.configure do |config|
   config.disable_monkey_patching!
 
   # Better formatting when running specs of single file.
-  if config.files_to_run.one?
-    config.default_formatter = "doc"
-  end
+  config.default_formatter = "doc" if config.files_to_run.one?
 
   # Run tests in different order.
   # config.order = :random

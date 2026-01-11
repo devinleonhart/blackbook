@@ -5,7 +5,6 @@ class CollaborationsController < ApplicationController
     @collaboration = Collaboration.includes(:user, :universe).find_by(id: params[:id])
     return unless model_found?(@collaboration, "Collaboration", params[:id], universes_url)
 
-    # There is no HTML template for this action today.
     head :not_acceptable
   end
 
@@ -31,6 +30,6 @@ class CollaborationsController < ApplicationController
   private
 
   def allowed_collaboration_params
-    params.require(:collaboration).permit(:universe_id, :user_id)
+    params.expect(collaboration: [:universe_id, :user_id])
   end
 end

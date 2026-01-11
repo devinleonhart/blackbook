@@ -1,8 +1,10 @@
 <div>
+  <!-- Header -->
   <div class="flex items-center justify-between mb-3">
     <h3 class="bb-subheading mb-0">Filters</h3>
   </div>
 
+  <!-- Filter Buttons -->
   <div class="space-y-2">
     <%= link_to universe_path(universe), class: "bb-filter-btn #{(images_filter != 'untagged') ? 'bb-filter-btn--active' : ''}" do %>
       <span class="truncate flex-1">All Images</span>

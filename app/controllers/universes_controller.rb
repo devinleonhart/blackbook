@@ -83,11 +83,11 @@ class UniversesController < ApplicationController
   private
 
   def allowed_universe_params
-    params.require(:universe).permit(
-      :name,
-      :owner_id,
-      :page,
-      collaborator_ids: [],
+    params.expect(
+      universe: [:name,
+                 :owner_id,
+                 :page,
+                 { collaborator_ids: [] }]
     )
   end
 end

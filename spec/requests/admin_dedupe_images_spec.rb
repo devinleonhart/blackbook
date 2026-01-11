@@ -23,7 +23,7 @@ RSpec.describe "Admin dedupe images", type: :request do
       universe_id: universe.id,
       checksum: "does-not-exist",
       byte_size: 123,
-      content_type: "image/jpeg",
+      content_type: "image/jpeg"
     }
 
     expect(response).to redirect_to(admin_dedupe_images_url)
@@ -66,7 +66,7 @@ RSpec.describe "Admin dedupe images", type: :request do
         universe_id: universe.id,
         checksum: checksum,
         byte_size: byte_size,
-        content_type: content_type,
+        content_type: content_type
       }
     end.to change(Image, :count).by(-1)
 

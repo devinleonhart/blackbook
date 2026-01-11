@@ -16,7 +16,6 @@ class CharacterTagsController < ApplicationController
                .where(character_tags: { name: @character_tag.name })
                .distinct
 
-    # Get all images from characters that have this tag
     character_ids = @characters_with_tag.pluck(:id)
     @images =
       @universe.images
@@ -64,10 +63,8 @@ class CharacterTagsController < ApplicationController
 
   def set_character
     if params[:character_id]
-      # Nested route: /characters/:character_id/character_tags
       @character = Character.find(params[:character_id])
     else
-      # Shallow route: /character_tags/:id
       @character_tag = CharacterTag.find(params[:id])
       @character = @character_tag.character
     end
@@ -76,13 +73,10 @@ class CharacterTagsController < ApplicationController
   end
 
   def set_character_tag
-    if @character_tag.nil?
-      # Only set if not already set in set_character
-      @character_tag = @character.character_tags.find(params[:id])
-    end
+    @character_tag = @character.character_tags.find(params[:id]) if @character_tag.nil?
   end
 
   def character_tag_params
-    params.require(:character_tag).permit(:name)
+    params.expect(character_tag: [:name])
   end
 end

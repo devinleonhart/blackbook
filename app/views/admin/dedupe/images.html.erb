@@ -1,5 +1,7 @@
 <section id="admin-dedupe-images-view" class="bb-page">
   <div class="bb-container-lg">
+
+    <!-- Page Header -->
     <div class="flex items-start justify-between gap-4 mb-8">
       <div>
         <h1 class="bb-heading-xl">Duplicate images</h1>
@@ -10,16 +12,21 @@
     </div>
 
     <% if @universes_with_duplicate_images.blank? %>
+      <!-- Empty State -->
       <div class="bb-card bb-card--panel bb-card--bordered">
         <%= render partial: "shared/empty_banner", locals: { message: "No duplicate image uploads found." } %>
       </div>
     <% else %>
+      <!-- Universes with Duplicates -->
       <div class="space-y-8">
         <% @universes_with_duplicate_images.each do |entry| %>
           <% universe = entry[:universe] %>
           <% groups = entry[:groups] %>
 
+          <!-- Universe Card -->
           <div class="bb-card bb-card--panel bb-card--bordered">
+
+            <!-- Universe Header -->
             <div class="flex items-start justify-between gap-4 mb-6">
               <div>
                 <h2 class="bb-heading-lg">
@@ -33,15 +40,18 @@
                 <%= form_with url: admin_dedupe_images_dedupe_universe_path, method: :post, local: true do %>
                   <%= hidden_field_tag :universe_id, universe.id %>
                   <%= submit_tag "Delete all duplicates in this universe",
-                                 data: { turbo_confirm: "Keep the earliest image in EACH duplicate group and delete the rest for "#{universe.name}"? This cannot be undone." },
+                                 data: { turbo_confirm: "Keep the earliest image in EACH duplicate group and delete the rest for '#{universe.name}'? This cannot be undone." },
                                  class: "bb-btn-sm bg-red-700 hover:bg-red-800 text-white cursor-pointer" %>
                 <% end %>
               </div>
             </div>
 
+            <!-- Duplicate Groups -->
             <div class="space-y-6">
               <% groups.each do |group| %>
                 <div class="rounded-lg border border-gray-200 p-4">
+
+                  <!-- Group Header -->
                   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                     <div>
                       <div class="text-lg font-semibold text-gray-900">
@@ -67,6 +77,7 @@
                     </div>
                   </div>
 
+                  <!-- Images Table -->
                   <div class="overflow-x-auto">
                     <table class="min-w-full text-sm">
                       <thead>
@@ -102,12 +113,15 @@
                       </tbody>
                     </table>
                   </div>
+
                 </div>
               <% end %>
             </div>
+
           </div>
         <% end %>
       </div>
     <% end %>
+
   </div>
 </section>

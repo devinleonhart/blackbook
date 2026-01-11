@@ -24,7 +24,7 @@ def attach_seed_image!(image, bytes, filename: "seed_image.jpg")
   image.image_file.attach(
     io: StringIO.new(bytes),
     filename: filename,
-    content_type: "image/jpeg",
+    content_type: "image/jpeg"
   )
 end
 
@@ -34,7 +34,7 @@ def create_user!(email:, display_name:, admin: false, password: "password123")
     display_name: display_name,
     password: password,
     password_confirmation: password,
-    admin: admin,
+    admin: admin
   )
 end
 
@@ -58,7 +58,7 @@ def seed_sample_data!
     { name: "Cyber City", owner: owner, collaborators: [bob] },
     { name: "High Fantasy", owner: alice, collaborators: [owner, collaborator] },
     { name: "Space Opera", owner: bob, collaborators: [owner] },
-    { name: "Admin Universe", owner: admin, collaborators: [] },
+    { name: "Admin Universe", owner: admin, collaborators: [] }
   ]
 
   universes =
@@ -84,7 +84,7 @@ def seed_sample_data!
   character_name_pool = [
     "Astra", "Nova", "Ember", "Sable", "Orion", "Lyra", "Iris", "Vega", "Juno", "Echo",
     "Rook", "Cipher", "Nyx", "Sol", "Zephyr", "Rowan", "Mira", "Kai", "Riven", "Arden",
-    "Morrigan", "Thorne", "Alaric", "Seraph", "Briar", "Cassia", "Vale", "Juniper",
+    "Morrigan", "Thorne", "Alaric", "Seraph", "Briar", "Cassia", "Vale", "Juniper"
   ]
 
   characters_by_universe = {}
@@ -105,7 +105,7 @@ def seed_sample_data!
   # --- Images + image tags ---
   caption_bits = [
     "portrait", "action shot", "group scene", "concept art", "reference", "location study",
-    "dramatic lighting", "alternate costume", "battle", "quiet moment", "flashback",
+    "dramatic lighting", "alternate costume", "battle", "quiet moment", "flashback"
   ]
 
   images_by_universe = {}

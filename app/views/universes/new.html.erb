@@ -1,17 +1,25 @@
 <section class="universes-new-view bb-page">
   <div class="bb-container-sm">
+
+    <!-- Page Header -->
     <h2 class="bb-heading-lg">New Universe</h2>
 
+    <!-- Universe Form -->
     <%= form_with model: @new_universe, url: universes_url(@new_universe), method: "post", class: "bb-card bb-card--panel bb-card--bordered" do |form| %>
+
+      <!-- Name Field -->
       <div class="bb-field">
         <%= form.label :name, for: "newUniverseNameField", class: "bb-label" %>
         <%= form.text_field :name, id: "newUniverseNameField", class: "bb-input" %>
       </div>
 
+      <!-- Actions -->
       <div class="flex items-center gap-2">
         <%= form.submit "Save", id: "newUniverseSaveButton", class: "bb-btn-sm bb-btn-primary" %>
         <%= link_to "Cancel", universes_url(), class: "bb-btn-sm bb-btn-ghost" %>
       </div>
+
     <% end %>
+
   </div>
 </section>

@@ -3,12 +3,16 @@
   <div class="bb-container-md">
     <div class="flex justify-center">
       <div class="w-full">
+
+        <!-- Page Header -->
         <div class="bb-page-header">
           <h1 class="bb-heading-xl">Your Universes</h1>
         </div>
 
+        <!-- Universe List -->
         <div class="bb-card bb-card--form">
           <% if @universes.empty? %>
+            <!-- Empty State -->
             <div class="bb-empty-state">
               <h3 class="bb-empty-state__title">No universes yet</h3>
               <p class="bb-empty-state__text">Create your first universe to get started</p>
@@ -37,6 +41,7 @@
             </div>
           <% end %>
         </div>
+
       </div>
     </div>
   </div>

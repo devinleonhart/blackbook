@@ -68,7 +68,7 @@ module ImageHelper
       :div,
       placeholder_text,
       class: placeholder_class,
-      style: PLACEHOLDER_STYLE,
+      style: PLACEHOLDER_STYLE
     )
   end
 end

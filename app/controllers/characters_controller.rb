@@ -3,8 +3,6 @@
 class CharactersController < ApplicationController
   def index
     @characters = Character.where(universe_id: params[:universe_id]).order(created_at: :asc)
-
-    # There is no HTML template for this action today.
     head :not_acceptable
   end
 
@@ -12,7 +10,7 @@ class CharactersController < ApplicationController
     @character =
       Character
       .includes(
-        image_tags: [:image],
+        image_tags: [:image]
       )
       .find_by(id: params[:id])
 
@@ -28,8 +26,8 @@ class CharactersController < ApplicationController
       .joins(
         Image.sanitize_sql_array(
           ["LEFT JOIN image_favorites ON image_favorites.image_id = images.id AND image_favorites.user_id = ?",
-           current_user.id,],
-        ),
+           current_user.id]
+        )
       )
       .order(Arel.sql("image_favorites.id IS NOT NULL DESC"), created_at: :desc)
       .paginate(page: params[:page], per_page: 20)
@@ -43,7 +41,7 @@ class CharactersController < ApplicationController
     @character =
       Character
       .includes(
-        image_tags: [:image],
+        image_tags: [:image]
       )
       .find_by(id: params[:id])
 
@@ -70,7 +68,7 @@ class CharactersController < ApplicationController
     @character =
       Character
       .includes(
-        image_tags: [:image],
+        image_tags: [:image]
       )
       .find_by(id: params[:id])
 
@@ -99,6 +97,6 @@ class CharactersController < ApplicationController
   private
 
   def allowed_character_params
-    params.require(:character).permit(:name, :page, images: [])
+    params.expect(character: [:name, :page, { images: [] }])
   end
 end

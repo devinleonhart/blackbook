@@ -2,15 +2,19 @@
   <div class="bb-container-xs">
     <div class="flex justify-center">
       <div class="w-full">
+
+        <!-- Page Header -->
         <div class="bb-page-header">
           <h1 class="bb-heading-xl">Change your password</h1>
           <p class="bb-subtitle">Choose a new password for your account.</p>
         </div>
 
+        <!-- Change Password Form -->
         <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "bb-card bb-card--form" }) do |f| %>
           <%= render "devise/shared/error_messages", resource: resource %>
           <%= f.hidden_field :reset_password_token %>
 
+          <!-- New Password Field -->
           <div class="bb-field">
             <%= f.label :password, "New password", class: "bb-label" %>
             <% if @minimum_password_length %>
@@ -19,17 +23,20 @@
             <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "bb-input" %>
           </div>
 
+          <!-- Password Confirmation Field -->
           <div class="bb-field-lg">
             <%= f.label :password_confirmation, "Confirm new password", class: "bb-label" %>
             <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "bb-input" %>
           </div>
 
+          <!-- Submit Button -->
           <div class="flex items-center justify-between">
             <%= f.submit "Change password", class: "bb-btn bb-btn-primary bb-btn--full" %>
           </div>
         <% end %>
 
         <%= render "devise/shared/links" %>
+
       </div>
     </div>
   </div>

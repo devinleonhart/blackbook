@@ -1,13 +1,13 @@
 <% if collection.respond_to?(:current_page) && collection.total_pages > 1 %>
   <% base_params = request.query_parameters.symbolize_keys.except(:page) %>
   <nav aria-label="Pagination" class="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
-    <!-- Page info (left on desktop, top on mobile) -->
+    <!-- Page info -->
     <div class="text-sm text-gray-600 order-1 sm:order-1">
       Page <%= collection.current_page %> of <%= collection.total_pages %>
       <span class="hidden sm:inline">(<%= collection.total_entries %> total)</span>
     </div>
 
-    <!-- Page numbers (center on desktop, hidden on mobile) -->
+    <!-- Page numbers -->
     <div class="hidden sm:flex items-center space-x-1 order-2">
       <!-- First page -->
       <% if collection.current_page > 3 %>
@@ -38,7 +38,7 @@
       <% end %>
     </div>
 
-    <!-- Previous/Next buttons (right on desktop, bottom on mobile) -->
+    <!-- Previous/Next buttons -->
     <div class="flex items-center space-x-2 order-3 sm:order-3">
       <!-- Previous button -->
       <% if collection.previous_page %>

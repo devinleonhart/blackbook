@@ -1,9 +1,14 @@
 <div>
   <div class="bb-field">
+    <!-- Label -->
     <label class="bb-label">Characters (<%= characters.count %>)</label>
+
+    <!-- Search Input -->
     <div class="bb-field">
       <input class="bb-input" type="text" id="character-search-<%= unique_id %>" placeholder="Search characters..." onkeyup="filterCharacters('<%= unique_id %>')">
     </div>
+
+    <!-- Character List -->
     <div id="character-results-<%= unique_id %>" data-character-results class="max-h-80 overflow-y-auto border border-gray-200 rounded-md bg-white">
       <% characters.sort_by {|c| c.name }.each do |character| %>
         <div data-character-item class="bb-list-item--bordered">

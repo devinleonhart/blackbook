@@ -1,22 +1,28 @@
 <section id="users-index-view" class="bb-page">
 
   <div class="bb-container-md">
+
+    <!-- Back Link -->
     <div class="mb-6">
       <%= link_to "← Back to Admin", admin_root_path, class: "bb-link-strong" %>
     </div>
 
     <div class="flex justify-center">
       <div class="w-full">
+
+        <!-- Page Header -->
         <div class="bb-page-header">
           <h1 class="bb-heading-xl">User Management</h1>
           <p class="bb-subtitle">Manage system users and permissions</p>
         </div>
 
+        <!-- User Table -->
         <div class="bb-card bb-card--form">
           <%= render partial: "shared/user_table", locals: {
             users: @users.sort_by {|u| u.email }
           } %>
         </div>
+
       </div>
     </div>
   </div>

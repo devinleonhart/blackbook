@@ -5,20 +5,25 @@
   <% end %>
 
   <div class="bb-container">
+
+    <!-- Page Header -->
     <div class="bb-page-header">
       <h1 class="bb-heading-xl">Your Favorites</h1>
       <p class="bb-subtitle">Your favorited images, grouped by universe.</p>
     </div>
 
     <% if @favorites_by_universe.blank? %>
+      <!-- Empty State -->
       <div class="bb-card bb-card--panel">
         <%= render partial: "shared/empty_banner", locals: { message: "No favorites yet. Favorite an image to see it here." } %>
       </div>
     <% else %>
+      <!-- Favorites by Universe -->
       <div class="space-y-10">
         <% @universes.each do |universe| %>
           <% images = @favorites_by_universe[universe] || [] %>
 
+          <!-- Universe Section -->
           <div class="bb-card bb-card--panel">
             <div class="flex items-center justify-between mb-6">
               <div>
@@ -34,5 +39,6 @@
         <% end %>
       </div>
     <% end %>
+
   </div>
 </section>

@@ -7,51 +7,26 @@ plugins:
 
 AllCops:
   TargetRubyVersion: 3.2
-  TargetRailsVersion: 7.0
   NewCops: enable
   Exclude:
-    - "Gemfile"
+    - "bin/**/*"
     - "config/**/*"
     - "config.ru"
-    - "spec/spec_helper.rb"
-    - "spec/rails_helper.rb"
-    - "bin/**/*"
+    - "db/schema.rb"
     - "node_modules/**/*"
     - "vendor/**/*"
     - "tmp/**/*"
-    - "coverage/**/*"
-    - "db/schema.rb"
 
-Layout/ArgumentAlignment:
-  EnforcedStyle: with_fixed_indentation
+# ─────────────────────────────────────────────────────────────
+# Layout
+# ─────────────────────────────────────────────────────────────
 
 Layout/LineLength:
   Max: 120
-  AllowedPatterns:
-    - "^\\s*describe"
-    - "^\\s*context"
-    - "^\\s*it"
-  Exclude:
-    - "db/migrate/*"
 
-Layout/EndAlignment:
-  EnforcedStyleAlignWith: variable
-
-Layout/FirstArrayElementIndentation:
-  EnforcedStyle: consistent
-
-Layout/CaseIndentation:
-  EnforcedStyle: end
-
-Lint/AmbiguousBlockAssociation:
-  Enabled: false
-
-Lint/DuplicateBranch:
-  Exclude:
-    - "db/seeds.rb"
-
-Naming/RescuedExceptionsVariableName:
-  PreferredName: error
+# ─────────────────────────────────────────────────────────────
+# Metrics - disable overly strict length/complexity cops
+# ─────────────────────────────────────────────────────────────
 
 Metrics/AbcSize:
   Enabled: false
@@ -66,27 +41,57 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Enabled: false
 
+Metrics/MethodLength:
+  Enabled: false
+
 Metrics/CyclomaticComplexity:
   Exclude:
     - "db/seeds.rb"
-
-Metrics/MethodLength:
-  Enabled: false
-  Exclude:
-    - "db/**/*"
 
 Metrics/PerceivedComplexity:
   Exclude:
     - "db/seeds.rb"
 
-Rails:
-  Enabled: true
+# ─────────────────────────────────────────────────────────────
+# Lint
+# ─────────────────────────────────────────────────────────────
 
-Rails/SaveBang:
-  Enabled: true
+Lint/DuplicateBranch:
+  Exclude:
+    - "db/seeds.rb"
 
-Rails/TimeZone:
-  EnforcedStyle: strict
+# ─────────────────────────────────────────────────────────────
+# Naming
+# ─────────────────────────────────────────────────────────────
+
+Naming/RescuedExceptionsVariableName:
+  PreferredName: error
+
+# ─────────────────────────────────────────────────────────────
+# Style
+# ─────────────────────────────────────────────────────────────
+
+Style/Documentation:
+  Enabled: false
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/SymbolArray:
+  Enabled: false
+
+Style/WordArray:
+  Enabled: false
+
+# ─────────────────────────────────────────────────────────────
+# Rails
+# ─────────────────────────────────────────────────────────────
 
 Rails/I18nLocaleTexts:
   Enabled: false
@@ -95,53 +100,48 @@ Rails/ReversibleMigration:
   Exclude:
     - "db/migrate/*"
 
+Rails/Exit:
+  Exclude:
+    - "spec/rails_helper.rb"
+    - "spec/spec_helper.rb"
+
+Rails/Output:
+  Exclude:
+    - "spec/rails_helper.rb"
+
+# ─────────────────────────────────────────────────────────────
+# RSpec
+# ─────────────────────────────────────────────────────────────
+
 RSpec/ExampleLength:
   Enabled: false
 
 RSpec/MultipleExpectations:
   Enabled: false
 
-RSpec/MultipleDescribes:
-  Enabled: false
-
-RSpec/RepeatedExampleGroupDescription:
-  Enabled: false
+RSpec/NestedGroups:
+  Max: 5
 
 RSpec/VerifiedDoubles:
   Enabled: false
+
+RSpec/Output:
+  Exclude:
+    - "spec/rails_helper.rb"
+
+# ─────────────────────────────────────────────────────────────
+# RSpecRails
+# ─────────────────────────────────────────────────────────────
+
+RSpecRails/InferredSpecType:
+  Enabled: false
+
+# ─────────────────────────────────────────────────────────────
+# FactoryBot
+# ─────────────────────────────────────────────────────────────
 
 FactoryBot/AssociationStyle:
   Enabled: false
 
 FactoryBot/ExcessiveCreateList:
-  Enabled: false
-
-RSpecRails/InferredSpecType:
-  Enabled: false
-
-Style/ClassAndModuleChildren:
-  Enabled: false
-
-Style/Documentation:
-  Enabled: false
-
-Style/GuardClause:
-  Enabled: false
-
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
-
-Style/TrailingCommaInArguments:
-  Enabled: false
-
-Style/TrailingCommaInArrayLiteral:
-  EnforcedStyleForMultiline: consistent_comma
-
-Style/TrailingCommaInHashLiteral:
-  EnforcedStyleForMultiline: consistent_comma
-
-Style/SymbolArray:
-  Enabled: false
-
-Style/WordArray:
   Enabled: false

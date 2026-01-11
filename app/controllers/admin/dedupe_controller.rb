@@ -17,7 +17,7 @@ module Admin
 
           {
             universe: universe,
-            groups: build_groups_for_universe(universe_id, groups_for_universe),
+            groups: build_groups_for_universe(universe_id, groups_for_universe)
           }
         end
 
@@ -39,8 +39,8 @@ module Admin
           active_storage_blobs: {
             checksum: checksum,
             byte_size: byte_size,
-            content_type: content_type,
-          },
+            content_type: content_type
+          }
         )
         .order(created_at: :asc)
 
@@ -76,15 +76,15 @@ module Admin
         .joins(image_file_attachment: :blob)
         .where(universe_id: universe_id)
         .select(
-            "active_storage_blobs.checksum AS checksum, " \
-            "active_storage_blobs.byte_size AS byte_size, " \
-            "active_storage_blobs.content_type AS content_type, " \
-            "COUNT(*) AS images_count",
-          )
+          "active_storage_blobs.checksum AS checksum, " \
+          "active_storage_blobs.byte_size AS byte_size, " \
+          "active_storage_blobs.content_type AS content_type, " \
+          "COUNT(*) AS images_count"
+        )
         .group(
           "active_storage_blobs.checksum",
           "active_storage_blobs.byte_size",
-          "active_storage_blobs.content_type",
+          "active_storage_blobs.content_type"
         )
         .having("COUNT(*) > 1")
 
@@ -100,8 +100,8 @@ module Admin
             active_storage_blobs: {
               checksum: row.checksum,
               byte_size: row.byte_size,
-              content_type: row.content_type,
-            },
+              content_type: row.content_type
+            }
           )
           .order(created_at: :asc)
 
@@ -136,13 +136,13 @@ module Admin
           "active_storage_blobs.checksum AS checksum, " \
           "active_storage_blobs.byte_size AS byte_size, " \
           "active_storage_blobs.content_type AS content_type, " \
-          "COUNT(*) AS images_count",
+          "COUNT(*) AS images_count"
         )
         .group(
           "images.universe_id",
           "active_storage_blobs.checksum",
           "active_storage_blobs.byte_size",
-          "active_storage_blobs.content_type",
+          "active_storage_blobs.content_type"
         )
         .having("COUNT(*) > 1")
         .order(Arel.sql("images_count DESC"))
@@ -165,8 +165,8 @@ module Admin
           active_storage_blobs: {
             checksum: row.checksum,
             byte_size: row.byte_size,
-            content_type: row.content_type,
-          },
+            content_type: row.content_type
+          }
         )
         .order(created_at: :asc)
 
@@ -175,7 +175,7 @@ module Admin
         byte_size: row.byte_size.to_i,
         content_type: row.content_type,
         count: row.images_count.to_i,
-        images: images,
+        images: images
       }
     end
   end

@@ -2,48 +2,53 @@
   <div class="bb-container-xs">
     <div class="flex justify-center">
       <div class="w-full">
+
+        <!-- Page Header -->
         <div class="bb-page-header">
           <h1 class="bb-heading-xl">Welcome Back</h1>
           <p class="bb-subtitle">Sign in to your account</p>
         </div>
 
+        <!-- Login Form -->
         <%= form_for(resource, as: resource_name, html: {class: "bb-card bb-card--form"}, url: session_path(resource_name)) do |form| %>
 
-        <div class="bb-field">
-          <%= form.label :email, for: "newUserSessionEmail", class: "bb-label" %>
-          <div class="bb-input-icon-wrapper">
-            <span class="bb-input-icon">✉️</span>
-            <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserSessionEmail", class: "bb-input pl-10 pr-3", placeholder: "your_email@gmail.com", required: true %>
-          </div>
-        </div>
-
-        <div class="bb-field">
-          <%= form.label :password, for: "newUserSessionPassword", class: "bb-label" %>
-          <div class="bb-input-icon-wrapper">
-            <span class="bb-input-icon">🔒</span>
-            <%= form.password_field :password, autocomplete: "current-password", id: "newUserSessionPassword", class: "bb-input pl-10 pr-3", placeholder: "*****", required: true  %>
-          </div>
-        </div>
-
-        <% if devise_mapping.rememberable? %>
+          <!-- Email Field -->
           <div class="bb-field">
-            <label for="rememberCheckBox" class="bb-checkbox-label">
-              <%= form.check_box :remember_me, id: "rememberCheckBox", class: "mr-2" %>
-              <span class="text-sm text-gray-700">Keep me logged in</span>
-            </label>
+            <%= form.label :email, for: "newUserSessionEmail", class: "bb-label" %>
+            <div class="bb-input-icon-wrapper">
+              <span class="bb-input-icon">✉️</span>
+              <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserSessionEmail", class: "bb-input pl-10 pr-3", placeholder: "your_email@gmail.com", required: true %>
+            </div>
           </div>
+
+          <!-- Password Field -->
+          <div class="bb-field">
+            <%= form.label :password, for: "newUserSessionPassword", class: "bb-label" %>
+            <div class="bb-input-icon-wrapper">
+              <span class="bb-input-icon">🔒</span>
+              <%= form.password_field :password, autocomplete: "current-password", id: "newUserSessionPassword", class: "bb-input pl-10 pr-3", placeholder: "*****", required: true  %>
+            </div>
+          </div>
+
+          <!-- Remember Me -->
+          <% if devise_mapping.rememberable? %>
+            <div class="bb-field">
+              <label for="rememberCheckBox" class="bb-checkbox-label">
+                <%= form.check_box :remember_me, id: "rememberCheckBox", class: "mr-2" %>
+                <span class="text-sm text-gray-700">Keep me logged in</span>
+              </label>
+            </div>
+          <% end %>
+
+          <!-- Submit Button -->
+          <div class="flex items-center justify-between">
+            <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "bb-btn bb-btn-primary bb-btn--full" %>
+          </div>
+
         <% end %>
 
-        <div class="flex items-center justify-between">
-          <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "bb-btn bb-btn-primary bb-btn--full" %>
-        </div>
-
-      <% end %>
-
       </div>
-
     </div>
-
   </div>
 
   <%= render "devise/shared/error_messages", resource: resource %>

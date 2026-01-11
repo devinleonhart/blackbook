@@ -3,13 +3,16 @@
   <div class="bb-container-lg">
     <div class="flex justify-center">
       <div class="w-full">
+
+        <!-- Page Header -->
         <div class="bb-page-header">
           <h1 class="bb-heading-xl">Edit Universe</h1>
           <p class="bb-subtitle">Update your universe settings and collaborators</p>
         </div>
 
         <div class="bb-card-grid-2">
-          <!-- Universe Settings -->
+
+          <!-- Universe Settings Card -->
           <div class="bb-card bb-card--form">
             <h2 class="bb-section-heading">Universe Settings</h2>
 
@@ -22,6 +25,7 @@
                 </div>
               </div>
 
+              <!-- Actions -->
               <div class="flex flex-col sm:flex-row gap-3">
                 <%= form.submit "Save Changes", class: "bb-btn bb-btn-primary bb-btn--flex" %>
                 <%= link_to "Cancel", universe_url(@universe), class: "bb-btn bb-btn-secondary bb-btn--flex text-center" %>
@@ -29,11 +33,12 @@
             <% end %>
           </div>
 
-          <!-- Collaborators -->
+          <!-- Collaborators Card -->
           <div class="bb-card bb-card--form">
             <h2 class="bb-section-heading">Collaborators</h2>
 
             <% if @universe.collaborators.empty? %>
+              <!-- Empty State -->
               <div class="bb-empty-state">
                 <div class="bb-avatar-lg bb-avatar-gray mx-auto mb-4">
                   <span class="text-2xl">👥</span>
@@ -42,6 +47,7 @@
                 <p class="bb-empty-state__text">Add collaborators to work together on this universe</p>
               </div>
             <% else %>
+              <!-- Current Collaborators List -->
               <div class="space-y-3 mb-6">
                 <h3 class="bb-subheading-sm">Current Collaborators</h3>
                 <% @universe.collaborations.each do | collaboration | %>
@@ -60,6 +66,7 @@
               </div>
             <% end %>
 
+            <!-- Add Collaborator Form -->
             <div class="border-t pt-6">
               <h3 class="bb-subheading-sm">Add New Collaborator</h3>
               <%= form_with model: Collaboration.new(), url: universe_collaborations_url(@universe), method: "post" do |form| %>
@@ -71,6 +78,7 @@
               <% end %>
             </div>
           </div>
+
         </div>
       </div>
     </div>

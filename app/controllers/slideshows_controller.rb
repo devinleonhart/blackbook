@@ -64,7 +64,6 @@ class SlideshowsController < ApplicationController
     end
   end
 
-  # NOTE: duplicated from ImagesController; keep local to avoid refactors unrelated to slideshow.
   def accessible_universe_ids_for_user(user)
     owned_ids = Universe.where(owner: user).pluck(:id)
     collaborated_ids =

@@ -4,15 +4,18 @@
 
   <div class="bb-container-md">
     <div class="bb-card bb-card--panel">
+
+      <!-- Page Header -->
       <div class="mb-6">
         <h1 class="bb-heading-xl">Tags for <%= @character.name %></h1>
         <p class="bb-subtitle">Manage tags for this character</p>
       </div>
 
-
       <% if @character_tags.any? %>
+        <!-- Tags Grid -->
         <div class="bb-card-grid">
           <% @character_tags.each do |tag| %>
+            <!-- Tag Card -->
             <div class="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors duration-200 shadow-sm hover:shadow-md">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="bb-section-heading--sm mb-0">
@@ -29,14 +32,17 @@
           <% end %>
         </div>
       <% else %>
+        <!-- Empty State -->
         <div class="bb-empty-state-lg">
           <p class="bb-subtitle text-lg">No tags yet for this character.</p>
         </div>
       <% end %>
 
+      <!-- Back Link -->
       <div class="mt-12 pt-6">
         <%= link_to "← Back to #{@character.name}", character_path(@character), class: "bb-btn-sm bb-btn-secondary" %>
       </div>
+
     </div>
   </div>
 

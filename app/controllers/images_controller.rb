@@ -26,9 +26,9 @@ class ImagesController < ApplicationController
     response.headers["Cache-Control"] = "no-store"
 
     send_data image_data,
-      type: image.image_file.content_type,
-      disposition: "inline",
-      filename: image.image_file.filename.to_s
+              type: image.image_file.content_type,
+              disposition: "inline",
+              filename: image.image_file.filename.to_s
   end
 
   def show
@@ -85,8 +85,6 @@ class ImagesController < ApplicationController
 
   def view
     @image = Image.find(params[:id])
-
-    # Stream the image directly without redirecting
     image_data = @image.image_file.download
 
     response.headers["Content-Type"] = @image.image_file.content_type
@@ -94,9 +92,9 @@ class ImagesController < ApplicationController
     response.headers["Cache-Control"] = "public, max-age=31536000"
 
     send_data image_data,
-      type: @image.image_file.content_type,
-      disposition: "inline",
-      filename: @image.image_file.filename.to_s
+              type: @image.image_file.content_type,
+              disposition: "inline",
+              filename: @image.image_file.filename.to_s
   end
 
   def destroy
@@ -112,7 +110,7 @@ class ImagesController < ApplicationController
   private
 
   def allowed_image_create_params
-    params.require(:image).permit(:image_file)
+    params.expect(image: [:image_file])
   end
 
   def allowed_image_update_params

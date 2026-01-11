@@ -157,18 +157,13 @@ export default class extends Controller {
         await this.requestFullscreen(this.stageTarget)
       }
     } catch (e) {
-      // Fallback: pseudo fullscreen that works everywhere (including mobile browsers
-      // that block/deny the Fullscreen API).
       this.enterPseudoFullscreen()
     }
   }
 
   stageTapped(event) {
-    // If the user taps the image/stage on mobile, exit pseudo fullscreen immediately.
-    // This guarantees an escape hatch even if controls are visually obstructed.
     if (!this.pseudoFullscreen && !this.currentFullscreenElement()) return
 
-    // Don't treat taps on controls as stage taps.
     if (event?.target?.closest?.("[data-slideshow-target='topControls'],[data-slideshow-target='bottomControls']")) return
 
     if (this.pseudoFullscreen) {
@@ -176,11 +171,10 @@ export default class extends Controller {
       return
     }
 
-    // Best-effort exit real fullscreen.
     this.exitFullscreen().catch(() => {})
   }
 
-  // --- internals ---
+  // Private methods
 
   hasSlides() {
     return Array.isArray(this.slidesValue) && this.slidesValue.length > 0
@@ -333,7 +327,6 @@ export default class extends Controller {
     this.imageTarget.classList.remove("bb-slideshow-image--default")
     this.imageTarget.classList.add("bb-slideshow-image--pseudo")
 
-    // Hide all UI chrome in pseudo fullscreen so the image can be as large as possible.
     if (this.hasTopControlsTarget) this.topControlsTarget.classList.add("hidden")
     if (this.hasBottomControlsTarget) this.bottomControlsTarget.classList.add("hidden")
 

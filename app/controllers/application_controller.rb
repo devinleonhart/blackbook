@@ -27,7 +27,7 @@ class ApplicationController < ActionController::Base
     unless universe.visible_to_user?(current_user)
       error_and_redirect(
         "You are not an owner or collaborator of this universe.",
-        universes_url,
+        universes_url
       )
       return false
     end

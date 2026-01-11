@@ -4,12 +4,17 @@
 
   <div class="bb-container-md">
     <div class="bb-card bb-card--panel-lg">
+
+      <!-- Page Header -->
       <div class="mb-8">
         <h1 class="bb-heading-xl">Edit Tag</h1>
         <p class="bb-subtitle text-lg">Edit the tag "<span class="font-semibold text-gray-800"><%= @character_tag.name %></span>" for <%= @character.name %></p>
       </div>
 
+      <!-- Tag Form -->
       <%= form_with model: [@character, @character_tag], url: character_tag_path(@character_tag), method: :patch, class: "space-y-8" do |form| %>
+
+        <!-- Error Messages -->
         <% if @character_tag.errors.any? %>
           <div class="bb-alert bb-alert-error">
             <h4 class="font-bold text-lg mb-3">Please fix the following errors:</h4>
@@ -21,17 +26,21 @@
           </div>
         <% end %>
 
+        <!-- Name Field -->
         <div class="space-y-3">
           <%= form.label :name, "Tag Name", class: "bb-label-lg" %>
           <%= form.text_field :name, placeholder: "Enter tag name...", class: "bb-input-lg" %>
           <p class="bb-subtitle-sm">Tags will be automatically converted to lowercase</p>
         </div>
 
+        <!-- Actions -->
         <div class="flex gap-4 pt-4">
           <%= form.submit "Update Tag", class: "bb-btn bb-btn-primary shadow-sm hover:shadow-md" %>
           <%= link_to "Cancel", character_path(@character), class: "bb-btn bb-btn-secondary shadow-sm hover:shadow-md" %>
         </div>
+
       <% end %>
+
     </div>
   </div>
 

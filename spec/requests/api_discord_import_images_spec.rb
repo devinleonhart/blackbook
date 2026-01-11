@@ -23,8 +23,8 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
   it "returns 401 when token is wrong" do
     with_env("DISCORD_IMPORT_TOKEN", "expected") do
       post "/api/discord_imports/images",
-        params: { universe_code: "KH" },
-        headers: headers.merge("Authorization" => "Bearer wrong")
+           params: { universe_code: "KH" },
+           headers: headers.merge("Authorization" => "Bearer wrong")
       expect(response).to have_http_status(:unauthorized)
     end
   end
@@ -32,8 +32,8 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
   it "returns 422 for invalid universe_code" do
     with_env("DISCORD_IMPORT_TOKEN", "expected") do
       post "/api/discord_imports/images",
-        params: { universe_code: "NOPE", image_file: "x" },
-        headers: headers.merge("Authorization" => "Bearer expected")
+           params: { universe_code: "NOPE", image_file: "x" },
+           headers: headers.merge("Authorization" => "Bearer expected")
       expect(response).to have_http_status(:unprocessable_content)
       json = response.parsed_body
       expect(json["error"]).to include("universe_code")
@@ -45,8 +45,8 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
     with_env("DISCORD_IMPORT_TOKEN", "expected") do
       create(:universe, name: "Knighthood") # KH
       post "/api/discord_imports/images",
-        params: { universe_code: "KH" },
-        headers: headers.merge("Authorization" => "Bearer expected")
+           params: { universe_code: "KH" },
+           headers: headers.merge("Authorization" => "Bearer expected")
       expect(response).to have_http_status(:unprocessable_content)
       expect(response.parsed_body["error"]).to include("image_file")
     end
@@ -61,8 +61,8 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
 
       expect do
         post "/api/discord_imports/images",
-          params: { universe_code: "KH", caption: "hello", image_file: upload },
-          headers: headers.merge("Authorization" => "Bearer expected")
+             params: { universe_code: "KH", caption: "hello", image_file: upload },
+             headers: headers.merge("Authorization" => "Bearer expected")
       end.to change(Image, :count).by(1)
 
       expect(response).to have_http_status(:created)

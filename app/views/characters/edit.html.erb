@@ -3,25 +3,34 @@
   <div class="bb-container-xs">
     <div class="flex justify-center">
       <div class="w-full">
+
+        <!-- Page Header -->
         <div class="bb-page-header">
           <h1 class="bb-heading-xl">Edit Character</h1>
           <p class="bb-subtitle">Update your character's information</p>
         </div>
 
-          <%= form_with model: @character, url: character_url(@character), method: "patch", html: {class: "bb-card bb-card--form"} do |form| %>
-            <div class="bb-field-lg">
-              <%= form.label :name, class: "bb-label" %>
-              <div class="bb-input-icon-wrapper">
-                <span class="bb-input-icon">👤</span>
-                <%= form.text_field :name, class: 'bb-input-lg pl-10 pr-3', placeholder: "Enter character name", required: true %>
-              </div>
+        <!-- Character Form -->
+        <%= form_with model: @character, url: character_url(@character), method: "patch", html: {class: "bb-card bb-card--form"} do |form| %>
+
+          <!-- Name Field -->
+          <div class="bb-field-lg">
+            <%= form.label :name, class: "bb-label" %>
+            <div class="bb-input-icon-wrapper">
+              <span class="bb-input-icon">👤</span>
+              <%= form.text_field :name, class: 'bb-input-lg pl-10 pr-3', placeholder: "Enter character name", required: true %>
             </div>
-            <div class="flex flex-col sm:flex-row gap-3">
-              <%= form.submit "Save Changes", class: "bb-btn bb-btn-primary bb-btn--flex" %>
-              <%= link_to "Cancel", character_path(@character), class: "bb-btn bb-btn-secondary bb-btn--flex text-center" %>
-              <%= link_to "Delete", character_path(@character), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "bb-btn bb-btn-danger bb-btn--flex text-center" %>
-            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="flex flex-col sm:flex-row gap-3">
+            <%= form.submit "Save Changes", class: "bb-btn bb-btn-primary bb-btn--flex" %>
+            <%= link_to "Cancel", character_path(@character), class: "bb-btn bb-btn-secondary bb-btn--flex text-center" %>
+            <%= link_to "Delete", character_path(@character), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "bb-btn bb-btn-danger bb-btn--flex text-center" %>
+          </div>
+
         <% end %>
+
       </div>
     </div>
   </div>
