@@ -1,16 +1,16 @@
 <section id="bb_confirmations_new" class="bb-page">
-  <div class="bb-container-md">
+  <div class="bb-container-xs">
     <div class="flex justify-center">
       <div class="w-full">
-        <div class="text-center mb-8">
+        <div class="bb-page-header">
           <h1 class="bb-heading-xl">Resend confirmation instructions</h1>
-          <p class="bb-subtitle">We’ll email you a fresh confirmation link.</p>
+          <p class="bb-subtitle">We'll email you a fresh confirmation link.</p>
         </div>
 
         <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post, class: "bb-card bb-card--form" }) do |f| %>
           <%= render "devise/shared/error_messages", resource: resource %>
 
-          <div class="mb-6">
+          <div class="bb-field-lg">
             <%= f.label :email, class: "bb-label" %>
             <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email), class: "bb-input" %>
           </div>

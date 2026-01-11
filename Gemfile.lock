@@ -102,6 +102,7 @@ GEM
     factory_bot_rails (6.5.1)
       factory_bot (~> 6.5)
       railties (>= 6.1.0)
+    ffi (1.17.3-aarch64-linux-gnu)
     ffi (1.17.3-aarch64-linux-musl)
     ffi (1.17.3-arm64-darwin)
     ffi (1.17.3-x86_64-linux-gnu)
@@ -155,6 +156,8 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.5)
+    nokogiri (1.19.0-aarch64-linux-gnu)
+      racc (~> 1.4)
     nokogiri (1.19.0-aarch64-linux-musl)
       racc (~> 1.4)
     nokogiri (1.19.0-arm64-darwin)
@@ -169,6 +172,7 @@ GEM
     parser (3.3.10.0)
       ast (~> 2.4.1)
       racc
+    pg (1.6.3-aarch64-linux)
     pg (1.6.3-aarch64-linux-musl)
     pg (1.6.3-arm64-darwin)
     pg (1.6.3-x86_64-linux)
@@ -312,6 +316,7 @@ GEM
     tailwindcss-rails (4.4.0)
       railties (>= 7.0.0)
       tailwindcss-ruby (~> 4.0)
+    tailwindcss-ruby (4.1.18-aarch64-linux-gnu)
     tailwindcss-ruby (4.1.18-aarch64-linux-musl)
     tailwindcss-ruby (4.1.18-arm64-darwin)
     tailwindcss-ruby (4.1.18-x86_64-linux-gnu)
@@ -339,6 +344,7 @@ GEM
     zeitwerk (2.7.4)
 
 PLATFORMS
+  aarch64-linux
   aarch64-linux-musl
   arm64-darwin-21
   arm64-darwin-22

@@ -3,13 +3,13 @@
 <section id="images-edit-view" class="bb-page">
 
   <div class="bb-container">
-    <div class="flex flex-col lg:flex-row gap-8">
+    <div class="bb-layout-sidebar">
       <!-- Left Sidebar -->
-      <div class="w-full lg:w-1/3 order-2 lg:order-1">
+      <div class="bb-sidebar--wide order-2 lg:order-1">
         <div class="bb-card bb-card--panel">
 
       <%# Favorite Image %>
-      <%= button_to universe_image_path(@image.universe, @image), method: :patch, params: { universe_id: @image.universe.id, image: { favorite: !@favorited } }, class: @favorited ? "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded mb-4" : "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4" do %>
+      <%= button_to universe_image_path(@image.universe, @image), method: :patch, params: { universe_id: @image.universe.id, image: { favorite: !@favorited } }, class: @favorited ? "bb-btn-sm bg-yellow-500 hover:bg-yellow-700 text-white mb-4" : "bb-btn-sm bb-btn-primary mb-4" do %>
         <%= @favorited ? "Unfavorite" : "Favorite" %>
       <% end %>
 
@@ -19,18 +19,16 @@
       <% else %>
 
         <!-- Currently Tagged Characters -->
-        <h2 class="text-xl font-semibold mb-3">Tagged Characters</h2>
+        <h2 class="bb-section-heading--sm">Tagged Characters</h2>
         <ul class="space-y-2 mb-6">
           <% if @image.image_tags.empty? %>
-            <li class="text-gray-500">None</li>
+            <li class="bb-subtitle-sm">None</li>
           <% else %>
             <% @image.image_tags.each do | tag | %>
-              <li class="flex items-center justify-between p-2 bg-gray-50 rounded">
+              <li class="bb-list-item--compact">
                 <%= link_to "#{tag.character.name}", character_url(tag.character), class: "bb-link" %>
-                <%= link_to image_tag_url(tag), data: { turbo_method: :delete }, class: "text-red-600 hover:text-red-800" do %>
-                  <span>
-                    <span>✕</span>
-                  </span>
+                <%= link_to image_tag_url(tag), data: { turbo_method: :delete }, class: "bb-action-text" do %>
+                  <span>✕</span>
                 <% end %>
               </li>
             <% end %>
@@ -38,14 +36,14 @@
         </ul>
 
         <!-- Add Character Tag -->
-        <h3 class="text-lg font-medium mb-3">Add Character Tag</h3>
-        <div class="mb-4">
+        <h3 class="bb-subheading">Add Character Tag</h3>
+        <div class="bb-field">
           <input class="bb-input" type="text" id="character-search-image-edit" placeholder="Search characters to add..." onkeyup="filterCharacters('image-edit')">
         </div>
         <div id="character-results-image-edit" data-character-results class="max-h-60 overflow-y-auto border border-gray-200 rounded-md bg-white mb-4">
           <% available_characters = @image.universe.characters - @image.characters %>
           <% available_characters.sort_by {|c| c.name }.each do |character| %>
-            <div data-character-item class="p-3 border-b border-gray-100 hover:bg-gray-50">
+            <div data-character-item class="bb-list-item--bordered">
               <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post", class: "inline" do |form| %>
                 <%= form.hidden_field :character_id, value: character.id %>
                   <%= form.submit "Add #{character.name}", class: "bb-link bg-transparent border-none cursor-pointer" %>
@@ -56,13 +54,13 @@
 
       <% end %>
 
-          <%= button_to "Delete", universe_image_url(@image), method: :delete, data: { confirm: 'Are you sure?' }, class: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4 w-full transition-colors duration-200" %>
+          <%= button_to "Delete", universe_image_url(@image), method: :delete, data: { confirm: 'Are you sure?' }, class: "bb-btn-sm bb-btn-danger w-full mt-4" %>
         </div>
       </div>
 
       <!-- Main Image Display -->
-      <div class="w-full lg:w-2/3 order-1 lg:order-2">
-        <div class="bg-white rounded-lg p-6">
+      <div class="bb-main--wide order-1 lg:order-2">
+        <div class="bb-card bb-card--panel">
           <div class="flex justify-center">
             <%= link_to view_image_path(@image, @image.image_file.filename) do %>
               <%= generate_image_tag(@image, [1000]) %>

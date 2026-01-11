@@ -1,22 +1,72 @@
 @import "tailwindcss";
 
 @layer components {
-  /* Layout */
+  /* ============================================
+     LAYOUT
+     ============================================ */
+
+  /* Page wrappers */
   .bb-page {
     @apply py-8 min-h-screen bg-gray-50;
   }
 
+  .bb-page--transparent {
+    @apply py-8 min-h-screen;
+  }
+
+  /* Containers - standard widths with horizontal padding */
   .bb-container {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
+  .bb-container-lg {
+    @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
   .bb-container-md {
+    @apply max-w-4xl mx-auto px-4;
+  }
+
+  .bb-container-sm {
+    @apply max-w-lg mx-auto px-4;
+  }
+
+  .bb-container-xs {
     @apply max-w-md mx-auto px-4;
   }
 
-  /* Surfaces */
+  /* Two-column sidebar layout */
+  .bb-layout-sidebar {
+    @apply flex flex-col lg:flex-row gap-8;
+  }
+
+  .bb-sidebar {
+    @apply w-full lg:w-1/4;
+  }
+
+  .bb-main {
+    @apply w-full lg:w-3/4;
+  }
+
+  .bb-main--wide {
+    @apply w-full lg:w-2/3;
+  }
+
+  .bb-sidebar--wide {
+    @apply w-full lg:w-1/3;
+  }
+
+  /* ============================================
+     SURFACES
+     ============================================ */
+
+  /* Cards */
   .bb-card {
     @apply bg-white rounded-lg shadow-lg;
+  }
+
+  .bb-card--bordered {
+    @apply border border-gray-100;
   }
 
   .bb-card--form {
@@ -27,52 +77,184 @@
     @apply p-6;
   }
 
-  /* Typography */
+  .bb-card--panel-lg {
+    @apply p-8;
+  }
+
+  /* ============================================
+     TYPOGRAPHY
+     ============================================ */
+
+  /* Page headings */
   .bb-heading-xl {
     @apply text-3xl font-bold text-gray-900 mb-2;
   }
 
+  .bb-heading-lg {
+    @apply text-2xl font-bold text-gray-900 mb-2;
+  }
+
+  /* Section headings within cards */
+  .bb-section-heading {
+    @apply text-xl font-semibold text-gray-800 mb-6;
+  }
+
+  .bb-section-heading--sm {
+    @apply text-lg font-semibold text-gray-800 mb-4;
+  }
+
+  .bb-section-heading--center {
+    @apply text-center;
+  }
+
+  /* Subheadings */
+  .bb-subheading {
+    @apply text-lg font-medium text-gray-800 mb-4;
+  }
+
+  .bb-subheading-sm {
+    @apply text-sm font-medium text-gray-700 mb-3;
+  }
+
+  /* Subtitle/muted text */
   .bb-subtitle {
     @apply text-gray-600;
   }
 
-  /* Forms */
+  .bb-subtitle-sm {
+    @apply text-sm text-gray-500;
+  }
+
+  /* Page header wrapper */
+  .bb-page-header {
+    @apply text-center mb-8;
+  }
+
+  /* ============================================
+     FORMS
+     ============================================ */
+
+  /* Labels */
   .bb-label {
     @apply block text-gray-700 text-sm font-bold mb-2;
   }
 
+  .bb-label-lg {
+    @apply block text-lg font-medium text-gray-700 mb-2;
+  }
+
+  /* Inputs */
   .bb-input {
     @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500;
   }
 
-  /* Links */
+  .bb-input-lg {
+    @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg;
+  }
+
+  /* Input with icon wrapper */
+  .bb-input-icon-wrapper {
+    @apply relative;
+  }
+
+  .bb-input-icon {
+    @apply absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400;
+  }
+
+  /* Form field spacing */
+  .bb-field {
+    @apply mb-4;
+  }
+
+  .bb-field-lg {
+    @apply mb-6;
+  }
+
+  /* Checkbox wrapper */
+  .bb-checkbox-label {
+    @apply flex items-center cursor-pointer;
+  }
+
+  .bb-checkbox-label input[type="checkbox"] {
+    @apply mr-2;
+  }
+
+  /* ============================================
+     LINKS
+     ============================================ */
+
   .bb-link {
     @apply text-blue-600 hover:text-blue-800 hover:underline;
   }
 
-  /* Buttons */
+  .bb-link-strong {
+    @apply text-blue-700 hover:text-blue-900 hover:underline font-medium;
+  }
+
+  .bb-link-muted {
+    @apply text-gray-600 hover:text-gray-800 hover:underline;
+  }
+
+  /* ============================================
+     BUTTONS
+     ============================================ */
+
+  /* Base button */
   .bb-btn {
     @apply font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors duration-200;
   }
 
-  .bb-btn--full {
-    @apply w-full;
+  .bb-btn-sm {
+    @apply font-bold py-2 px-4 rounded focus:outline-none transition-colors duration-200;
   }
 
+  /* Button colors */
   .bb-btn-primary {
     @apply bg-blue-500 text-white hover:bg-blue-700;
+  }
+
+  .bb-btn-secondary {
+    @apply bg-gray-500 text-white hover:bg-gray-700;
+  }
+
+  .bb-btn-success {
+    @apply bg-green-500 text-white hover:bg-green-700;
   }
 
   .bb-btn-danger {
     @apply bg-red-500 text-white hover:bg-red-700;
   }
 
-  /* Navigation */
+  .bb-btn-ghost {
+    @apply bg-gray-100 text-gray-900 hover:bg-gray-200 border border-gray-200;
+  }
+
+  .bb-btn-outline {
+    @apply bg-white text-gray-900 hover:bg-gray-50 active:bg-gray-100 border border-gray-300;
+  }
+
+  /* Button modifiers */
+  .bb-btn--full {
+    @apply w-full;
+  }
+
+  .bb-btn--flex {
+    @apply flex-1 text-center;
+  }
+
+  /* ============================================
+     NAVIGATION
+     ============================================ */
+
   .bb-nav-link {
     @apply text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium;
   }
 
-  /* Pills */
+  /* ============================================
+     PILLS & BADGES
+     ============================================ */
+
+  /* Pills - larger tag-like elements */
   .bb-pill {
     @apply inline-flex items-center rounded-full px-3 py-1 text-sm font-medium;
   }
@@ -85,9 +267,155 @@
     @apply bg-gray-100 text-gray-800;
   }
 
+  .bb-pill-green {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .bb-pill-red {
+    @apply bg-red-100 text-red-800;
+  }
+
+  /* Badges - small counters */
+  .bb-badge {
+    @apply text-xs rounded-full px-2 py-1 min-w-6 text-center;
+  }
+
+  .bb-badge-gray {
+    @apply bg-gray-100 text-gray-700 border border-gray-200;
+  }
+
+  .bb-badge-blue {
+    @apply bg-blue-200 text-blue-700;
+  }
+
+  /* ============================================
+     ALERTS
+     ============================================ */
+
+  .bb-alert {
+    @apply rounded-lg border px-4 py-3 shadow-sm;
+  }
+
+  .bb-alert-info {
+    @apply border-blue-200 bg-blue-50 text-blue-900;
+  }
+
+  .bb-alert-success {
+    @apply border-green-200 bg-green-50 text-green-900;
+  }
+
+  .bb-alert-warning {
+    @apply border-yellow-200 bg-yellow-50 text-yellow-900;
+  }
+
+  .bb-alert-error {
+    @apply border-red-200 bg-red-50 text-red-900;
+  }
+
+  .bb-alert-neutral {
+    @apply border-gray-200 bg-gray-50 text-gray-900;
+  }
+
+  /* ============================================
+     LIST ITEMS
+     ============================================ */
+
+  /* Interactive list row */
+  .bb-list-item {
+    @apply flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200;
+  }
+
+  .bb-list-item--compact {
+    @apply flex items-center justify-between p-3 bg-gray-50 rounded-lg;
+  }
+
+  .bb-list-item--bordered {
+    @apply p-3 border-b border-gray-100 hover:bg-gray-50;
+  }
+
+  /* ============================================
+     AVATARS & ICONS
+     ============================================ */
+
+  .bb-avatar {
+    @apply w-10 h-10 rounded-full flex items-center justify-center;
+  }
+
+  .bb-avatar-sm {
+    @apply w-8 h-8 rounded-full flex items-center justify-center;
+  }
+
+  .bb-avatar-lg {
+    @apply w-16 h-16 rounded-full flex items-center justify-center;
+  }
+
+  .bb-avatar-blue {
+    @apply bg-blue-100 text-blue-600;
+  }
+
+  .bb-avatar-gray {
+    @apply bg-gray-100 text-gray-400;
+  }
+
+  /* ============================================
+     EMPTY STATES
+     ============================================ */
+
+  .bb-empty-state {
+    @apply text-center py-8;
+  }
+
+  .bb-empty-state-lg {
+    @apply text-center py-12;
+  }
+
+  .bb-empty-state__title {
+    @apply text-lg font-semibold text-gray-600 mb-2;
+  }
+
+  .bb-empty-state__text {
+    @apply text-gray-500;
+  }
+
+  /* ============================================
+     DIVIDERS
+     ============================================ */
+
+  .bb-divider {
+    @apply border-t border-gray-200 my-6;
+  }
+
+  /* ============================================
+     GRIDS
+     ============================================ */
+
+  .bb-image-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center;
+  }
+
+  .bb-card-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+
+  .bb-card-grid-2 {
+    @apply grid grid-cols-1 lg:grid-cols-2 gap-8;
+  }
+
+  /* ============================================
+     UTILITIES
+     ============================================ */
+
   .bb-no-scroll {
     @apply overflow-hidden;
   }
+
+  .bb-action-text {
+    @apply text-red-600 hover:text-red-800 transition-colors duration-200;
+  }
+
+  /* ============================================
+     SLIDESHOW
+     ============================================ */
 
   .bb-slideshow-shell {
     @apply bg-white rounded-lg shadow-lg overflow-hidden border border-gray-300;
@@ -132,5 +460,41 @@
 
   .bb-slideshow-image--pseudo {
     @apply max-h-full;
+  }
+
+  /* ============================================
+     PAGINATION
+     ============================================ */
+
+  .bb-pagination-btn {
+    @apply inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200;
+  }
+
+  .bb-pagination-btn--disabled {
+    @apply inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed;
+  }
+
+  .bb-pagination-num {
+    @apply inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200;
+  }
+
+  .bb-pagination-num--active {
+    @apply inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg;
+  }
+
+  /* ============================================
+     FILTER BUTTONS
+     ============================================ */
+
+  .bb-filter-btn {
+    @apply flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-medium border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors duration-200 cursor-pointer no-underline;
+  }
+
+  .bb-filter-btn--active {
+    @apply ring-2 ring-blue-500 ring-offset-1;
+  }
+
+  .bb-tag-btn {
+    @apply flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors duration-200 cursor-pointer no-underline;
   }
 }

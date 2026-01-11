@@ -1,15 +1,15 @@
 <div>
   <div class="flex items-center justify-between mb-4">
-    <h3 class="text-lg font-medium text-gray-800">Character Tags</h3>
+    <h3 class="bb-subheading mb-0">Character Tags</h3>
   </div>
 
   <% if @character_tags.any? %>
     <div class="space-y-2">
       <% @character_tags.each do |tag_name, count| %>
         <div class="group relative">
-          <%= link_to character_tag_path(@tag_name_to_id[tag_name]), class: "flex items-center justify-between w-full px-3 py-2 rounded-lg text-sm font-medium bg-blue-100 text-blue-800 hover:bg-blue-200 transition-colors duration-200 cursor-pointer no-underline" do %>
+          <%= link_to character_tag_path(@tag_name_to_id[tag_name]), class: "bb-tag-btn" do %>
             <span class="truncate flex-1"><%= tag_name %></span>
-            <span class="ml-2 text-xs bg-blue-200 text-blue-700 rounded-full px-2 py-1 min-w-6 text-center">
+            <span class="ml-2 bb-badge bb-badge-blue">
               <%= count %>
             </span>
           <% end %>
@@ -17,7 +17,7 @@
       <% end %>
     </div>
   <% else %>
-    <div class="text-center py-8 text-gray-500">
+    <div class="bb-empty-state text-gray-500">
       <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
       </svg>

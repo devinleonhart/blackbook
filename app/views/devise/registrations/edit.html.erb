@@ -1,8 +1,8 @@
 <section id="bb_account_edit" class="bb-page">
-  <div class="bb-container-md">
+  <div class="bb-container-xs">
     <div class="flex justify-center">
       <div class="w-full">
-        <div class="text-center mb-8">
+        <div class="bb-page-header">
           <h1 class="bb-heading-xl">Account settings</h1>
           <p class="bb-subtitle">Update your email or password.</p>
         </div>
@@ -10,33 +10,33 @@
         <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "bb-card bb-card--form" }) do |f| %>
           <%= render "devise/shared/error_messages", resource: resource %>
 
-          <div class="mb-4">
+          <div class="bb-field">
             <%= f.label :email, class: "bb-label" %>
             <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "bb-input" %>
           </div>
 
           <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-            <div class="mb-4 rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3 text-yellow-900 text-sm">
+            <div class="bb-field bb-alert bb-alert-warning text-sm">
               Currently waiting confirmation for: <span class="font-medium"><%= resource.unconfirmed_email %></span>
             </div>
           <% end %>
 
-          <div class="mb-4">
+          <div class="bb-field">
             <%= f.label :password, class: "bb-label" do %>
               Password <span class="font-normal text-gray-500">(leave blank if you don't want to change it)</span>
             <% end %>
             <% if @minimum_password_length %>
-              <p class="text-xs text-gray-500 mb-2"><%= @minimum_password_length %> characters minimum</p>
+              <p class="bb-subtitle-sm mb-2"><%= @minimum_password_length %> characters minimum</p>
             <% end %>
             <%= f.password_field :password, autocomplete: "new-password", class: "bb-input" %>
           </div>
 
-          <div class="mb-4">
+          <div class="bb-field">
             <%= f.label :password_confirmation, class: "bb-label" %>
             <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "bb-input" %>
           </div>
 
-          <div class="mb-6">
+          <div class="bb-field-lg">
             <%= f.label :current_password, class: "bb-label" do %>
               Current password <span class="font-normal text-gray-500">(required to confirm changes)</span>
             <% end %>
@@ -49,8 +49,8 @@
         <% end %>
 
         <div class="mt-6 bb-card px-8 py-6">
-          <h2 class="text-lg font-semibold text-gray-900 mb-2">Cancel my account</h2>
-          <p class="text-sm text-gray-600 mb-4">This action is permanent.</p>
+          <h2 class="bb-section-heading--sm mb-2">Cancel my account</h2>
+          <p class="bb-subtitle-sm mb-4">This action is permanent.</p>
           <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "bb-btn bb-btn-danger bb-btn--full" %>
         </div>
 

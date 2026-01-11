@@ -1,31 +1,31 @@
-<section id="universes-show-view" class="py-8 min-h-screen">
+<section id="universes-show-view" class="bb-page--transparent">
 
   <% render partial: "shared/capture_navbar" %>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex flex-col lg:flex-row gap-8">
+  <div class="bb-container">
+    <div class="bb-layout-sidebar">
       <!-- Left Sidebar -->
-      <div class="w-full lg:w-1/4 order-2 lg:order-1">
-        <div class="bg-white rounded-lg p-6 shadow-lg">
-          <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">Upload & Characters</h2>
+      <div class="bb-sidebar order-2 lg:order-1">
+        <div class="bb-card bb-card--panel">
+          <h2 class="bb-section-heading bb-section-heading--center">Upload & Characters</h2>
 
           <%= form_with model: Image.new(universe_id: @universe.id), url: universe_images_url(@universe), method: "post", class: "mb-6" do | form | %>
-            <%= form.submit "Upload Image", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full mb-3 transition-colors duration-200" %>
+            <%= form.submit "Upload Image", class: "bb-btn-sm bb-btn-primary w-full mb-3" %>
             <%= form.file_field :image_file, required: true, class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
           <% end %>
 
-          <hr class="my-6" />
+          <hr class="bb-divider" />
 
           <%= render partial: "shared/character_selector", locals: {
             characters: @universe.characters,
             unique_id: "universe"
           } %>
 
-          <hr class="my-6" />
+          <hr class="bb-divider" />
 
           <%= render partial: "shared/tag_browser" %>
 
-          <hr class="my-6" />
+          <hr class="bb-divider" />
 
           <%= render partial: "shared/filters", locals: {
             universe: @universe,
@@ -36,12 +36,12 @@
       </div>
 
       <!-- Main Content -->
-      <div class="w-full lg:w-3/4 order-1 lg:order-2">
-        <div class="bg-white rounded-lg p-6">
+      <div class="bb-main order-1 lg:order-2">
+        <div class="bb-card bb-card--panel">
           <%= render partial: "shared/image_list", locals: {
             images: @images,
             universe: @universe,
-            empty_message: (@images_filter == "untagged" ? "No untagged images — you’re all caught up." : nil)
+            empty_message: (@images_filter == "untagged" ? "No untagged images — you're all caught up." : nil)
           } %>
         </div>
       </div>

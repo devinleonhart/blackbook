@@ -1,21 +1,21 @@
-<section id="character-tags-index-view" class="py-8 min-h-screen">
+<section id="character-tags-index-view" class="bb-page--transparent">
 
   <% render partial: "shared/capture_navbar" %>
 
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-white rounded-lg p-6">
+  <div class="bb-container-md">
+    <div class="bb-card bb-card--panel">
       <div class="mb-6">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Tags for <%= @character.name %></h1>
-        <p class="text-gray-600">Manage tags for this character</p>
+        <h1 class="bb-heading-xl">Tags for <%= @character.name %></h1>
+        <p class="bb-subtitle">Manage tags for this character</p>
       </div>
 
 
       <% if @character_tags.any? %>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bb-card-grid">
           <% @character_tags.each do |tag| %>
             <div class="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors duration-200 shadow-sm hover:shadow-md">
               <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-semibold text-gray-800">
+                <h3 class="bb-section-heading--sm mb-0">
                   <%= link_to tag.name, character_tag_path(tag), class: "hover:text-blue-600 hover:underline" %>
                 </h3>
               </div>
@@ -29,13 +29,13 @@
           <% end %>
         </div>
       <% else %>
-        <div class="text-center py-12">
-          <p class="text-gray-500 text-lg">No tags yet for this character.</p>
+        <div class="bb-empty-state-lg">
+          <p class="bb-subtitle text-lg">No tags yet for this character.</p>
         </div>
       <% end %>
 
       <div class="mt-12 pt-6">
-        <%= link_to "← Back to #{@character.name}", character_path(@character), class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded transition-colors duration-200" %>
+        <%= link_to "← Back to #{@character.name}", character_path(@character), class: "bb-btn-sm bb-btn-secondary" %>
       </div>
     </div>
   </div>

@@ -1,14 +1,14 @@
 <section id="slideshows-show-view" class="bb-page">
   <% render partial: "shared/capture_navbar" %>
 
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="bb-container-lg">
     <div class="mb-6">
-      <h1 class="text-2xl font-bold text-gray-900">Slideshow</h1>
-      <p class="text-gray-600">Space = play/pause, ←/→ = prev/next.</p>
+      <h1 class="bb-heading-lg">Slideshow</h1>
+      <p class="bb-subtitle">Space = play/pause, ←/→ = prev/next.</p>
     </div>
 
     <% unless @has_images %>
-      <div class="bg-white rounded-lg p-6 shadow-lg">
+      <div class="bb-card bb-card--panel">
         <%= render partial: "shared/empty_banner", locals: { message: (@mode == "favorites" ? "No favorite images yet. Favorite an image to see it here." : "No images available for slideshow.") } %>
       </div>
     <% else %>
@@ -40,16 +40,14 @@
 
               <%= link_to "All",
                           slideshow_path(mode: "all", universe_id: @universe_id),
-                          class: "px-4 py-2 rounded border text-sm font-medium transition-colors " \
-                                 "#{@mode == "favorites" ? "bg-white hover:bg-gray-50 active:bg-gray-100 border-gray-300 text-gray-900" : "bg-blue-600 active:bg-blue-800 border-blue-600 text-white"}" %>
+                          class: "bb-btn-sm #{@mode == "favorites" ? "bb-btn-outline" : "bb-btn-primary"}" %>
               <%= link_to "Favorites",
                           slideshow_path(mode: "favorites", universe_id: @universe_id),
-                          class: "px-4 py-2 rounded border text-sm font-medium transition-colors " \
-                                 "#{@mode == "favorites" ? "bg-blue-600 active:bg-blue-800 border-blue-600 text-white" : "bg-white hover:bg-gray-50 active:bg-gray-100 border-gray-300 text-gray-900"}" %>
-              <button type="button" class="px-4 py-2 rounded bg-white hover:bg-gray-50 active:bg-gray-100 border border-gray-300 text-gray-900 text-sm font-medium transition-colors" data-action="slideshow#prev">Prev</button>
-              <button type="button" class="px-4 py-2 rounded bg-blue-500 hover:bg-blue-700 active:bg-blue-800 text-white text-sm font-medium transition-colors" data-action="slideshow#togglePlay" data-slideshow-target="playButton">Play</button>
-              <button type="button" class="px-4 py-2 rounded bg-white hover:bg-gray-50 active:bg-gray-100 border border-gray-300 text-gray-900 text-sm font-medium transition-colors" data-action="slideshow#next">Next</button>
-              <button type="button" class="px-4 py-2 rounded bg-white hover:bg-gray-50 active:bg-gray-100 border border-gray-300 text-gray-900 text-sm font-medium transition-colors" data-action="slideshow#toggleFullscreen" data-slideshow-target="fullscreenButton">Fullscreen</button>
+                          class: "bb-btn-sm #{@mode == "favorites" ? "bb-btn-primary" : "bb-btn-outline"}" %>
+              <button type="button" class="bb-btn-sm bb-btn-outline" data-action="slideshow#prev">Prev</button>
+              <button type="button" class="bb-btn-sm bb-btn-primary" data-action="slideshow#togglePlay" data-slideshow-target="playButton">Play</button>
+              <button type="button" class="bb-btn-sm bb-btn-outline" data-action="slideshow#next">Next</button>
+              <button type="button" class="bb-btn-sm bb-btn-outline" data-action="slideshow#toggleFullscreen" data-slideshow-target="fullscreenButton">Fullscreen</button>
             </div>
 
             <span class="text-sm text-gray-700" data-slideshow-target="counter"></span>

@@ -11,8 +11,7 @@
     <div class="hidden sm:flex items-center space-x-1 order-2">
       <!-- First page -->
       <% if collection.current_page > 3 %>
-        <%= link_to "1", base_params.merge(page: 1),
-            class: "inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" %>
+        <%= link_to "1", base_params.merge(page: 1), class: "bb-pagination-num" %>
         <% if collection.current_page > 4 %>
           <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400">...</span>
         <% end %>
@@ -24,12 +23,9 @@
 
       <% (start_page..end_page).each do |page| %>
         <% if page == collection.current_page %>
-          <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-white bg-blue-600 border border-blue-600 rounded-lg">
-            <%= page %>
-          </span>
+          <span class="bb-pagination-num--active"><%= page %></span>
         <% else %>
-          <%= link_to page.to_s, base_params.merge(page: page),
-              class: "inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" %>
+          <%= link_to page.to_s, base_params.merge(page: page), class: "bb-pagination-num" %>
         <% end %>
       <% end %>
 
@@ -38,8 +34,7 @@
         <% if collection.current_page < collection.total_pages - 3 %>
           <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400">...</span>
         <% end %>
-        <%= link_to collection.total_pages.to_s, base_params.merge(page: collection.total_pages),
-            class: "inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200" %>
+        <%= link_to collection.total_pages.to_s, base_params.merge(page: collection.total_pages), class: "bb-pagination-num" %>
       <% end %>
     </div>
 
@@ -48,23 +43,19 @@
       <!-- Previous button -->
       <% if collection.previous_page %>
         <%= link_to "← Previous", base_params.merge(page: collection.previous_page),
-            class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200",
+            class: "bb-pagination-btn",
             title: "Previous page" %>
       <% else %>
-        <span class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed">
-          ← Previous
-        </span>
+        <span class="bb-pagination-btn--disabled">← Previous</span>
       <% end %>
 
       <!-- Next button -->
       <% if collection.next_page %>
         <%= link_to "Next →", base_params.merge(page: collection.next_page),
-            class: "inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200",
+            class: "bb-pagination-btn",
             title: "Next page" %>
       <% else %>
-        <span class="inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-300 bg-gray-100 border border-gray-200 rounded-lg cursor-not-allowed">
-          Next →
-        </span>
+        <span class="bb-pagination-btn--disabled">Next →</span>
       <% end %>
     </div>
   </nav>

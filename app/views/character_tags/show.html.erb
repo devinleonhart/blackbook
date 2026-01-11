@@ -1,19 +1,19 @@
-<section id="character-tags-show-view" class="py-8 min-h-screen">
+<section id="character-tags-show-view" class="bb-page--transparent">
 
   <% render partial: "shared/capture_navbar" %>
 
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="bg-white rounded-lg p-8">
+  <div class="bb-container">
+    <div class="bb-card bb-card--panel-lg">
 
       <!-- Header section -->
       <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Tag: <%= @character_tag.name %></h1>
+        <h1 class="bb-heading-xl">Tag: <%= @character_tag.name %></h1>
       </div>
 
       <% if @images.empty? %>
-        <div class="text-center py-16">
+        <div class="bb-empty-state-lg">
           <div class="mb-6">
-            <p class="text-gray-500 text-lg mb-4">No images found with characters tagged as "<%= @character_tag.name %>".</p>
+            <p class="bb-subtitle text-lg mb-4">No images found with characters tagged as "<%= @character_tag.name %>".</p>
             <p class="text-gray-400 text-sm">
               Characters with this tag:
               <% if @characters_with_tag.any? %>
@@ -34,7 +34,7 @@
       <% end %>
 
       <div class="mt-16 pt-6 text-center">
-        <%= link_to "← Back to #{@universe.name}", universe_path(@universe), class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 shadow-sm hover:shadow-md" %>
+        <%= link_to "← Back to #{@universe.name}", universe_path(@universe), class: "bb-btn bb-btn-secondary shadow-sm hover:shadow-md" %>
       </div>
     </div>
   </div>

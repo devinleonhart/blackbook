@@ -1,8 +1,8 @@
 <section id="bb_passwords_edit" class="bb-page">
-  <div class="bb-container-md">
+  <div class="bb-container-xs">
     <div class="flex justify-center">
       <div class="w-full">
-        <div class="text-center mb-8">
+        <div class="bb-page-header">
           <h1 class="bb-heading-xl">Change your password</h1>
           <p class="bb-subtitle">Choose a new password for your account.</p>
         </div>
@@ -11,15 +11,15 @@
           <%= render "devise/shared/error_messages", resource: resource %>
           <%= f.hidden_field :reset_password_token %>
 
-          <div class="mb-4">
+          <div class="bb-field">
             <%= f.label :password, "New password", class: "bb-label" %>
             <% if @minimum_password_length %>
-              <p class="text-xs text-gray-500 mb-2">(<%= @minimum_password_length %> characters minimum)</p>
+              <p class="bb-subtitle-sm mb-2">(<%= @minimum_password_length %> characters minimum)</p>
             <% end %>
             <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class: "bb-input" %>
           </div>
 
-          <div class="mb-6">
+          <div class="bb-field-lg">
             <%= f.label :password_confirmation, "Confirm new password", class: "bb-label" %>
             <%= f.password_field :password_confirmation, autocomplete: "new-password", class: "bb-input" %>
           </div>

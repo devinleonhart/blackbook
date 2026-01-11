@@ -1,37 +1,33 @@
 <section id="bb_login" class="bb-page">
-  <div class="bb-container-md">
+  <div class="bb-container-xs">
     <div class="flex justify-center">
       <div class="w-full">
-        <div class="text-center mb-8">
+        <div class="bb-page-header">
           <h1 class="bb-heading-xl">Welcome Back</h1>
           <p class="bb-subtitle">Sign in to your account</p>
         </div>
 
         <%= form_for(resource, as: resource_name, html: {class: "bb-card bb-card--form"}, url: session_path(resource_name)) do |form| %>
 
-        <div class="mb-4">
+        <div class="bb-field">
           <%= form.label :email, for: "newUserSessionEmail", class: "bb-label" %>
-          <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span class="text-gray-400">✉️</span>
-            </span>
+          <div class="bb-input-icon-wrapper">
+            <span class="bb-input-icon">✉️</span>
             <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserSessionEmail", class: "bb-input pl-10 pr-3", placeholder: "your_email@gmail.com", required: true %>
           </div>
         </div>
 
-        <div class="mb-4">
+        <div class="bb-field">
           <%= form.label :password, for: "newUserSessionPassword", class: "bb-label" %>
-          <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span class="text-gray-400">🔒</span>
-            </span>
+          <div class="bb-input-icon-wrapper">
+            <span class="bb-input-icon">🔒</span>
             <%= form.password_field :password, autocomplete: "current-password", id: "newUserSessionPassword", class: "bb-input pl-10 pr-3", placeholder: "*****", required: true  %>
           </div>
         </div>
 
         <% if devise_mapping.rememberable? %>
-          <div class="mb-4">
-            <label for="rememberCheckBox" class="flex items-center">
+          <div class="bb-field">
+            <label for="rememberCheckBox" class="bb-checkbox-label">
               <%= form.check_box :remember_me, id: "rememberCheckBox", class: "mr-2" %>
               <span class="text-sm text-gray-700">Keep me logged in</span>
             </label>

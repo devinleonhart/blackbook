@@ -1,23 +1,23 @@
 <section id="admin-dashboard-view" class="bb-page">
   <div class="max-w-5xl mx-auto px-4">
     <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900">Admin</h1>
-      <p class="text-gray-600">Administrative tools for managing the system.</p>
+      <h1 class="bb-heading-xl">Admin</h1>
+      <p class="bb-subtitle">Administrative tools for managing the system.</p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bb-card-grid-2">
       <!-- User management -->
-      <div class="bg-white rounded-lg p-6 shadow-lg border border-gray-100">
-        <h2 class="text-xl font-semibold text-gray-900 mb-2">User management</h2>
-        <p class="text-sm text-gray-600 mb-4">View and manage users, permissions, and ownership.</p>
-        <%= link_to "Open user management →", users_path, class: "inline-flex items-center text-blue-700 hover:text-blue-900 hover:underline font-medium" %>
+      <div class="bb-card bb-card--panel bb-card--bordered">
+        <h2 class="bb-section-heading--sm mb-2">User management</h2>
+        <p class="bb-subtitle-sm mb-4">View and manage users, permissions, and ownership.</p>
+        <%= link_to "Open user management →", users_path, class: "bb-link-strong" %>
       </div>
 
       <!-- Dedupe -->
-      <div class="bg-white rounded-lg p-6 shadow-lg border border-gray-100">
-        <h2 class="text-xl font-semibold text-gray-900 mb-2">Dedupe</h2>
-        <p class="text-sm text-gray-600 mb-4">Find duplicate image uploads.</p>
-        <%= link_to "Find duplicate images →", admin_dedupe_images_path, class: "inline-flex items-center text-blue-700 hover:text-blue-900 hover:underline font-medium" %>
+      <div class="bb-card bb-card--panel bb-card--bordered">
+        <h2 class="bb-section-heading--sm mb-2">Dedupe</h2>
+        <p class="bb-subtitle-sm mb-4">Find duplicate image uploads.</p>
+        <%= link_to "Find duplicate images →", admin_dedupe_images_path, class: "bb-link-strong" %>
       </div>
     </div>
   </div>

@@ -3,17 +3,17 @@
   <% render partial: "shared/capture_navbar" %>
 
   <div class="bb-container">
-    <div class="flex flex-col lg:flex-row gap-8">
+    <div class="bb-layout-sidebar">
       <!-- Left Sidebar - Character Tags -->
-      <div class="w-full lg:w-1/4 order-2 lg:order-1">
+      <div class="bb-sidebar order-2 lg:order-1">
         <div class="bb-card bb-card--panel">
-          <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">Character Tags</h2>
+          <h2 class="bb-section-heading bb-section-heading--center">Character Tags</h2>
 
           <!-- Current Tags -->
           <div class="mb-8">
-            <h3 class="text-lg font-medium mb-4">Current Tags</h3>
+            <h3 class="bb-subheading">Current Tags</h3>
             <% if @character.character_tags.empty? %>
-              <p class="text-gray-500 text-sm">No tags yet</p>
+              <p class="bb-subtitle-sm">No tags yet</p>
             <% else %>
               <div class="flex flex-wrap gap-2">
                 <% @character.character_tags.order(:name).each do |tag| %>
@@ -32,11 +32,11 @@
 
           <!-- Add New Tag -->
           <div>
-            <h3 class="text-lg font-medium mb-4">Add Tag</h3>
+            <h3 class="bb-subheading">Add Tag</h3>
             <%= form_with model: [@character, @character.character_tags.build], url: character_character_tags_path(@character), method: :post, class: "mb-6", local: true do |form| %>
               <div class="space-y-3">
                 <%= form.text_field :name, placeholder: "Enter tag name...", class: "bb-input text-sm" %>
-                <%= form.submit "Add", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded text-sm transition-colors duration-200" %>
+                <%= form.submit "Add", class: "bb-btn-sm bb-btn-primary" %>
               </div>
             <% end %>
 
@@ -45,7 +45,7 @@
             <% available_tags = universe_tags.reject { |tag_name| @character.character_tags.exists?(name: tag_name) } %>
             <% if available_tags.any? %>
               <div class="mt-6">
-                <h4 class="text-sm font-medium text-gray-600 mb-3">Existing tags in universe:</h4>
+                <h4 class="bb-subheading-sm">Existing tags in universe:</h4>
                 <div class="flex flex-wrap gap-1">
                   <% available_tags.each do |tag_name| %>
                     <%= form_with model: [@character, @character.character_tags.build], url: character_character_tags_path(@character), method: :post, class: "inline", local: true do |form| %>
@@ -57,16 +57,16 @@
               </div>
             <% elsif universe_tags.any? %>
               <div class="mt-6">
-                <p class="text-sm text-gray-500">All available tags in this universe have been added to this character.</p>
+                <p class="bb-subtitle-sm">All available tags in this universe have been added to this character.</p>
               </div>
             <% else %>
               <div class="mt-6">
-                <p class="text-sm text-gray-500">No tags exist in this universe yet.</p>
+                <p class="bb-subtitle-sm">No tags exist in this universe yet.</p>
               </div>
             <% end %>
           </div>
 
-          <hr class="my-6" />
+          <hr class="bb-divider" />
 
           <%= render partial: "shared/filters", locals: {
             universe: @universe,
@@ -77,7 +77,7 @@
       </div>
 
       <!-- Main Content - Images -->
-      <div class="w-full lg:w-3/4 order-1 lg:order-2">
+      <div class="bb-main order-1 lg:order-2">
         <div class="bb-card bb-card--panel">
           <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center"><%= @character.name %></h1>
           <%= render partial: "shared/image_list", locals: {

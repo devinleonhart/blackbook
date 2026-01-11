@@ -1,60 +1,58 @@
 <section id="universes-edit-view" class="bb-page">
 
-  <div class="max-w-6xl mx-auto px-4">
+  <div class="bb-container-lg">
     <div class="flex justify-center">
       <div class="w-full">
-        <div class="text-center mb-8">
+        <div class="bb-page-header">
           <h1 class="bb-heading-xl">Edit Universe</h1>
           <p class="bb-subtitle">Update your universe settings and collaborators</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="bb-card-grid-2">
           <!-- Universe Settings -->
           <div class="bb-card bb-card--form">
-            <h2 class="text-xl font-semibold text-gray-800 mb-6">Universe Settings</h2>
+            <h2 class="bb-section-heading">Universe Settings</h2>
 
             <%= form_with model: @universe, url: universe_url(@universe), method: "patch" do |form| %>
-              <div class="mb-6">
+              <div class="bb-field-lg">
                 <%= form.label :name, class: "bb-label" %>
-                <div class="relative">
-                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <span class="text-gray-400">🚀</span>
-                  </span>
-                  <%= form.text_field :name, class: "w-full pl-10 pr-3 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg", placeholder: "Enter universe name", required: true %>
+                <div class="bb-input-icon-wrapper">
+                  <span class="bb-input-icon">🚀</span>
+                  <%= form.text_field :name, class: "bb-input-lg pl-10 pr-3", placeholder: "Enter universe name", required: true %>
                 </div>
               </div>
 
               <div class="flex flex-col sm:flex-row gap-3">
-                <%= form.submit "Save Changes", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors duration-200 flex-1" %>
-                <%= link_to "Cancel", universe_url(@universe), class: "bg-gray-500 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg focus:outline-none transition-colors duration-200 flex-1 text-center" %>
+                <%= form.submit "Save Changes", class: "bb-btn bb-btn-primary bb-btn--flex" %>
+                <%= link_to "Cancel", universe_url(@universe), class: "bb-btn bb-btn-secondary bb-btn--flex text-center" %>
               </div>
             <% end %>
           </div>
 
           <!-- Collaborators -->
           <div class="bb-card bb-card--form">
-            <h2 class="text-xl font-semibold text-gray-800 mb-6">Collaborators</h2>
+            <h2 class="bb-section-heading">Collaborators</h2>
 
             <% if @universe.collaborators.empty? %>
-              <div class="text-center py-8">
-                <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span class="text-2xl text-gray-400">👥</span>
+              <div class="bb-empty-state">
+                <div class="bb-avatar-lg bb-avatar-gray mx-auto mb-4">
+                  <span class="text-2xl">👥</span>
                 </div>
-                <h3 class="text-lg font-semibold text-gray-600 mb-2">No collaborators yet</h3>
-                <p class="text-gray-500">Add collaborators to work together on this universe</p>
+                <h3 class="bb-empty-state__title">No collaborators yet</h3>
+                <p class="bb-empty-state__text">Add collaborators to work together on this universe</p>
               </div>
             <% else %>
               <div class="space-y-3 mb-6">
-                <h3 class="text-sm font-medium text-gray-700 mb-3">Current Collaborators</h3>
+                <h3 class="bb-subheading-sm">Current Collaborators</h3>
                 <% @universe.collaborations.each do | collaboration | %>
-                  <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div class="bb-list-item--compact">
                     <div class="flex items-center">
-                      <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                        <span class="text-blue-600 text-sm">👤</span>
+                      <div class="bb-avatar-sm bb-avatar-blue mr-3">
+                        <span class="text-sm">👤</span>
                       </div>
                       <span class="text-gray-900 font-medium"><%= collaboration.user.display_name %></span>
                     </div>
-                    <%= link_to collaboration_url(collaboration), method: "delete", class: "text-red-600 hover:text-red-800 transition-colors duration-200" do %>
+                    <%= link_to collaboration_url(collaboration), method: "delete", class: "bb-action-text" do %>
                       <span>✕</span>
                     <% end %>
                   </div>
@@ -63,13 +61,13 @@
             <% end %>
 
             <div class="border-t pt-6">
-              <h3 class="text-sm font-medium text-gray-700 mb-3">Add New Collaborator</h3>
+              <h3 class="bb-subheading-sm">Add New Collaborator</h3>
               <%= form_with model: Collaboration.new(), url: universe_collaborations_url(@universe), method: "post" do |form| %>
-                <div class="mb-4">
+                <div class="bb-field">
                   <%= form.label :user_id, class: "bb-label" %>
                   <%= form.select :user_id, generate_collaborator_names(User.all, @universe.collaborators, @universe.owner), {include_blank: true}, class: "bb-input" %>
                 </div>
-                <%= form.submit "Add Collaborator", class: "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none transition-colors duration-200 w-full" %>
+                <%= form.submit "Add Collaborator", class: "bb-btn-sm bb-btn-success w-full" %>
               <% end %>
             </div>
           </div>

@@ -1,50 +1,42 @@
 <section id="bb_register" class="bb-page">
-  <div class="bb-container-md">
+  <div class="bb-container-xs">
     <div class="flex justify-center">
       <div class="w-full">
-        <div class="text-center mb-8">
+        <div class="bb-page-header">
           <h1 class="bb-heading-xl">Create Account</h1>
           <p class="bb-subtitle">Join Blackbook to start creating</p>
         </div>
 
         <%= form_for(resource, as: resource_name, html: {class: "bb-card bb-card--form"}, url: registration_path(resource_name)) do |form| %>
 
-       <div class="mb-4">
+       <div class="bb-field">
           <%= form.label :email, for: "newUserRegisterEmail", class: "bb-label" %>
-          <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span class="text-gray-400">✉️</span>
-            </span>
+          <div class="bb-input-icon-wrapper">
+            <span class="bb-input-icon">✉️</span>
             <%= form.email_field :email, autofocus: true, autocomplete: "email", id: "newUserRegisterEmail", class: "bb-input pl-10 pr-3", placeholder: "your_email@gmail.com", required: true %>
           </div>
         </div>
 
-        <div class="mb-4">
+        <div class="bb-field">
           <%= form.label :display_name, for: "newUserRegisterDisplayname", class: "bb-label" %>
-          <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span class="text-gray-400">👤</span>
-            </span>
+          <div class="bb-input-icon-wrapper">
+            <span class="bb-input-icon">👤</span>
             <%= form.text_field :display_name, autocomplete: "display name", id: "newUserRegisterDisplayname", class: "bb-input pl-10 pr-3", placeholder: "CoolUser69", required: true %>
           </div>
         </div>
 
-        <div class="mb-4">
+        <div class="bb-field">
           <%= form.label :password, for: "newUserRegisterPassword", class: "bb-label" %>
-          <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span class="text-gray-400">🔒</span>
-            </span>
+          <div class="bb-input-icon-wrapper">
+            <span class="bb-input-icon">🔒</span>
             <%= form.password_field :password, id: "newUserRegisterPassword", class: "bb-input pl-10 pr-3", required: true  %>
           </div>
         </div>
 
-        <div class="mb-6">
+        <div class="bb-field-lg">
           <%= form.label :password_confirmation, for: "newUserRegisterPasswordconfirmation", class: "bb-label" %>
-          <div class="relative">
-            <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <span class="text-gray-400">🔒</span>
-            </span>
+          <div class="bb-input-icon-wrapper">
+            <span class="bb-input-icon">🔒</span>
             <%= form.password_field :password_confirmation, id: "newUserRegisterPasswordconfirmation", class: "bb-input pl-10 pr-3", required: true  %>
           </div>
         </div>

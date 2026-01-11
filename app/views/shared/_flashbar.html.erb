@@ -1,13 +1,13 @@
 <% flash.each do |type, message| %>
   <% variant =
     case type.to_s
-    when "notice" then "border-blue-200 bg-blue-50 text-blue-900"
-    when "success" then "border-green-200 bg-green-50 text-green-900"
-    when "alert", "error" then "border-red-200 bg-red-50 text-red-900"
-    else "border-gray-200 bg-gray-50 text-gray-900"
+    when "notice" then "bb-alert-info"
+    when "success" then "bb-alert-success"
+    when "alert", "error" then "bb-alert-error"
+    else "bb-alert-neutral"
     end
   %>
-  <div class="rounded-lg border px-4 py-3 mt-3 shadow-sm pointer-events-auto <%= variant %>">
+  <div class="bb-alert mt-3 pointer-events-auto <%= variant %>">
     <%= message %>
   </div>
 <% end %>

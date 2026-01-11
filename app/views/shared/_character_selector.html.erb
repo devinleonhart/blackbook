@@ -1,12 +1,12 @@
 <div>
-  <div class="mb-4">
-    <label class="block text-sm font-medium text-gray-700 mb-2">Characters (<%= characters.count %>)</label>
-    <div class="mb-4">
+  <div class="bb-field">
+    <label class="bb-label">Characters (<%= characters.count %>)</label>
+    <div class="bb-field">
       <input class="bb-input" type="text" id="character-search-<%= unique_id %>" placeholder="Search characters..." onkeyup="filterCharacters('<%= unique_id %>')">
     </div>
     <div id="character-results-<%= unique_id %>" data-character-results class="max-h-80 overflow-y-auto border border-gray-200 rounded-md bg-white">
       <% characters.sort_by {|c| c.name }.each do |character| %>
-        <div data-character-item class="p-3 border-b border-gray-100 hover:bg-gray-50">
+        <div data-character-item class="bb-list-item--bordered">
           <%= link_to character.name, character_path(character), class: "bb-link" %>
         </div>
       <% end %>
