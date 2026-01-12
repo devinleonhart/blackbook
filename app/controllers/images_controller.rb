@@ -115,6 +115,7 @@ class ImagesController < ApplicationController
 
   def normalize_image_files(image_files)
     return [] if image_files.blank?
+
     files = image_files.is_a?(Array) ? image_files : [image_files]
     files.compact_blank
   end
