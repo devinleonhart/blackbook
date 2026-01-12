@@ -86,6 +86,7 @@ export default class extends Controller {
     if (!this.hasSlides()) return
     const nextIndex = (this.index + 1) % this.slidesValue.length
     this.show(nextIndex)
+    if (this.playing) this.startTimer()
   }
 
   prev() {
@@ -93,6 +94,7 @@ export default class extends Controller {
     const len = this.slidesValue.length
     const prevIndex = (this.index - 1 + len) % len
     this.show(prevIndex)
+    if (this.playing) this.startTimer()
   }
 
   speedChanged(event) {
