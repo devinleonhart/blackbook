@@ -5,6 +5,12 @@ set -eu
 echo "==> rubocop"
 bundle exec rubocop
 
+echo "==> brakeman"
+bundle exec brakeman -qz
+
+echo "==> bundle-audit"
+bundle exec bundle-audit check --update
+
 echo "==> tailwindcss:build"
 bundle exec rails tailwindcss:build
 

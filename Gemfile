@@ -6,7 +6,7 @@ ruby "3.4.10"
 gem "rails", "~> 8.1"
 
 gem "bootsnap", "~> 1.20"
-gem "devise", "~> 4.9"
+gem "devise", "~> 5.0"
 gem "image_processing", "~> 1.14"
 gem "importmap-rails", "~> 2.2"
 gem "jbuilder", "~> 2.14"
@@ -23,6 +23,8 @@ gem "will_paginate", "~> 4.0"
 
 group :development do
   gem "annotaterb", "~> 4.20"
+  gem "brakeman", "~> 8.0", require: false
+  gem "bundler-audit", "~> 0.9", require: false
   gem "observer", "~> 0.1"
   gem "rubocop", "~> 1.82"
   gem "rubocop-factory_bot", "~> 2.28"
