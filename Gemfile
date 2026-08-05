@@ -9,11 +9,9 @@ gem "bootsnap", require: false
 gem "devise"
 gem "image_processing"
 gem "importmap-rails"
-gem "jbuilder"
 gem "pg"
 gem "puma"
 gem "ruby-vips"
-gem "sassc"
 gem "securerandom"
 gem "sprockets-rails"
 gem "stimulus-rails"
@@ -26,7 +24,6 @@ group :development do
   gem "annotaterb"
   gem "brakeman", require: false
   gem "bundler-audit", require: false
-  gem "observer"
   gem "rubocop", require: false
   gem "rubocop-factory_bot", require: false
   gem "rubocop-rails", require: false
