@@ -63,9 +63,9 @@ class CharacterTagsController < ApplicationController
 
   def set_character
     if params[:character_id]
-      @character = Character.find(params[:character_id])
+      @character = Character.find(params.expect(:character_id))
     else
-      @character_tag = CharacterTag.find(params[:id])
+      @character_tag = CharacterTag.find(params.expect(:id))
       @character = @character_tag.character
     end
     universe_visible_to_user?(@character.universe)
@@ -73,7 +73,7 @@ class CharacterTagsController < ApplicationController
   end
 
   def set_character_tag
-    @character_tag = @character.character_tags.find(params[:id]) if @character_tag.nil?
+    @character_tag = @character.character_tags.find(params.expect(:id)) if @character_tag.nil?
   end
 
   def character_tag_params

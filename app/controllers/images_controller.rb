@@ -80,7 +80,7 @@ class ImagesController < ApplicationController
   end
 
   def view
-    @image = Image.find(params[:id])
+    @image = Image.find(params.expect(:id))
     image_data = @image.image_file.download
 
     response.headers["Content-Type"] = @image.image_file.content_type

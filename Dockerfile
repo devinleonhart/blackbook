@@ -1,4 +1,4 @@
-FROM ruby:3.3.7-alpine AS base
+FROM ruby:3.4.10-alpine AS base
 
 ENV APP_PATH=/app \
     BUNDLE_VERSION=2.6.2 \
@@ -9,10 +9,10 @@ ENV APP_PATH=/app \
 WORKDIR $APP_PATH
 
 RUN apk add --no-cache \
-    curl=8.14.1-r2 \
-    postgresql17-client=17.7-r0 \
-    tzdata=2025c-r0 \
-    vips=8.15.3-r5 \
+    curl=8.21.0-r0 \
+    postgresql17-client=17.10-r0 \
+    tzdata=2026c-r0 \
+    vips=8.18.2-r0 \
     yaml=0.2.5-r2
 
 RUN gem install bundler --version "$BUNDLE_VERSION" --no-document
@@ -20,10 +20,10 @@ RUN gem install bundler --version "$BUNDLE_VERSION" --no-document
 FROM base AS build_base
 
 RUN apk add --no-cache \
-    build-base=0.5-r3 \
-    git=2.47.3-r0 \
-    postgresql17-dev=17.7-r0 \
-    vips-dev=8.15.3-r5 \
+    build-base=0.5-r4 \
+    git=2.54.0-r0 \
+    postgresql17-dev=17.10-r0 \
+    vips-dev=8.18.2-r0 \
     yaml-dev=0.2.5-r2
 
 FROM build_base AS dev
