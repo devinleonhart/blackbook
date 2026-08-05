@@ -10,7 +10,7 @@ WORKDIR $APP_PATH
 
 RUN apk add --no-cache \
     curl=8.21.0-r0 \
-    postgresql17-client=17.10-r0 \
+    postgresql18-client=18.4-r0 \
     tzdata=2026c-r0 \
     vips=8.18.2-r0 \
     yaml=0.2.5-r2
@@ -22,7 +22,7 @@ FROM base AS build_base
 RUN apk add --no-cache \
     build-base=0.5-r4 \
     git=2.54.0-r0 \
-    postgresql17-dev=17.10-r0 \
+    postgresql18-dev=18.4-r0 \
     vips-dev=8.18.2-r0 \
     yaml-dev=0.2.5-r2
 

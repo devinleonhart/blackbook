@@ -1,9 +1,9 @@
 services:
   postgres_db:
     container_name: postgres_db
-    image: postgres:17.4-alpine
+    image: postgres:18.4-alpine
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql
       - shared_data:/var/shared
     environment:
       - POSTGRES_USER=postgres
