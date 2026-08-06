@@ -47,14 +47,4 @@ RSpec.describe CharacterTag, type: :model do
       expect(dupe.errors[:name]).to be_present
     end
   end
-
-  describe ".characters_with_tag" do
-    it "returns characters that have the given tag name" do
-      character = create(:character)
-      create(:character_tag, character: character, name: "hero")
-      create(:character_tag, name: "villain")
-
-      expect(described_class.characters_with_tag("hero").map(&:character)).to eq([character])
-    end
-  end
 end

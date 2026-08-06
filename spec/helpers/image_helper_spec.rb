@@ -58,31 +58,9 @@ RSpec.describe ImageHelper, type: :helper do
       expect(helper.send(:safe_url_for, double)).to eq("/ok.png")
     end
 
-    it "logs and falls back to nil when url_for raises and no blob is available" do
+    it "logs and returns nil when url_for raises" do
       allow(helper).to receive(:url_for).and_raise(StandardError.new("boom"))
       expect(helper.send(:safe_url_for, double)).to be_nil
-    end
-
-    it "attempts a blob fallback (still nil for local storage) when url_for raises" do
-      allow(helper).to receive(:url_for).and_raise(StandardError.new("boom"))
-      expect(helper.send(:safe_url_for, double(blob: double("blob")))).to be_nil
-    end
-  end
-
-  describe "#extract_blob" do
-    it "returns the blob directly when the object responds to :blob" do
-      blob = double("blob")
-      expect(helper.send(:extract_blob, double(blob: blob))).to eq(blob)
-    end
-
-    it "returns the image's blob for a variant-like object" do
-      blob = double("blob")
-      variant = double(image: double(blob: blob))
-      expect(helper.send(:extract_blob, variant)).to eq(blob)
-    end
-
-    it "returns nil when no blob can be found" do
-      expect(helper.send(:extract_blob, double)).to be_nil
     end
   end
 end

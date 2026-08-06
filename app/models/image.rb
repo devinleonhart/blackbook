@@ -21,9 +21,8 @@ class Image < ApplicationRecord
   has_one_attached :image_file
 
   has_many :image_tags, inverse_of: :image, dependent: :destroy
-  has_many :characters, through: :image_tags, inverse_of: :images
+  has_many :characters, through: :image_tags
   has_many :image_favorites, dependent: :destroy
-  has_many :favorited_by_users, through: :image_favorites, source: :user
 
   belongs_to :universe, inverse_of: :images
 

@@ -191,10 +191,6 @@
     @apply text-blue-700 hover:text-blue-900 hover:underline font-medium;
   }
 
-  .bb-link-muted {
-    @apply text-gray-600 hover:text-gray-800 hover:underline;
-  }
-
   /* ============================================
      BUTTONS
      ============================================ */
@@ -269,10 +265,6 @@
 
   .bb-pill-green {
     @apply bg-green-100 text-green-800;
-  }
-
-  .bb-pill-red {
-    @apply bg-red-100 text-red-800;
   }
 
   /* Badges - small counters */
@@ -436,10 +428,6 @@
 
   .bb-slideshow-controls--bottom {
     @apply bg-gray-100 text-gray-900 border-t border-gray-200;
-  }
-
-  .bb-slideshow-controls--pseudo {
-    @apply bg-black/80 text-white border-0;
   }
 
   .bb-slideshow-stage {

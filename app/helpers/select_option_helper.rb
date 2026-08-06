@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
 module SelectOptionHelper
-  def generate_character_names(characters, existing_tags)
-    names = []
-    characters.each do |character|
-      names.push([character.name, character.id]) unless existing_tags.any? { |tag| tag.character.id == character.id }
-    end
-    names.sort_by { |pair| pair[0].downcase }
-  end
-
   def generate_collaborator_names(users, existing_collaborators, owner)
     names = []
     users.each do |user|

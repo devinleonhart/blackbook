@@ -19,13 +19,6 @@
             <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "bb-input" %>
           </div>
 
-          <!-- Pending Reconfirmation Notice -->
-          <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-            <div class="bb-field bb-alert bb-alert-warning text-sm">
-              Currently waiting confirmation for: <span class="font-medium"><%= resource.unconfirmed_email %></span>
-            </div>
-          <% end %>
-
           <!-- New Password Field -->
           <div class="bb-field">
             <%= f.label :password, class: "bb-label" do %>

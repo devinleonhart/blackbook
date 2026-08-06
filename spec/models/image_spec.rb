@@ -24,7 +24,7 @@ RSpec.describe Image, type: :model do
   describe "associations" do
     it { is_expected.to belong_to(:universe).inverse_of(:images) }
     it { is_expected.to have_many(:image_tags).dependent(:destroy).inverse_of(:image) }
-    it { is_expected.to have_many(:characters).through(:image_tags).inverse_of(:images) }
+    it { is_expected.to have_many(:characters).through(:image_tags) }
     it { is_expected.to have_one_attached(:image_file) }
   end
 

@@ -38,7 +38,6 @@ RSpec.describe User, type: :model do
     it { is_expected.to have_many(:collaborations).dependent(:destroy).inverse_of(:user) }
     it { is_expected.to have_many(:contributor_universes).through(:collaborations).source(:universe) }
     it { is_expected.to have_many(:image_favorites).dependent(:destroy) }
-    it { is_expected.to have_many(:favorite_images).through(:image_favorites).source(:image) }
   end
 
   describe "validations" do

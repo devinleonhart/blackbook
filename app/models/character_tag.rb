@@ -23,17 +23,11 @@
 class CharacterTag < ApplicationRecord
   validates :name, presence: true, length: { minimum: 1 }
   validates :name, uniqueness: { scope: :character_id, case_sensitive: false }
-  validate :name_must_be_lowercase, :name_cannot_be_empty_string
 
   belongs_to :character, inverse_of: :character_tags
 
   before_validation :normalize_name
   after_destroy :cleanup_orphaned_tags
-
-  # Returns all characters that have a specific tag
-  def self.characters_with_tag(tag_name)
-    joins(:character).where(name: tag_name).includes(:character)
-  end
 
   # Instance method to clean up after this specific tag is destroyed
   def cleanup_orphaned_tags
@@ -46,17 +40,5 @@ class CharacterTag < ApplicationRecord
 
   def normalize_name
     self.name = name&.strip&.downcase
-  end
-
-  def name_must_be_lowercase
-    return if name.blank?
-
-    errors.add(:name, "must be lowercase") unless name == name.downcase
-  end
-
-  def name_cannot_be_empty_string
-    return if name.blank?
-
-    errors.add(:name, "cannot be empty string") if name.strip.empty?
   end
 end

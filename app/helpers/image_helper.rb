@@ -40,23 +40,6 @@ module ImageHelper
     url_for(attachment_or_variant)
   rescue StandardError => error
     Rails.logger.warn("Failed to generate URL for attachment: #{error.message}")
-
-    blob = extract_blob(attachment_or_variant)
-    fallback_url_for_blob(blob) if blob
-  end
-
-  def extract_blob(attachment_or_variant)
-    return attachment_or_variant.blob if attachment_or_variant.respond_to?(:blob)
-
-    if attachment_or_variant.respond_to?(:image) && attachment_or_variant.image.respond_to?(:blob)
-      return attachment_or_variant.image.blob
-    end
-
-    nil
-  end
-
-  def fallback_url_for_blob(_blob)
-    # No fallback URL available for local storage
     nil
   end
 
