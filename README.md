@@ -35,3 +35,5 @@ docker compose exec blackbook bundle exec rails console
 ```bash
 docker compose exec blackbook bundle exec rspec
 ```
+
+<!-- ci: re-trigger 2026-08-06T22:02Z -->
