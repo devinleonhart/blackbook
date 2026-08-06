@@ -80,6 +80,15 @@ RSpec.describe "Universes", type: :request do
       expect(response).to redirect_to(universes_url)
       expect(flash[:error]).to be_present
     end
+
+    it "redirects a user who cannot access the universe (no collaborator-list leak)" do
+      other = create(:universe, owner: create(:user))
+
+      get edit_universe_path(other)
+
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to be_present
+    end
   end
 
   describe "POST create" do

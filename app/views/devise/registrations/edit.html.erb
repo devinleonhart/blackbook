@@ -54,7 +54,7 @@
         <div class="mt-6 bb-card px-8 py-6">
           <h2 class="bb-section-heading--sm mb-2">Cancel my account</h2>
           <p class="bb-subtitle-sm mb-4">This action is permanent.</p>
-          <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete, class: "bb-btn bb-btn-danger bb-btn--full" %>
+          <%= button_to "Cancel my account", registration_path(resource_name), data: { turbo_confirm: "Are you sure?" }, method: :delete, class: "bb-btn bb-btn-danger bb-btn--full" %>
         </div>
 
         <%= render "devise/shared/links" %>

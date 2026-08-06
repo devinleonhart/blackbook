@@ -54,7 +54,7 @@
 
       <% end %>
 
-          <%= button_to "Delete", universe_image_url(@image), method: :delete, data: { confirm: 'Are you sure?' }, class: "bb-btn-sm bb-btn-danger w-full mt-4" %>
+          <%= button_to "Delete", universe_image_url(@image.universe, @image), method: :delete, data: { turbo_confirm: 'Are you sure?' }, class: "bb-btn-sm bb-btn-danger w-full mt-4" %>
         </div>
       </div>
 

@@ -51,7 +51,9 @@ class UniversesController < ApplicationController
 
   def edit
     @universe = Universe.find_by(id: params[:id])
-    nil unless model_found?(@universe, "Universe", params[:id], universes_url)
+    return unless model_found?(@universe, "Universe", params[:id], universes_url)
+
+    nil unless universe_visible_to_user?(@universe)
   end
 
   def create

@@ -121,11 +121,27 @@ RSpec.describe "Characters", type: :request do
   end
 
   describe "authorization" do
-    it "redirects a stranger away from a character they cannot access" do
-      stranger = create(:user)
-      sign_in(stranger)
+    let(:stranger) { create(:user) }
 
+    before { sign_in(stranger) }
+
+    it "redirects a stranger away from a character they cannot access" do
       get character_path(character)
+
+      expect(response).to redirect_to(universes_url)
+    end
+
+    it "prevents a stranger from creating a character in an inaccessible universe" do
+      expect do
+        post universe_characters_path(universe), params: { character: { name: "Sneaky" } }
+      end.not_to change(Character, :count)
+
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to be_present
+    end
+
+    it "prevents a stranger from opening the new-character form" do
+      get new_universe_character_path(universe)
 
       expect(response).to redirect_to(universes_url)
     end

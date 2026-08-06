@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users
+  resources :users, only: [:index, :destroy]
 
   resources :universes do
     resources :collaborations, only: [:create, :destroy], shallow: true
@@ -29,7 +29,7 @@ Rails.application.routes.draw do
       resources :character_tags, except: [:new], shallow: true
     end
 
-    resources :images, except: [:index, :show] do
+    resources :images, except: [:index, :show, :new] do
       resources :image_tags, only: [:create, :destroy], shallow: true
     end
   end

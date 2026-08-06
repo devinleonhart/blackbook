@@ -28,6 +28,18 @@ RSpec.describe "ImageTags", type: :request do
         expect(response).to redirect_to(new_user_session_path)
       end
     end
+
+    context "when the user cannot access the universe" do
+      before { sign_in(create(:user)) }
+
+      it "does not create the tag and redirects (authorizes before persisting)" do
+        expect do
+          post universe_image_image_tags_path(universe, image), params: { image_tag: { character_id: character.id } }
+        end.not_to change(ImageTag, :count)
+
+        expect(response).to redirect_to(universes_url)
+      end
+    end
   end
 
   describe "DELETE destroy" do

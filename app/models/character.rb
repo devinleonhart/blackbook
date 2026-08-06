@@ -30,14 +30,13 @@ class Character < ApplicationRecord
   has_many :image_tags, inverse_of: :character, dependent: :destroy
   has_many :character_tags, inverse_of: :character, dependent: :destroy
 
-  # After a character is destroyed, we don't need to clean up tags
-  # because the dependent: :destroy on character_tags handles this
-  # However, we can add logging if needed
-  after_destroy :log_character_deletion
+  # prepend so this runs before the dependent: :destroy callbacks, while the
+  # character_tags still exist and can be counted.
+  before_destroy :log_character_deletion, prepend: true
 
   private
 
   def log_character_deletion
-    Rails.logger.info "Character '#{name}' (ID: #{id}) was deleted along with #{character_tags.count} character tags"
+    Rails.logger.info "Character '#{name}' (##{id}) is being deleted with #{character_tags.count} tags"
   end
 end

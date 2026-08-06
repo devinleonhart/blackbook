@@ -29,7 +29,11 @@ class CharactersController < ApplicationController
   end
 
   def new
-    @new_character = Character.new(universe_id: params[:universe_id])
+    universe = Universe.find_by(id: params[:universe_id])
+    return unless model_found?(universe, "Universe", params[:universe_id], universes_url)
+    return unless universe_visible_to_user?(universe)
+
+    @new_character = Character.new(universe_id: universe.id)
   end
 
   def edit
@@ -47,15 +51,18 @@ class CharactersController < ApplicationController
   end
 
   def create
-    properties = allowed_character_params.merge(universe_id: params[:universe_id])
-    @character = Character.new(properties)
+    universe = Universe.find_by(id: params[:universe_id])
+    return unless model_found?(universe, "Universe", params[:universe_id], universes_url)
+    return unless universe_visible_to_user?(universe)
+
+    @character = Character.new(allowed_character_params.merge(universe_id: universe.id))
 
     if @character.save
       flash[:success] = "Character created!"
       redirect_to character_url(@character)
     else
       flash[:error] = @character.errors.full_messages.join("\n")
-      redirect_to new_universe_character_url(params[:universe_id])
+      redirect_to new_universe_character_url(universe)
     end
   end
 

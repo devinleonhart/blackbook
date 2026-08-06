@@ -2,14 +2,13 @@
 
 class ImageTagsController < ApplicationController
   def create
-    properties = allowed_image_tag_params.merge(image_id: params[:image_id])
-    character_id = params.dig(:image_tag, :character_id)
-    character = Character.find_by(id: character_id)
-    @image_tag = ImageTag.create!(properties)
-    return unless model_found?(@image_tag, "Image Tag", params[:id], universes_url)
-    return unless universe_visible_to_user?(@image_tag.universe)
+    image = Image.find_by(id: params[:image_id])
+    return unless model_found?(image, "Image", params[:image_id], universes_url)
+    return unless universe_visible_to_user?(image.universe)
 
-    redirect_to edit_universe_image_url(character.universe.id, params[:image_id])
+    @image_tag = image.image_tags.build(allowed_image_tag_params)
+    flash[:error] = @image_tag.errors.full_messages.join(", ") unless @image_tag.save
+    redirect_to edit_universe_image_url(image.universe, image)
   end
 
   def destroy

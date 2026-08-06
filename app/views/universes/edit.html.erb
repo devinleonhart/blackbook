@@ -58,7 +58,7 @@
                       </div>
                       <span class="text-gray-900 font-medium"><%= collaboration.user.display_name %></span>
                     </div>
-                    <%= link_to collaboration_url(collaboration), method: "delete", class: "bb-action-text" do %>
+                    <%= link_to collaboration_url(collaboration), data: { turbo_method: :delete, turbo_confirm: "Remove this collaborator?" }, class: "bb-action-text" do %>
                       <span>✕</span>
                     <% end %>
                   </div>
