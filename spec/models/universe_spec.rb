@@ -67,5 +67,9 @@ RSpec.describe Universe, type: :model do
 
       expect(universe.visible_to_user?(stranger)).to be(false)
     end
+
+    it "returns false for a nil user" do
+      expect(universe.visible_to_user?(nil)).to be(false)
+    end
   end
 end

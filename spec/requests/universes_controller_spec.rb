@@ -16,6 +16,15 @@ RSpec.describe "Universes", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include(owned.name, collaborated.name)
     end
+
+    it "shows per-universe character and image counts" do
+      create_list(:character, 2, universe: universe)
+      create(:image, universe: universe)
+
+      get universes_path
+
+      expect(response.body).to include("2 characters", "1 image")
+    end
   end
 
   describe "GET show" do

@@ -4,7 +4,7 @@ class ImagesController < ApplicationController
   skip_before_action :authenticate_user!, only: [:view]
 
   def random
-    universe_ids = accessible_universe_ids_for_user(current_user)
+    universe_ids = Universe.accessible_to(current_user).pluck(:id)
 
     image =
       Image
@@ -159,16 +159,5 @@ class ImagesController < ApplicationController
 
   def allowed_image_update_params
     params.fetch(:image, {}).permit(:favorite)
-  end
-
-  def accessible_universe_ids_for_user(user)
-    owned_ids = Universe.where(owner: user).pluck(:id)
-    collaborated_ids =
-      Universe
-      .joins(:collaborations)
-      .where(collaborations: { user_id: user.id })
-      .pluck(:id)
-
-    (owned_ids + collaborated_ids).uniq
   end
 end

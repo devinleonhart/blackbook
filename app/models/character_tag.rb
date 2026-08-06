@@ -29,16 +29,14 @@ class CharacterTag < ApplicationRecord
   before_validation :normalize_name
   after_destroy :cleanup_orphaned_tags
 
-  # Instance method to clean up after this specific tag is destroyed
-  def cleanup_orphaned_tags
-    # This callback runs after a tag is destroyed
-    # We can use this to log or perform additional cleanup if needed
-    Rails.logger.debug { "CharacterTag '#{name}' (ID: #{id}) was destroyed for character #{character_id}" }
-  end
-
   private
 
   def normalize_name
     self.name = name&.strip&.downcase
+  end
+
+  # Runs after a tag is destroyed; logs for observability.
+  def cleanup_orphaned_tags
+    Rails.logger.debug { "CharacterTag '#{name}' (ID: #{id}) was destroyed for character #{character_id}" }
   end
 end

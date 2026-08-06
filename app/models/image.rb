@@ -22,7 +22,7 @@ class Image < ApplicationRecord
 
   has_many :image_tags, inverse_of: :image, dependent: :destroy
   has_many :characters, through: :image_tags
-  has_many :image_favorites, dependent: :destroy
+  has_many :image_favorites, dependent: :destroy, inverse_of: :image
 
   belongs_to :universe, inverse_of: :images
 

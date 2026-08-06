@@ -19,7 +19,8 @@
         <!-- User Table -->
         <div class="bb-card bb-card--form">
           <%= render partial: "shared/user_table", locals: {
-            users: @users.sort_by {|u| u.email }
+            users: @users,
+            character_counts: @character_counts
           } %>
         </div>
 

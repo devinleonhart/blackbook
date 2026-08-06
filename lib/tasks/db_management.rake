@@ -1,21 +1,8 @@
 # frozen_string_literal: true
 
 namespace :db do
-  desc "Reset and seed development database"
-  task dev_reset: :environment do
-    puts "🔄 Resetting development database..."
-    system("docker compose exec blackbook bundle exec rails db:reset")
-    puts "✅ Development database reset and seeded successfully!"
-    puts "🔐 Admin login: admin@blackbook.dev / password123"
-  end
-
-  desc "Reset and seed test database"
-  task test_reset: :environment do
-    puts "🔄 Resetting test database..."
-    system("docker compose exec blackbook bundle exec rails db:reset RAILS_ENV=test")
-    puts "✅ Test database reset and seeded successfully!"
-    puts "🔐 Admin login: admin@blackbook.dev / password123"
-  end
+  # Development/test database resets live in bin/reset-db and bin/reset-test-db
+  # (documented in the README) — the canonical, more robust entry points.
 
   desc "Seed both development and test databases"
   task seed_all: :environment do

@@ -2,9 +2,13 @@
 
 class UniversesController < ApplicationController
   def index
-    owned_universes = Universe.where(owner: current_user)
-    collaborated_universes = Universe.joins(:collaborations).where(collaborations: { user: current_user })
-    @universes = (owned_universes + collaborated_universes).uniq
+    @universes = Universe.accessible_to(current_user)
+
+    # Counts for every universe in two grouped queries, so the view doesn't
+    # run a per-row COUNT (N+1). Missing keys default to 0.
+    universe_ids = @universes.map(&:id)
+    @character_counts = Character.where(universe_id: universe_ids).group(:universe_id).count
+    @image_counts = Image.where(universe_id: universe_ids).group(:universe_id).count
   end
 
   def show

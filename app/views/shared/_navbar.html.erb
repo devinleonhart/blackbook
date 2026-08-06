@@ -52,34 +52,7 @@
       <div class="hidden md:block">
         <div class="ml-10 flex items-baseline space-x-4">
           <div class="flex space-x-4">
-            <!-- Context-specific Links -->
-            <% unless @universe.nil? %>
-              <% unless @character_tag %>
-                <%= link_to "New Character", new_universe_character_url(@universe), class: "bb-nav-link" %>
-                <%= link_to "Edit Universe", edit_universe_url(@universe), class: "bb-nav-link" %>
-              <% end %>
-            <% end %>
-            <% unless @character.nil? %>
-              <% unless @character_tag %>
-                <%= link_to "Edit Character", edit_character_url(@character), class: "bb-nav-link" %>
-              <% end %>
-            <% end %>
-
-            <!-- Admin Link -->
-            <% if admin? %>
-              <%= link_to "Admin", admin_root_path, class: "bb-nav-link" %>
-            <% end %>
-
-            <!-- User Links -->
-            <% if user_signed_in? %>
-              <%= link_to "Random", random_image_path, data: { turbo: false }, class: "bb-nav-link" %>
-              <%= link_to "Slideshow", slideshow_path, class: "bb-nav-link" %>
-              <%= link_to "Favorites", favorites_path, class: "bb-nav-link" %>
-              <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "bb-nav-link" %>
-            <% else %>
-              <%= link_to "Register", new_user_registration_path, class: "bb-nav-link" %>
-              <%= link_to "Sign in", new_user_session_path, class: "bb-nav-link" %>
-            <% end %>
+            <%= render "shared/nav_links", mobile: false %>
           </div>
         </div>
       </div>
@@ -90,34 +63,7 @@
   <!-- Mobile Navigation Menu -->
   <div id="bb_navbar_mobile" class="md:hidden hidden border-t border-gray-700" data-navbar-target="menu">
     <div class="px-2 pt-2 pb-3 space-y-1">
-      <!-- Context-specific Links -->
-      <% unless @universe.nil? %>
-        <% unless @character_tag %>
-          <%= link_to "New Character", new_universe_character_url(@universe), class: "bb-nav-link block w-full" %>
-          <%= link_to "Edit Universe", edit_universe_url(@universe), class: "bb-nav-link block w-full" %>
-        <% end %>
-      <% end %>
-      <% unless @character.nil? %>
-        <% unless @character_tag %>
-          <%= link_to "Edit Character", edit_character_url(@character), class: "bb-nav-link block w-full" %>
-        <% end %>
-      <% end %>
-
-      <!-- Admin Link -->
-      <% if admin? %>
-        <%= link_to "Admin", admin_root_path, class: "bb-nav-link block w-full" %>
-      <% end %>
-
-      <!-- User Links -->
-      <% if user_signed_in? %>
-        <%= link_to "Random", random_image_path, data: { turbo: false }, class: "bb-nav-link block w-full" %>
-        <%= link_to "Slideshow", slideshow_path, class: "bb-nav-link block w-full" %>
-        <%= link_to "Favorites", favorites_path, class: "bb-nav-link block w-full" %>
-        <%= link_to "Logout", destroy_user_session_path, data: { turbo_method: :delete }, class: "bb-nav-link block w-full" %>
-      <% else %>
-        <%= link_to "Register", new_user_registration_path, class: "bb-nav-link block w-full" %>
-        <%= link_to "Sign in", new_user_session_path, class: "bb-nav-link block w-full" %>
-      <% end %>
+      <%= render "shared/nav_links", mobile: true %>
     </div>
   </div>
 

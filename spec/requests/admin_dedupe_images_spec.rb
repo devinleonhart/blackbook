@@ -19,6 +19,15 @@ RSpec.describe "Admin dedupe images", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("Duplicate images", "Dupes Universe", "identical file data")
     end
+
+    it "lists the individual images belonging to each duplicate group" do
+      img1 = create(:image, universe: universe)
+      img2 = create(:image, universe: universe)
+
+      get admin_dedupe_images_path
+
+      expect(response.body).to include("Image ##{img1.id}", "Image ##{img2.id}")
+    end
   end
 
   describe "POST dedupe_universe" do

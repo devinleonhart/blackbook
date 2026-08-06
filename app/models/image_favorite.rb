@@ -22,8 +22,8 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class ImageFavorite < ApplicationRecord
-  belongs_to :user
-  belongs_to :image
+  belongs_to :user, inverse_of: :image_favorites
+  belongs_to :image, inverse_of: :image_favorites
 
   validates :user_id, uniqueness: { scope: :image_id }
 end

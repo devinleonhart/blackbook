@@ -28,7 +28,8 @@
                   id="slideshow_universe_id"
                   name="universe_id"
                   class="bb-input w-auto"
-                  onchange="this.form.requestSubmit()"
+                  data-controller="autosubmit"
+                  data-action="change->autosubmit#submit"
                   aria-label="Universe"
                 >
                   <option value="" <%= @universe_id.nil? ? "selected" : "" %>>All universes</option>

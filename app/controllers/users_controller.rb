@@ -4,7 +4,10 @@ class UsersController < ApplicationController
   before_action :require_admin!
 
   def index
-    @users = User.all
+    @users = User.order(:email)
+    # One grouped query for every user's owned-character count (avoids a
+    # per-row COUNT in the view). Keyed by the universe owner's id.
+    @character_counts = Character.joins(:universe).group("universes.owner_id").count
   end
 
   def destroy

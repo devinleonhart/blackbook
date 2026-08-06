@@ -36,9 +36,18 @@ class Universe < ApplicationRecord
   has_many :characters, inverse_of: :universe, dependent: :destroy
   has_many :images, inverse_of: :universe, dependent: :destroy
 
+  # Universes the user owns or collaborates on, in a single query.
+  scope :accessible_to, lambda { |user|
+    left_joins(:collaborations)
+      .where("universes.owner_id = :user_id OR collaborations.user_id = :user_id", user_id: user&.id)
+      .distinct
+  }
+
   # returns a boolean indicating whether the given User model is allowed to
   # view this Universe
   def visible_to_user?(user)
-    owner == user || collaborators.include?(user)
+    return false if user.nil?
+
+    owner_id == user.id || collaborations.exists?(user_id: user.id)
   end
 end

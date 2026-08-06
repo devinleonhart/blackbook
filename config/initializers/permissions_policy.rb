@@ -1,11 +1,16 @@
-# Define an application-wide HTTP permissions policy. For further
-# information see https://developers.google.com/web/updates/2018/06/feature-policy
-#
-# Rails.application.config.permissions_policy do |f|
-#   f.camera      :none
-#   f.gyroscope   :none
-#   f.microphone  :none
-#   f.usb         :none
-#   f.fullscreen  :self
-#   f.payment     :self, "https://secure.example.com"
-# end
+# frozen_string_literal: true
+
+# Application-wide Permissions Policy: disable browser features the app never
+# uses. Fullscreen is allowed for same-origin so the slideshow's fullscreen
+# button keeps working.
+Rails.application.configure do
+  config.permissions_policy do |policy|
+    policy.camera      :none
+    policy.gyroscope   :none
+    policy.microphone  :none
+    policy.usb         :none
+    policy.geolocation :none
+    policy.payment     :none
+    policy.fullscreen  :self
+  end
+end

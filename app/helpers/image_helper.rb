@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 module ImageHelper
-  PLACEHOLDER_STYLE =
-    "display: flex; align-items: center; justify-content: center; " \
-    "background-color: #f8f9fa; border: 1px dashed #dee2e6; " \
-    "min-height: 200px; color: #6c757d;"
-
   def generate_image_tag(image, size)
     return image_placeholder unless image&.image_file&.attached?
 
@@ -44,14 +39,6 @@ module ImageHelper
   end
 
   def image_placeholder(error: false)
-    placeholder_class = error ? "img-thumbnail placeholder-error" : "img-thumbnail placeholder"
-    placeholder_text = error ? "Image unavailable" : "Loading..."
-
-    content_tag(
-      :div,
-      placeholder_text,
-      class: placeholder_class,
-      style: PLACEHOLDER_STYLE
-    )
+    content_tag(:div, error ? "Image unavailable" : "Loading...", class: "bb-image-placeholder")
   end
 end

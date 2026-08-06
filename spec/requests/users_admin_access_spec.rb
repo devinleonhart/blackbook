@@ -24,6 +24,16 @@ RSpec.describe "User management access control", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response.body).to include("User Management")
       end
+
+      it "shows each user's owned-character count" do
+        admin = create(:user, admin: true)
+        create_list(:character, 2, universe: create(:universe, owner: admin))
+
+        sign_in(admin)
+        get users_path
+
+        expect(response.body).to include("2 characters")
+      end
     end
   end
 end

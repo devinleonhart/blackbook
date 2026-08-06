@@ -2,7 +2,7 @@
 
 class SlideshowsController < ApplicationController
   def show
-    universe_ids = accessible_universe_ids_for_user(current_user)
+    universe_ids = Universe.accessible_to(current_user).pluck(:id)
     @mode = slideshow_mode
     @universe_id = selected_universe_id!(universe_ids)
     @universes = Universe.where(id: universe_ids).order(Arel.sql("LOWER(universes.name) ASC"))
@@ -12,7 +12,7 @@ class SlideshowsController < ApplicationController
   end
 
   def images
-    universe_ids = accessible_universe_ids_for_user(current_user)
+    universe_ids = Universe.accessible_to(current_user).pluck(:id)
     @mode = slideshow_mode
     universe_id = selected_universe_id!(universe_ids)
     scoped_universe_ids = universe_id ? [universe_id] : universe_ids
@@ -62,16 +62,5 @@ class SlideshowsController < ApplicationController
     else
       Image.where(universe_id: universe_ids)
     end
-  end
-
-  def accessible_universe_ids_for_user(user)
-    owned_ids = Universe.where(owner: user).pluck(:id)
-    collaborated_ids =
-      Universe
-      .joins(:collaborations)
-      .where(collaborations: { user_id: user.id })
-      .pluck(:id)
-
-    (owned_ids + collaborated_ids).uniq
   end
 end

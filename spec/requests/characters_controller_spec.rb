@@ -15,6 +15,16 @@ RSpec.describe "Characters", type: :request do
       expect(response.body).to include(character.name)
     end
 
+    it "offers universe tags the character does not already have" do
+      other = create(:character, universe: universe)
+      create(:character_tag, character: character, name: "hero")
+      create(:character_tag, character: other, name: "villain")
+
+      get character_path(character)
+
+      expect(response.body).to include("villain") # available to add from the universe
+    end
+
     it "redirects with a flash when the character does not exist" do
       get character_path(missing_id)
 

@@ -26,6 +26,12 @@ class CharactersController < ApplicationController
       )
       .order(Arel.sql("image_favorites.id IS NOT NULL DESC"), created_at: :desc)
       .paginate(page: params[:page], per_page: 20)
+
+    # Tags used anywhere in this universe, and the subset this character
+    # doesn't have yet. The set difference is done in Ruby from two loaded
+    # lists rather than one exists? query per universe tag.
+    @universe_tag_names = @universe.characters.joins(:character_tags).distinct.pluck("character_tags.name").sort
+    @available_tag_names = @universe_tag_names - @character.character_tags.pluck(:name)
   end
 
   def new

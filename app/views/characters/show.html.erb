@@ -41,13 +41,11 @@
             <% end %>
 
             <!-- Existing Tags from Universe -->
-            <% universe_tags = @character.universe.characters.joins(:character_tags).distinct.pluck('character_tags.name').sort %>
-            <% available_tags = universe_tags.reject { |tag_name| @character.character_tags.exists?(name: tag_name) } %>
-            <% if available_tags.any? %>
+            <% if @available_tag_names.any? %>
               <div class="mt-6">
                 <h4 class="bb-subheading-sm">Existing tags in universe:</h4>
                 <div class="flex flex-wrap gap-1">
-                  <% available_tags.each do |tag_name| %>
+                  <% @available_tag_names.each do |tag_name| %>
                     <%= form_with model: [@character, @character.character_tags.build], url: character_character_tags_path(@character), method: :post, class: "inline", local: true do |form| %>
                       <%= form.hidden_field :name, value: tag_name %>
                       <%= form.submit tag_name, class: "text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition-colors duration-200 cursor-pointer" %>
@@ -55,7 +53,7 @@
                   <% end %>
                 </div>
               </div>
-            <% elsif universe_tags.any? %>
+            <% elsif @universe_tag_names.any? %>
               <div class="mt-6">
                 <p class="bb-subtitle-sm">All available tags in this universe have been added to this character.</p>
               </div>

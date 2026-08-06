@@ -25,7 +25,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  validates :email, :display_name, :encrypted_password, presence: true
+  validates :email, :display_name, presence: true
   validates :admin, exclusion: { in: [nil] }
   validates :email, :display_name, uniqueness: { case_sensitive: false }
 
@@ -38,5 +38,5 @@ class User < ApplicationRecord
   has_many :collaborations, dependent: :destroy, inverse_of: :user
   has_many :contributor_universes, through: :collaborations, source: :universe
 
-  has_many :image_favorites, dependent: :destroy
+  has_many :image_favorites, dependent: :destroy, inverse_of: :user
 end
