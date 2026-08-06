@@ -3,76 +3,113 @@
 require "rails_helper"
 
 RSpec.describe "CharacterTags", type: :request do
-  it "redirects unauthenticated users" do
-    character = create(:character)
-    get character_character_tags_path(character)
-    expect(response).to redirect_to(new_user_session_path)
+  include_context "with a signed-in owner"
+
+  let(:character) { create(:character, universe: universe) }
+
+  describe "GET index" do
+    it "lists the character's tags" do
+      create(:character_tag, character: character, name: "elf")
+
+      get character_character_tags_path(character)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("elf")
+    end
   end
 
-  it "lists tags for a character" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
-    create(:character_tag, character: character, name: "elf")
+  describe "GET show" do
+    it "shows a tag and its related characters" do
+      tag = create(:character_tag, character: character, name: "mage")
+      image = create(:image, universe: universe)
+      create(:image_tag, image: image, character: character)
 
-    sign_in(owner)
-    get character_character_tags_path(character)
+      get character_tag_path(tag)
 
-    expect(response).to have_http_status(:ok)
-    expect(response.body).to include("elf")
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("mage")
+    end
   end
 
-  it "creates a tag (normalizes to lowercase) and redirects to the character" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
+  describe "GET edit" do
+    it "renders the edit form" do
+      tag = create(:character_tag, character: character, name: "human")
 
-    sign_in(owner)
-    post character_character_tags_path(character), params: { character_tag: { name: "Elf" } }
+      get edit_character_tag_path(tag)
 
-    expect(response).to redirect_to(character_path(character))
-    expect(character.character_tags.reload.map(&:name)).to include("elf")
+      expect(response).to have_http_status(:ok)
+    end
   end
 
-  it "shows a tag, including related images" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
-    tag = create(:character_tag, character: character, name: "mage")
+  describe "POST create" do
+    context "with a valid name" do
+      it "creates the tag (normalized to lowercase) and redirects to the character" do
+        expect do
+          post character_character_tags_path(character), params: { character_tag: { name: "Elf" } }
+        end.to change(character.character_tags, :count).by(1)
 
-    image = create(:image, universe: universe)
-    create(:image_tag, image: image, character: character)
+        expect(response).to redirect_to(character_path(character))
+        expect(character.character_tags.reload.map(&:name)).to include("elf")
+        expect(flash[:success]).to be_present
+      end
+    end
 
-    sign_in(owner)
-    get character_tag_path(tag)
+    context "with an invalid name" do
+      it "does not create the tag and redirects back to the tag list with a flash" do
+        expect do
+          post character_character_tags_path(character), params: { character_tag: { name: "" } }
+        end.not_to change(CharacterTag, :count)
 
-    expect(response).to have_http_status(:ok)
-    expect(response.body).to include("mage")
+        expect(response).to redirect_to(character_character_tags_path(character))
+        expect(flash[:error]).to be_present
+      end
+    end
   end
 
-  it "updates a tag and redirects back to the character tags index" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
-    tag = create(:character_tag, character: character, name: "human")
+  describe "PATCH update" do
+    context "with a valid name" do
+      it "updates the tag and redirects to the tag list" do
+        tag = create(:character_tag, character: character, name: "human")
 
-    sign_in(owner)
-    patch character_tag_path(tag), params: { character_tag: { name: "noble" } }
+        patch character_tag_path(tag), params: { character_tag: { name: "noble" } }
 
-    expect(response).to redirect_to(character_character_tags_path(character))
-    expect(tag.reload.name).to eq("noble")
+        expect(response).to redirect_to(character_character_tags_path(character))
+        expect(tag.reload.name).to eq("noble")
+      end
+    end
+
+    context "with an invalid name" do
+      it "re-renders edit with an unprocessable status" do
+        tag = create(:character_tag, character: character, name: "human")
+
+        patch character_tag_path(tag), params: { character_tag: { name: "" } }
+
+        expect(response).to have_http_status(:unprocessable_content)
+        expect(tag.reload.name).to eq("human")
+        expect(flash[:error]).to be_present
+      end
+    end
   end
 
-  it "destroys a tag and redirects back to the character tags index" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
-    tag = create(:character_tag, character: character, name: "warrior")
+  describe "DELETE destroy" do
+    it "destroys the tag and redirects to the tag list" do
+      tag = create(:character_tag, character: character, name: "warrior")
 
-    sign_in(owner)
-    delete character_tag_path(tag)
+      expect do
+        delete character_tag_path(tag)
+      end.to change(CharacterTag, :count).by(-1)
 
-    expect(response).to redirect_to(character_character_tags_path(character))
-    expect(CharacterTag.where(id: tag.id)).not_to exist
+      expect(response).to redirect_to(character_character_tags_path(character))
+    end
+  end
+
+  describe "authentication" do
+    before { sign_out(owner) }
+
+    it "redirects unauthenticated users to sign in" do
+      get character_character_tags_path(character)
+
+      expect(response).to redirect_to(new_user_session_path)
+    end
   end
 end

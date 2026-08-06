@@ -3,33 +3,25 @@
 require "rails_helper"
 
 RSpec.describe "Random image", type: :request do
-  it "streams a random image from universes accessible to the current user" do
-    user = create(:user, email: "user1@example.com")
-    other_user = create(:user, email: "user2@example.com")
+  include_context "with a signed-in owner"
 
-    accessible_universe = create(:universe, owner: user, name: "Accessible Universe")
-    inaccessible_universe = create(:universe, owner: other_user, name: "Inaccessible Universe")
+  describe "GET random" do
+    it "streams a random image from a universe the user can access" do
+      accessible_image = create(:image, universe: universe)
+      create(:image, universe: create(:universe, owner: create(:user))) # inaccessible
 
-    accessible_image = create(:image, universe: accessible_universe)
-    _inaccessible_image = create(:image, universe: inaccessible_universe)
+      get random_image_path
 
-    sign_in(user)
+      expect(response).to have_http_status(:ok)
+      expect(response.content_type).to eq(accessible_image.image_file.content_type)
+      expect(response.body).to eq(accessible_image.image_file.download)
+    end
 
-    get random_image_path
+    it "returns 404 when the user has no accessible images" do
+      get random_image_path
 
-    expect(response).to have_http_status(:ok)
-    expect(response.content_type).to eq(accessible_image.image_file.content_type)
-    expect(response.body).to eq(accessible_image.image_file.download)
-  end
-
-  it "returns 404 when the user has no accessible images" do
-    user = create(:user, email: "noimages@example.com")
-
-    sign_in(user)
-
-    get random_image_path
-
-    expect(response).to have_http_status(:not_found)
-    expect(response.body).to include("No images available")
+      expect(response).to have_http_status(:not_found)
+      expect(response.body).to include("No images available")
+    end
   end
 end

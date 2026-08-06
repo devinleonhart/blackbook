@@ -3,11 +3,16 @@
 require "simplecov"
 
 SimpleCov.start "rails" do
-  add_filter "/spec/"
+  skip "/spec/"
   enable_coverage :branch
 
+  # Framework boilerplate with no logic to exercise.
+  skip "app/channels"
+  skip "app/jobs/application_job.rb"
+  skip "app/mailers/application_mailer.rb"
+
   # Keep reports stable for CI/Docker
-  track_files "{app,lib}/**/*.rb"
+  cover "{app,lib}/**/*.rb"
 end
 
 ENV["RAILS_ENV"] = "test" if ENV["RAILS_ENV"].to_s != "test"

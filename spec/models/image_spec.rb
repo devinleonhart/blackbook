@@ -39,6 +39,16 @@ RSpec.describe Image, type: :model do
       expect(new_image).not_to be_valid
       expect(new_image.errors[:image_file]).to be_present
     end
+
+    it "adds an error when the attachment signature is invalid" do
+      new_image = build(:image, universe: universe)
+      allow(new_image.image_file)
+        .to receive(:attached?).and_raise(ActiveSupport::MessageVerifier::InvalidSignature.new("bad sig"))
+
+      new_image.validate
+
+      expect(new_image.errors[:image_file].join).to include("invalid data")
+    end
   end
 
   describe "#favorited_by?" do

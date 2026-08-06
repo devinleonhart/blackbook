@@ -30,42 +30,9 @@ class CharacterTag < ApplicationRecord
   before_validation :normalize_name
   after_destroy :cleanup_orphaned_tags
 
-  # Class method to clean up tags that are no longer associated with any characters
-  def self.cleanup_orphaned_tags
-    # This method can be called manually or via a scheduled job
-    # to clean up any tags that might have become orphaned
-    Rails.logger.info "Running orphaned tags cleanup..."
-
-    # Find all unique tag names
-    tag_names = distinct.pluck(:name)
-    cleaned_count = 0
-
-    tag_names.each do |tag_name|
-      # Count how many character tags exist with this name
-      count = where(name: tag_name).count
-      if count.zero?
-        Rails.logger.warn "Found orphaned tag '#{tag_name}' - this should not happen"
-        cleaned_count += 1
-      end
-    end
-
-    Rails.logger.info "Orphaned tags cleanup complete. Found #{cleaned_count} orphaned tags."
-    cleaned_count
-  end
-
-  # Method to get all unique tag names across all characters
-  def self.all_tag_names
-    distinct.pluck(:name).sort
-  end
-
-  # Method to get all characters that have a specific tag
+  # Returns all characters that have a specific tag
   def self.characters_with_tag(tag_name)
     joins(:character).where(name: tag_name).includes(:character)
-  end
-
-  # Method to check if a tag name is used by any characters
-  def self.tag_exists?(tag_name)
-    exists?(name: tag_name)
   end
 
   # Instance method to clean up after this specific tag is destroyed

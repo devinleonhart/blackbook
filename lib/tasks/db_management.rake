@@ -40,11 +40,4 @@ namespace :db do
     puts "  🏷️  Character tags: #{CharacterTag.count}"
     puts "  🤝 Collaborations: #{Collaboration.count}"
   end
-
-  desc "Clean up orphaned character tags"
-  task cleanup_tags: :environment do
-    puts "🧹 Cleaning up orphaned character tags..."
-    cleaned_count = CharacterTag.cleanup_orphaned_tags
-    puts "✅ Cleanup complete! Found #{cleaned_count} orphaned tags."
-  end
 end

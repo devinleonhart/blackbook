@@ -3,58 +3,49 @@
 require "rails_helper"
 
 RSpec.describe "ImageTags", type: :request do
-  it "redirects unauthenticated users" do
-    universe = create(:universe)
-    image = create(:image, universe: universe)
-    expect do
-      post universe_image_image_tags_path(universe, image), params: { image_tag: { character_id: 123 } }
-    end.not_to change(ImageTag, :count)
-    expect(response).to redirect_to(new_user_session_path)
+  include_context "with a signed-in owner"
+
+  let(:character) { create(:character, universe: universe) }
+  let(:image) { create(:image, universe: universe) }
+
+  describe "POST create" do
+    it "creates an image tag and redirects to the image edit page" do
+      expect do
+        post universe_image_image_tags_path(universe, image), params: { image_tag: { character_id: character.id } }
+      end.to change(ImageTag, :count).by(1)
+
+      expect(response).to redirect_to(edit_universe_image_url(universe, image))
+    end
+
+    context "when unauthenticated" do
+      before { sign_out(owner) }
+
+      it "redirects to sign in without creating a tag" do
+        expect do
+          post universe_image_image_tags_path(universe, image), params: { image_tag: { character_id: character.id } }
+        end.not_to change(ImageTag, :count)
+
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
   end
 
-  it "creates an image tag and redirects to image edit" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
-    image = create(:image, universe: universe)
+  describe "DELETE destroy" do
+    it "destroys the image tag and redirects to the image edit page" do
+      image_tag = create(:image_tag, image: image, character: character)
 
-    sign_in(owner)
+      expect do
+        delete image_tag_path(image_tag)
+      end.to change(ImageTag, :count).by(-1)
 
-    expect do
-      post universe_image_image_tags_path(universe, image), params: { image_tag: { character_id: character.id } }
-    end.to change(ImageTag, :count).by(1)
+      expect(response).to redirect_to(edit_universe_image_url(universe, image))
+    end
 
-    expect(response).to redirect_to(edit_universe_image_url(universe.id, image.id))
-  end
+    it "redirects with a flash when the image tag does not exist" do
+      delete image_tag_path(missing_id)
 
-  it "shows an image tag" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
-    image = create(:image, universe: universe)
-    image_tag = create(:image_tag, image: image, character: character)
-
-    sign_in(owner)
-    get image_tag_path(image_tag)
-
-    # There is no HTML template for this action today, so Rails returns 406.
-    # (This still exercises the controller lookup + authorization paths.)
-    expect(response).to have_http_status(:not_acceptable)
-  end
-
-  it "destroys an image tag and redirects back to image edit" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
-    image = create(:image, universe: universe)
-    image_tag = create(:image_tag, image: image, character: character)
-
-    sign_in(owner)
-
-    expect do
-      delete image_tag_path(image_tag)
-    end.to change(ImageTag, :count).by(-1)
-
-    expect(response).to redirect_to(edit_universe_image_url(universe.id, image.id))
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to be_present
+    end
   end
 end

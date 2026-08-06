@@ -3,34 +3,32 @@
 require "rails_helper"
 
 RSpec.describe "Character tags authorization", type: :request do
-  it "prevents non-collaborators from creating character tags" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
-    stranger = create(:user)
+  let(:character) { create(:character, universe: create(:universe, owner: create(:user))) }
+  let(:stranger) { create(:user) }
 
-    sign_in(stranger)
-    expect do
-      post character_character_tags_path(character), params: { character_tag: { name: "Elf" } }
-    end.not_to change(CharacterTag, :count)
+  before { sign_in(stranger) }
 
-    expect(response).to redirect_to(universes_url)
-    expect(flash[:error]).to include("owner or collaborator")
+  describe "POST create" do
+    it "prevents a non-collaborator from creating character tags" do
+      expect do
+        post character_character_tags_path(character), params: { character_tag: { name: "Elf" } }
+      end.not_to change(CharacterTag, :count)
+
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to include("owner or collaborator")
+    end
   end
 
-  it "prevents non-collaborators from deleting character tags" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
-    tag = create(:character_tag, character: character, name: "elf")
-    stranger = create(:user)
+  describe "DELETE destroy" do
+    it "prevents a non-collaborator from deleting character tags" do
+      tag = create(:character_tag, character: character, name: "elf")
 
-    sign_in(stranger)
-    expect do
-      delete character_tag_path(tag)
-    end.not_to change(CharacterTag, :count)
+      expect do
+        delete character_tag_path(tag)
+      end.not_to change(CharacterTag, :count)
 
-    expect(response).to redirect_to(universes_url)
-    expect(flash[:error]).to include("owner or collaborator")
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to include("owner or collaborator")
+    end
   end
 end

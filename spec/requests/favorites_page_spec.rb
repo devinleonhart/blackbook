@@ -3,41 +3,35 @@
 require "rails_helper"
 
 RSpec.describe "Favorites page", type: :request do
-  it "requires authentication" do
-    get favorites_path
-    expect(response).to redirect_to(new_user_session_path)
-  end
+  describe "GET index" do
+    it "requires authentication" do
+      get favorites_path
 
-  it "shows only the current user's favorites, grouped by universe" do
-    user = create(:user)
-    other_user = create(:user)
+      expect(response).to redirect_to(new_user_session_path)
+    end
 
-    universe_a = create(:universe, owner: user, name: "Alpha")
-    universe_b = create(:universe, owner: user, name: "Beta")
+    context "when signed in" do
+      include_context "with a signed-in owner"
 
-    img_a1 = create(:image, universe: universe_a)
-    img_b1 = create(:image, universe: universe_b)
-    img_a2 = create(:image, universe: universe_a)
+      it "shows only the current user's favorites, grouped by universe" do
+        universe_a = create(:universe, owner: owner, name: "Alpha")
+        universe_b = create(:universe, owner: owner, name: "Beta")
+        favorited_a = create(:image, universe: universe_a)
+        favorited_b = create(:image, universe: universe_b)
+        others_favorite = create(:image, universe: universe_a)
 
-    create(:image_favorite, user: user, image: img_a1)
-    create(:image_favorite, user: user, image: img_b1)
+        create(:image_favorite, user: owner, image: favorited_a)
+        create(:image_favorite, user: owner, image: favorited_b)
+        create(:image_favorite, user: create(:user), image: others_favorite)
 
-    # Other user's favorite should not show up
-    create(:image_favorite, user: other_user, image: img_a2)
+        get favorites_path
 
-    sign_in(user)
-    get favorites_path
-
-    expect(response).to have_http_status(:ok)
-    expect(response.body).to include("Your Favorites")
-
-    # Universes shown
-    expect(response.body).to include("Alpha")
-    expect(response.body).to include("Beta")
-
-    # Only user's favorited images are linked
-    expect(response.body).to include(edit_universe_image_path(universe_a, img_a1))
-    expect(response.body).to include(edit_universe_image_path(universe_b, img_b1))
-    expect(response.body).not_to include(edit_universe_image_path(universe_a, img_a2))
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Your Favorites", "Alpha", "Beta")
+        expect(response.body).to include(edit_universe_image_path(universe_a, favorited_a))
+        expect(response.body).to include(edit_universe_image_path(universe_b, favorited_b))
+        expect(response.body).not_to include(edit_universe_image_path(universe_a, others_favorite))
+      end
+    end
   end
 end

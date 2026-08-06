@@ -25,10 +25,6 @@ class CharacterTagsController < ApplicationController
                .order("images.created_at DESC")
   end
 
-  def new
-    @character_tag = @character.character_tags.build
-  end
-
   def edit; end
 
   def create
@@ -39,7 +35,7 @@ class CharacterTagsController < ApplicationController
       redirect_to character_path(@character)
     else
       flash[:error] = @character_tag.errors.full_messages.join(", ")
-      render :new, status: :unprocessable_content
+      redirect_to character_character_tags_path(@character)
     end
   end
 

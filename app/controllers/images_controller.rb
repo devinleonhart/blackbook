@@ -31,15 +31,6 @@ class ImagesController < ApplicationController
               filename: image.image_file.filename.to_s
   end
 
-  def show
-    @image =
-      Image
-      .includes(image_tags: { character: :universe })
-      .find_by(id: params[:id])
-
-    nil unless model_found?(@image, "Image", params[:id], universes_url)
-  end
-
   def edit
     @image =
       Image

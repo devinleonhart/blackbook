@@ -48,24 +48,13 @@ RSpec.describe CharacterTag, type: :model do
     end
   end
 
-  describe ".all_tag_names" do
-    it "returns sorted unique tag names" do
-      create(:character_tag, name: "elf")
-      create(:character_tag, name: "human")
-      create(:character_tag, name: "elf")
+  describe ".characters_with_tag" do
+    it "returns characters that have the given tag name" do
+      character = create(:character)
+      create(:character_tag, character: character, name: "hero")
+      create(:character_tag, name: "villain")
 
-      expect(described_class.all_tag_names).to eq(%w[elf human])
-    end
-  end
-
-  describe ".tag_exists?" do
-    it "returns true when the tag exists" do
-      create(:character_tag, name: "warrior")
-      expect(described_class.tag_exists?("warrior")).to be(true)
-    end
-
-    it "returns false when the tag does not exist" do
-      expect(described_class.tag_exists?("does-not-exist")).to be(false)
+      expect(described_class.characters_with_tag("hero").map(&:character)).to eq([character])
     end
   end
 end

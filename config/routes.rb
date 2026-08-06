@@ -24,13 +24,13 @@ Rails.application.routes.draw do
   resources :users
 
   resources :universes do
-    resources :collaborations, except: [:update], shallow: true
-    resources :characters, shallow: true do
-      resources :character_tags, shallow: true
+    resources :collaborations, only: [:create, :destroy], shallow: true
+    resources :characters, except: [:index], shallow: true do
+      resources :character_tags, except: [:new], shallow: true
     end
 
-    resources :images, except: [:index] do
-      resources :image_tags, except: [:update], shallow: true
+    resources :images, except: [:index, :show] do
+      resources :image_tags, only: [:create, :destroy], shallow: true
     end
   end
 

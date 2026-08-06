@@ -3,105 +3,94 @@
 require "rails_helper"
 
 RSpec.describe "Slideshow", type: :request do
-  it "redirects unauthenticated users from the slideshow page" do
-    get slideshow_path
-    expect(response).to redirect_to(new_user_session_path)
+  describe "GET show" do
+    it "redirects unauthenticated users to sign in" do
+      get slideshow_path
+
+      expect(response).to redirect_to(new_user_session_path)
+    end
+
+    it "renders the slideshow page for authenticated users" do
+      sign_in(create(:user))
+
+      get slideshow_path
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Slideshow")
+    end
   end
 
-  it "renders the slideshow page for authenticated users" do
-    user = create(:user, email: "slideshow@example.com")
-    sign_in(user)
+  describe "GET images" do
+    include_context "with a signed-in owner"
 
-    get slideshow_path
-    expect(response).to have_http_status(:ok)
-    expect(response.body).to include("Slideshow")
-  end
+    def slide_ids
+      response.parsed_body.fetch("slides").map { |slide| slide.fetch("id") }
+    end
 
-  it "redirects unauthenticated users from the slideshow images endpoint" do
-    get slideshow_images_path(mode: "all")
-    expect(response).to redirect_to(new_user_session_path)
-  end
+    it "redirects unauthenticated users to sign in" do
+      sign_out(owner)
 
-  it "returns only accessible images for mode=all" do
-    user = create(:user, email: "user1@example.com")
-    other_user = create(:user, email: "user2@example.com")
+      get slideshow_images_path(mode: "all")
 
-    accessible_universe = create(:universe, owner: user, name: "Accessible Universe")
-    inaccessible_universe = create(:universe, owner: other_user, name: "Inaccessible Universe")
+      expect(response).to redirect_to(new_user_session_path)
+    end
 
-    accessible_image = create(:image, universe: accessible_universe)
-    inaccessible_image = create(:image, universe: inaccessible_universe)
+    context "with mode=all" do
+      it "returns only images the user can access" do
+        accessible = create(:image, universe: universe)
+        inaccessible = create(:image, universe: create(:universe, owner: create(:user)))
 
-    sign_in(user)
+        get slideshow_images_path(mode: "all")
 
-    get slideshow_images_path(mode: "all")
-    expect(response).to have_http_status(:ok)
+        expect(response).to have_http_status(:ok)
+        expect(slide_ids).to include(accessible.id)
+        expect(slide_ids).not_to include(inaccessible.id)
+      end
 
-    data = response.parsed_body
-    ids = data.fetch("slides").map { |s| s.fetch("id") }
-    expect(ids).to include(accessible_image.id)
-    expect(ids).not_to include(inaccessible_image.id)
-  end
+      it "filters slides to a specific accessible universe" do
+        other_universe = create(:universe, owner: owner)
+        included = create(:image, universe: universe)
+        excluded = create(:image, universe: other_universe)
 
-  it "supports filtering slides by universe_id" do
-    user = create(:user, email: "user1@example.com")
-    accessible_universe = create(:universe, owner: user, name: "U1")
-    other_accessible_universe = create(:universe, owner: user, name: "U2")
+        get slideshow_images_path(mode: "all", universe_id: universe.id)
 
-    included = create(:image, universe: accessible_universe)
-    excluded = create(:image, universe: other_accessible_universe)
+        expect(slide_ids).to include(included.id)
+        expect(slide_ids).not_to include(excluded.id)
+      end
 
-    sign_in(user)
+      it "returns 404 when filtering to an inaccessible universe" do
+        inaccessible = create(:universe, owner: create(:user))
+        create(:image, universe: inaccessible)
 
-    get slideshow_images_path(mode: "all", universe_id: accessible_universe.id)
-    expect(response).to have_http_status(:ok)
+        get slideshow_images_path(mode: "all", universe_id: inaccessible.id)
 
-    ids = response.parsed_body.fetch("slides").map { |s| s.fetch("id") }
-    expect(ids).to include(included.id)
-    expect(ids).not_to include(excluded.id)
-  end
+        expect(response).to have_http_status(:not_found)
+      end
 
-  it "returns 404 when filtering to an inaccessible universe" do
-    user = create(:user, email: "user1@example.com")
-    other_user = create(:user, email: "user2@example.com")
+      it "returns 404 for a non-numeric universe id" do
+        get slideshow_images_path(mode: "all", universe_id: "not-a-number")
 
-    accessible_universe = create(:universe, owner: user, name: "Accessible Universe")
-    inaccessible_universe = create(:universe, owner: other_user, name: "Inaccessible Universe")
+        expect(response).to have_http_status(:not_found)
+      end
+    end
 
-    create(:image, universe: accessible_universe)
-    create(:image, universe: inaccessible_universe)
+    context "with mode=favorites" do
+      it "returns only the current user's favorites, still enforcing universe access" do
+        favorited_accessible = create(:image, universe: universe)
+        not_favorited = create(:image, universe: universe)
+        inaccessible_universe = create(:universe, owner: create(:user))
+        favorited_inaccessible = create(:image, universe: inaccessible_universe)
 
-    sign_in(user)
+        create(:image_favorite, user: owner, image: favorited_accessible)
+        create(:image_favorite, user: owner, image: favorited_inaccessible)
+        create(:image_favorite, user: create(:user), image: favorited_accessible)
 
-    get slideshow_images_path(mode: "all", universe_id: inaccessible_universe.id)
-    expect(response).to have_http_status(:not_found)
-  end
+        get slideshow_images_path(mode: "favorites")
 
-  it "returns only favorited images for the current user, and still enforces universe accessibility" do
-    user = create(:user, email: "favuser@example.com")
-    other_user = create(:user, email: "other@example.com")
-
-    accessible_universe = create(:universe, owner: user, name: "Accessible Universe")
-    inaccessible_universe = create(:universe, owner: other_user, name: "Inaccessible Universe")
-
-    favorited_accessible = create(:image, universe: accessible_universe)
-    not_favorited_accessible = create(:image, universe: accessible_universe)
-    favorited_inaccessible = create(:image, universe: inaccessible_universe)
-
-    create(:image_favorite, user: user, image: favorited_accessible)
-    create(:image_favorite, user: user, image: favorited_inaccessible) # excluded by universe access
-    create(:image_favorite, user: other_user, image: favorited_accessible) # other user's favorite doesn't matter
-
-    sign_in(user)
-
-    get slideshow_images_path(mode: "favorites")
-    expect(response).to have_http_status(:ok)
-
-    data = response.parsed_body
-    ids = data.fetch("slides").map { |s| s.fetch("id") }
-
-    expect(ids).to include(favorited_accessible.id)
-    expect(ids).not_to include(not_favorited_accessible.id)
-    expect(ids).not_to include(favorited_inaccessible.id)
+        expect(response).to have_http_status(:ok)
+        expect(slide_ids).to include(favorited_accessible.id)
+        expect(slide_ids).not_to include(not_favorited.id, favorited_inaccessible.id)
+      end
+    end
   end
 end

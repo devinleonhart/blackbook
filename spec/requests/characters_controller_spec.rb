@@ -3,63 +3,131 @@
 require "rails_helper"
 
 RSpec.describe "Characters", type: :request do
-  it "lists characters for a universe" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    create(:character, universe: universe, name: "A")
-    create(:character, universe: universe, name: "B")
+  include_context "with a signed-in owner"
 
-    sign_in(owner)
-    get universe_characters_path(universe)
+  let(:character) { create(:character, universe: universe, name: "Aria") }
 
-    # There is no HTML template for this action today, so Rails returns 406.
-    # (This still exercises the controller query path.)
-    expect(response).to have_http_status(:not_acceptable)
+  describe "GET show" do
+    it "renders the character for a viewer with access" do
+      get character_path(character)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(character.name)
+    end
+
+    it "redirects with a flash when the character does not exist" do
+      get character_path(missing_id)
+
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to be_present
+    end
+
+    it "redirects when the universe is not visible to the user" do
+      other = create(:character, universe: create(:universe, owner: create(:user)))
+
+      get character_path(other)
+
+      expect(response).to redirect_to(universes_url)
+    end
   end
 
-  it "creates a character and redirects to show" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
+  describe "GET new" do
+    it "renders the new-character form" do
+      get new_universe_character_path(universe)
 
-    sign_in(owner)
-    post universe_characters_path(universe), params: { character: { name: "New Char" } }
-
-    character = Character.order(:id).last
-    expect(response).to redirect_to(character_url(character))
-    expect(character.name).to eq("New Char")
+      expect(response).to have_http_status(:ok)
+    end
   end
 
-  it "fails to create a character and redirects back to new" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
+  describe "GET edit" do
+    it "renders the edit form for an accessible character" do
+      get edit_character_path(character)
 
-    sign_in(owner)
-    post universe_characters_path(universe), params: { character: { name: "" } }
-    expect(response).to redirect_to(new_universe_character_url(universe))
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "redirects with a flash when the character does not exist" do
+      get edit_character_path(missing_id)
+
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to be_present
+    end
   end
 
-  it "updates a character" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe, name: "Old")
+  describe "POST create" do
+    context "with valid params" do
+      it "creates the character and redirects to it" do
+        expect do
+          post universe_characters_path(universe), params: { character: { name: "New Char" } }
+        end.to change(Character, :count).by(1)
 
-    sign_in(owner)
-    patch character_path(character), params: { character: { name: "Updated" } }
+        expect(response).to redirect_to(character_url(Character.order(:id).last))
+        expect(flash[:success]).to eq("Character created!")
+      end
+    end
 
-    expect(response).to redirect_to(character_url(character))
-    expect(character.reload.name).to eq("Updated")
+    context "with invalid params" do
+      it "does not create and redirects back to new with a flash" do
+        expect do
+          post universe_characters_path(universe), params: { character: { name: "" } }
+        end.not_to change(Character, :count)
+
+        expect(response).to redirect_to(new_universe_character_url(universe))
+        expect(flash[:error]).to be_present
+      end
+    end
   end
 
-  it "destroys a character" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    character = create(:character, universe: universe)
+  describe "PATCH update" do
+    context "with valid params" do
+      it "updates and redirects to the character" do
+        patch character_path(character), params: { character: { name: "Renamed" } }
 
-    sign_in(owner)
-    expect do
-      delete character_path(character)
-    end.to change(Character, :count).by(-1)
+        expect(response).to redirect_to(character_url(character))
+        expect(character.reload.name).to eq("Renamed")
+        expect(flash[:success]).to eq("Character updated!")
+      end
+    end
 
-    expect(response).to redirect_to(universe_url(universe))
+    context "with invalid params" do
+      it "does not update and redirects back to edit with a flash" do
+        patch character_path(character), params: { character: { name: "" } }
+
+        expect(response).to redirect_to(edit_character_url(character))
+        expect(character.reload.name).to eq("Aria")
+        expect(flash[:error]).to be_present
+      end
+    end
+
+    it "redirects with a flash when the character does not exist" do
+      patch character_path(missing_id), params: { character: { name: "x" } }
+
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to be_present
+    end
+  end
+
+  describe "DELETE destroy" do
+    it "destroys the character and redirects to the universe" do
+      character # ensure it exists before the count assertion
+
+      expect do
+        delete character_path(character)
+      end.to change(Character, :count).by(-1)
+
+      expect(response).to redirect_to(universe_url(universe))
+      expect(flash[:success]).to eq("Character deleted!")
+    end
+  end
+
+  describe "authorization" do
+    it "redirects a stranger away from a character they cannot access" do
+      stranger = create(:user)
+      sign_in(stranger)
+
+      get character_path(character)
+
+      expect(response).to redirect_to(universes_url)
+    end
   end
 end

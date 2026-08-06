@@ -3,27 +3,45 @@
 require "rails_helper"
 
 RSpec.describe "Users management", type: :request do
-  it "allows admins to delete a user" do
-    admin = create(:user, admin: true)
-    victim = create(:user)
+  describe "DELETE destroy" do
+    let(:victim) { create(:user) }
 
-    sign_in(admin)
+    context "when the user is an admin" do
+      before { sign_in(create(:user, admin: true)) }
 
-    expect do
-      delete user_path(victim)
-    end.to change(User, :count).by(-1)
+      it "deletes the user and redirects to the user list" do
+        victim
 
-    expect(response).to redirect_to(users_url)
-  end
+        expect do
+          delete user_path(victim)
+        end.to change(User, :count).by(-1)
 
-  it "blocks non-admins from deleting users" do
-    user = create(:user, admin: false)
-    victim = create(:user)
+        expect(response).to redirect_to(users_url)
+      end
 
-    sign_in(user)
-    delete user_path(victim)
+      it "shows an error when the user cannot be deleted" do
+        allow(User).to receive(:find_by).and_return(victim)
+        allow(victim).to receive_messages(
+          destroy: false,
+          errors: instance_double(ActiveModel::Errors, full_messages: ["nope"])
+        )
 
-    expect(response).to redirect_to(universes_url)
-    expect(User.where(id: victim.id)).to exist
+        delete user_path(victim)
+
+        expect(response).to redirect_to(users_url)
+        expect(flash[:error]).to be_present
+      end
+    end
+
+    context "when the user is not an admin" do
+      it "is blocked and leaves the user intact" do
+        sign_in(create(:user, admin: false))
+
+        delete user_path(victim)
+
+        expect(response).to redirect_to(universes_url)
+        expect(User.where(id: victim.id)).to exist
+      end
+    end
   end
 end

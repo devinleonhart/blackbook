@@ -109,4 +109,24 @@ RSpec.describe "Images#create", type: :request do
       expect(flash[:success]).to eq("2 images created!")
     end
   end
+
+  describe "when saving fails" do
+    it "creates nothing and reports the failure" do
+      failing = Image.new
+      allow(failing).to receive_messages(save: false,
+                                         errors: instance_double(
+                                           ActiveModel::Errors, full_messages: ["bad file"]
+                                         ))
+      allow(Image).to receive(:new).and_return(failing)
+
+      upload = Rack::Test::UploadedFile.new(file_path, "image/jpeg")
+
+      expect do
+        post universe_images_path(universe), params: { image: { image_file: upload } }
+      end.not_to change(Image, :count)
+
+      expect(response).to redirect_to(universe_path(universe))
+      expect(flash[:error]).to be_present
+    end
+  end
 end

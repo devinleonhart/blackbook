@@ -3,64 +3,70 @@
 require "rails_helper"
 
 RSpec.describe "Collaborations", type: :request do
-  it "redirects unauthenticated users from creating a collaboration" do
-    universe = create(:universe)
-    expect do
-      post universe_collaborations_path(universe), params: { collaboration: { user_id: 123 } }
-    end.not_to change(Collaboration, :count)
-    expect(response).to redirect_to(new_user_session_path)
+  describe "POST create" do
+    context "when signed in as the owner" do
+      include_context "with a signed-in owner"
+
+      let(:collaborator) { create(:user) }
+
+      it "creates a collaboration and redirects to universe edit" do
+        expect do
+          post universe_collaborations_path(universe), params: { collaboration: { user_id: collaborator.id } }
+        end.to change(Collaboration, :count).by(1)
+
+        expect(response).to redirect_to(edit_universe_url(universe))
+      end
+
+      it "does not create a duplicate collaboration but still redirects with a flash" do
+        create(:collaboration, universe: universe, user: collaborator)
+
+        expect do
+          post universe_collaborations_path(universe), params: { collaboration: { user_id: collaborator.id } }
+        end.not_to change(Collaboration, :count)
+
+        expect(response).to redirect_to(edit_universe_url(universe))
+        expect(flash[:error]).to be_present
+      end
+
+      it "redirects with a flash when the universe does not exist" do
+        post universe_collaborations_path(missing_id), params: { collaboration: { user_id: collaborator.id } }
+
+        expect(response).to redirect_to(universes_url)
+        expect(flash[:error]).to be_present
+      end
+    end
+
+    it "redirects unauthenticated users to sign in" do
+      universe = create(:universe)
+
+      expect do
+        post universe_collaborations_path(universe), params: { collaboration: { user_id: 123 } }
+      end.not_to change(Collaboration, :count)
+
+      expect(response).to redirect_to(new_user_session_path)
+    end
   end
 
-  it "creates a collaboration and redirects to universe edit" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    collaborator = create(:user)
+  describe "DELETE destroy" do
+    include_context "with a signed-in owner"
 
-    sign_in(owner)
-    post universe_collaborations_path(universe), params: { collaboration: { user_id: collaborator.id } }
+    let(:collaborator) { create(:user) }
 
-    expect(response).to redirect_to(edit_universe_url(universe))
-    expect(Collaboration.where(universe: universe, user: collaborator)).to exist
-  end
+    it "destroys the collaboration and redirects to universe edit" do
+      collaboration = create(:collaboration, universe: universe, user: collaborator)
 
-  it "does not create invalid collaboration (duplicate) but still redirects to universe edit" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    collaborator = create(:user)
-    create(:collaboration, universe: universe, user: collaborator)
+      expect do
+        delete collaboration_path(collaboration)
+      end.to change(Collaboration, :count).by(-1)
 
-    sign_in(owner)
-    expect do
-      post universe_collaborations_path(universe), params: { collaboration: { user_id: collaborator.id } }
-    end.not_to change(Collaboration, :count)
+      expect(response).to redirect_to(edit_universe_url(universe))
+    end
 
-    expect(response).to redirect_to(edit_universe_url(universe))
-  end
+    it "redirects with a flash when the collaboration does not exist" do
+      delete collaboration_path(missing_id)
 
-  it "shows a collaboration" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    collaborator = create(:user)
-    collab = create(:collaboration, universe: universe, user: collaborator)
-
-    sign_in(owner)
-    get collaboration_path(collab)
-    # There is no HTML template for this action today, so Rails returns 406.
-    # (This still exercises the controller lookup paths.)
-    expect(response).to have_http_status(:not_acceptable)
-  end
-
-  it "destroys a collaboration and redirects to universe edit" do
-    owner = create(:user)
-    universe = create(:universe, owner: owner)
-    collaborator = create(:user)
-    collab = create(:collaboration, universe: universe, user: collaborator)
-
-    sign_in(owner)
-    expect do
-      delete collaboration_path(collab)
-    end.to change(Collaboration, :count).by(-1)
-
-    expect(response).to redirect_to(edit_universe_url(universe.id))
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to be_present
+    end
   end
 end
