@@ -21,7 +21,7 @@
 #
 class Character < ApplicationRecord
   validates :name, presence: true
-  validates :name, uniqueness: { scope: :universe_id, case_sensitive: false }
+  validates :name, uniqueness: { scope: :universe_id }
 
   belongs_to :universe, inverse_of: :characters
 

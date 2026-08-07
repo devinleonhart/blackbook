@@ -21,7 +21,7 @@
 #
 class Universe < ApplicationRecord
   validates :name, presence: true
-  validates :name, uniqueness: { case_sensitive: false, scope: :owner_id }
+  validates :name, uniqueness: { scope: :owner_id }
 
   belongs_to :owner, class_name: "User", inverse_of: :owned_universes
 

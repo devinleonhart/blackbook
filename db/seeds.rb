@@ -127,9 +127,12 @@ def seed_sample_data!
       if image_variants.any?
         bytes = image_variants.sample(random: rng)
         attach_seed_image!(image, bytes, filename: "seed_#{universe.id}_#{i}.jpg")
+        image.save!
+      else
+        # No fixture image available; skip the attachment validation for seeds.
+        image.save!(validate: false)
       end
 
-      image.save!
       images << image
     end
 
