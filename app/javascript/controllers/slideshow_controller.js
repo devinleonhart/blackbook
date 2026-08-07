@@ -18,13 +18,13 @@ export default class extends Controller {
   ]
 
   static values = {
-    slides: Array,
     slidesUrl: String,
     intervalMs: Number,
   }
 
   async connect() {
     this.index = 0
+    this.slides = [] // runtime-only state, populated by loadSlides()
     this.playing = false
     this.timer = null
     this.hintTimer = null
@@ -84,14 +84,14 @@ export default class extends Controller {
 
   next() {
     if (!this.hasSlides()) return
-    const nextIndex = (this.index + 1) % this.slidesValue.length
+    const nextIndex = (this.index + 1) % this.slides.length
     this.show(nextIndex)
     if (this.playing) this.startTimer()
   }
 
   prev() {
     if (!this.hasSlides()) return
-    const len = this.slidesValue.length
+    const len = this.slides.length
     const prevIndex = (this.index - 1 + len) % len
     this.show(prevIndex)
     if (this.playing) this.startTimer()
@@ -108,7 +108,7 @@ export default class extends Controller {
   }
 
   show(newIndex) {
-    const slide = this.slidesValue[newIndex]
+    const slide = this.slides[newIndex]
     if (!slide) return
 
     this.index = newIndex
@@ -133,7 +133,7 @@ export default class extends Controller {
 
       const data = await response.json()
       const slides = Array.isArray(data?.slides) ? data.slides : []
-      this.slidesValue = slides
+      this.slides = slides
 
       if (this.hasSlides()) this.show(0)
     } catch (e) {
@@ -179,7 +179,7 @@ export default class extends Controller {
   // Private methods
 
   hasSlides() {
-    return Array.isArray(this.slidesValue) && this.slidesValue.length > 0
+    return Array.isArray(this.slides) && this.slides.length > 0
   }
 
   startTimer() {
@@ -196,8 +196,8 @@ export default class extends Controller {
 
   preloadNext() {
     if (!this.hasSlides()) return
-    const nextIndex = (this.index + 1) % this.slidesValue.length
-    const nextSlide = this.slidesValue[nextIndex]
+    const nextIndex = (this.index + 1) % this.slides.length
+    const nextSlide = this.slides[nextIndex]
     if (!nextSlide?.url) return
     const img = new Image()
     img.src = nextSlide.url
@@ -273,7 +273,7 @@ export default class extends Controller {
 
   renderCounter() {
     if (!this.hasCounterTarget) return
-    const total = this.slidesValue?.length || 0
+    const total = this.slides?.length || 0
     this.counterTarget.textContent = total ? `${this.index + 1} / ${total}` : ""
   }
 

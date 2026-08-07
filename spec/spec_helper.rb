@@ -14,7 +14,8 @@ RSpec.configure do |config|
   # Better formatting when running specs of single file.
   config.default_formatter = "doc" if config.files_to_run.one?
 
-  # Run tests in different order.
-  # config.order = :random
-  # Kernel.srand config.seed
+  # Randomize spec order to surface order dependence; the seed is printed so
+  # a failing order can be reproduced with `rspec --seed N`.
+  config.order = :random
+  Kernel.srand config.seed
 end
