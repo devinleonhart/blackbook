@@ -16,11 +16,16 @@
           <p class="bb-subtitle">Manage system users and permissions</p>
         </div>
 
+        <div class="mb-4 flex justify-end">
+          <%= link_to "+ New universe", new_universe_path, class: "bb-btn-sm bb-btn-primary" %>
+        </div>
+
         <!-- User Table -->
         <div class="bb-card bb-card--form">
           <%= render partial: "shared/user_table", locals: {
             users: @users,
-            character_counts: @character_counts
+            universe_counts: @universe_counts,
+            image_counts: @image_counts
           } %>
         </div>
 

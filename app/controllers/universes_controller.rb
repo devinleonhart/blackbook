@@ -2,6 +2,9 @@
 
 class UniversesController < ApplicationController
   before_action :set_universe, only: [:show, :edit, :update]
+  # Creating universes is an admin action — individual users don't self-serve
+  # new universes; an admin creates one and assigns it an owner.
+  before_action :require_admin!, only: [:new, :create]
 
   def index
     @universes = Universe.accessible_to(current_user)
@@ -49,6 +52,7 @@ class UniversesController < ApplicationController
 
   def new
     @new_universe = Universe.new
+    @users = User.order(:display_name)
   end
 
   def edit
@@ -57,11 +61,10 @@ class UniversesController < ApplicationController
   end
 
   def create
-    attributes = allowed_universe_params.merge(owner_id: current_user.id)
-    @universe = Universe.new(attributes)
+    @universe = Universe.new(allowed_universe_params)
     if @universe.save
-      flash[:success] = "Universe created!"
-      redirect_to universes_url
+      flash[:success] = "Universe \"#{@universe.name}\" created for #{@universe.owner.display_name}."
+      redirect_to users_url
     else
       flash[:error] = @universe.errors.full_messages.join("\n")
       redirect_to new_universe_url

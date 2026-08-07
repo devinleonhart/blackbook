@@ -69,10 +69,19 @@ RSpec.describe "Universes", type: :request do
   end
 
   describe "GET new" do
-    it "renders the new-universe form" do
+    it "renders the new-universe form for an admin" do
+      sign_in(create(:user, admin: true))
+
       get new_universe_path
 
       expect(response).to have_http_status(:ok)
+    end
+
+    it "forbids a non-admin" do
+      get new_universe_path # signed in as a non-admin owner via the shared context
+
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to include("admin")
     end
   end
 
@@ -101,24 +110,40 @@ RSpec.describe "Universes", type: :request do
   end
 
   describe "POST create" do
-    context "with valid params" do
-      it "creates the universe and redirects to the index" do
-        expect do
-          post universes_path, params: { universe: { name: "New Universe" } }
-        end.to change { Universe.where(owner: owner).count }.by(1)
+    let(:admin) { create(:user, admin: true) }
+    let(:target) { create(:user) }
 
-        expect(response).to redirect_to(universes_url)
+    before { sign_in(admin) }
+
+    context "with valid params" do
+      it "creates the universe for the chosen owner and redirects to user management" do
+        expect do
+          post universes_path, params: { universe: { name: "New Universe", owner_id: target.id } }
+        end.to change { Universe.where(owner: target).count }.by(1)
+
+        expect(response).to redirect_to(users_url)
       end
     end
 
     context "with invalid params" do
       it "does not create and redirects back to new" do
         expect do
-          post universes_path, params: { universe: { name: "" } }
+          post universes_path, params: { universe: { name: "", owner_id: target.id } }
         end.not_to change(Universe, :count)
 
         expect(response).to redirect_to(new_universe_url)
       end
+    end
+
+    it "forbids a non-admin from creating a universe" do
+      sign_in(create(:user))
+
+      expect do
+        post universes_path, params: { universe: { name: "Nope", owner_id: target.id } }
+      end.not_to change(Universe, :count)
+
+      expect(response).to redirect_to(universes_url)
+      expect(flash[:error]).to include("admin")
     end
   end
 

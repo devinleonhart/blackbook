@@ -15,7 +15,12 @@
             <!-- Empty State -->
             <div class="bb-empty-state">
               <h3 class="bb-empty-state__title">No universes yet</h3>
-              <p class="bb-empty-state__text">Create your first universe to get started</p>
+              <% if admin? %>
+                <p class="bb-empty-state__text">Create a universe and assign it to a user from the admin area.</p>
+                <div class="mt-4"><%= link_to "New universe", new_universe_path, class: "bb-btn-sm bb-btn-primary" %></div>
+              <% else %>
+                <p class="bb-empty-state__text">You don't have any universes yet. Ask an admin to set one up for you.</p>
+              <% end %>
             </div>
           <% else %>
             <div class="space-y-3">

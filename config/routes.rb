@@ -21,7 +21,9 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :users, only: [:index, :destroy]
+  resources :users, only: [:index, :destroy] do
+    member { patch :toggle_admin }
+  end
 
   resources :universes, except: [:destroy] do
     resources :collaborations, only: [:create, :destroy], shallow: true
