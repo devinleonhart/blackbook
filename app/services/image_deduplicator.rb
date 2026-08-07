@@ -65,6 +65,12 @@ class ImageDeduplicator
       [deleted, groups_processed]
     end
 
+    # Number of duplicate groups across all universes — a single grouped query,
+    # no image records loaded. Used for the admin dashboard stat.
+    def duplicate_group_count
+      duplicate_group_rows.length
+    end
+
     private
 
     # Duplicate groups (COUNT > 1) keyed by universe + blob identity. `limit`

@@ -24,6 +24,18 @@ RSpec.describe "Admin dashboard", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response.body).to include("Admin", "User management", "Dedupe")
       end
+
+      it "shows at-a-glance system stats" do
+        admin = create(:user, admin: true)
+        universe = create(:universe, owner: admin)
+        create(:character, universe: universe)
+        create(:image, universe: universe)
+
+        sign_in(admin)
+        get admin_root_path
+
+        expect(response.body).to include("Users", "Universes", "Characters", "Images", "Storage", "Duplicate groups")
+      end
     end
   end
 end
