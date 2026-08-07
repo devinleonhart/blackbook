@@ -46,7 +46,6 @@
 
               <!-- Add a trait: type to find an existing one or create a new one -->
               <div>
-                <h3 class="bb-subheading">Add a trait</h3>
                 <%= form_with model: [@character, @character.traits.build], url: character_traits_path(@character), method: :post, class: "mb-3" do |form| %>
                   <div class="flex gap-2">
                     <%= form.text_field :name, placeholder: "Type to find or create…",
@@ -56,7 +55,6 @@
                 <% end %>
 
                 <% if @available_trait_names.any? %>
-                  <p class="bb-subtitle-sm mb-1">Used elsewhere in this universe — click to apply:</p>
                   <div class="flex flex-wrap gap-1">
                     <% @available_trait_names.each do |trait_name| %>
                       <div data-filter-target="item" data-filter-text="<%= trait_name %>">

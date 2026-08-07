@@ -1,11 +1,6 @@
 <section id="slideshows-show-view" class="bb-page">
 
   <div class="bb-container-lg">
-    <div class="mb-6">
-      <h1 class="bb-heading-lg">Slideshow</h1>
-      <p class="bb-subtitle">Space = play/pause, ←/→ = prev/next.</p>
-    </div>
-
     <% unless @has_images %>
       <div class="bb-card bb-card--panel">
         <%= render partial: "shared/empty_banner", locals: { message: (@mode == "favorites" ? "No favorite images yet. Favorite an image to see it here." : "No images available for slideshow.") } %>

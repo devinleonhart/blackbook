@@ -4,12 +4,6 @@
     <div class="flex justify-center">
       <div class="w-full">
 
-        <!-- Page Header -->
-        <div class="bb-page-header">
-          <h1 class="bb-heading-xl">Create New Character</h1>
-          <p class="bb-subtitle">Add a new character to your universe</p>
-        </div>
-
         <!-- Character Form -->
         <%= form_with model: @new_character, url: universe_characters_url(universe_id: @new_character.universe_id), html: {class: "bb-card bb-card--form"} do |form| %>
 

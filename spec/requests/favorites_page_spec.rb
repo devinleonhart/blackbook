@@ -28,7 +28,7 @@ RSpec.describe "Favorites page", type: :request do
 
         expect(response).to have_http_status(:ok)
         expect(response.body).to include('name="turbo-cache-control"') # rendered via yield(:head)
-        expect(response.body).to include("Your Favorites", "Alpha", "Beta")
+        expect(response.body).to include("Alpha", "Beta")
         expect(response.body).to include(edit_universe_image_path(universe_a, favorited_a))
         expect(response.body).to include(edit_universe_image_path(universe_b, favorited_b))
         expect(response.body).not_to include(edit_universe_image_path(universe_a, others_favorite))

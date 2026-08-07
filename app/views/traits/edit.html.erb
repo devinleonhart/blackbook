@@ -4,12 +4,6 @@
   <div class="bb-container-md">
     <div class="bb-card bb-card--panel-lg">
 
-      <!-- Page Header -->
-      <div class="mb-8">
-        <h1 class="bb-heading-xl">Edit trait</h1>
-        <p class="bb-subtitle text-lg">Edit the trait "<span class="font-semibold text-gray-800"><%= @trait.name %></span>" for <%= @character.name %></p>
-      </div>
-
       <!-- Trait Form -->
       <%= form_with model: [@character, @trait], url: trait_path(@trait), method: :patch, class: "space-y-8" do |form| %>
 
