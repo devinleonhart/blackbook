@@ -52,5 +52,12 @@ RSpec.describe User, type: :model do
       expect(user).not_to be_valid
       expect(user.errors[:admin]).to be_present
     end
+
+    it "requires a password of at least 8 characters" do
+      user = build(:user, password: "short7c", password_confirmation: "short7c")
+
+      expect(user).not_to be_valid
+      expect(user.errors[:password]).to be_present
+    end
   end
 end
