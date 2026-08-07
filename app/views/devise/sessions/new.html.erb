@@ -45,6 +45,12 @@
             <%= form.submit "Sign In", id: "newUserSessionSubmit", class: "bb-btn bb-btn-primary bb-btn--full" %>
           </div>
 
+          <% if devise_mapping.recoverable? %>
+            <div class="mt-4 text-center text-sm">
+              <%= link_to "Forgot your password?", new_password_path(resource_name), class: "bb-link" %>
+            </div>
+          <% end %>
+
         <% end %>
 
       </div>

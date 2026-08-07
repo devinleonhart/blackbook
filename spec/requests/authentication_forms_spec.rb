@@ -15,6 +15,13 @@ RSpec.describe "Authentication forms", type: :request do
       expect(response.body).to include('name="user[password]"')
     end
 
+    it "links to password recovery" do
+      get new_user_session_path
+
+      expect(response.body).to include(new_user_password_path)
+      expect(response.body).to include("Forgot your password?")
+    end
+
     it "signs the user in through those params" do
       user = create(:user, password: "password123", password_confirmation: "password123")
 
