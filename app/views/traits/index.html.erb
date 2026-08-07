@@ -1,4 +1,4 @@
-<section id="character-tags-index-view" class="bb-page--transparent">
+<section id="traits-index-view" class="bb-page--transparent">
 
 
   <div class="bb-container-md">
@@ -6,8 +6,8 @@
 
       <!-- Page Header -->
       <div class="mb-6">
-        <h1 class="bb-heading-xl">Tags for <%= @character.name %></h1>
-        <p class="bb-subtitle">Manage tags for this character</p>
+        <h1 class="bb-heading-xl">Traits for <%= @character.name %></h1>
+        <p class="bb-subtitle">Rename or remove this character's traits</p>
       </div>
 
       <% if @traits.any? %>
@@ -24,7 +24,7 @@
               <div class="flex gap-3 justify-end">
                 <%= link_to "Edit", edit_trait_path(tag), class: "text-blue-600 hover:text-blue-800 text-sm font-medium px-3 py-1 rounded hover:bg-blue-50 transition-colors duration-200" %>
                 <%= form_with url: trait_path(tag), method: :delete, local: true, class: "inline" do |form| %>
-                  <%= form.submit "Delete", class: "text-red-600 hover:text-red-800 text-sm font-medium px-3 py-1 rounded hover:bg-red-50 transition-colors duration-200 bg-transparent border-none cursor-pointer", data: { turbo_confirm: "Delete the \"#{tag.name}\" tag from every character in this universe?" } %>
+                  <%= form.submit "Delete", class: "text-red-600 hover:text-red-800 text-sm font-medium px-3 py-1 rounded hover:bg-red-50 transition-colors duration-200 bg-transparent border-none cursor-pointer", data: { turbo_confirm: "Remove the \"#{tag.name}\" trait from #{@character.name}?" } %>
                 <% end %>
               </div>
             </div>
@@ -33,7 +33,7 @@
       <% else %>
         <!-- Empty State -->
         <div class="bb-empty-state-lg">
-          <p class="bb-subtitle text-lg">No tags yet for this character.</p>
+          <p class="bb-subtitle text-lg">No traits yet for this character.</p>
         </div>
       <% end %>
 

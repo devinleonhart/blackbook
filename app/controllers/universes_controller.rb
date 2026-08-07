@@ -44,10 +44,10 @@ class UniversesController < ApplicationController
                    .sort_by { |name, count| [-count, name] }
 
     # Get the first trait ID for each tag name for linking
-    @tag_name_to_id = Trait.joins(:character)
-                           .where(characters: { universe_id: @universe.id })
-                           .group(:name)
-                           .minimum(:id)
+    @trait_name_to_id = Trait.joins(:character)
+                             .where(characters: { universe_id: @universe.id })
+                             .group(:name)
+                             .minimum(:id)
   end
 
   def new

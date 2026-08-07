@@ -10,13 +10,13 @@ class TraitsController < ApplicationController
 
   def show
     @universe = @character.universe
-    @characters_with_tag =
+    @characters_with_trait =
       @universe.characters
                .joins(:traits)
                .where(traits: { name: @trait.name })
                .distinct
 
-    character_ids = @characters_with_tag.pluck(:id)
+    character_ids = @characters_with_trait.pluck(:id)
     @images =
       @universe.images
                .joins(:appearances)
@@ -31,7 +31,7 @@ class TraitsController < ApplicationController
     @trait = @character.traits.build(trait_params)
 
     if @trait.save
-      flash[:success] = "Character tag created successfully!"
+      flash[:success] = "Trait added."
       redirect_to character_path(@character)
     else
       flash[:error] = @trait.errors.full_messages.join(", ")
@@ -41,7 +41,7 @@ class TraitsController < ApplicationController
 
   def update
     if @trait.update(trait_params)
-      flash[:success] = "Character tag updated successfully!"
+      flash[:success] = "Trait renamed."
       redirect_to character_traits_path(@character)
     else
       flash[:error] = @trait.errors.full_messages.join(", ")
@@ -51,8 +51,10 @@ class TraitsController < ApplicationController
 
   def destroy
     @trait.destroy!
-    flash[:success] = "Character tag deleted successfully!"
-    redirect_to character_traits_path(@character)
+    flash[:success] = "Trait removed."
+    # Return to wherever the delete came from (the character page's inline ×
+    # or the manage list); fall back to the character page.
+    redirect_back_or_to(character_path(@character))
   end
 
   private

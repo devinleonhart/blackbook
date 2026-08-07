@@ -1,4 +1,4 @@
-<section id="character-tags-edit-view" class="bb-page--transparent">
+<section id="traits-edit-view" class="bb-page--transparent">
 
 
   <div class="bb-container-md">
@@ -6,11 +6,11 @@
 
       <!-- Page Header -->
       <div class="mb-8">
-        <h1 class="bb-heading-xl">Edit Tag</h1>
-        <p class="bb-subtitle text-lg">Edit the tag "<span class="font-semibold text-gray-800"><%= @trait.name %></span>" for <%= @character.name %></p>
+        <h1 class="bb-heading-xl">Edit trait</h1>
+        <p class="bb-subtitle text-lg">Edit the trait "<span class="font-semibold text-gray-800"><%= @trait.name %></span>" for <%= @character.name %></p>
       </div>
 
-      <!-- Tag Form -->
+      <!-- Trait Form -->
       <%= form_with model: [@character, @trait], url: trait_path(@trait), method: :patch, class: "space-y-8" do |form| %>
 
         <!-- Error Messages -->
@@ -27,14 +27,14 @@
 
         <!-- Name Field -->
         <div class="space-y-3">
-          <%= form.label :name, "Tag Name", class: "bb-label-lg" %>
-          <%= form.text_field :name, placeholder: "Enter tag name...", class: "bb-input-lg" %>
-          <p class="bb-subtitle-sm">Tags will be automatically converted to lowercase</p>
+          <%= form.label :name, "Trait name", class: "bb-label-lg" %>
+          <%= form.text_field :name, placeholder: "Enter trait name...", class: "bb-input-lg" %>
+          <p class="bb-subtitle-sm">Traits are saved in lowercase</p>
         </div>
 
         <!-- Actions -->
         <div class="flex gap-4 pt-4">
-          <%= form.submit "Update Tag", class: "bb-btn bb-btn-primary shadow-sm hover:shadow-md" %>
+          <%= form.submit "Update trait", class: "bb-btn bb-btn-primary shadow-sm hover:shadow-md" %>
           <%= link_to "Cancel", character_path(@character), class: "bb-btn bb-btn-secondary shadow-sm hover:shadow-md" %>
         </div>
 

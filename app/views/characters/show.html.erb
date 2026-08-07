@@ -11,73 +11,70 @@
                 data-action="collapse#toggle"
                 data-collapse-target="button"
                 aria-expanded="false">
-          <span>Character tags</span>
+          <span>Traits</span>
           <span data-collapse-target="icon" class="transition-transform duration-200">▾</span>
         </button>
 
         <div data-collapse-target="content" class="hidden lg:block">
           <div class="bb-card bb-card--panel">
-            <!-- Upload & tag with this character -->
+            <!-- Upload images that include this character -->
             <%= render "shared/dropzone", url: universe_images_url(@character.universe), character_id: @character.id %>
-            <p class="bb-subtitle-sm text-center mt-2 mb-6">New images are tagged with <%= @character.name %>.</p>
+            <p class="bb-subtitle-sm text-center mt-2 mb-6">New images will include <%= @character.name %>.</p>
 
             <hr class="bb-divider" />
 
-            <h2 class="bb-section-heading bb-section-heading--center">Character Tags</h2>
+            <div data-controller="filter">
+              <h2 class="bb-section-heading bb-section-heading--center">Traits</h2>
 
-            <!-- Current Tags -->
-            <div class="mb-8">
-              <h3 class="bb-subheading">Current Tags</h3>
-              <% if @character.traits.empty? %>
-                <p class="bb-subtitle-sm">No tags yet</p>
-              <% else %>
-                <div class="flex flex-wrap gap-2">
-                  <% @character.traits.order(:name).each do |tag| %>
-                    <div class="bb-pill bb-pill-blue">
-                      <%= link_to tag.name, trait_path(tag), class: "hover:underline" %>
-                    </div>
-                  <% end %>
-                </div>
-              <% end %>
-            </div>
-
-            <!-- Manage Tags Link -->
-            <div class="mb-6">
-              <%= link_to "Manage Tags", character_traits_path(@character), class: "bb-link text-sm font-medium" %>
-            </div>
-
-            <!-- Add New Tag -->
-            <div>
-              <h3 class="bb-subheading">Add Tag</h3>
-              <%= form_with model: [@character, @character.traits.build], url: character_traits_path(@character), method: :post, class: "mb-6", local: true do |form| %>
-                <div class="space-y-3">
-                  <%= form.text_field :name, placeholder: "Enter tag name...", class: "bb-input text-sm" %>
-                  <%= form.submit "Add", class: "bb-btn-sm bb-btn-primary" %>
-                </div>
-              <% end %>
-
-              <!-- Existing Tags from Universe -->
-              <% if @available_tag_names.any? %>
-                <div class="mt-6">
-                  <h4 class="bb-subheading-sm">Existing tags in universe:</h4>
-                  <div class="flex flex-wrap gap-1">
-                    <% @available_tag_names.each do |tag_name| %>
-                      <%= form_with model: [@character, @character.traits.build], url: character_traits_path(@character), method: :post, class: "inline", local: true do |form| %>
-                        <%= form.hidden_field :name, value: tag_name %>
-                        <%= form.submit tag_name, class: "text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition-colors duration-200 cursor-pointer" %>
-                      <% end %>
+              <!-- Current traits: name links to a browse; × removes it from this character -->
+              <div class="mb-6">
+                <% if @character.traits.empty? %>
+                  <p class="bb-subtitle-sm">No traits yet</p>
+                <% else %>
+                  <div class="flex flex-wrap gap-2">
+                    <% @character.traits.order(:name).each do |trait| %>
+                      <span class="bb-pill bb-pill-blue inline-flex items-center gap-1">
+                        <%= link_to trait.name, trait_path(trait), class: "hover:underline" %>
+                        <%= button_to "×", trait_path(trait), method: :delete,
+                              data: { turbo_confirm: "Remove the \"#{trait.name}\" trait from #{@character.name}?" },
+                              class: "leading-none text-blue-600 hover:text-red-600 bg-transparent border-none cursor-pointer p-0" %>
+                      </span>
                     <% end %>
                   </div>
-                </div>
-              <% elsif @universe_tag_names.any? %>
-                <div class="mt-6">
-                  <p class="bb-subtitle-sm">All available tags in this universe have been added to this character.</p>
-                </div>
-              <% else %>
-                <div class="mt-6">
-                  <p class="bb-subtitle-sm">No tags exist in this universe yet.</p>
-                </div>
-              <% end %>
+                <% end %>
+              </div>
+
+              <!-- Add a trait: type to find an existing one or create a new one -->
+              <div>
+                <h3 class="bb-subheading">Add a trait</h3>
+                <%= form_with model: [@character, @character.traits.build], url: character_traits_path(@character), method: :post, class: "mb-3" do |form| %>
+                  <div class="flex gap-2">
+                    <%= form.text_field :name, placeholder: "Type to find or create…",
+                          data: { filter_target: "query", action: "input->filter#apply" }, class: "bb-input text-sm" %>
+                    <%= form.submit "Add", class: "bb-btn-sm bb-btn-primary" %>
+                  </div>
+                <% end %>
+
+                <% if @available_trait_names.any? %>
+                  <p class="bb-subtitle-sm mb-1">Used elsewhere in this universe — click to apply:</p>
+                  <div class="flex flex-wrap gap-1">
+                    <% @available_trait_names.each do |trait_name| %>
+                      <div data-filter-target="item" data-filter-text="<%= trait_name %>">
+                        <%= form_with model: [@character, @character.traits.build], url: character_traits_path(@character), method: :post, class: "inline" do |form| %>
+                          <%= form.hidden_field :name, value: trait_name %>
+                          <%= form.submit trait_name, class: "text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition-colors duration-200 cursor-pointer" %>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% elsif @universe_trait_names.any? %>
+                  <p class="bb-subtitle-sm mt-2">Every trait in this universe is already on this character.</p>
+                <% end %>
+              </div>
+
+              <div class="mt-6">
+                <%= link_to "Manage traits", character_traits_path(@character), class: "bb-link text-sm font-medium" %>
+              </div>
             </div>
           </div>
         </div>

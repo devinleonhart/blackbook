@@ -92,14 +92,14 @@ RSpec.describe "Traits", type: :request do
   end
 
   describe "DELETE destroy" do
-    it "destroys the tag and redirects to the tag list" do
-      tag = create(:trait, character: character, name: "warrior")
+    it "destroys the trait and redirects to the character" do
+      trait = create(:trait, character: character, name: "warrior")
 
       expect do
-        delete trait_path(tag)
+        delete trait_path(trait)
       end.to change(Trait, :count).by(-1)
 
-      expect(response).to redirect_to(character_traits_path(character))
+      expect(response).to redirect_to(character_path(character))
     end
   end
 

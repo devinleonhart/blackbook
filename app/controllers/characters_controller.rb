@@ -22,8 +22,8 @@ class CharactersController < ApplicationController
     # Tags used anywhere in this universe, and the subset this character
     # doesn't have yet. The set difference is done in Ruby from two loaded
     # lists rather than one exists? query per universe tag.
-    @universe_tag_names = @universe.characters.joins(:traits).distinct.pluck("traits.name").sort
-    @available_tag_names = @universe_tag_names - @character.traits.pluck(:name)
+    @universe_trait_names = @universe.characters.joins(:traits).distinct.pluck("traits.name").sort
+    @available_trait_names = @universe_trait_names - @character.traits.pluck(:name)
   end
 
   def new
