@@ -23,7 +23,7 @@ Rails.application.routes.draw do
 
   resources :users, only: [:index, :destroy]
 
-  resources :universes do
+  resources :universes, except: [:destroy] do
     resources :collaborations, only: [:create, :destroy], shallow: true
     resources :characters, except: [:index], shallow: true do
       resources :character_tags, except: [:new], shallow: true

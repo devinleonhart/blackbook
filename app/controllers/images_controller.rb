@@ -71,7 +71,9 @@ class ImagesController < ApplicationController
   end
 
   def view
-    @image = Image.find(params.expect(:id))
+    @image = Image.find_by(id: params[:id])
+    return head(:not_found) unless @image && url_filename_matches?(@image)
+
     image_data = @image.image_file.download
 
     response.headers["Content-Type"] = @image.image_file.content_type
@@ -95,6 +97,14 @@ class ImagesController < ApplicationController
   end
 
   private
+
+  # `view` is intentionally public so image URLs are shareable/embeddable
+  # (e.g. Discord). The URL filename must match the stored (UUID) filename:
+  # this keeps the endpoint public while preventing enumeration by sequential
+  # id, since the integer alone is not enough to fetch an image.
+  def url_filename_matches?(image)
+    params[:filename] == image.image_file.filename.to_s
+  end
 
   def extract_image_files
     image_params = params.fetch(:image, {}).permit(image_file: [])
