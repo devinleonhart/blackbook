@@ -6,7 +6,6 @@ class CharactersController < ApplicationController
 
   def show
     @universe = @character.universe
-    @untagged_images_count = Image.where(universe_id: @universe.id).untagged.count
     @images =
       Image
       .joins(:image_tags)
