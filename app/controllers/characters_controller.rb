@@ -8,8 +8,8 @@ class CharactersController < ApplicationController
     @universe = @character.universe
     @images =
       Image
-      .joins(:image_tags)
-      .where(image_tags: { character: @character })
+      .joins(:appearances)
+      .where(appearances: { character: @character })
       .joins(
         Image.sanitize_sql_array(
           ["LEFT JOIN image_favorites ON image_favorites.image_id = images.id AND image_favorites.user_id = ?",
@@ -22,8 +22,8 @@ class CharactersController < ApplicationController
     # Tags used anywhere in this universe, and the subset this character
     # doesn't have yet. The set difference is done in Ruby from two loaded
     # lists rather than one exists? query per universe tag.
-    @universe_tag_names = @universe.characters.joins(:character_tags).distinct.pluck("character_tags.name").sort
-    @available_tag_names = @universe_tag_names - @character.character_tags.pluck(:name)
+    @universe_tag_names = @universe.characters.joins(:traits).distinct.pluck("traits.name").sort
+    @available_tag_names = @universe_tag_names - @character.traits.pluck(:name)
   end
 
   def new
@@ -72,7 +72,7 @@ class CharactersController < ApplicationController
   end
 
   def set_character
-    @character = Character.includes(image_tags: [:image]).find_by(id: params[:id])
+    @character = Character.includes(appearances: [:image]).find_by(id: params[:id])
     return unless model_found?(@character, "Character", params[:id], universes_url)
 
     universe_visible_to_user?(@character.universe)

@@ -17,8 +17,8 @@ RSpec.describe "Characters", type: :request do
 
     it "offers universe tags the character does not already have" do
       other = create(:character, universe: universe)
-      create(:character_tag, character: character, name: "hero")
-      create(:character_tag, character: other, name: "villain")
+      create(:trait, character: character, name: "hero")
+      create(:trait, character: other, name: "villain")
 
       get character_path(character)
 

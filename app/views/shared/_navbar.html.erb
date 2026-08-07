@@ -13,9 +13,9 @@
             <span class="text-gray-400 mx-2">|</span>
             <%= link_to current_universe.name, universe_url(current_universe), class: "bb-nav-link" %>
 
-            <% if @character_tag %>
+            <% if @trait %>
               <span class="text-gray-400 mx-2">|</span>
-              <span class="text-gray-300 px-3 py-2 text-sm font-medium">"<%= @character_tag.name %>"</span>
+              <span class="text-gray-300 px-3 py-2 text-sm font-medium">"<%= @trait.name %>"</span>
             <% end %>
           <% end %>
         </div>

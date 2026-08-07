@@ -28,11 +28,11 @@ Rails.application.routes.draw do
   resources :universes, except: [:destroy] do
     resources :collaborations, only: [:create, :destroy], shallow: true
     resources :characters, except: [:index], shallow: true do
-      resources :character_tags, except: [:new], shallow: true
+      resources :traits, except: [:new], shallow: true
     end
 
     resources :images, except: [:index, :show, :new] do
-      resources :image_tags, only: [:create, :destroy], shallow: true
+      resources :appearances, only: [:create, :destroy], shallow: true
     end
   end
 

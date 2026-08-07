@@ -15,13 +15,13 @@
         <!-- Currently Tagged Characters -->
         <h2 class="bb-section-heading--sm">Tagged Characters</h2>
         <ul class="space-y-2 mb-6">
-          <% if @image.image_tags.empty? %>
+          <% if @image.appearances.empty? %>
             <li class="bb-subtitle-sm">None</li>
           <% else %>
-            <% @image.image_tags.each do | tag | %>
+            <% @image.appearances.each do | tag | %>
               <li class="bb-list-item--compact">
                 <%= link_to "#{tag.character.name}", character_url(tag.character), class: "bb-link" %>
-                <%= link_to image_tag_url(tag), data: { turbo_method: :delete }, class: "bb-action-text" do %>
+                <%= link_to appearance_url(tag), data: { turbo_method: :delete }, class: "bb-action-text" do %>
                   <span>✕</span>
                 <% end %>
               </li>
@@ -39,7 +39,7 @@
           <div data-character-results class="max-h-60 overflow-y-auto border border-gray-200 rounded-md bg-white mb-4">
             <% @available_characters.sort_by(&:name).each do |character| %>
               <div data-filter-target="item" data-filter-text="<%= character.name %>" class="bb-list-item--bordered">
-                <%= form_with model: ImageTag.new(), url: universe_image_image_tags_url(@image.universe, @image), method: "post", class: "inline" do |form| %>
+                <%= form_with model: Appearance.new(), url: universe_image_appearances_url(@image.universe, @image), method: "post", class: "inline" do |form| %>
                   <%= form.hidden_field :character_id, value: character.id %>
                   <%= form.submit "Add #{character.name}", class: "bb-link bg-transparent border-none cursor-pointer" %>
                 <% end %>

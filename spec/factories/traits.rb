@@ -2,7 +2,7 @@
 
 # == Schema Information
 #
-# Table name: character_tags
+# Table name: traits
 #
 #  id           :bigint           not null, primary key
 #  name         :string           not null
@@ -12,16 +12,16 @@
 #
 # Indexes
 #
-#  index_character_tags_on_character_id           (character_id)
-#  index_character_tags_on_character_id_and_name  (character_id,name) UNIQUE
-#  index_character_tags_on_name                   (name)
+#  index_traits_on_character_id           (character_id)
+#  index_traits_on_character_id_and_name  (character_id,name) UNIQUE
+#  index_traits_on_name                   (name)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (character_id => characters.id)
 #
 FactoryBot.define do
-  factory :character_tag do
+  factory :trait do
     character
     sequence(:name) { |n| "tag#{n}" }
   end

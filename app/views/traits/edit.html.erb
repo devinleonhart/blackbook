@@ -7,18 +7,18 @@
       <!-- Page Header -->
       <div class="mb-8">
         <h1 class="bb-heading-xl">Edit Tag</h1>
-        <p class="bb-subtitle text-lg">Edit the tag "<span class="font-semibold text-gray-800"><%= @character_tag.name %></span>" for <%= @character.name %></p>
+        <p class="bb-subtitle text-lg">Edit the tag "<span class="font-semibold text-gray-800"><%= @trait.name %></span>" for <%= @character.name %></p>
       </div>
 
       <!-- Tag Form -->
-      <%= form_with model: [@character, @character_tag], url: character_tag_path(@character_tag), method: :patch, class: "space-y-8" do |form| %>
+      <%= form_with model: [@character, @trait], url: trait_path(@trait), method: :patch, class: "space-y-8" do |form| %>
 
         <!-- Error Messages -->
-        <% if @character_tag.errors.any? %>
+        <% if @trait.errors.any? %>
           <div class="bb-alert bb-alert-error">
             <h4 class="font-bold text-lg mb-3">Please fix the following errors:</h4>
             <ul class="list-disc list-inside space-y-1">
-              <% @character_tag.errors.full_messages.each do |message| %>
+              <% @trait.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
               <% end %>
             </ul>

@@ -19,13 +19,13 @@ class Image < ApplicationRecord
 
   has_one_attached :image_file
 
-  has_many :image_tags, inverse_of: :image, dependent: :destroy
-  has_many :characters, through: :image_tags
+  has_many :appearances, inverse_of: :image, dependent: :destroy
+  has_many :characters, through: :appearances
   has_many :image_favorites, dependent: :destroy, inverse_of: :image
 
   belongs_to :universe, inverse_of: :images
 
-  scope :untagged, -> { where.missing(:image_tags) }
+  scope :untagged, -> { where.missing(:appearances) }
 
   def favorited_by?(user)
     return false if user.nil?

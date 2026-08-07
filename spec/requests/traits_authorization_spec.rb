@@ -11,8 +11,8 @@ RSpec.describe "Character tags authorization", type: :request do
   describe "POST create" do
     it "prevents a non-collaborator from creating character tags" do
       expect do
-        post character_character_tags_path(character), params: { character_tag: { name: "Elf" } }
-      end.not_to change(CharacterTag, :count)
+        post character_traits_path(character), params: { trait: { name: "Elf" } }
+      end.not_to change(Trait, :count)
 
       expect(response).to redirect_to(universes_url)
       expect(flash[:error]).to include("owner or collaborator")
@@ -21,11 +21,11 @@ RSpec.describe "Character tags authorization", type: :request do
 
   describe "DELETE destroy" do
     it "prevents a non-collaborator from deleting character tags" do
-      tag = create(:character_tag, character: character, name: "elf")
+      tag = create(:trait, character: character, name: "elf")
 
       expect do
-        delete character_tag_path(tag)
-      end.not_to change(CharacterTag, :count)
+        delete trait_path(tag)
+      end.not_to change(Trait, :count)
 
       expect(response).to redirect_to(universes_url)
       expect(flash[:error]).to include("owner or collaborator")

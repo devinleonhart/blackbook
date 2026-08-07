@@ -4,12 +4,12 @@
     <h3 class="bb-subheading mb-0">Character Tags</h3>
   </div>
 
-  <% if @character_tags.any? %>
+  <% if @traits.any? %>
     <!-- Tag List -->
     <div class="space-y-2">
-      <% @character_tags.each do |tag_name, count| %>
+      <% @traits.each do |tag_name, count| %>
         <div class="group relative">
-          <%= link_to character_tag_path(@tag_name_to_id[tag_name]), class: "bb-tag-btn" do %>
+          <%= link_to trait_path(@tag_name_to_id[tag_name]), class: "bb-tag-btn" do %>
             <span class="truncate flex-1"><%= tag_name %></span>
             <span class="ml-2 bb-badge bb-badge-blue">
               <%= count %>

@@ -2,7 +2,7 @@
 
 # == Schema Information
 #
-# Table name: character_tags
+# Table name: traits
 #
 #  id           :bigint           not null, primary key
 #  name         :string           not null
@@ -12,9 +12,9 @@
 #
 # Indexes
 #
-#  index_character_tags_on_character_id           (character_id)
-#  index_character_tags_on_character_id_and_name  (character_id,name) UNIQUE
-#  index_character_tags_on_name                   (name)
+#  index_traits_on_character_id           (character_id)
+#  index_traits_on_character_id_and_name  (character_id,name) UNIQUE
+#  index_traits_on_name                   (name)
 #
 # Foreign Keys
 #
@@ -22,13 +22,13 @@
 #
 require "rails_helper"
 
-RSpec.describe CharacterTag, type: :model do
-  subject(:tag) { build(:character_tag, character: character) }
+RSpec.describe Trait, type: :model do
+  subject(:tag) { build(:trait, character: character) }
 
   let(:character) { create(:character) }
 
   describe "associations" do
-    it { is_expected.to belong_to(:character).inverse_of(:character_tags) }
+    it { is_expected.to belong_to(:character).inverse_of(:traits) }
   end
 
   describe "validations" do
@@ -41,8 +41,8 @@ RSpec.describe CharacterTag, type: :model do
     end
 
     it "enforces case-insensitive uniqueness scoped to character" do
-      create(:character_tag, character: character, name: "mage")
-      dupe = build(:character_tag, character: character, name: "MAGE")
+      create(:trait, character: character, name: "mage")
+      dupe = build(:trait, character: character, name: "MAGE")
       expect(dupe).not_to be_valid
       expect(dupe.errors[:name]).to be_present
     end

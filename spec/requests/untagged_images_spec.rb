@@ -10,7 +10,7 @@ RSpec.describe "Untagged images filter", type: :request do
       untagged_image = create(:image, universe: universe)
       tagged_image = create(:image, universe: universe)
       character = create(:character, universe: universe)
-      create(:image_tag, image: tagged_image, character: character)
+      create(:appearance, image: tagged_image, character: character)
 
       get universe_path(universe, filter: "untagged")
 

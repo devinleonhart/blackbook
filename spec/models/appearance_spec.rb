@@ -2,7 +2,7 @@
 
 # == Schema Information
 #
-# Table name: image_tags
+# Table name: appearances
 #
 #  id           :bigint           not null, primary key
 #  created_at   :datetime         not null
@@ -12,18 +12,18 @@
 #
 # Indexes
 #
-#  index_image_tags_on_character_id               (character_id)
-#  index_image_tags_on_character_id_and_image_id  (character_id,image_id) UNIQUE
-#  index_image_tags_on_image_id                   (image_id)
+#  index_appearances_on_character_id               (character_id)
+#  index_appearances_on_character_id_and_image_id  (character_id,image_id) UNIQUE
+#  index_appearances_on_image_id                   (image_id)
 #
 require "rails_helper"
 
-RSpec.describe ImageTag, type: :model do
-  subject(:image_tag) { build(:image_tag) }
+RSpec.describe Appearance, type: :model do
+  subject(:appearance) { build(:appearance) }
 
   describe "associations" do
-    it { is_expected.to belong_to(:character).inverse_of(:image_tags) }
-    it { is_expected.to belong_to(:image).inverse_of(:image_tags) }
+    it { is_expected.to belong_to(:character).inverse_of(:appearances) }
+    it { is_expected.to belong_to(:image).inverse_of(:appearances) }
   end
 
   describe "validations" do
@@ -45,7 +45,7 @@ RSpec.describe ImageTag, type: :model do
       character = create(:character)
       image = create(:image, universe: character.universe)
 
-      tag = create(:image_tag, character: character, image: image)
+      tag = create(:appearance, character: character, image: image)
       expect(tag.universe).to eq(character.universe)
     end
   end

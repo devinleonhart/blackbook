@@ -26,8 +26,8 @@ RSpec.describe Character, type: :model do
 
   describe "associations" do
     it { is_expected.to belong_to(:universe).inverse_of(:characters) }
-    it { is_expected.to have_many(:image_tags).inverse_of(:character).dependent(:destroy) }
-    it { is_expected.to have_many(:character_tags).inverse_of(:character).dependent(:destroy) }
+    it { is_expected.to have_many(:appearances).inverse_of(:character).dependent(:destroy) }
+    it { is_expected.to have_many(:traits).inverse_of(:character).dependent(:destroy) }
   end
 
   describe "validations" do

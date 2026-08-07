@@ -2,7 +2,7 @@
 
 # == Schema Information
 #
-# Table name: image_tags
+# Table name: appearances
 #
 #  id           :bigint           not null, primary key
 #  created_at   :datetime         not null
@@ -12,17 +12,17 @@
 #
 # Indexes
 #
-#  index_image_tags_on_character_id               (character_id)
-#  index_image_tags_on_character_id_and_image_id  (character_id,image_id) UNIQUE
-#  index_image_tags_on_image_id                   (image_id)
+#  index_appearances_on_character_id               (character_id)
+#  index_appearances_on_character_id_and_image_id  (character_id,image_id) UNIQUE
+#  index_appearances_on_image_id                   (image_id)
 #
-class ImageTag < ApplicationRecord
+class Appearance < ApplicationRecord
   validates :character, uniqueness: { scope: :image_id }
 
   validate :character_must_be_from_same_universe_as_image
 
-  belongs_to :character, inverse_of: :image_tags
-  belongs_to :image, inverse_of: :image_tags
+  belongs_to :character, inverse_of: :appearances
+  belongs_to :image, inverse_of: :appearances
 
   delegate :universe, to: :character, allow_nil: true
 

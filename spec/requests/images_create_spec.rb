@@ -149,7 +149,7 @@ RSpec.describe "Images#create", type: :request do
       expect do
         post universe_images_path(universe),
              params: { image: { image_file: uploads }, character_id: character.id }, headers: json
-      end.to change { character.image_tags.count }.by(2)
+      end.to change { character.appearances.count }.by(2)
 
       expect(response.parsed_body).to include("created" => 2, "tagged" => 2)
     end
@@ -161,7 +161,7 @@ RSpec.describe "Images#create", type: :request do
       expect do
         post universe_images_path(universe),
              params: { image: { image_file: [upload] }, character_id: other.id }, headers: json
-      end.not_to change(ImageTag, :count)
+      end.not_to change(Appearance, :count)
 
       expect(response.parsed_body["tagged"]).to eq(0)
     end

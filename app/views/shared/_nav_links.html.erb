@@ -2,12 +2,12 @@
     the full-width styling; the links and their conditions are defined once. %>
 <% link_class = mobile ? "bb-nav-link block w-full" : "bb-nav-link" %>
 
-<% if @universe && @character_tag.nil? %>
+<% if @universe && @trait.nil? %>
   <%= link_to "New Character", new_universe_character_url(@universe), class: link_class %>
   <%= link_to "Edit Universe", edit_universe_url(@universe), class: link_class %>
 <% end %>
 
-<% if @character && @character_tag.nil? %>
+<% if @character && @trait.nil? %>
   <%= link_to "Edit Character", edit_character_url(@character), class: link_class %>
 <% end %>
 

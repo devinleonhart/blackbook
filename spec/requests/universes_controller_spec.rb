@@ -31,8 +31,8 @@ RSpec.describe "Universes", type: :request do
     it "renders the universe with its images and tag browser" do
       character = create(:character, universe: universe)
       image = create(:image, universe: universe)
-      create(:image_tag, image: image, character: character)
-      create(:character_tag, character: character, name: "hero")
+      create(:appearance, image: image, character: character)
+      create(:trait, character: character, name: "hero")
 
       get universe_path(universe)
 
@@ -43,7 +43,7 @@ RSpec.describe "Universes", type: :request do
     it "supports the untagged filter" do
       character = create(:character, universe: universe)
       tagged = create(:image, universe: universe)
-      create(:image_tag, image: tagged, character: character)
+      create(:appearance, image: tagged, character: character)
       create(:image, universe: universe)
 
       get universe_path(universe, filter: "untagged")

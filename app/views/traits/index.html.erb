@@ -10,20 +10,20 @@
         <p class="bb-subtitle">Manage tags for this character</p>
       </div>
 
-      <% if @character_tags.any? %>
+      <% if @traits.any? %>
         <!-- Tags Grid -->
         <div class="bb-card-grid">
-          <% @character_tags.each do |tag| %>
+          <% @traits.each do |tag| %>
             <!-- Tag Card -->
             <div class="bg-gray-50 rounded-lg p-6 hover:bg-gray-100 transition-colors duration-200 shadow-sm hover:shadow-md">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="bb-section-heading--sm mb-0">
-                  <%= link_to tag.name, character_tag_path(tag), class: "hover:text-blue-600 hover:underline" %>
+                  <%= link_to tag.name, trait_path(tag), class: "hover:text-blue-600 hover:underline" %>
                 </h3>
               </div>
               <div class="flex gap-3 justify-end">
-                <%= link_to "Edit", edit_character_tag_path(tag), class: "text-blue-600 hover:text-blue-800 text-sm font-medium px-3 py-1 rounded hover:bg-blue-50 transition-colors duration-200" %>
-                <%= form_with url: character_tag_path(tag), method: :delete, local: true, class: "inline" do |form| %>
+                <%= link_to "Edit", edit_trait_path(tag), class: "text-blue-600 hover:text-blue-800 text-sm font-medium px-3 py-1 rounded hover:bg-blue-50 transition-colors duration-200" %>
+                <%= form_with url: trait_path(tag), method: :delete, local: true, class: "inline" do |form| %>
                   <%= form.submit "Delete", class: "text-red-600 hover:text-red-800 text-sm font-medium px-3 py-1 rounded hover:bg-red-50 transition-colors duration-200 bg-transparent border-none cursor-pointer", data: { turbo_confirm: "Delete the \"#{tag.name}\" tag from every character in this universe?" } %>
                 <% end %>
               </div>

@@ -98,7 +98,7 @@ def seed_sample_data!
     characters.each do |character|
       # Give each character a couple tags, with some overlap for the tag browser.
       tags = tag_pool.sample(2 + rng.rand(3), random: rng)
-      tags.each { |t| character.character_tags.create!(name: t) }
+      tags.each { |t| character.traits.create!(name: t) }
     end
   end
 
@@ -140,7 +140,7 @@ def seed_sample_data!
 
       tag_count = 1 + rng.rand(3) # 1..3 characters tagged per image
       universe_characters.sample(tag_count, random: rng).each do |character|
-        ImageTag.find_or_create_by!(image: image, character: character)
+        Appearance.find_or_create_by!(image: image, character: character)
       end
     end
   end
@@ -160,8 +160,8 @@ end
 
 def clear_dev_data!
   ImageFavorite.delete_all
-  ImageTag.delete_all
-  CharacterTag.delete_all
+  Appearance.delete_all
+  Trait.delete_all
   Image.delete_all
   Character.delete_all
   Collaboration.delete_all

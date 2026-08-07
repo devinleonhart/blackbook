@@ -10,8 +10,8 @@ RSpec.describe "Character image ordering", type: :request do
       character = create(:character, universe: universe)
       image_a = create(:image, universe: universe)
       image_b = create(:image, universe: universe)
-      create(:image_tag, image: image_a, character: character)
-      create(:image_tag, image: image_b, character: character)
+      create(:appearance, image: image_a, character: character)
+      create(:appearance, image: image_b, character: character)
 
       # Another user's favorite must not affect the owner's ordering or visibility.
       create(:image_favorite, user: create(:user), image: image_a)

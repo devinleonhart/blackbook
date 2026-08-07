@@ -102,7 +102,7 @@ class ImagesController < ApplicationController
   end
 
   def set_image
-    @image = Image.includes(image_tags: { character: :universe }).find_by(id: params[:id])
+    @image = Image.includes(appearances: { character: :universe }).find_by(id: params[:id])
     return unless model_found?(@image, "Image", params[:id], universes_url)
 
     universe_visible_to_user?(@image.universe)
@@ -127,7 +127,7 @@ class ImagesController < ApplicationController
   def tag_images(images, character)
     return 0 if character.nil?
 
-    images.count { |image| image.image_tags.create(character: character).persisted? }
+    images.count { |image| image.appearances.create(character: character).persisted? }
   end
 
   def extract_image_files
