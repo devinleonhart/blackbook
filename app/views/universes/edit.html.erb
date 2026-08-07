@@ -37,7 +37,7 @@
           <div class="bb-card bb-card--form">
             <h2 class="bb-section-heading">Collaborators</h2>
 
-            <% if @universe.collaborators.empty? %>
+            <% if @collaborations.empty? %>
               <!-- Empty State -->
               <div class="bb-empty-state">
                 <div class="bb-avatar-lg bb-avatar-gray mx-auto mb-4">
@@ -50,7 +50,7 @@
               <!-- Current Collaborators List -->
               <div class="space-y-3 mb-6">
                 <h3 class="bb-subheading-sm">Current Collaborators</h3>
-                <% @universe.collaborations.each do | collaboration | %>
+                <% @collaborations.each do |collaboration| %>
                   <div class="bb-list-item--compact">
                     <div class="flex items-center">
                       <div class="bb-avatar-sm bb-avatar-blue mr-3">
@@ -72,7 +72,7 @@
               <%= form_with model: Collaboration.new(), url: universe_collaborations_url(@universe), method: "post" do |form| %>
                 <div class="bb-field">
                   <%= form.label :user_id, class: "bb-label" %>
-                  <%= form.select :user_id, generate_collaborator_names(User.all, @universe.collaborators, @universe.owner), {include_blank: true}, class: "bb-input" %>
+                  <%= form.select :user_id, generate_collaborator_names(@users, @collaborations.map(&:user), @universe.owner), {include_blank: true}, class: "bb-input" %>
                 </div>
                 <%= form.submit "Add Collaborator", class: "bb-btn-sm bb-btn-success w-full" %>
               <% end %>

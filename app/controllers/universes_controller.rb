@@ -51,7 +51,10 @@ class UniversesController < ApplicationController
     @new_universe = Universe.new
   end
 
-  def edit; end
+  def edit
+    @users = User.all
+    @collaborations = @universe.collaborations.includes(:user)
+  end
 
   def create
     attributes = allowed_universe_params.merge(owner_id: current_user.id)

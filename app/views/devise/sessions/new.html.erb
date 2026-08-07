@@ -10,7 +10,7 @@
         </div>
 
         <!-- Login Form -->
-        <%= form_for(resource, as: resource_name, html: {class: "bb-card bb-card--form"}, url: session_path(resource_name)) do |form| %>
+        <%= form_with(model: resource, scope: resource_name, url: session_path(resource_name), class: "bb-card bb-card--form") do |form| %>
 
           <!-- Email Field -->
           <div class="bb-field">

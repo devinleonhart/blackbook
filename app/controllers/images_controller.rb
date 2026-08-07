@@ -35,6 +35,7 @@ class ImagesController < ApplicationController
 
   def edit
     @favorited = @image.favorited_by?(current_user)
+    @available_characters = @image.universe.characters - @image.characters
   end
 
   def create

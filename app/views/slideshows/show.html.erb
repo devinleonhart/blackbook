@@ -21,21 +21,14 @@
         <div class="bb-slideshow-controls bb-slideshow-controls--top" data-slideshow-target="topControls">
           <div class="flex flex-wrap items-center justify-between gap-3">
             <div class="flex flex-wrap items-center gap-2">
-              <%= form_with url: slideshow_path, method: :get, local: true, class: "flex items-center" do %>
+              <%= form_with url: slideshow_path, method: :get, class: "flex items-center" do %>
                 <%= hidden_field_tag :mode, @mode %>
-                <select
-                  id="slideshow_universe_id"
-                  name="universe_id"
-                  class="bb-input w-auto"
-                  data-controller="autosubmit"
-                  data-action="change->autosubmit#submit"
-                  aria-label="Universe"
-                >
-                  <option value="" <%= @universe_id.nil? ? "selected" : "" %>>All universes</option>
-                  <% @universes.each do |universe| %>
-                    <option value="<%= universe.id %>" <%= universe.id == @universe_id ? "selected" : "" %>><%= universe.name %></option>
-                  <% end %>
-                </select>
+                <%= select_tag :universe_id,
+                               options_for_select([["All universes", nil]] + @universes.map { |u| [u.name, u.id] }, @universe_id),
+                               id: "slideshow_universe_id",
+                               class: "bb-input w-auto",
+                               aria: { label: "Universe" },
+                               data: { controller: "autosubmit", action: "change->autosubmit#submit" } %>
               <% end %>
 
               <%= link_to "All",
