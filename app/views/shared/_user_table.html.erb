@@ -27,7 +27,7 @@
           <span class="bb-badge bb-badge-gray">
             <%= character_counts.fetch(user.id, 0) %> characters
           </span>
-          <%= link_to user_path(user.id), data: { turbo_method: :delete, turbo_confirm: 'Are you sure you want to delete this user?' }, class: "bb-action-text p-2 hover:bg-red-50 rounded-full" do %>
+          <%= link_to user_path(user.id), data: { turbo_method: :delete, turbo_confirm: "Delete #{user.display_name} (#{user.email})? This permanently removes their account." }, class: "bb-action-text p-2 hover:bg-red-50 rounded-full" do %>
             <span>🗑️</span>
           <% end %>
         </div>

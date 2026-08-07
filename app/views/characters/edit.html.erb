@@ -26,10 +26,16 @@
           <div class="flex flex-col sm:flex-row gap-3">
             <%= form.submit "Save Changes", class: "bb-btn bb-btn-primary bb-btn--flex" %>
             <%= link_to "Cancel", character_path(@character), class: "bb-btn bb-btn-secondary bb-btn--flex text-center" %>
-            <%= link_to "Delete", character_path(@character), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "bb-btn bb-btn-danger bb-btn--flex text-center" %>
           </div>
 
         <% end %>
+
+        <!-- Danger Zone: separated so Delete can't be mistaken for Save -->
+        <div class="mt-6 bb-card px-8 py-6">
+          <h2 class="bb-section-heading--sm mb-2">Delete character</h2>
+          <p class="bb-subtitle-sm mb-4">This permanently removes <%= @character.name %> and its tags. This can't be undone.</p>
+          <%= button_to "Delete #{@character.name}", character_path(@character), method: :delete, data: { turbo_confirm: "Delete #{@character.name}? This permanently removes the character and its tags." }, class: "bb-btn bb-btn-danger bb-btn--full" %>
+        </div>
 
       </div>
     </div>
