@@ -4,16 +4,14 @@
 #
 # Table name: characters
 #
-#  id           :bigint           not null, primary key
-#  discarded_at :datetime
-#  name         :citext           not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  universe_id  :bigint           not null
+#  id          :bigint           not null, primary key
+#  name        :citext           not null
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
+#  universe_id :bigint           not null
 #
 # Indexes
 #
-#  index_characters_on_discarded_at          (discarded_at)
 #  index_characters_on_name_and_universe_id  (name,universe_id) UNIQUE
 #  index_characters_on_universe_id           (universe_id)
 #

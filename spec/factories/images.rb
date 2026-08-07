@@ -26,12 +26,5 @@ FactoryBot.define do
         content_type: "image/jpeg"
       )
     end
-
-    # Factory for seeding without file attachments
-    factory :image_for_seeding do
-      universe
-
-      # No file attachment for seeding - validation is skipped during seeding
-    end
   end
 end

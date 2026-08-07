@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_06_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_06_000001) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -65,11 +65,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_06_000000) do
 
   create_table "characters", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.datetime "discarded_at", precision: nil
     t.citext "name", null: false
     t.bigint "universe_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["discarded_at"], name: "index_characters_on_discarded_at"
     t.index ["name", "universe_id"], name: "index_characters_on_name_and_universe_id", unique: true
     t.index ["universe_id"], name: "index_characters_on_universe_id"
   end
@@ -114,11 +112,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_06_000000) do
 
   create_table "universes", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.datetime "discarded_at", precision: nil
     t.citext "name", null: false
     t.bigint "owner_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["discarded_at"], name: "index_universes_on_discarded_at"
     t.index ["name", "owner_id"], name: "index_universes_on_name_and_owner_id", unique: true
     t.index ["owner_id"], name: "index_universes_on_owner_id"
   end
