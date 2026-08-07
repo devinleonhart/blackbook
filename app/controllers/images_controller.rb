@@ -2,6 +2,8 @@
 
 class ImagesController < ApplicationController
   skip_before_action :authenticate_user!, only: [:view]
+  before_action :set_universe, only: [:create]
+  before_action :set_image, only: [:edit, :update, :destroy]
 
   def random
     universe_ids = Universe.accessible_to(current_user).pluck(:id)
@@ -32,34 +34,18 @@ class ImagesController < ApplicationController
   end
 
   def edit
-    @image =
-      Image
-      .includes(image_tags: { character: :universe })
-      .find_by(id: params[:id])
-
-    return unless model_found?(@image, "Image", params[:id], universes_url)
-    return unless universe_visible_to_user?(@image.universe)
-
     @favorited = @image.favorited_by?(current_user)
   end
 
   def create
-    universe = Universe.find_by(id: params[:universe_id])
-    return unless model_found?(universe, "Universe", params[:universe_id], universes_url)
-    return unless universe_visible_to_user?(universe)
-
     image_files = extract_image_files
-    return handle_empty_files(universe) if image_files.empty?
+    return handle_empty_files(@universe) if image_files.empty?
 
-    created_images, errors = process_image_uploads(universe, image_files)
-    handle_upload_result(universe, created_images, errors)
+    created_images, errors = process_image_uploads(@universe, image_files)
+    handle_upload_result(@universe, created_images, errors)
   end
 
   def update
-    @image = Image.includes(image_tags: { character: :universe }).find_by(id: params[:id])
-    return unless model_found?(@image, "Image", params[:id], universes_url)
-    return unless universe_visible_to_user?(@image.universe)
-
     desired = ActiveModel::Type::Boolean.new.cast(allowed_image_update_params[:favorite])
     if desired
       ImageFavorite.find_or_create_by!(user: current_user, image: @image)
@@ -87,16 +73,26 @@ class ImagesController < ApplicationController
   end
 
   def destroy
-    @image = Image.find_by(id: params[:id])
-    return unless model_found?(@image, "Image", params[:id], universes_url)
-    return unless universe_visible_to_user?(@image.universe)
-
     @image.destroy!
     flash[:success] = "Image deleted!"
     redirect_to universe_url(@image.universe)
   end
 
   private
+
+  def set_universe
+    @universe = Universe.find_by(id: params[:universe_id])
+    return unless model_found?(@universe, "Universe", params[:universe_id], universes_url)
+
+    universe_visible_to_user?(@universe)
+  end
+
+  def set_image
+    @image = Image.includes(image_tags: { character: :universe }).find_by(id: params[:id])
+    return unless model_found?(@image, "Image", params[:id], universes_url)
+
+    universe_visible_to_user?(@image.universe)
+  end
 
   # `view` is intentionally public so image URLs are shareable/embeddable
   # (e.g. Discord). The URL filename must match the stored (UUID) filename:

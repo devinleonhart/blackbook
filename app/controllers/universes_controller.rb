@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class UniversesController < ApplicationController
+  before_action :set_universe, only: [:show, :edit, :update]
+
   def index
     @universes = Universe.accessible_to(current_user)
 
@@ -12,10 +14,6 @@ class UniversesController < ApplicationController
   end
 
   def show
-    @universe = Universe.find_by(id: params[:id])
-    return unless model_found?(@universe, "Universe", params[:id], universes_url)
-    return unless universe_visible_to_user?(@universe)
-
     @images_filter = params[:filter].presence
 
     base_images =
@@ -53,16 +51,11 @@ class UniversesController < ApplicationController
     @new_universe = Universe.new
   end
 
-  def edit
-    @universe = Universe.find_by(id: params[:id])
-    return unless model_found?(@universe, "Universe", params[:id], universes_url)
-
-    nil unless universe_visible_to_user?(@universe)
-  end
+  def edit; end
 
   def create
-    params = allowed_universe_params.merge(owner_id: current_user.id)
-    @universe = Universe.new(params)
+    attributes = allowed_universe_params.merge(owner_id: current_user.id)
+    @universe = Universe.new(attributes)
     if @universe.save
       flash[:success] = "Universe created!"
       redirect_to universes_url
@@ -73,10 +66,6 @@ class UniversesController < ApplicationController
   end
 
   def update
-    @universe = Universe.find_by(id: params[:id])
-    return unless model_found?(@universe, "Universe", params[:id], universes_url)
-    return unless universe_visible_to_user?(@universe)
-
     if @universe.update(allowed_universe_params)
       flash[:success] = "Universe updated!"
       redirect_to universes_url
@@ -87,6 +76,13 @@ class UniversesController < ApplicationController
   end
 
   private
+
+  def set_universe
+    @universe = Universe.find_by(id: params[:id])
+    return unless model_found?(@universe, "Universe", params[:id], universes_url)
+
+    universe_visible_to_user?(@universe)
+  end
 
   def allowed_universe_params
     params.expect(
