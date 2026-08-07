@@ -5,42 +5,55 @@
     <div class="bb-layout-sidebar">
 
       <!-- Sidebar -->
-      <div class="bb-sidebar order-2 lg:order-1">
-        <div class="bb-card bb-card--panel">
+      <div class="bb-sidebar order-1 lg:order-1" data-controller="collapse">
+        <!-- On small screens the tools collapse behind this toggle so the
+             image grid stays near the top; on desktop they're always shown. -->
+        <button type="button"
+                class="lg:hidden bb-btn bb-btn-secondary w-full flex items-center justify-between mb-3"
+                data-action="collapse#toggle"
+                data-collapse-target="button"
+                aria-expanded="false">
+          <span>Upload, characters &amp; filters</span>
+          <span data-collapse-target="icon" class="transition-transform duration-200">▾</span>
+        </button>
 
-          <!-- Upload Form -->
-          <%= form_with model: Image.new(universe_id: @universe.id), url: universe_images_url(@universe), method: "post", class: "mb-6" do | form | %>
-            <%= form.submit "Upload Images", class: "bb-btn-sm bb-btn-primary w-full mb-3" %>
-            <%= form.file_field :image_file, required: true, multiple: true, class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
-          <% end %>
+        <div data-collapse-target="content" class="hidden lg:block">
+          <div class="bb-card bb-card--panel">
 
-          <hr class="bb-divider" />
+            <!-- Upload Form -->
+            <%= form_with model: Image.new(universe_id: @universe.id), url: universe_images_url(@universe), method: "post", class: "mb-6" do | form | %>
+              <%= form.submit "Upload Images", class: "bb-btn-sm bb-btn-primary w-full mb-3" %>
+              <%= form.file_field :image_file, required: true, multiple: true, class: "w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" %>
+            <% end %>
 
-          <!-- Character Selector -->
-          <%= render partial: "shared/character_selector", locals: {
-            characters: @universe.characters,
-            unique_id: "universe"
-          } %>
+            <hr class="bb-divider" />
 
-          <hr class="bb-divider" />
+            <!-- Character Selector -->
+            <%= render partial: "shared/character_selector", locals: {
+              characters: @universe.characters,
+              unique_id: "universe"
+            } %>
 
-          <!-- Tag Browser -->
-          <%= render partial: "shared/tag_browser" %>
+            <hr class="bb-divider" />
 
-          <hr class="bb-divider" />
+            <!-- Tag Browser -->
+            <%= render partial: "shared/tag_browser" %>
 
-          <!-- Filters -->
-          <%= render partial: "shared/filters", locals: {
-            universe: @universe,
-            images_filter: @images_filter,
-            untagged_images_count: @untagged_images_count
-          } %>
+            <hr class="bb-divider" />
 
+            <!-- Filters -->
+            <%= render partial: "shared/filters", locals: {
+              universe: @universe,
+              images_filter: @images_filter,
+              untagged_images_count: @untagged_images_count
+            } %>
+
+          </div>
         </div>
       </div>
 
       <!-- Main Content -->
-      <div class="bb-main order-1 lg:order-2">
+      <div class="bb-main order-2 lg:order-2">
         <div class="bb-card bb-card--panel">
           <%= render partial: "shared/image_list", locals: {
             images: @images,

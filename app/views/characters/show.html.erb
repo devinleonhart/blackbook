@@ -4,69 +4,81 @@
   <div class="bb-container">
     <div class="bb-layout-sidebar">
       <!-- Left Sidebar - Character Tags -->
-      <div class="bb-sidebar order-2 lg:order-1">
-        <div class="bb-card bb-card--panel">
-          <h2 class="bb-section-heading bb-section-heading--center">Character Tags</h2>
+      <div class="bb-sidebar order-1 lg:order-1" data-controller="collapse">
+        <!-- Collapsed on small screens so the character's images stay near the top. -->
+        <button type="button"
+                class="lg:hidden bb-btn bb-btn-secondary w-full flex items-center justify-between mb-3"
+                data-action="collapse#toggle"
+                data-collapse-target="button"
+                aria-expanded="false">
+          <span>Character tags</span>
+          <span data-collapse-target="icon" class="transition-transform duration-200">▾</span>
+        </button>
 
-          <!-- Current Tags -->
-          <div class="mb-8">
-            <h3 class="bb-subheading">Current Tags</h3>
-            <% if @character.character_tags.empty? %>
-              <p class="bb-subtitle-sm">No tags yet</p>
-            <% else %>
-              <div class="flex flex-wrap gap-2">
-                <% @character.character_tags.order(:name).each do |tag| %>
-                  <div class="bb-pill bb-pill-blue">
-                    <%= link_to tag.name, character_tag_path(tag), class: "hover:underline" %>
-                  </div>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
+        <div data-collapse-target="content" class="hidden lg:block">
+          <div class="bb-card bb-card--panel">
+            <h2 class="bb-section-heading bb-section-heading--center">Character Tags</h2>
 
-          <!-- Manage Tags Link -->
-          <div class="mb-6">
-            <%= link_to "Manage Tags", character_character_tags_path(@character), class: "bb-link text-sm font-medium" %>
-          </div>
-
-          <!-- Add New Tag -->
-          <div>
-            <h3 class="bb-subheading">Add Tag</h3>
-            <%= form_with model: [@character, @character.character_tags.build], url: character_character_tags_path(@character), method: :post, class: "mb-6", local: true do |form| %>
-              <div class="space-y-3">
-                <%= form.text_field :name, placeholder: "Enter tag name...", class: "bb-input text-sm" %>
-                <%= form.submit "Add", class: "bb-btn-sm bb-btn-primary" %>
-              </div>
-            <% end %>
-
-            <!-- Existing Tags from Universe -->
-            <% if @available_tag_names.any? %>
-              <div class="mt-6">
-                <h4 class="bb-subheading-sm">Existing tags in universe:</h4>
-                <div class="flex flex-wrap gap-1">
-                  <% @available_tag_names.each do |tag_name| %>
-                    <%= form_with model: [@character, @character.character_tags.build], url: character_character_tags_path(@character), method: :post, class: "inline", local: true do |form| %>
-                      <%= form.hidden_field :name, value: tag_name %>
-                      <%= form.submit tag_name, class: "text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition-colors duration-200 cursor-pointer" %>
-                    <% end %>
+            <!-- Current Tags -->
+            <div class="mb-8">
+              <h3 class="bb-subheading">Current Tags</h3>
+              <% if @character.character_tags.empty? %>
+                <p class="bb-subtitle-sm">No tags yet</p>
+              <% else %>
+                <div class="flex flex-wrap gap-2">
+                  <% @character.character_tags.order(:name).each do |tag| %>
+                    <div class="bb-pill bb-pill-blue">
+                      <%= link_to tag.name, character_tag_path(tag), class: "hover:underline" %>
+                    </div>
                   <% end %>
                 </div>
-              </div>
-            <% elsif @universe_tag_names.any? %>
-              <div class="mt-6">
-                <p class="bb-subtitle-sm">All available tags in this universe have been added to this character.</p>
-              </div>
-            <% else %>
-              <div class="mt-6">
-                <p class="bb-subtitle-sm">No tags exist in this universe yet.</p>
-              </div>
-            <% end %>
+              <% end %>
+            </div>
+
+            <!-- Manage Tags Link -->
+            <div class="mb-6">
+              <%= link_to "Manage Tags", character_character_tags_path(@character), class: "bb-link text-sm font-medium" %>
+            </div>
+
+            <!-- Add New Tag -->
+            <div>
+              <h3 class="bb-subheading">Add Tag</h3>
+              <%= form_with model: [@character, @character.character_tags.build], url: character_character_tags_path(@character), method: :post, class: "mb-6", local: true do |form| %>
+                <div class="space-y-3">
+                  <%= form.text_field :name, placeholder: "Enter tag name...", class: "bb-input text-sm" %>
+                  <%= form.submit "Add", class: "bb-btn-sm bb-btn-primary" %>
+                </div>
+              <% end %>
+
+              <!-- Existing Tags from Universe -->
+              <% if @available_tag_names.any? %>
+                <div class="mt-6">
+                  <h4 class="bb-subheading-sm">Existing tags in universe:</h4>
+                  <div class="flex flex-wrap gap-1">
+                    <% @available_tag_names.each do |tag_name| %>
+                      <%= form_with model: [@character, @character.character_tags.build], url: character_character_tags_path(@character), method: :post, class: "inline", local: true do |form| %>
+                        <%= form.hidden_field :name, value: tag_name %>
+                        <%= form.submit tag_name, class: "text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition-colors duration-200 cursor-pointer" %>
+                      <% end %>
+                    <% end %>
+                  </div>
+                </div>
+              <% elsif @universe_tag_names.any? %>
+                <div class="mt-6">
+                  <p class="bb-subtitle-sm">All available tags in this universe have been added to this character.</p>
+                </div>
+              <% else %>
+                <div class="mt-6">
+                  <p class="bb-subtitle-sm">No tags exist in this universe yet.</p>
+                </div>
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Main Content - Images -->
-      <div class="bb-main order-1 lg:order-2">
+      <div class="bb-main order-2 lg:order-2">
         <div class="bb-card bb-card--panel">
           <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center"><%= @character.name %></h1>
           <%= render partial: "shared/image_list", locals: {
