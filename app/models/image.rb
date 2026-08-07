@@ -5,7 +5,6 @@
 # Table name: images
 #
 #  id          :bigint           not null, primary key
-#  caption     :text             default(""), not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  universe_id :bigint           not null

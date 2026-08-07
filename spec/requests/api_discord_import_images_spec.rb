@@ -80,13 +80,12 @@ RSpec.describe "Api::DiscordImports::Images", type: :request do
         universe = create(:universe, name: "Knighthood") # KH
 
         expect do
-          post_import({ universe_code: "KH", caption: "hello", image_file: upload })
+          post_import({ universe_code: "KH", image_file: upload })
         end.to change(Image, :count).by(1)
 
         expect(response).to have_http_status(:created)
         image = Image.find(response.parsed_body.fetch("image_id"))
         expect(image.universe_id).to eq(universe.id)
-        expect(image.caption).to eq("hello")
         expect(image.image_file).to be_attached
       end
     end

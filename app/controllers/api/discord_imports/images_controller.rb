@@ -20,7 +20,6 @@ module Api
       def create
         universe_code = params[:universe_code].to_s.upcase
         file = params[:image_file]
-        caption = params[:caption]
 
         universe_name = UNIVERSE_CODE_TO_NAME[universe_code]
         if universe_name.blank?
@@ -42,7 +41,7 @@ module Api
           return
         end
 
-        image = Image.new(universe: universe, caption: caption.to_s)
+        image = Image.new(universe: universe)
         image.image_file.attach(file)
 
         if image.save

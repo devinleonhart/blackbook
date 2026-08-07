@@ -103,11 +103,6 @@ def seed_sample_data!
   end
 
   # --- Images + image tags ---
-  caption_bits = [
-    "portrait", "action shot", "group scene", "concept art", "reference", "location study",
-    "dramatic lighting", "alternate costume", "battle", "quiet moment", "flashback"
-  ]
-
   images_by_universe = {}
   universes.each do |universe|
     image_count =
@@ -121,8 +116,7 @@ def seed_sample_data!
 
     images = []
     image_count.times do |i|
-      caption = "#{universe.name} — #{caption_bits.sample(random: rng)} ##{format('%02d', i + 1)}"
-      image = Image.new(universe: universe, caption: caption)
+      image = Image.new(universe: universe)
 
       if image_variants.any?
         bytes = image_variants.sample(random: rng)
