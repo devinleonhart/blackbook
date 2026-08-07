@@ -36,7 +36,7 @@ class UniversesController < ApplicationController
       end
       .paginate(page: params[:page], per_page: 20)
 
-    # Load character tags for the tag browser
+    # Load traits for the trait browser
     @traits = Trait.joins(:character)
                    .where(characters: { universe_id: @universe.id })
                    .group(:name)

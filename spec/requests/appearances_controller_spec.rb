@@ -9,7 +9,7 @@ RSpec.describe "Appearances", type: :request do
   let(:image) { create(:image, universe: universe) }
 
   describe "POST create" do
-    it "creates an image tag and redirects to the image edit page" do
+    it "creates an appearance and redirects to the image edit page" do
       expect do
         post universe_image_appearances_path(universe, image), params: { appearance: { character_id: character.id } }
       end.to change(Appearance, :count).by(1)
@@ -43,7 +43,7 @@ RSpec.describe "Appearances", type: :request do
   end
 
   describe "DELETE destroy" do
-    it "destroys the image tag and redirects to the image edit page" do
+    it "destroys the appearance and redirects to the image edit page" do
       appearance = create(:appearance, image: image, character: character)
 
       expect do
@@ -53,7 +53,7 @@ RSpec.describe "Appearances", type: :request do
       expect(response).to redirect_to(edit_universe_image_url(universe, image))
     end
 
-    it "redirects with a flash when the image tag does not exist" do
+    it "redirects with a flash when the appearance does not exist" do
       delete appearance_path(missing_id)
 
       expect(response).to redirect_to(universes_url)

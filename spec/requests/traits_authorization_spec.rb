@@ -9,7 +9,7 @@ RSpec.describe "Character tags authorization", type: :request do
   before { sign_in(stranger) }
 
   describe "POST create" do
-    it "prevents a non-collaborator from creating character tags" do
+    it "prevents a non-collaborator from creating traits" do
       expect do
         post character_traits_path(character), params: { trait: { name: "Elf" } }
       end.not_to change(Trait, :count)
@@ -20,7 +20,7 @@ RSpec.describe "Character tags authorization", type: :request do
   end
 
   describe "DELETE destroy" do
-    it "prevents a non-collaborator from deleting character tags" do
+    it "prevents a non-collaborator from deleting traits" do
       tag = create(:trait, character: character, name: "elf")
 
       expect do

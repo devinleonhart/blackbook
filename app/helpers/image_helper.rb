@@ -12,7 +12,7 @@ module ImageHelper
       image_tag(safe_url_for(variant), class: "img-thumbnail", loading: "lazy")
     end
   rescue StandardError => error
-    Rails.logger.error("Failed to generate image tag for image #{image.id}: #{error.message}")
+    Rails.logger.error("Failed to render image #{image.id}: #{error.message}")
     image_placeholder(error: true)
   end
 
