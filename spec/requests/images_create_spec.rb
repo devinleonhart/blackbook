@@ -129,4 +129,48 @@ RSpec.describe "Images#create", type: :request do
       expect(flash[:error]).to be_present
     end
   end
+
+  describe "drag-and-drop (JSON)" do
+    let(:json) { { "Accept" => "application/json" } }
+
+    it "returns created/tagged counts as JSON" do
+      upload = Rack::Test::UploadedFile.new(file_path, "image/jpeg")
+
+      post universe_images_path(universe), params: { image: { image_file: [upload] } }, headers: json
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include("created" => 1, "tagged" => 0)
+    end
+
+    it "tags every uploaded image with the given character" do
+      character = create(:character, universe: universe)
+      uploads = Array.new(2) { Rack::Test::UploadedFile.new(file_path, "image/jpeg") }
+
+      expect do
+        post universe_images_path(universe),
+             params: { image: { image_file: uploads }, character_id: character.id }, headers: json
+      end.to change { character.image_tags.count }.by(2)
+
+      expect(response.parsed_body).to include("created" => 2, "tagged" => 2)
+    end
+
+    it "ignores a character_id from another universe" do
+      other = create(:character, universe: create(:universe, owner: user))
+      upload = Rack::Test::UploadedFile.new(file_path, "image/jpeg")
+
+      expect do
+        post universe_images_path(universe),
+             params: { image: { image_file: [upload] }, character_id: other.id }, headers: json
+      end.not_to change(ImageTag, :count)
+
+      expect(response.parsed_body["tagged"]).to eq(0)
+    end
+
+    it "returns 422 with no files" do
+      post universe_images_path(universe), params: { image: { image_file: [] } }, headers: json
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.parsed_body["error"]).to be_present
+    end
+  end
 end

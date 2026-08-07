@@ -40,10 +40,23 @@ class ImagesController < ApplicationController
 
   def create
     image_files = extract_image_files
-    return handle_empty_files(@universe) if image_files.empty?
+    character = tag_target_character
+
+    if image_files.empty?
+      respond_to do |format|
+        format.html { handle_empty_files(@universe) }
+        format.json { render json: { created: 0, error: "No images were selected." }, status: :unprocessable_content }
+      end
+      return
+    end
 
     created_images, errors = process_image_uploads(@universe, image_files)
-    handle_upload_result(@universe, created_images, errors)
+    tagged = tag_images(created_images, character)
+
+    respond_to do |format|
+      format.html { handle_upload_result(@universe, created_images, errors) }
+      format.json { render json: { created: created_images.length, failed: errors.length, tagged: tagged } }
+    end
   end
 
   def update
@@ -101,6 +114,20 @@ class ImagesController < ApplicationController
   # id, since the integer alone is not enough to fetch an image.
   def url_filename_matches?(image)
     params[:filename] == image.image_file.filename.to_s
+  end
+
+  # Optional character to tag every uploaded image with — used by the character
+  # page's drag-and-drop. Must belong to the target universe (nil otherwise).
+  def tag_target_character
+    return nil if params[:character_id].blank?
+
+    @universe.characters.find_by(id: params[:character_id])
+  end
+
+  def tag_images(images, character)
+    return 0 if character.nil?
+
+    images.count { |image| image.image_tags.create(character: character).persisted? }
   end
 
   def extract_image_files

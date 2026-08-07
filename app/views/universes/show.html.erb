@@ -54,7 +54,12 @@
 
       <!-- Main Content -->
       <div class="bb-main order-2 lg:order-2">
-        <div class="bb-card bb-card--panel">
+        <div class="bb-card bb-card--panel"
+             data-controller="dropzone"
+             data-dropzone-url-value="<%= universe_images_url(@universe) %>"
+             data-dropzone-dragover-class="ring-2 ring-inset ring-blue-400 bg-blue-50"
+             data-action="dragover->dropzone#dragover dragleave->dropzone#dragleave drop->dropzone#drop">
+          <%= render "shared/dropzone_prompt" %>
           <%= render partial: "shared/image_list", locals: {
             images: @images,
             universe: @universe,
