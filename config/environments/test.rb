@@ -11,8 +11,8 @@ Rails.application.configure do
   # Allow any host in test (request specs use www.example.com by default)
   config.hosts.clear
 
-  # Turn false under Spring and add config.action_view.cache_template_loading = true.
-  config.cache_classes = true
+  # Code is not reloaded between requests while the test suite runs.
+  config.enable_reloading = false
 
   # Eager loading loads your whole application. When running a single test locally,
   # this probably isn't necessary. It's a good idea to do in a continuous integration
@@ -30,8 +30,9 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
 
-  # Raise exceptions instead of rendering exception templates.
-  config.action_dispatch.show_exceptions = false
+  # Render the framework's exception pages for rescuable errors so request
+  # specs can assert on real status codes; re-raise everything else.
+  config.action_dispatch.show_exceptions = :rescuable
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
