@@ -9,7 +9,7 @@
       <div
         class="bb-slideshow-shell"
         data-controller="slideshow"
-        data-slideshow-slides-url-value="<%= slideshow_images_path(mode: @mode, universe_id: @universe_id, character_ids: @character_ids.presence) %>"
+        data-slideshow-slides-url-value="<%= slideshow_images_path(mode: @mode, universe_id: @universe_id, trait_names: @trait_names.presence) %>"
         data-slideshow-interval-ms-value="3000"
       >
         <!-- Top controls -->
@@ -42,29 +42,6 @@
 
             <span class="text-sm text-gray-700" data-slideshow-target="counter"></span>
           </div>
-
-          <!-- Character filter: cycle through only images that include the chosen characters. -->
-          <% if @universe_id %>
-            <div class="mt-3" data-slideshow-target="characterFilter">
-              <% if @characters.any? %>
-                <div class="flex flex-wrap items-center gap-2">
-                  <span class="text-sm font-medium text-gray-700 mr-1">Characters:</span>
-                  <% @characters.each do |character| %>
-                    <label class="bb-slideshow-chip">
-                      <%= check_box_tag "character_ids[]", character.id, @character_ids.include?(character.id),
-                            id: "slideshow_character_#{character.id}",
-                            class: "sr-only bb-slideshow-chip__input",
-                            data: { slideshow_target: "character", action: "change->slideshow#characterChanged" } %>
-                      <span><%= character.name %></span>
-                    </label>
-                  <% end %>
-                  <button type="button" class="bb-link text-sm" data-action="slideshow#clearCharacters">Clear</button>
-                </div>
-              <% else %>
-                <p class="bb-subtitle-sm">This universe has no characters to filter by yet.</p>
-              <% end %>
-            </div>
-          <% end %>
         </div>
 
         <!-- Stage -->
@@ -90,13 +67,36 @@
           </div>
         </div>
 
-        <!-- Bottom controls -->
+        <!-- Bottom controls (sit under the image, so the trait filter never pushes it down) -->
         <div class="bb-slideshow-controls bb-slideshow-controls--bottom" data-slideshow-target="bottomControls">
           <div class="flex items-center justify-between">
             <label class="text-sm font-medium text-gray-700" for="slideshow_speed">Speed</label>
             <span class="text-sm text-gray-700 w-16 text-right" data-slideshow-target="speedLabel">3.0s</span>
           </div>
           <input id="slideshow_speed" type="range" min="1" max="300" step="1" value="3" class="w-full mt-2" data-action="input->slideshow#speedChanged" data-slideshow-target="speed" />
+
+          <!-- Trait filter: cycle through only images featuring a character with one of these traits. -->
+          <% if @universe_id %>
+            <div class="mt-4 pt-4 border-t border-gray-200">
+              <% if @available_trait_names.any? %>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-sm font-medium text-gray-700 mr-1">Traits:</span>
+                  <% @available_trait_names.each_with_index do |trait_name, index| %>
+                    <label class="bb-slideshow-chip">
+                      <%= check_box_tag "trait_names[]", trait_name, @trait_names.include?(trait_name),
+                            id: "slideshow_trait_#{index}",
+                            class: "sr-only bb-slideshow-chip__input",
+                            data: { slideshow_target: "trait", action: "change->slideshow#traitChanged" } %>
+                      <span><%= trait_name %></span>
+                    </label>
+                  <% end %>
+                  <button type="button" class="bb-link text-sm" data-action="slideshow#clearTraits">Clear</button>
+                </div>
+              <% else %>
+                <p class="bb-subtitle-sm">This universe has no traits to filter by yet.</p>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </div>
     <% end %>

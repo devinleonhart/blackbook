@@ -20,7 +20,7 @@ export default class extends Controller {
     "errorText",
     "favoriteButton",
     "detailLink",
-    "character",
+    "trait",
   ]
 
   static values = {
@@ -178,33 +178,33 @@ export default class extends Controller {
     }
   }
 
-  // --- Character filter ---------------------------------------------------
+  // --- Trait filter -------------------------------------------------------
 
-  characterChanged() {
-    this.applyCharacterFilter(this.selectedCharacterIds())
+  traitChanged() {
+    this.applyTraitFilter(this.selectedTraitNames())
   }
 
-  clearCharacters() {
-    if (this.hasCharacterTarget) this.characterTargets.forEach((el) => { el.checked = false })
-    this.applyCharacterFilter([])
+  clearTraits() {
+    if (this.hasTraitTarget) this.traitTargets.forEach((el) => { el.checked = false })
+    this.applyTraitFilter([])
   }
 
-  selectedCharacterIds() {
-    if (!this.hasCharacterTarget) return []
-    return this.characterTargets.filter((el) => el.checked).map((el) => el.value)
+  selectedTraitNames() {
+    if (!this.hasTraitTarget) return []
+    return this.traitTargets.filter((el) => el.checked).map((el) => el.value)
   }
 
-  applyCharacterFilter(ids) {
+  applyTraitFilter(names) {
     // Rebuild the JSON endpoint URL, preserving mode/universe, and reload slides.
     const slidesUrl = new URL(this.slidesUrlValue, window.location.origin)
-    slidesUrl.searchParams.delete("character_ids[]")
-    ids.forEach((id) => slidesUrl.searchParams.append("character_ids[]", id))
+    slidesUrl.searchParams.delete("trait_names[]")
+    names.forEach((name) => slidesUrl.searchParams.append("trait_names[]", name))
     this.slidesUrlValue = slidesUrl.pathname + slidesUrl.search
 
     // Mirror the selection in the page URL so a reload remembers it.
     const pageUrl = new URL(window.location.href)
-    pageUrl.searchParams.delete("character_ids[]")
-    ids.forEach((id) => pageUrl.searchParams.append("character_ids[]", id))
+    pageUrl.searchParams.delete("trait_names[]")
+    names.forEach((name) => pageUrl.searchParams.append("trait_names[]", name))
     window.history.replaceState({}, "", pageUrl.pathname + pageUrl.search)
 
     this.loadSlides()

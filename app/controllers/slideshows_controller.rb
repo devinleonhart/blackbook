@@ -5,12 +5,12 @@ class SlideshowsController < ApplicationController
     universe_ids = Universe.accessible_to(current_user).pluck(:id)
     @mode = slideshow_mode
     @universe_id = selected_universe_id!(universe_ids)
-    @character_ids = selected_character_ids
+    @trait_names = selected_trait_names
     @universes = Universe.where(id: universe_ids).order(Arel.sql("LOWER(universes.name) ASC"))
 
-    # The character picker only makes sense within a single universe, where the
-    # list is bounded and names are unambiguous.
-    @characters = @universe_id ? Character.where(universe_id: @universe_id).order(:name) : Character.none
+    # The trait picker only makes sense within a single universe, where the list
+    # is bounded and names are unambiguous.
+    @available_trait_names = @universe_id ? universe_trait_names(@universe_id) : []
 
     scoped_universe_ids = @universe_id ? [@universe_id] : universe_ids
     @has_images = slideshow_images_scope(scoped_universe_ids).limit(1).exists?
@@ -67,13 +67,22 @@ class SlideshowsController < ApplicationController
     raise ActiveRecord::RecordNotFound
   end
 
-  # Character ids to cycle through. Accepts an array or a comma-separated string;
-  # non-numeric values are ignored. Ids outside the user's accessible images
-  # simply match nothing, so no extra authorization is needed here.
-  def selected_character_ids
-    raw = params[:character_ids]
+  # Trait names to cycle through — images that include any character carrying one
+  # of these traits. Accepts an array or a comma-separated string; names are
+  # normalized the same way Trait stores them (stripped + downcased). Unknown
+  # names simply match nothing, so no extra authorization is needed here.
+  def selected_trait_names
+    raw = params[:trait_names]
     values = raw.is_a?(Array) ? raw : raw.to_s.split(",")
-    values.filter_map { |value| Integer(value, 10, exception: false) }.uniq
+    values.map { |value| value.to_s.strip.downcase }.compact_blank.uniq
+  end
+
+  def universe_trait_names(universe_id)
+    Trait.joins(:character)
+         .where(characters: { universe_id: universe_id })
+         .distinct
+         .order(:name)
+         .pluck(:name)
   end
 
   def slideshow_images_scope(universe_ids)
@@ -81,8 +90,8 @@ class SlideshowsController < ApplicationController
 
     scope = scope.joins(:image_favorites).where(image_favorites: { user_id: current_user.id }) if @mode == "favorites"
 
-    character_ids = selected_character_ids
-    scope = scope.joins(:appearances).where(appearances: { character_id: character_ids }) if character_ids.any?
+    trait_names = selected_trait_names
+    scope = scope.joins(appearances: { character: :traits }).where(traits: { name: trait_names }) if trait_names.any?
 
     scope.distinct
   end

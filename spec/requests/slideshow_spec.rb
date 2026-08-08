@@ -22,15 +22,16 @@ RSpec.describe "Slideshow", type: :request do
     context "with a universe selected" do
       include_context "with a signed-in owner"
 
-      it "renders the character picker for that universe" do
+      it "renders the trait picker for that universe" do
         create(:image, universe: universe)
         character = create(:character, universe: universe, name: "Aria")
+        create(:trait, character: character, name: "villain")
 
         get slideshow_path(universe_id: universe.id)
 
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include("Characters:")
-        expect(response.body).to include(character.name)
+        expect(response.body).to include("Traits:")
+        expect(response.body).to include("villain")
       end
     end
   end
@@ -119,23 +120,35 @@ RSpec.describe "Slideshow", type: :request do
       end
     end
 
-    context "with a character filter" do
-      it "returns only images that include the selected characters" do
-        with_character = create(:image, universe: universe)
-        without_character = create(:image, universe: universe)
-        character = create(:character, universe: universe)
-        create(:appearance, image: with_character, character: character)
+    context "with a trait filter" do
+      it "returns only images featuring a character with the selected trait" do
+        matching = create(:image, universe: universe)
+        non_matching = create(:image, universe: universe)
+        villain = create(:character, universe: universe)
+        create(:trait, character: villain, name: "villain")
+        create(:appearance, image: matching, character: villain)
 
-        get slideshow_images_path(mode: "all", universe_id: universe.id, character_ids: [character.id])
+        get slideshow_images_path(mode: "all", universe_id: universe.id, trait_names: ["villain"])
 
-        expect(slide_ids).to include(with_character.id)
-        expect(slide_ids).not_to include(without_character.id)
+        expect(slide_ids).to include(matching.id)
+        expect(slide_ids).not_to include(non_matching.id)
       end
 
-      it "ignores non-numeric character ids" do
+      it "matches trait names case-insensitively (they are stored normalized)" do
+        image = create(:image, universe: universe)
+        character = create(:character, universe: universe)
+        create(:trait, character: character, name: "mentor")
+        create(:appearance, image: image, character: character)
+
+        get slideshow_images_path(mode: "all", universe_id: universe.id, trait_names: ["  MENTOR  "])
+
+        expect(slide_ids).to include(image.id)
+      end
+
+      it "ignores blank trait names" do
         image = create(:image, universe: universe)
 
-        get slideshow_images_path(mode: "all", universe_id: universe.id, character_ids: "not-a-number")
+        get slideshow_images_path(mode: "all", universe_id: universe.id, trait_names: [""])
 
         expect(slide_ids).to include(image.id)
       end
