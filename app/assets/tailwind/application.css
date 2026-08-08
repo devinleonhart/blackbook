@@ -467,17 +467,6 @@
     @apply opacity-100;
   }
 
-  /* Countdown bar pinned to the bottom of the stage; width is animated in JS via
-     the Web Animations API (no inline styles, so the strict CSP stays intact). */
-  .bb-slideshow-progress-track {
-    @apply absolute bottom-0 left-0 right-0 h-1 bg-white/20 pointer-events-none;
-  }
-
-  .bb-slideshow-progress-bar {
-    @apply h-full bg-blue-500 origin-left;
-    transform: scaleX(0);
-  }
-
   /* Character filter chips: the checkbox is visually hidden; the label is the pill. */
   .bb-slideshow-chip {
     @apply inline-flex items-center px-3 py-1 rounded-full border border-gray-300 bg-white

@@ -18,7 +18,6 @@ export default class extends Controller {
     "loading",
     "error",
     "errorText",
-    "progress",
     "favoriteButton",
     "detailLink",
     "character",
@@ -36,7 +35,6 @@ export default class extends Controller {
     this.timer = null
     this.hintTimer = null
     this.pseudoFullscreen = false
-    this.progressAnim = null
 
     // Crossfade layers: front is visible, back receives the next image.
     this.frontLayer = this.hasLayerATarget ? this.layerATarget : null
@@ -61,7 +59,6 @@ export default class extends Controller {
 
   disconnect() {
     this.stopTimer()
-    this.stopProgress()
     this.clearHintTimer()
     this.exitPseudoFullscreen()
     window.removeEventListener("keydown", this.boundKeydown)
@@ -82,7 +79,6 @@ export default class extends Controller {
     this.playing = true
     this.renderPlayButton()
     this.startTimer()
-    this.startProgress()
   }
 
   pause() {
@@ -90,7 +86,6 @@ export default class extends Controller {
     this.playing = false
     this.renderPlayButton()
     this.stopTimer()
-    this.stopProgress()
   }
 
   next() {
@@ -116,10 +111,7 @@ export default class extends Controller {
     this.renderSpeedLabel(seconds)
     this.persistSpeed(seconds)
 
-    if (this.playing) {
-      this.startTimer()
-      this.startProgress()
-    }
+    if (this.playing) this.startTimer()
   }
 
   show(newIndex) {
@@ -133,9 +125,6 @@ export default class extends Controller {
     this.renderFavoriteButton()
     this.renderDetailLink()
     this.preloadNext()
-
-    if (this.playing) this.startProgress()
-    else this.stopProgress()
   }
 
   crossfadeTo(slide) {
@@ -324,22 +313,6 @@ export default class extends Controller {
     if (!this.timer) return
     window.clearInterval(this.timer)
     this.timer = null
-  }
-
-  startProgress() {
-    this.stopProgress()
-    if (!this.hasProgressTarget || !this.progressTarget.animate) return
-    const duration = this.intervalMsValue || 3000
-    this.progressAnim = this.progressTarget.animate(
-      [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }],
-      { duration, easing: "linear", fill: "forwards" },
-    )
-  }
-
-  stopProgress() {
-    if (!this.progressAnim) return
-    this.progressAnim.cancel()
-    this.progressAnim = null
   }
 
   preloadNext() {
