@@ -8,17 +8,11 @@
     <!-- Pagination at top -->
     <%= render partial: "shared/pagination", locals: { collection: images } %>
 
-    <%# One query for this page's favorites so the stars render without an N+1. %>
-    <% favorited_ids = current_user ? ImageFavorite.where(user: current_user, image_id: images.map(&:id)).pluck(:image_id).to_set : Set.new %>
-
     <div class="bb-image-grid">
       <% images.each do |image| %>
-        <div class="bb-image-cell">
-          <%= link_to edit_universe_image_url(universe, image), class: "block p-1 transition-all duration-200" do %>
-            <%= generate_image_tag(image, [250, 400]) %>
-          <% end %>
-          <%= render "shared/favorite_toggle", image: image, universe: universe, favorited: favorited_ids.include?(image.id) %>
-        </div>
+        <%= link_to edit_universe_image_url(universe, image), class: "block p-1 transition-all duration-200" do %>
+          <%= generate_image_tag(image, [250, 400]) %>
+        <% end %>
       <% end %>
     </div>
 

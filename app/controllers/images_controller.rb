@@ -60,17 +60,7 @@ class ImagesController < ApplicationController
       ImageFavorite.where(user: current_user, image: @image).destroy_all
     end
 
-    respond_to do |format|
-      # Grid star toggles favorite in place via Turbo Stream, no navigation.
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          "favorite_toggle_#{@image.id}",
-          partial: "shared/favorite_toggle",
-          locals: { image: @image, universe: @image.universe, favorited: desired }
-        )
-      end
-      format.html { redirect_to edit_universe_image_url(@image.universe, @image) }
-    end
+    redirect_to edit_universe_image_url(@image.universe, @image)
   end
 
   def view

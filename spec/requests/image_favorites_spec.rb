@@ -28,45 +28,6 @@ RSpec.describe "Image favorites", type: :request do
     end
   end
 
-  describe "PATCH update as a Turbo Stream (grid quick-favorite)" do
-    let(:turbo_headers) { { "Accept" => "text/vnd.turbo-stream.html" } }
-
-    it "favorites in place and returns the updated toggle" do
-      expect do
-        patch universe_image_path(universe, image), params: { image: { favorite: true } }, headers: turbo_headers
-      end.to change(ImageFavorite, :count).by(1)
-
-      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
-      expect(response.body).to include("favorite_toggle_#{image.id}")
-      expect(response.body).to include("Unfavorite")
-    end
-
-    it "unfavorites in place and returns the updated toggle" do
-      ImageFavorite.create!(user: owner, image: image)
-
-      expect do
-        patch universe_image_path(universe, image), params: { image: { favorite: false } }, headers: turbo_headers
-      end.to change(ImageFavorite, :count).by(-1)
-
-      expect(response.body).to include("favorite_toggle_#{image.id}")
-      expect(response.body).to include("Favorite")
-    end
-  end
-
-  describe "the grid star on the universe page" do
-    it "renders a filled star for favorited images and an empty star otherwise" do
-      favorited = create(:image, universe: universe)
-      create(:image, universe: universe) # not favorited
-      ImageFavorite.create!(user: owner, image: favorited)
-
-      get universe_path(universe)
-
-      expect(response.body).to include("bb-fav-toggle--on")
-      expect(response.body).to include("☆")
-      expect(response.body).to include("★")
-    end
-  end
-
   describe "per-user isolation" do
     it "keeps favorites independent between users" do
       collaborator = create(:user)

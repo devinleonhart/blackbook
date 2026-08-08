@@ -52,7 +52,7 @@
 
           <!-- Controls -->
           <div class="border-t pt-4 mt-4 space-y-2">
-            <%= button_to universe_image_path(@image.universe, @image), method: :patch, params: { universe_id: @image.universe.id, image: { favorite: !@favorited } }, form: { data: { turbo: false } }, class: @favorited ? "bb-btn-sm bg-yellow-500 hover:bg-yellow-700 text-white w-full" : "bb-btn-sm bb-btn-primary w-full" do %>
+            <%= button_to universe_image_path(@image.universe, @image), method: :patch, params: { universe_id: @image.universe.id, image: { favorite: !@favorited } }, class: @favorited ? "bb-btn-sm bg-yellow-500 hover:bg-yellow-700 text-white w-full" : "bb-btn-sm bb-btn-primary w-full" do %>
               <%= @favorited ? "Unfavorite" : "Favorite" %>
             <% end %>
             <%= button_to "Delete image", universe_image_url(@image.universe, @image), method: :delete, data: { turbo_confirm: "Delete this image? This can't be undone." }, class: "bb-btn-sm bb-btn-danger w-full" %>
