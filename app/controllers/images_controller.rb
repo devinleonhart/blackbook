@@ -60,7 +60,10 @@ class ImagesController < ApplicationController
       ImageFavorite.where(user: current_user, image: @image).destroy_all
     end
 
-    redirect_to edit_universe_image_url(@image.universe, @image)
+    respond_to do |format|
+      format.html { redirect_to edit_universe_image_url(@image.universe, @image) }
+      format.json { render json: { favorited: desired } }
+    end
   end
 
   def view

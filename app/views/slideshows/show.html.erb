@@ -9,7 +9,7 @@
       <div
         class="bb-slideshow-shell"
         data-controller="slideshow"
-        data-slideshow-slides-url-value="<%= slideshow_images_path(mode: @mode, universe_id: @universe_id) %>"
+        data-slideshow-slides-url-value="<%= slideshow_images_path(mode: @mode, universe_id: @universe_id, character_ids: @character_ids.presence) %>"
         data-slideshow-interval-ms-value="3000"
       >
         <!-- Top controls -->
@@ -36,25 +36,46 @@
               <button type="button" class="bb-btn-sm bb-btn-primary" data-action="slideshow#togglePlay" data-slideshow-target="playButton">Play</button>
               <button type="button" class="bb-btn-sm bb-btn-outline" data-action="slideshow#next">Next</button>
               <button type="button" class="bb-btn-sm bb-btn-outline" data-action="slideshow#toggleFullscreen" data-slideshow-target="fullscreenButton">Fullscreen</button>
+              <button type="button" class="bb-btn-sm bb-btn-outline" data-action="slideshow#toggleFavorite" data-slideshow-target="favoriteButton" title="Favorite (f)">☆ Favorite</button>
+              <%= link_to "Open ↗", "#", target: "_blank", rel: "noopener", class: "bb-btn-sm bb-btn-outline", data: { slideshow_target: "detailLink" }, title: "Open detail (o)" %>
             </div>
 
             <span class="text-sm text-gray-700" data-slideshow-target="counter"></span>
           </div>
+
+          <!-- Character filter: cycle through only images that include the chosen characters. -->
+          <% if @universe_id %>
+            <div class="mt-3" data-slideshow-target="characterFilter">
+              <% if @characters.any? %>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-sm font-medium text-gray-700 mr-1">Characters:</span>
+                  <% @characters.each do |character| %>
+                    <label class="bb-slideshow-chip">
+                      <%= check_box_tag "character_ids[]", character.id, @character_ids.include?(character.id),
+                            id: "slideshow_character_#{character.id}",
+                            class: "sr-only bb-slideshow-chip__input",
+                            data: { slideshow_target: "character", action: "change->slideshow#characterChanged" } %>
+                      <span><%= character.name %></span>
+                    </label>
+                  <% end %>
+                  <button type="button" class="bb-link text-sm" data-action="slideshow#clearCharacters">Clear</button>
+                </div>
+              <% else %>
+                <p class="bb-subtitle-sm">This universe has no characters to filter by yet.</p>
+              <% end %>
+            </div>
+          <% end %>
         </div>
 
         <!-- Stage -->
         <div
-          class="bb-slideshow-stage"
+          class="bb-slideshow-stage bb-slideshow-stage--default"
           data-slideshow-target="stage"
           data-action="click->slideshow#stageTapped"
           tabindex="0"
         >
-          <img
-            data-slideshow-target="image"
-            src=""
-            alt="Slideshow image"
-            class="bb-slideshow-image bb-slideshow-image--default"
-          />
+          <img data-slideshow-target="layerA" src="" alt="Slideshow image" class="bb-slideshow-layer bb-slideshow-layer--front" />
+          <img data-slideshow-target="layerB" src="" alt="" aria-hidden="true" class="bb-slideshow-layer" />
 
           <div data-slideshow-target="loading" class="absolute inset-0 flex items-center justify-center text-white text-sm bg-black/40">
             Loading…
@@ -66,6 +87,11 @@
 
           <div data-slideshow-target="fullscreenHint" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-black/60 text-white text-sm px-3 py-2 rounded">
             Fullscreen — press Esc to exit
+          </div>
+
+          <!-- Countdown progress bar -->
+          <div class="bb-slideshow-progress-track">
+            <div class="bb-slideshow-progress-bar" data-slideshow-target="progress"></div>
           </div>
         </div>
 

@@ -1,8 +1,11 @@
 import { Controller } from "@hotwired/stimulus"
 
+const SPEED_STORAGE_KEY = "bb-slideshow-speed"
+
 export default class extends Controller {
   static targets = [
-    "image",
+    "layerA",
+    "layerB",
     "counter",
     "playButton",
     "speed",
@@ -15,6 +18,10 @@ export default class extends Controller {
     "loading",
     "error",
     "errorText",
+    "progress",
+    "favoriteButton",
+    "detailLink",
+    "character",
   ]
 
   static values = {
@@ -29,18 +36,21 @@ export default class extends Controller {
     this.timer = null
     this.hintTimer = null
     this.pseudoFullscreen = false
+    this.progressAnim = null
+
+    // Crossfade layers: front is visible, back receives the next image.
+    this.frontLayer = this.hasLayerATarget ? this.layerATarget : null
+    this.backLayer = this.hasLayerBTarget ? this.layerBTarget : null
+
+    this.restoreSpeed()
 
     this.boundKeydown = (e) => this.onKeydown(e)
     this.boundFullscreenChange = () => this.onFullscreenChange()
-    this.boundResize = () => this.onResize()
-    this.boundOrientationChange = () => this.onResize()
     window.addEventListener("keydown", this.boundKeydown)
     document.addEventListener("fullscreenchange", this.boundFullscreenChange)
     document.addEventListener("webkitfullscreenchange", this.boundFullscreenChange)
     document.addEventListener("mozfullscreenchange", this.boundFullscreenChange)
     document.addEventListener("MSFullscreenChange", this.boundFullscreenChange)
-    window.addEventListener("resize", this.boundResize)
-    window.addEventListener("orientationchange", this.boundOrientationChange)
 
     this.renderCounter()
     this.renderSpeedLabelFromInterval()
@@ -51,6 +61,7 @@ export default class extends Controller {
 
   disconnect() {
     this.stopTimer()
+    this.stopProgress()
     this.clearHintTimer()
     this.exitPseudoFullscreen()
     window.removeEventListener("keydown", this.boundKeydown)
@@ -58,8 +69,6 @@ export default class extends Controller {
     document.removeEventListener("webkitfullscreenchange", this.boundFullscreenChange)
     document.removeEventListener("mozfullscreenchange", this.boundFullscreenChange)
     document.removeEventListener("MSFullscreenChange", this.boundFullscreenChange)
-    window.removeEventListener("resize", this.boundResize)
-    window.removeEventListener("orientationchange", this.boundOrientationChange)
   }
 
   togglePlay() {
@@ -73,6 +82,7 @@ export default class extends Controller {
     this.playing = true
     this.renderPlayButton()
     this.startTimer()
+    this.startProgress()
   }
 
   pause() {
@@ -80,6 +90,7 @@ export default class extends Controller {
     this.playing = false
     this.renderPlayButton()
     this.stopTimer()
+    this.stopProgress()
   }
 
   next() {
@@ -103,8 +114,12 @@ export default class extends Controller {
 
     this.intervalMsValue = Math.round(seconds * 1000)
     this.renderSpeedLabel(seconds)
+    this.persistSpeed(seconds)
 
-    if (this.playing) this.startTimer()
+    if (this.playing) {
+      this.startTimer()
+      this.startProgress()
+    }
   }
 
   show(newIndex) {
@@ -112,15 +127,44 @@ export default class extends Controller {
     if (!slide) return
 
     this.index = newIndex
-    if (slide.url) this.imageTarget.src = slide.url
+    this.crossfadeTo(slide)
 
     this.renderCounter()
+    this.renderFavoriteButton()
+    this.renderDetailLink()
     this.preloadNext()
+
+    if (this.playing) this.startProgress()
+    else this.stopProgress()
+  }
+
+  crossfadeTo(slide) {
+    if (!this.frontLayer || !this.backLayer) return
+    if (!slide.url) return
+
+    const incoming = this.backLayer
+    const outgoing = this.frontLayer
+
+    const swap = () => {
+      incoming.classList.add("bb-slideshow-layer--front")
+      outgoing.classList.remove("bb-slideshow-layer--front")
+      incoming.setAttribute("alt", slide.characters?.length ? slide.characters.join(", ") : "Slideshow image")
+      incoming.removeAttribute("aria-hidden")
+      outgoing.setAttribute("alt", "")
+      outgoing.setAttribute("aria-hidden", "true")
+      this.frontLayer = incoming
+      this.backLayer = outgoing
+    }
+
+    incoming.src = slide.url
+    if (incoming.decode) incoming.decode().then(swap).catch(swap)
+    else swap()
   }
 
   async loadSlides() {
     this.hideError()
     this.showLoading()
+    this.pause()
 
     try {
       if (!this.hasSlidesUrlValue || !this.slidesUrlValue) throw new Error("slidesUrl missing")
@@ -134,14 +178,87 @@ export default class extends Controller {
       const data = await response.json()
       const slides = Array.isArray(data?.slides) ? data.slides : []
       this.slides = slides
+      this.index = 0
 
       if (this.hasSlides()) this.show(0)
+      else this.renderCounter()
     } catch (e) {
       this.showError(`Failed to load slideshow (${e?.message || "unknown error"}).`)
     } finally {
       this.hideLoading()
     }
   }
+
+  // --- Character filter ---------------------------------------------------
+
+  characterChanged() {
+    this.applyCharacterFilter(this.selectedCharacterIds())
+  }
+
+  clearCharacters() {
+    if (this.hasCharacterTarget) this.characterTargets.forEach((el) => { el.checked = false })
+    this.applyCharacterFilter([])
+  }
+
+  selectedCharacterIds() {
+    if (!this.hasCharacterTarget) return []
+    return this.characterTargets.filter((el) => el.checked).map((el) => el.value)
+  }
+
+  applyCharacterFilter(ids) {
+    // Rebuild the JSON endpoint URL, preserving mode/universe, and reload slides.
+    const slidesUrl = new URL(this.slidesUrlValue, window.location.origin)
+    slidesUrl.searchParams.delete("character_ids[]")
+    ids.forEach((id) => slidesUrl.searchParams.append("character_ids[]", id))
+    this.slidesUrlValue = slidesUrl.pathname + slidesUrl.search
+
+    // Mirror the selection in the page URL so a reload remembers it.
+    const pageUrl = new URL(window.location.href)
+    pageUrl.searchParams.delete("character_ids[]")
+    ids.forEach((id) => pageUrl.searchParams.append("character_ids[]", id))
+    window.history.replaceState({}, "", pageUrl.pathname + pageUrl.search)
+
+    this.loadSlides()
+  }
+
+  // --- Per-slide actions --------------------------------------------------
+
+  async toggleFavorite() {
+    const slide = this.slides[this.index]
+    if (!slide?.favorite_url) return
+
+    const desired = !slide.favorited
+    try {
+      const response = await fetch(slide.favorite_url, {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/x-www-form-urlencoded",
+          "X-CSRF-Token": this.csrfToken(),
+        },
+        credentials: "same-origin",
+        body: `image[favorite]=${desired}`,
+      })
+      if (!response.ok) throw new Error(`HTTP ${response.status}`)
+      const data = await response.json()
+      slide.favorited = Boolean(data?.favorited)
+      this.renderFavoriteButton()
+    } catch (e) {
+      this.showError(`Couldn't update favorite (${e?.message || "unknown error"}).`)
+    }
+  }
+
+  openDetail() {
+    const slide = this.slides[this.index]
+    if (!slide?.detail_url) return
+    window.open(slide.detail_url, "_blank", "noopener")
+  }
+
+  csrfToken() {
+    return document.querySelector('meta[name="csrf-token"]')?.content || ""
+  }
+
+  // --- Fullscreen ---------------------------------------------------------
 
   async toggleFullscreen(event) {
     event?.preventDefault?.()
@@ -163,17 +280,32 @@ export default class extends Controller {
     }
   }
 
+  // Click zones: left third = prev, right third = next. The centre toggles play,
+  // except in fullscreen where it exits (so touch devices without Esc can leave).
   stageTapped(event) {
-    if (!this.pseudoFullscreen && !this.currentFullscreenElement()) return
+    if (event?.target?.closest?.("a,button,input,label")) return
 
-    if (event?.target?.closest?.("[data-slideshow-target='topControls'],[data-slideshow-target='bottomControls']")) return
+    const rect = this.stageTarget.getBoundingClientRect()
+    const x = (event.clientX - rect.left) / rect.width
+
+    if (x < 0.33) {
+      this.prev()
+      return
+    }
+    if (x > 0.67) {
+      this.next()
+      return
+    }
 
     if (this.pseudoFullscreen) {
       this.exitPseudoFullscreen()
       return
     }
-
-    this.exitFullscreen().catch(() => {})
+    if (this.currentFullscreenElement()) {
+      this.exitFullscreen().catch(() => {})
+      return
+    }
+    this.togglePlay()
   }
 
   // Private methods
@@ -194,6 +326,22 @@ export default class extends Controller {
     this.timer = null
   }
 
+  startProgress() {
+    this.stopProgress()
+    if (!this.hasProgressTarget || !this.progressTarget.animate) return
+    const duration = this.intervalMsValue || 3000
+    this.progressAnim = this.progressTarget.animate(
+      [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }],
+      { duration, easing: "linear", fill: "forwards" },
+    )
+  }
+
+  stopProgress() {
+    if (!this.progressAnim) return
+    this.progressAnim.cancel()
+    this.progressAnim = null
+  }
+
   preloadNext() {
     if (!this.hasSlides()) return
     const nextIndex = (this.index + 1) % this.slides.length
@@ -208,25 +356,35 @@ export default class extends Controller {
     const tag = el?.tagName?.toLowerCase()
     if (tag === "input" || tag === "textarea" || tag === "select") return
 
-    if (event.key === " ") {
-      event.preventDefault()
-      this.togglePlay()
-      return
-    }
-    if (event.key === "ArrowRight") {
-      event.preventDefault()
-      this.next()
-      return
-    }
-    if (event.key === "ArrowLeft") {
-      event.preventDefault()
-      this.prev()
-      return
+    switch (event.key) {
+      case " ":
+        event.preventDefault()
+        this.togglePlay()
+        break
+      case "ArrowRight":
+        event.preventDefault()
+        this.next()
+        break
+      case "ArrowLeft":
+        event.preventDefault()
+        this.prev()
+        break
+      case "f":
+      case "F":
+        event.preventDefault()
+        this.toggleFavorite()
+        break
+      case "o":
+      case "O":
+        event.preventDefault()
+        this.openDetail()
+        break
+      default:
+        break
     }
   }
 
   onFullscreenChange() {
-    // In real fullscreen we hide chrome; in pseudo fullscreen we manage that ourselves.
     if (this.hasTopControlsTarget && !this.pseudoFullscreen) {
       const shouldHide = this.isStageFullscreen()
       this.topControlsTarget.classList.toggle("hidden", shouldHide)
@@ -252,6 +410,21 @@ export default class extends Controller {
       this.pseudoFullscreen || this.currentFullscreenElement() ? "Exit fullscreen" : "Fullscreen"
   }
 
+  renderFavoriteButton() {
+    if (!this.hasFavoriteButtonTarget) return
+    const slide = this.slides[this.index]
+    const favorited = Boolean(slide?.favorited)
+    this.favoriteButtonTarget.textContent = favorited ? "★ Favorited" : "☆ Favorite"
+    this.favoriteButtonTarget.classList.toggle("bb-btn-primary", favorited)
+    this.favoriteButtonTarget.classList.toggle("bb-btn-outline", !favorited)
+  }
+
+  renderDetailLink() {
+    if (!this.hasDetailLinkTarget) return
+    const slide = this.slides[this.index]
+    if (slide?.detail_url) this.detailLinkTarget.setAttribute("href", slide.detail_url)
+  }
+
   showFullscreenHint() {
     if (!this.hasFullscreenHintTarget) return
     this.fullscreenHintTarget.classList.remove("hidden")
@@ -274,7 +447,7 @@ export default class extends Controller {
   renderCounter() {
     if (!this.hasCounterTarget) return
     const total = this.slides?.length || 0
-    this.counterTarget.textContent = total ? `${this.index + 1} / ${total}` : ""
+    this.counterTarget.textContent = total ? `${this.index + 1} / ${total}` : "0 / 0"
   }
 
   renderPlayButton() {
@@ -291,6 +464,27 @@ export default class extends Controller {
   renderSpeedLabel(seconds) {
     if (!this.hasSpeedLabelTarget) return
     this.speedLabelTarget.textContent = `${seconds.toFixed(1)}s`
+  }
+
+  restoreSpeed() {
+    let seconds = null
+    try {
+      seconds = parseFloat(window.localStorage.getItem(SPEED_STORAGE_KEY))
+    } catch (e) {
+      seconds = null
+    }
+    if (!Number.isFinite(seconds) || seconds <= 0) return
+
+    this.intervalMsValue = Math.round(seconds * 1000)
+    if (this.hasSpeedTarget) this.speedTarget.value = String(seconds)
+  }
+
+  persistSpeed(seconds) {
+    try {
+      window.localStorage.setItem(SPEED_STORAGE_KEY, String(seconds))
+    } catch (e) {
+      // Ignore storage failures (private mode, quota, etc.).
+    }
   }
 
   showLoading() {
@@ -312,11 +506,6 @@ export default class extends Controller {
     if (this.hasErrorTarget) this.errorTarget.classList.add("hidden")
   }
 
-  onResize() {
-    if (!this.pseudoFullscreen) return
-    this.updatePseudoDimensions()
-  }
-
   enterPseudoFullscreen() {
     if (this.pseudoFullscreen) return
     this.pseudoFullscreen = true
@@ -324,15 +513,14 @@ export default class extends Controller {
     document.documentElement.classList.add("bb-no-scroll")
     document.body.classList.add("bb-no-scroll")
 
+    // Sizing is handled entirely by CSS (100dvh + flex), so no inline styles are
+    // written here — that keeps the strict CSP happy and works on iOS Safari.
     this.element.classList.add("bb-slideshow-shell--pseudo")
     this.stageTarget.classList.add("bb-slideshow-stage--pseudo")
-    this.imageTarget.classList.remove("bb-slideshow-image--default")
-    this.imageTarget.classList.add("bb-slideshow-image--pseudo")
+    this.stageTarget.classList.remove("bb-slideshow-stage--default")
 
     if (this.hasTopControlsTarget) this.topControlsTarget.classList.add("hidden")
     if (this.hasBottomControlsTarget) this.bottomControlsTarget.classList.add("hidden")
-
-    this.updatePseudoDimensions()
 
     this.showFullscreenHint()
     this.renderFullscreenButton()
@@ -346,15 +534,10 @@ export default class extends Controller {
     document.documentElement.classList.remove("bb-no-scroll")
     document.body.classList.remove("bb-no-scroll")
 
-    this.element.style.height = ""
-    if (this.hasStageTarget) this.stageTarget.style.height = ""
-
     this.element.classList.remove("bb-slideshow-shell--pseudo")
-    if (this.hasStageTarget) this.stageTarget.classList.remove("bb-slideshow-stage--pseudo")
-
-    if (this.hasImageTarget) {
-      this.imageTarget.classList.remove("bb-slideshow-image--pseudo")
-      this.imageTarget.classList.add("bb-slideshow-image--default")
+    if (this.hasStageTarget) {
+      this.stageTarget.classList.remove("bb-slideshow-stage--pseudo")
+      this.stageTarget.classList.add("bb-slideshow-stage--default")
     }
 
     if (this.hasTopControlsTarget) this.topControlsTarget.classList.remove("hidden")
@@ -362,19 +545,6 @@ export default class extends Controller {
 
     this.hideFullscreenHint()
     this.renderFullscreenButton()
-  }
-
-  updatePseudoDimensions() {
-    if (!this.pseudoFullscreen) return
-    if (!this.hasStageTarget) return
-
-    const viewportHeight = window.visualViewport?.height || window.innerHeight
-    // Lock to the current viewport height so orientation/address-bar changes resize cleanly.
-    this.element.style.height = `${Math.round(viewportHeight)}px`
-    this.stageTarget.style.height = `${Math.round(viewportHeight)}px`
-
-    // Force a reflow for mobile browsers when the address bar collapses/expands.
-    this.stageTarget.offsetHeight
   }
 
   currentFullscreenElement() {

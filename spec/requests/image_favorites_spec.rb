@@ -28,6 +28,25 @@ RSpec.describe "Image favorites", type: :request do
     end
   end
 
+  describe "PATCH update as JSON (slideshow favorite)" do
+    it "favorites and returns the new state" do
+      expect do
+        patch universe_image_path(universe, image), params: { image: { favorite: true } }, as: :json
+      end.to change(ImageFavorite, :count).by(1)
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to eq("favorited" => true)
+    end
+
+    it "unfavorites and returns the new state" do
+      ImageFavorite.create!(user: owner, image: image)
+
+      patch universe_image_path(universe, image), params: { image: { favorite: false } }, as: :json
+
+      expect(response.parsed_body).to eq("favorited" => false)
+    end
+  end
+
   describe "per-user isolation" do
     it "keeps favorites independent between users" do
       collaborator = create(:user)

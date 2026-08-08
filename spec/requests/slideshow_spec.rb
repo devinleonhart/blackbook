@@ -18,13 +18,32 @@ RSpec.describe "Slideshow", type: :request do
       expect(response).to have_http_status(:ok)
       expect(response.body).to include("Slideshow")
     end
+
+    context "with a universe selected" do
+      include_context "with a signed-in owner"
+
+      it "renders the character picker for that universe" do
+        create(:image, universe: universe)
+        character = create(:character, universe: universe, name: "Aria")
+
+        get slideshow_path(universe_id: universe.id)
+
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include("Characters:")
+        expect(response.body).to include(character.name)
+      end
+    end
   end
 
   describe "GET images" do
     include_context "with a signed-in owner"
 
+    def slides
+      response.parsed_body.fetch("slides")
+    end
+
     def slide_ids
-      response.parsed_body.fetch("slides").map { |slide| slide.fetch("id") }
+      slides.map { |slide| slide.fetch("id") }
     end
 
     it "redirects unauthenticated users to sign in" do
@@ -71,6 +90,54 @@ RSpec.describe "Slideshow", type: :request do
         get slideshow_images_path(mode: "all", universe_id: "not-a-number")
 
         expect(response).to have_http_status(:not_found)
+      end
+    end
+
+    context "with the default slide payload" do
+      it "includes detail/favorite urls, favorite state, and character names" do
+        image = create(:image, universe: universe)
+        character = create(:character, universe: universe, name: "Zara")
+        create(:appearance, image: image, character: character)
+        create(:image_favorite, user: owner, image: image)
+
+        get slideshow_images_path(mode: "all", universe_id: universe.id)
+
+        slide = slides.find { |s| s.fetch("id") == image.id }
+        expect(slide.fetch("detail_url")).to eq(edit_universe_image_path(universe.id, image.id))
+        expect(slide.fetch("favorite_url")).to eq(universe_image_path(universe.id, image.id))
+        expect(slide.fetch("favorited")).to be(true)
+        expect(slide.fetch("characters")).to eq(["Zara"])
+      end
+
+      it "reports favorited: false for images the user has not favorited" do
+        image = create(:image, universe: universe)
+
+        get slideshow_images_path(mode: "all", universe_id: universe.id)
+
+        slide = slides.find { |s| s.fetch("id") == image.id }
+        expect(slide.fetch("favorited")).to be(false)
+      end
+    end
+
+    context "with a character filter" do
+      it "returns only images that include the selected characters" do
+        with_character = create(:image, universe: universe)
+        without_character = create(:image, universe: universe)
+        character = create(:character, universe: universe)
+        create(:appearance, image: with_character, character: character)
+
+        get slideshow_images_path(mode: "all", universe_id: universe.id, character_ids: [character.id])
+
+        expect(slide_ids).to include(with_character.id)
+        expect(slide_ids).not_to include(without_character.id)
+      end
+
+      it "ignores non-numeric character ids" do
+        image = create(:image, universe: universe)
+
+        get slideshow_images_path(mode: "all", universe_id: universe.id, character_ids: "not-a-number")
+
+        expect(slide_ids).to include(image.id)
       end
     end
 
