@@ -288,6 +288,20 @@
     @apply rounded-lg border px-4 py-3 shadow-sm;
   }
 
+  /* Toast variant: a dismissible flash that fades out on its own. */
+  .bb-alert--toast {
+    @apply flex items-center gap-3 transition-opacity duration-500 ease-out;
+  }
+
+  .bb-alert--dismissing {
+    @apply opacity-0;
+  }
+
+  .bb-alert__close {
+    @apply shrink-0 text-xl leading-none opacity-60 hover:opacity-100 cursor-pointer
+           bg-transparent border-none p-0;
+  }
+
   .bb-alert-info {
     @apply border-blue-200 bg-blue-50 text-blue-900;
   }
@@ -383,6 +397,24 @@
 
   .bb-image-grid {
     @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-items-center;
+  }
+
+  /* Wraps a single grid thumbnail so the favorite toggle can sit on top of it. */
+  .bb-image-cell {
+    @apply relative;
+  }
+
+  /* Star toggle overlaid on the top-right of a grid thumbnail. It stays subtly
+     visible so users know it exists, and brightens on hover/when favorited. */
+  .bb-fav-toggle {
+    @apply absolute top-2 right-2 flex items-center justify-center w-9 h-9 rounded-full
+           bg-black/40 text-white/80 text-xl leading-none cursor-pointer
+           opacity-70 hover:opacity-100 hover:bg-black/60 transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-white;
+  }
+
+  .bb-fav-toggle--on {
+    @apply bg-black/50 text-yellow-300 opacity-100;
   }
 
   .bb-card-grid {

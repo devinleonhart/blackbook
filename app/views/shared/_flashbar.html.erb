@@ -7,7 +7,16 @@
     else "bb-alert-neutral"
     end
   %>
-  <div class="bb-alert mt-3 pointer-events-auto <%= variant %>">
-    <%= message %>
+  <% # Errors stay a little longer than confirmations. %>
+  <% delay = %w[alert error].include?(type.to_s) ? 9000 : 5000 %>
+  <div class="bb-alert bb-alert--toast mt-3 pointer-events-auto <%= variant %>"
+       role="status"
+       data-controller="flash"
+       data-flash-delay-value="<%= delay %>">
+    <span class="flex-1"><%= message %></span>
+    <button type="button"
+            class="bb-alert__close"
+            aria-label="Dismiss"
+            data-action="flash#dismiss">×</button>
   </div>
 <% end %>

@@ -10,27 +10,20 @@ class ImagesController < ApplicationController
 
     image =
       Image
-      .with_attached_image_file
       .where(universe_id: universe_ids)
       .order(Arel.sql("RANDOM()"))
       .first
 
     unless image
-      render plain: "No images available.", status: :not_found
+      flash[:notice] = "No images available yet."
+      redirect_to root_path
       return
     end
 
-    image_data = image.image_file.download
-
-    response.headers["Turbo-Visit-Control"] = "reload"
-    response.headers["Content-Type"] = image.image_file.content_type
-    response.headers["Content-Length"] = image_data.bytesize.to_s
-    response.headers["Cache-Control"] = "no-store"
-
-    send_data image_data,
-              type: image.image_file.content_type,
-              disposition: "inline",
-              filename: image.image_file.filename.to_s
+    # Land the user on the image's detail page — full navigation plus tag,
+    # favorite and delete controls, and "Random" again in the nav — instead of
+    # a bare image file with no way back.
+    redirect_to edit_universe_image_url(image.universe, image)
   end
 
   def edit
@@ -67,7 +60,17 @@ class ImagesController < ApplicationController
       ImageFavorite.where(user: current_user, image: @image).destroy_all
     end
 
-    redirect_to edit_universe_image_url(@image.universe, @image)
+    respond_to do |format|
+      # Grid star toggles favorite in place via Turbo Stream, no navigation.
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "favorite_toggle_#{@image.id}",
+          partial: "shared/favorite_toggle",
+          locals: { image: @image, universe: @image.universe, favorited: desired }
+        )
+      end
+      format.html { redirect_to edit_universe_image_url(@image.universe, @image) }
+    end
   end
 
   def view
