@@ -1,5 +1,31 @@
 @import "tailwindcss";
 
+/* Tailwind v4's Preflight no longer sets `cursor: pointer` on buttons, so restore
+   the hand cursor on interactive elements and controls app-wide (links already get
+   it natively). Disabled controls show `not-allowed`. Kept in the base layer so
+   component/utility cursor classes (e.g. cursor-text on the token box) still win. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  summary,
+  label[for],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  input[type="range"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  input[type="reset"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  button:disabled,
+  select:disabled,
+  input:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
+
 @layer components {
   /* ============================================
      LAYOUT
