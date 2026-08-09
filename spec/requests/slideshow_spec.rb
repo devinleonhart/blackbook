@@ -22,7 +22,7 @@ RSpec.describe "Slideshow", type: :request do
     context "with a universe selected" do
       include_context "with a signed-in owner"
 
-      it "renders the trait picker for that universe" do
+      it "renders the trait and character pickers for that universe" do
         create(:image, universe: universe)
         character = create(:character, universe: universe, name: "Aria")
         create(:trait, character: character, name: "villain")
@@ -32,6 +32,8 @@ RSpec.describe "Slideshow", type: :request do
         expect(response).to have_http_status(:ok)
         expect(response.body).to include("Traits:")
         expect(response.body).to include("villain")
+        expect(response.body).to include("Characters:")
+        expect(response.body).to include("Aria")
       end
     end
   end
@@ -151,6 +153,50 @@ RSpec.describe "Slideshow", type: :request do
         get slideshow_images_path(mode: "all", universe_id: universe.id, trait_names: [""])
 
         expect(slide_ids).to include(image.id)
+      end
+    end
+
+    context "with a character filter" do
+      it "returns only images featuring the selected characters" do
+        matching = create(:image, universe: universe)
+        non_matching = create(:image, universe: universe)
+        character = create(:character, universe: universe)
+        create(:appearance, image: matching, character: character)
+
+        get slideshow_images_path(mode: "all", universe_id: universe.id, character_ids: [character.id])
+
+        expect(slide_ids).to include(matching.id)
+        expect(slide_ids).not_to include(non_matching.id)
+      end
+
+      it "ignores non-numeric character ids" do
+        image = create(:image, universe: universe)
+
+        get slideshow_images_path(mode: "all", universe_id: universe.id, character_ids: "not-a-number")
+
+        expect(slide_ids).to include(image.id)
+      end
+    end
+
+    context "with both trait and character filters" do
+      it "returns the union: images featuring a selected character OR a character with a selected trait" do
+        by_character = create(:image, universe: universe)
+        by_trait = create(:image, universe: universe)
+        unrelated = create(:image, universe: universe)
+
+        picked = create(:character, universe: universe)
+        villain = create(:character, universe: universe)
+        create(:trait, character: villain, name: "villain")
+        create(:appearance, image: by_character, character: picked)
+        create(:appearance, image: by_trait, character: villain)
+
+        get slideshow_images_path(
+          mode: "all", universe_id: universe.id,
+          character_ids: [picked.id], trait_names: ["villain"]
+        )
+
+        expect(slide_ids).to include(by_character.id, by_trait.id)
+        expect(slide_ids).not_to include(unrelated.id)
       end
     end
 

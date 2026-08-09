@@ -9,7 +9,7 @@
       <div
         class="bb-slideshow-shell"
         data-controller="slideshow"
-        data-slideshow-slides-url-value="<%= slideshow_images_path(mode: @mode, universe_id: @universe_id, trait_names: @trait_names.presence) %>"
+        data-slideshow-slides-url-value="<%= slideshow_images_path(mode: @mode, universe_id: @universe_id, trait_names: @trait_names.presence, character_ids: @character_ids.presence) %>"
         data-slideshow-interval-ms-value="3000"
       >
         <!-- Top controls -->
@@ -94,6 +94,27 @@
                 </div>
               <% else %>
                 <p class="bb-subtitle-sm">This universe has no traits to filter by yet.</p>
+              <% end %>
+            </div>
+
+            <!-- Character filter: cycle through only images featuring one of these characters. -->
+            <div class="mt-4 pt-4 border-t border-gray-200">
+              <% if @characters.any? %>
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="text-sm font-medium text-gray-700 mr-1">Characters:</span>
+                  <% @characters.each_with_index do |character, index| %>
+                    <label class="bb-slideshow-chip">
+                      <%= check_box_tag "character_ids[]", character.id, @character_ids.include?(character.id),
+                            id: "slideshow_character_#{index}",
+                            class: "sr-only bb-slideshow-chip__input",
+                            data: { slideshow_target: "character", action: "change->slideshow#characterChanged" } %>
+                      <span><%= character.name %></span>
+                    </label>
+                  <% end %>
+                  <button type="button" class="bb-link text-sm" data-action="slideshow#clearCharacters">Clear</button>
+                </div>
+              <% else %>
+                <p class="bb-subtitle-sm">This universe has no characters to filter by yet.</p>
               <% end %>
             </div>
           <% end %>

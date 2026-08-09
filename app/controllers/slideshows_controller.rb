@@ -6,11 +6,13 @@ class SlideshowsController < ApplicationController
     @mode = slideshow_mode
     @universe_id = selected_universe_id!(universe_ids)
     @trait_names = selected_trait_names
+    @character_ids = selected_character_ids
     @universes = Universe.where(id: universe_ids).order(Arel.sql("LOWER(universes.name) ASC"))
 
-    # The trait picker only makes sense within a single universe, where the list
-    # is bounded and names are unambiguous.
+    # The trait and character pickers only make sense within a single universe,
+    # where the lists are bounded and names are unambiguous.
     @available_trait_names = @universe_id ? universe_trait_names(@universe_id) : []
+    @characters = @universe_id ? Character.where(universe_id: @universe_id).order(:name) : Character.none
 
     scoped_universe_ids = @universe_id ? [@universe_id] : universe_ids
     @has_images = slideshow_images_scope(scoped_universe_ids).limit(1).exists?
@@ -77,6 +79,15 @@ class SlideshowsController < ApplicationController
     values.map { |value| value.to_s.strip.downcase }.compact_blank.uniq
   end
 
+  # Character ids to cycle through. Accepts an array or a comma-separated string;
+  # non-numeric values are ignored. Ids outside the accessible images simply match
+  # nothing, so no extra authorization is needed here.
+  def selected_character_ids
+    raw = params[:character_ids]
+    values = raw.is_a?(Array) ? raw : raw.to_s.split(",")
+    values.filter_map { |value| Integer(value, 10, exception: false) }.uniq
+  end
+
   def universe_trait_names(universe_id)
     Trait.joins(:character)
          .where(characters: { universe_id: universe_id })
@@ -90,9 +101,28 @@ class SlideshowsController < ApplicationController
 
     scope = scope.joins(:image_favorites).where(image_favorites: { user_id: current_user.id }) if @mode == "favorites"
 
-    trait_names = selected_trait_names
-    scope = scope.joins(appearances: { character: :traits }).where(traits: { name: trait_names }) if trait_names.any?
+    character_ids = filter_character_ids(universe_ids)
+    scope = scope.joins(:appearances).where(appearances: { character_id: character_ids }) unless character_ids.nil?
 
     scope.distinct
+  end
+
+  # Characters the trait/character pickers narrow to. Returns nil when neither
+  # filter is active (no narrowing); otherwise the union of the explicitly chosen
+  # characters and every character carrying a chosen trait. An empty array is a
+  # real result that matches no images.
+  def filter_character_ids(universe_ids)
+    trait_names = selected_trait_names
+    character_ids = selected_character_ids
+    return nil if trait_names.empty? && character_ids.empty?
+
+    trait_character_ids =
+      if trait_names.any?
+        Character.joins(:traits).where(universe_id: universe_ids, traits: { name: trait_names }).pluck(:id)
+      else
+        []
+      end
+
+    (character_ids + trait_character_ids).uniq
   end
 end

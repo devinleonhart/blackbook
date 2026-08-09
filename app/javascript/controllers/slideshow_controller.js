@@ -21,6 +21,7 @@ export default class extends Controller {
     "favoriteButton",
     "detailLink",
     "trait",
+    "character",
   ]
 
   static values = {
@@ -178,36 +179,48 @@ export default class extends Controller {
     }
   }
 
-  // --- Trait filter -------------------------------------------------------
+  // --- Trait / character filters -----------------------------------------
 
   traitChanged() {
-    this.applyTraitFilter(this.selectedTraitNames())
+    this.applyFilters()
+  }
+
+  characterChanged() {
+    this.applyFilters()
   }
 
   clearTraits() {
     if (this.hasTraitTarget) this.traitTargets.forEach((el) => { el.checked = false })
-    this.applyTraitFilter([])
+    this.applyFilters()
   }
 
-  selectedTraitNames() {
-    if (!this.hasTraitTarget) return []
-    return this.traitTargets.filter((el) => el.checked).map((el) => el.value)
+  clearCharacters() {
+    if (this.hasCharacterTarget) this.characterTargets.forEach((el) => { el.checked = false })
+    this.applyFilters()
   }
 
-  applyTraitFilter(names) {
-    // Rebuild the JSON endpoint URL, preserving mode/universe, and reload slides.
-    const slidesUrl = new URL(this.slidesUrlValue, window.location.origin)
-    slidesUrl.searchParams.delete("trait_names[]")
-    names.forEach((name) => slidesUrl.searchParams.append("trait_names[]", name))
-    this.slidesUrlValue = slidesUrl.pathname + slidesUrl.search
+  checkedValues(targets) {
+    return targets.filter((el) => el.checked).map((el) => el.value)
+  }
 
-    // Mirror the selection in the page URL so a reload remembers it.
-    const pageUrl = new URL(window.location.href)
-    pageUrl.searchParams.delete("trait_names[]")
-    names.forEach((name) => pageUrl.searchParams.append("trait_names[]", name))
-    window.history.replaceState({}, "", pageUrl.pathname + pageUrl.search)
+  applyFilters() {
+    const traitNames = this.hasTraitTarget ? this.checkedValues(this.traitTargets) : []
+    const characterIds = this.hasCharacterTarget ? this.checkedValues(this.characterTargets) : []
+
+    // Rebuild the JSON endpoint URL (preserving mode/universe) and mirror the
+    // selection in the page URL so a reload remembers it.
+    this.slidesUrlValue = this.withFilters(new URL(this.slidesUrlValue, window.location.origin), traitNames, characterIds)
+    window.history.replaceState({}, "", this.withFilters(new URL(window.location.href), traitNames, characterIds))
 
     this.loadSlides()
+  }
+
+  withFilters(url, traitNames, characterIds) {
+    url.searchParams.delete("trait_names[]")
+    traitNames.forEach((name) => url.searchParams.append("trait_names[]", name))
+    url.searchParams.delete("character_ids[]")
+    characterIds.forEach((id) => url.searchParams.append("character_ids[]", id))
+    return url.pathname + url.search
   }
 
   // --- Per-slide actions --------------------------------------------------
