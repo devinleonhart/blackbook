@@ -1,0 +1,16 @@
+<%# Characters currently tagged in this image. Replaced in place by Turbo Stream
+    when appearances are added or removed. Local: image. %>
+<ul id="appearances_list" class="space-y-2 mb-6">
+  <% if image.appearances.empty? %>
+    <li class="bb-subtitle-sm">None</li>
+  <% else %>
+    <% image.appearances.includes(:character).each do |appearance| %>
+      <li class="bb-list-item--compact">
+        <%= link_to appearance.character.name, character_url(appearance.character), class: "bb-link" %>
+        <%= link_to appearance_url(appearance), data: { turbo_method: :delete, turbo_confirm: "Remove #{appearance.character.name} from this image?" }, class: "bb-action-text" do %>
+          <span>✕</span>
+        <% end %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

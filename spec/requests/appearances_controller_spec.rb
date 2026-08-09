@@ -17,6 +17,44 @@ RSpec.describe "Appearances", type: :request do
       expect(response).to redirect_to(edit_universe_image_url(universe, image))
     end
 
+    it "creates appearances for several characters at once" do
+      first = create(:character, universe: universe, name: "Aria")
+      second = create(:character, universe: universe, name: "Bram")
+
+      expect do
+        post universe_image_appearances_path(universe, image), params: { character_ids: [first.id, second.id] }
+      end.to change(Appearance, :count).by(2)
+
+      expect(response).to redirect_to(edit_universe_image_url(universe, image))
+      expect(flash[:success]).to include("2 characters")
+    end
+
+    it "skips characters already tagged or from another universe" do
+      already = create(:character, universe: universe)
+      create(:appearance, image: image, character: already)
+      fresh = create(:character, universe: universe)
+      foreign = create(:character, universe: create(:universe, owner: create(:user)))
+
+      expect do
+        post universe_image_appearances_path(universe, image),
+             params: { character_ids: [already.id, fresh.id, foreign.id] }
+      end.to change(Appearance, :count).by(1)
+
+      expect(image.reload.characters).to include(fresh)
+      expect(image.characters).not_to include(foreign)
+    end
+
+    it "responds with a Turbo Stream that updates both lists in place" do
+      character = create(:character, universe: universe, name: "Zenith")
+
+      post universe_image_appearances_path(universe, image),
+           params: { character_ids: [character.id] },
+           headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      expect(response.body).to include("appearances_list", "character_picker", "Zenith")
+    end
+
     context "when unauthenticated" do
       before { sign_out(owner) }
 
@@ -51,6 +89,15 @@ RSpec.describe "Appearances", type: :request do
       end.to change(Appearance, :count).by(-1)
 
       expect(response).to redirect_to(edit_universe_image_url(universe, image))
+    end
+
+    it "responds with a Turbo Stream that updates both lists in place" do
+      appearance = create(:appearance, image: image, character: character)
+
+      delete appearance_path(appearance), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+
+      expect(response.media_type).to eq("text/vnd.turbo-stream.html")
+      expect(response.body).to include("appearances_list", "character_picker")
     end
 
     it "redirects with a flash when the appearance does not exist" do

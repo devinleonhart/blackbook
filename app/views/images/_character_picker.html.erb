@@ -1,0 +1,37 @@
+<%# Type-ahead token box for tagging several characters at once. Replaced in place
+    by Turbo Stream after a create/destroy, which resets it. Locals: image,
+    available_characters. %>
+<div id="character_picker">
+  <h3 class="bb-subheading">Add characters</h3>
+
+  <% if available_characters.empty? %>
+    <p class="bb-subtitle-sm">Every character in this universe is already in this image.</p>
+  <% else %>
+    <%= form_with url: universe_image_appearances_url(image.universe, image), method: :post do %>
+      <div data-controller="appearance-picker">
+        <%# Source list the controller reads to build suggestions — data in DOM
+            attributes (not an inline <script>) to satisfy the strict CSP. %>
+        <% available_characters.sort_by(&:name).each do |character| %>
+          <span data-appearance-picker-target="option"
+                data-character-id="<%= character.id %>"
+                data-name="<%= character.name %>" hidden></span>
+        <% end %>
+
+        <div class="bb-token-box" data-action="click->appearance-picker#focusInput">
+          <span class="contents" data-appearance-picker-target="tokens"></span>
+          <input type="text" class="bb-token-input" autocomplete="off"
+                 placeholder="Search characters to add…"
+                 aria-label="Search characters to add"
+                 data-appearance-picker-target="input"
+                 data-action="input->appearance-picker#onInput keydown->appearance-picker#onKeydown">
+        </div>
+
+        <div class="bb-token-suggestions hidden" role="listbox"
+             data-appearance-picker-target="suggestions"></div>
+
+        <button type="submit" class="bb-btn-sm bb-btn-primary w-full mt-3" disabled
+                data-appearance-picker-target="submit">Add characters</button>
+      </div>
+    <% end %>
+  <% end %>
+</div>

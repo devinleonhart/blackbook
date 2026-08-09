@@ -1,0 +1,6 @@
+<%= turbo_stream.replace "appearances_list" do %>
+  <%= render "images/appearances", image: @image %>
+<% end %>
+<%= turbo_stream.replace "character_picker" do %>
+  <%= render "images/character_picker", image: @image, available_characters: @available_characters %>
+<% end %>

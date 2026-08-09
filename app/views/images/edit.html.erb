@@ -14,39 +14,10 @@
 
         <!-- Characters currently in this image -->
         <h2 class="bb-section-heading--sm">Characters in this image</h2>
-        <ul class="space-y-2 mb-6">
-          <% if @image.appearances.empty? %>
-            <li class="bb-subtitle-sm">None</li>
-          <% else %>
-            <% @image.appearances.each do |appearance| %>
-              <li class="bb-list-item--compact">
-                <%= link_to appearance.character.name, character_url(appearance.character), class: "bb-link" %>
-                <%= link_to appearance_url(appearance), data: { turbo_method: :delete, turbo_confirm: "Remove #{appearance.character.name} from this image?" }, class: "bb-action-text" do %>
-                  <span>✕</span>
-                <% end %>
-              </li>
-            <% end %>
-          <% end %>
-        </ul>
+        <%= render "appearances", image: @image %>
 
-        <!-- Add a character to this image -->
-        <h3 class="bb-subheading">Add a character</h3>
-        <div data-controller="filter">
-          <div class="bb-field">
-            <input class="bb-input" type="text" id="character-search-image-edit" placeholder="Search characters to add..."
-                   data-filter-target="query" data-action="input->filter#apply">
-          </div>
-          <div data-character-results class="max-h-60 overflow-y-auto border border-gray-200 rounded-md bg-white mb-4">
-            <% @available_characters.sort_by(&:name).each do |character| %>
-              <div data-filter-target="item" data-filter-text="<%= character.name %>" class="bb-list-item--bordered">
-                <%= form_with model: Appearance.new(), url: universe_image_appearances_url(@image.universe, @image), method: "post", class: "inline" do |form| %>
-                  <%= form.hidden_field :character_id, value: character.id %>
-                  <%= form.submit "Add #{character.name}", class: "bb-link bg-transparent border-none cursor-pointer" %>
-                <% end %>
-              </div>
-            <% end %>
-          </div>
-        </div>
+        <!-- Add characters to this image (type-ahead, multi-select) -->
+        <%= render "character_picker", image: @image, available_characters: @available_characters %>
 
       <% end %>
 

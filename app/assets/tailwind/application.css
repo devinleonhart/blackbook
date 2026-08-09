@@ -408,6 +408,43 @@
   }
 
   /* ============================================
+     TOKEN INPUT (type-ahead multi-select)
+     ============================================ */
+
+  /* Bordered box that holds selected tokens inline with the text input. */
+  .bb-token-box {
+    @apply flex flex-wrap items-center gap-2 w-full min-h-11 rounded-md border border-gray-300
+           bg-white px-2 py-1.5 cursor-text
+           focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500;
+  }
+
+  .bb-token-input {
+    @apply flex-1 min-w-32 border-none bg-transparent text-sm py-1 focus:outline-none;
+  }
+
+  .bb-token {
+    @apply inline-flex items-center gap-1 rounded-full bg-blue-600 text-white text-sm pl-3 pr-2 py-1;
+  }
+
+  .bb-token__remove {
+    @apply cursor-pointer leading-none text-white bg-transparent border-none p-0 opacity-80 hover:opacity-100;
+  }
+
+  /* Suggestions dropdown rendered under the box while typing. */
+  .bb-token-suggestions {
+    @apply mt-1 max-h-60 overflow-y-auto rounded-md border border-gray-200 bg-white shadow-sm;
+  }
+
+  .bb-token-suggestion {
+    @apply block w-full text-left px-3 py-2 text-sm text-gray-700 cursor-pointer bg-transparent border-none;
+  }
+
+  .bb-token-suggestion--active,
+  .bb-token-suggestion:hover {
+    @apply bg-blue-50 text-blue-800;
+  }
+
+  /* ============================================
      UTILITIES
      ============================================ */
 
