@@ -84,7 +84,8 @@
           <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center"><%= @character.name %></h1>
           <%= render partial: "shared/image_list", locals: {
             images: @images,
-            universe: @character.universe
+            universe: @character.universe,
+            character: @character
           } %>
         </div>
       </div>

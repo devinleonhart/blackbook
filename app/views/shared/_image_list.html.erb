@@ -10,7 +10,7 @@
 
     <div class="bb-image-grid">
       <% images.each do |image| %>
-        <%= link_to edit_universe_image_url(universe, image), class: "block p-1 transition-all duration-200" do %>
+        <%= link_to edit_universe_image_url(universe, image, character_id: local_assigns[:character]&.id), class: "block p-1 transition-all duration-200" do %>
           <%= generate_image_tag(image, [250, 400]) %>
         <% end %>
       <% end %>

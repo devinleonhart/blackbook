@@ -29,6 +29,9 @@ class ImagesController < ApplicationController
   def edit
     @favorited = @image.favorited_by?(current_user)
     @available_characters = @image.universe.characters - @image.characters
+    # Preserves the character the user came from so deleting the image can send
+    # them back to that character's page instead of the universe.
+    @source_character = source_character(@image.universe)
   end
 
   def create
@@ -83,12 +86,24 @@ class ImagesController < ApplicationController
   end
 
   def destroy
+    universe = @image.universe
+    # Resolve the originating character before destroying the image so we can
+    # return the user to it — even when it has no images left afterwards.
+    character = source_character(universe)
     @image.destroy!
     flash[:success] = "Image deleted!"
-    redirect_to universe_url(@image.universe)
+    redirect_to(character ? character_url(character) : universe_url(universe))
   end
 
   private
+
+  # The character the user navigated from (passed as `character_id`), scoped to
+  # the image's universe so it can't point elsewhere. Nil when absent/invalid.
+  def source_character(universe)
+    return nil if params[:character_id].blank?
+
+    universe.characters.find_by(id: params[:character_id])
+  end
 
   def set_universe
     @universe = Universe.find_by(id: params[:universe_id])
