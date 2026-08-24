@@ -29,14 +29,14 @@
                   <div class="bb-list-item">
                     <div class="flex items-center">
                       <div class="flex flex-col">
-                        <span class="text-gray-900 font-medium"><%= universe.name %></span>
+                        <span class="text-neutral-900 font-medium"><%= universe.name %></span>
                         <span class="bb-subtitle-sm">
                           <%= pluralize(@character_counts.fetch(universe.id, 0), 'character') %> • <%= pluralize(@image_counts.fetch(universe.id, 0), 'image') %>
                         </span>
                       </div>
                     </div>
                     <div class="flex items-center">
-                      <div class="text-blue-600 p-2 rounded-full">
+                      <div class="text-brand-600 p-2 rounded-full">
                         <span>→</span>
                       </div>
                     </div>

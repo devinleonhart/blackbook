@@ -22,7 +22,7 @@
           <!-- New Password Field -->
           <div class="bb-field">
             <%= f.label :password, class: "bb-label" do %>
-              Password <span class="font-normal text-gray-500">(leave blank if you don't want to change it)</span>
+              Password <span class="font-normal text-neutral-500">(leave blank if you don't want to change it)</span>
             <% end %>
             <% if @minimum_password_length %>
               <p class="bb-subtitle-sm mb-2"><%= @minimum_password_length %> characters minimum</p>
@@ -39,7 +39,7 @@
           <!-- Current Password Field -->
           <div class="bb-field-lg">
             <%= f.label :current_password, class: "bb-label" do %>
-              Current password <span class="font-normal text-gray-500">(required to confirm changes)</span>
+              Current password <span class="font-normal text-neutral-500">(required to confirm changes)</span>
             <% end %>
             <%= f.password_field :current_password, autocomplete: "current-password", class: "bb-input" %>
           </div>

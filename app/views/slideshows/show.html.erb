@@ -40,7 +40,7 @@
               <%= link_to "Open ↗", "#", target: "_blank", rel: "noopener", class: "bb-btn-sm bb-btn-outline", data: { slideshow_target: "detailLink" }, title: "Open detail (o)" %>
             </div>
 
-            <span class="text-sm text-gray-700" data-slideshow-target="counter"></span>
+            <span class="text-sm text-neutral-700" data-slideshow-target="counter"></span>
           </div>
         </div>
 
@@ -58,7 +58,7 @@
             Loading…
           </div>
 
-          <div data-slideshow-target="error" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-red-600/90 text-white text-sm px-3 py-2 rounded">
+          <div data-slideshow-target="error" class="hidden absolute top-4 left-1/2 -translate-x-1/2 bg-danger-600/90 text-white text-sm px-3 py-2 rounded">
             <span data-slideshow-target="errorText">Failed to load slideshow.</span>
           </div>
 
@@ -70,17 +70,17 @@
         <!-- Bottom controls (sit under the image, so the trait filter never pushes it down) -->
         <div class="bb-slideshow-controls bb-slideshow-controls--bottom" data-slideshow-target="bottomControls">
           <div class="flex items-center justify-between">
-            <label class="text-sm font-medium text-gray-700" for="slideshow_speed">Speed</label>
-            <span class="text-sm text-gray-700 w-16 text-right" data-slideshow-target="speedLabel">3.0s</span>
+            <label class="text-sm font-medium text-neutral-700" for="slideshow_speed">Speed</label>
+            <span class="text-sm text-neutral-700 w-16 text-right" data-slideshow-target="speedLabel">3.0s</span>
           </div>
           <input id="slideshow_speed" type="range" min="1" max="300" step="1" value="3" class="w-full mt-2" data-action="input->slideshow#speedChanged" data-slideshow-target="speed" />
 
           <!-- Trait filter: cycle through only images featuring a character with one of these traits. -->
           <% if @universe_id %>
-            <div class="mt-4 pt-4 border-t border-gray-200">
+            <div class="mt-4 pt-4 border-t border-neutral-200">
               <% if @available_trait_names.any? %>
                 <div class="flex flex-wrap items-center gap-2">
-                  <span class="text-sm font-medium text-gray-700 mr-1">Traits:</span>
+                  <span class="text-sm font-medium text-neutral-700 mr-1">Traits:</span>
                   <% @available_trait_names.each_with_index do |trait_name, index| %>
                     <label class="bb-slideshow-chip">
                       <%= check_box_tag "trait_names[]", trait_name, @trait_names.include?(trait_name),
@@ -98,10 +98,10 @@
             </div>
 
             <!-- Character filter: cycle through only images featuring one of these characters. -->
-            <div class="mt-4 pt-4 border-t border-gray-200">
+            <div class="mt-4 pt-4 border-t border-neutral-200">
               <% if @characters.any? %>
                 <div class="flex flex-wrap items-center gap-2">
-                  <span class="text-sm font-medium text-gray-700 mr-1">Characters:</span>
+                  <span class="text-sm font-medium text-neutral-700 mr-1">Characters:</span>
                   <% @characters.each_with_index do |character, index| %>
                     <label class="bb-slideshow-chip">
                       <%= check_box_tag "character_ids[]", character.id, @character_ids.include?(character.id),

@@ -1,18 +1,19 @@
-/* Custom scrollbar for webkit browsers */
+/* Custom scrollbar for webkit browsers.
+   Colors resolve to the neutral ramp defined in app/assets/tailwind/application.css. */
 [data-character-results]::-webkit-scrollbar {
   width: 6px;
 }
 
 [data-character-results]::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: var(--color-neutral-100);
   border-radius: 3px;
 }
 
 [data-character-results]::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: var(--color-neutral-300);
   border-radius: 3px;
 }
 
 [data-character-results]::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: var(--color-neutral-400);
 }

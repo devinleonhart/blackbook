@@ -41,7 +41,7 @@
                   <%= hidden_field_tag :universe_id, universe.id %>
                   <%= submit_tag "Delete all duplicates in this universe",
                                  data: { turbo_confirm: "Keep the earliest image in EACH duplicate group and delete the rest for '#{universe.name}'? This cannot be undone." },
-                                 class: "bb-btn-sm bg-red-700 hover:bg-red-800 text-white cursor-pointer" %>
+                                 class: "bb-btn-sm bg-danger-700 hover:bg-danger-800 text-white cursor-pointer" %>
                 <% end %>
               </div>
             </div>
@@ -49,15 +49,15 @@
             <!-- Duplicate Groups -->
             <div class="space-y-6">
               <% groups.each do |group| %>
-                <div class="rounded-lg border border-gray-200 p-4">
+                <div class="rounded-lg border border-neutral-200 p-4">
 
                   <!-- Group Header -->
                   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                     <div>
-                      <div class="text-lg font-semibold text-gray-900">
+                      <div class="text-lg font-semibold text-neutral-900">
                         <%= pluralize(group[:count], "image") %> with identical file data
                       </div>
-                      <div class="text-xs text-gray-500">
+                      <div class="text-xs text-neutral-500">
                         <span class="font-mono">checksum=<%= group[:checksum] %></span>
                         <span class="mx-2">•</span>
                         <span><%= number_to_human_size(group[:byte_size]) %></span>
@@ -81,7 +81,7 @@
                   <div class="overflow-x-auto">
                     <table class="min-w-full text-sm">
                       <thead>
-                        <tr class="text-left text-gray-600 border-b">
+                        <tr class="text-left text-neutral-600 border-b">
                           <th class="py-2 pr-3">Image</th>
                           <th class="py-2 pr-3">Created</th>
                           <th class="py-2 pr-3">Action</th>
@@ -93,15 +93,15 @@
                             <td class="py-3 pr-3">
                               <%= link_to "Image ##{image.id}", edit_universe_image_path(universe, image), class: "bb-link-strong" %>
                               <% if idx == 0 %>
-                                <span class="ml-2 bb-pill bb-pill-green text-xs">keep</span>
+                                <span class="ml-2 bb-pill bb-pill-success text-xs">keep</span>
                               <% else %>
-                                <span class="ml-2 bb-pill bb-pill-gray text-xs">duplicate</span>
+                                <span class="ml-2 bb-pill bb-pill-neutral text-xs">duplicate</span>
                               <% end %>
                             </td>
-                            <td class="py-3 pr-3 text-gray-500">
+                            <td class="py-3 pr-3 text-neutral-500">
                               <%= image.created_at.strftime("%Y-%m-%d %H:%M") %>
                             </td>
-                            <td class="py-3 pr-3 text-gray-500">
+                            <td class="py-3 pr-3 text-neutral-500">
                               <% if idx == 0 %>
                                 keep
                               <% else %>

@@ -12,7 +12,7 @@
 
     <%= link_to universe_path(universe, filter: "untagged"), class: "bb-filter-btn #{(images_filter == 'untagged') ? 'bb-filter-btn--active' : ''}" do %>
       <span class="truncate flex-1">Untagged Images</span>
-      <span class="ml-2 bb-badge bb-badge-gray">
+      <span class="ml-2 bb-badge bb-badge-neutral">
         <%= untagged_images_count %>
       </span>
     <% end %>

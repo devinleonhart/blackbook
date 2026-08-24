@@ -2,7 +2,7 @@
   <% base_params = request.query_parameters.symbolize_keys.except(:page) %>
   <nav aria-label="Pagination" class="flex flex-col sm:flex-row items-center justify-between gap-4 py-4">
     <!-- Page info -->
-    <div class="text-sm text-gray-600 order-1 sm:order-1">
+    <div class="text-sm text-neutral-600 order-1 sm:order-1">
       Page <%= collection.current_page %> of <%= collection.total_pages %>
       <span class="hidden sm:inline">(<%= collection.total_entries %> total)</span>
     </div>
@@ -13,7 +13,7 @@
       <% if collection.current_page > 3 %>
         <%= link_to "1", base_params.merge(page: 1), class: "bb-pagination-num" %>
         <% if collection.current_page > 4 %>
-          <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400">...</span>
+          <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-neutral-400">...</span>
         <% end %>
       <% end %>
 
@@ -32,7 +32,7 @@
       <!-- Last page -->
       <% if collection.current_page < collection.total_pages - 2 %>
         <% if collection.current_page < collection.total_pages - 3 %>
-          <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-gray-400">...</span>
+          <span class="inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-neutral-400">...</span>
         <% end %>
         <%= link_to collection.total_pages.to_s, base_params.merge(page: collection.total_pages), class: "bb-pagination-num" %>
       <% end %>

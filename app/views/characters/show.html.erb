@@ -33,11 +33,11 @@
                 <% else %>
                   <div class="flex flex-wrap gap-2">
                     <% @character.traits.order(:name).each do |trait| %>
-                      <span class="bb-pill bb-pill-blue inline-flex items-center gap-1">
+                      <span class="bb-pill bb-pill-brand inline-flex items-center gap-1">
                         <%= link_to trait.name, trait_path(trait), class: "hover:underline" %>
                         <%= button_to "×", trait_path(trait), method: :delete,
                               data: { turbo_confirm: "Remove the \"#{trait.name}\" trait from #{@character.name}?" },
-                              class: "leading-none text-blue-600 hover:text-red-600 bg-transparent border-none cursor-pointer p-0" %>
+                              class: "leading-none text-brand-600 hover:text-danger-600 bg-transparent border-none cursor-pointer p-0" %>
                       </span>
                     <% end %>
                   </div>
@@ -60,7 +60,7 @@
                       <div data-filter-target="item" data-filter-text="<%= trait_name %>">
                         <%= form_with model: [@character, @character.traits.build], url: character_traits_path(@character), method: :post, class: "inline" do |form| %>
                           <%= form.hidden_field :name, value: trait_name %>
-                          <%= form.submit trait_name, class: "text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded transition-colors duration-200 cursor-pointer" %>
+                          <%= form.submit trait_name, class: "text-xs bg-neutral-100 hover:bg-neutral-200 text-neutral-700 px-2 py-1 rounded transition-colors duration-200 cursor-pointer" %>
                         <% end %>
                       </div>
                     <% end %>
@@ -81,7 +81,7 @@
       <!-- Main Content - Images -->
       <div class="bb-main order-2 lg:order-2">
         <div class="bb-card bb-card--panel">
-          <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center"><%= @character.name %></h1>
+          <h1 class="text-3xl font-bold text-neutral-800 mb-6 text-center"><%= @character.name %></h1>
           <%= render partial: "shared/image_list", locals: {
             images: @images,
             universe: @character.universe,
