@@ -16,9 +16,9 @@
                 </h3>
               </div>
               <div class="flex gap-3 justify-end">
-                <%= link_to "Edit", edit_trait_path(tag), class: "text-brand-600 hover:text-brand-800 text-sm font-medium px-3 py-1 rounded hover:bg-brand-950 transition-colors duration-200" %>
+                <%= link_to "Edit", edit_trait_path(tag), class: "text-brand-600 hover:text-brand-800 text-sm font-medium px-3 py-1 rounded hover:bg-neutral-200 transition-colors duration-200" %>
                 <%= form_with url: trait_path(tag), method: :delete, local: true, class: "inline" do |form| %>
-                  <%= form.submit "Delete", class: "text-danger-600 hover:text-danger-800 text-sm font-medium px-3 py-1 rounded hover:bg-danger-950 transition-colors duration-200 bg-transparent border-none cursor-pointer", data: { turbo_confirm: "Remove the \"#{tag.name}\" trait from #{@character.name}?" } %>
+                  <%= form.submit "Delete", class: "text-danger-600 hover:text-danger-800 text-sm font-medium px-3 py-1 rounded hover:bg-neutral-200 transition-colors duration-200 bg-transparent border-none cursor-pointer", data: { turbo_confirm: "Remove the \"#{tag.name}\" trait from #{@character.name}?" } %>
                 <% end %>
               </div>
             </div>

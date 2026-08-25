@@ -94,6 +94,22 @@
   --color-warning-800: var(--color-yellow-800);
   --color-warning-900: var(--color-yellow-900);
   --color-warning-950: var(--color-yellow-950);
+
+  /* Raised surface (cards, inputs, dropdowns, dialogs) — the one surface that
+     is NOT a neutral-ramp step: pure white in light, near-black-grey in dark.
+     The light value is set in the prefers-color-scheme: light block below.
+     Use via bg-surface. */
+  --color-surface: var(--color-gray-900);
+
+  /* Navbar — a dark bar in BOTH themes, so it is pinned to the constant Tailwind
+     gray ramp and does not follow the neutral flip. Used via bg-nav /
+     text-nav-fg / text-nav-muted / text-nav-link / bg-nav-hover / border-nav. */
+  --color-nav:        var(--color-gray-900);
+  --color-nav-fg:     var(--color-gray-100);
+  --color-nav-muted:  var(--color-gray-400);
+  --color-nav-link:   var(--color-gray-300);
+  --color-nav-hover:  var(--color-gray-800);
+  --color-nav-border: var(--color-gray-800);
 }
 
 /* Tailwind v4's Preflight no longer sets `cursor: pointer` on buttons, so restore
@@ -101,10 +117,12 @@
    it natively). Disabled controls show `not-allowed`. Kept in the base layer so
    component/utility cursor classes (e.g. cursor-text on the token box) still win. */
 @layer base {
-  /* The app is dark-only. This makes the browser render native form controls,
-     default scrollbars, and other UA chrome in their dark variants. */
+  /* The app ships a dark theme (the base, below) and a light theme (the
+     prefers-color-scheme: light overrides at the end of this file); the browser
+     picks per the OS/user preference. `light dark` lets native form controls,
+     default scrollbars, and other UA chrome follow that same preference. */
   :root {
-    color-scheme: dark;
+    color-scheme: light dark;
   }
 
   button:not(:disabled),
@@ -190,7 +208,7 @@
 
   /* Cards */
   .bb-card {
-    @apply bg-neutral-100 rounded-lg shadow-lg border border-neutral-200;
+    @apply bg-surface rounded-lg shadow-lg border border-neutral-200;
   }
 
   .bb-card--bordered {
@@ -371,7 +389,7 @@
      ============================================ */
 
   .bb-nav-link {
-    @apply text-neutral-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium;
+    @apply text-nav-link hover:text-nav-fg px-3 py-2 rounded-md text-sm font-medium;
   }
 
   /* ============================================
@@ -542,7 +560,7 @@
   /* Bordered box that holds selected tokens inline with the text input. */
   .bb-token-box {
     @apply flex flex-wrap items-center gap-2 w-full min-h-11 rounded-md border border-neutral-300
-           bg-neutral-100 px-2 py-1.5 cursor-text
+           bg-surface px-2 py-1.5 cursor-text
            focus-within:border-brand-500 focus-within:ring-1 focus-within:ring-brand-500;
   }
 
@@ -560,7 +578,7 @@
 
   /* Suggestions dropdown rendered under the box while typing. */
   .bb-token-suggestions {
-    @apply mt-1 max-h-60 overflow-y-auto rounded-md border border-neutral-200 bg-neutral-100 shadow-sm;
+    @apply mt-1 max-h-60 overflow-y-auto rounded-md border border-neutral-200 bg-surface shadow-sm;
   }
 
   .bb-token-suggestion {
@@ -589,7 +607,7 @@
      ============================================ */
 
   .bb-slideshow-shell {
-    @apply bg-neutral-100 rounded-lg shadow-lg overflow-hidden border border-neutral-300;
+    @apply bg-surface rounded-lg shadow-lg overflow-hidden border border-neutral-300;
   }
 
   .bb-slideshow-shell--pseudo {
@@ -652,7 +670,7 @@
      ============================================ */
 
   .bb-pagination-btn {
-    @apply inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-neutral-500 bg-neutral-100 border border-neutral-300 rounded-lg hover:bg-neutral-200 hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors duration-200;
+    @apply inline-flex items-center justify-center px-3 py-2 text-sm font-medium text-neutral-500 bg-surface border border-neutral-300 rounded-lg hover:bg-neutral-200 hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors duration-200;
   }
 
   .bb-pagination-btn--disabled {
@@ -660,7 +678,7 @@
   }
 
   .bb-pagination-num {
-    @apply inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-neutral-500 bg-neutral-100 border border-neutral-300 rounded-lg hover:bg-neutral-200 hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors duration-200;
+    @apply inline-flex items-center justify-center w-10 h-10 text-sm font-medium text-neutral-500 bg-surface border border-neutral-300 rounded-lg hover:bg-neutral-200 hover:text-neutral-700 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors duration-200;
   }
 
   .bb-pagination-num--active {
@@ -686,5 +704,99 @@
   /* Placeholder shown while an image loads or when it is unavailable */
   .bb-image-placeholder {
     @apply flex items-center justify-center min-h-[200px] border border-dashed border-neutral-200 bg-neutral-50 text-neutral-500;
+  }
+
+  /* ============================================
+     DROPZONE
+     ============================================ */
+
+  /* Upload progress/status line. Theme-aware accent text. */
+  .bb-dropzone__status {
+    @apply text-brand-300 font-medium;
+  }
+
+  /* Applied by the dropzone controller while a file is dragged over. Tinted
+     dark in the dark theme, light in the light theme (override below). */
+  .bb-dropzone--active {
+    @apply border-brand-500 bg-brand-950 text-brand-300;
+  }
+}
+
+/* =====================================================================
+   LIGHT THEME
+   ---------------------------------------------------------------------
+   The base above is the dark theme. When the browser/OS prefers light,
+   this block restores the original light scheme:
+     1. re-points the swappable ramps — surface -> white, neutral -> the
+        normal (un-inverted) grey direction, brand -> blue; and
+     2. re-styles the handful of components whose accent/tint/shade
+        choices genuinely differ between the two themes (buttons, links,
+        soft-tinted chips/badges/alerts/tags, dropzone).
+   Everything else flips automatically because it is expressed in these
+   ramp tokens. The navbar is intentionally absent — it is pinned to the
+   constant `nav` tokens and stays dark in both themes.
+   ===================================================================== */
+@media (prefers-color-scheme: light) {
+  :root {
+    /* Raised surface -> white */
+    --color-surface: #fff;
+
+    /* Neutral -> normal grey (un-invert the dark ramp) */
+    --color-neutral-50:  var(--color-gray-50);
+    --color-neutral-100: var(--color-gray-100);
+    --color-neutral-200: var(--color-gray-200);
+    --color-neutral-300: var(--color-gray-300);
+    --color-neutral-400: var(--color-gray-400);
+    --color-neutral-500: var(--color-gray-500);
+    --color-neutral-600: var(--color-gray-600);
+    --color-neutral-700: var(--color-gray-700);
+    --color-neutral-800: var(--color-gray-800);
+    --color-neutral-900: var(--color-gray-900);
+    --color-neutral-950: var(--color-gray-950);
+
+    /* Brand accent -> blue (the original), instead of the dark theme's slate */
+    --color-brand-50:  var(--color-blue-50);
+    --color-brand-100: var(--color-blue-100);
+    --color-brand-200: var(--color-blue-200);
+    --color-brand-300: var(--color-blue-300);
+    --color-brand-400: var(--color-blue-400);
+    --color-brand-500: var(--color-blue-500);
+    --color-brand-600: var(--color-blue-600);
+    --color-brand-700: var(--color-blue-700);
+    --color-brand-800: var(--color-blue-800);
+    --color-brand-900: var(--color-blue-900);
+    --color-brand-950: var(--color-blue-950);
+  }
+
+  @layer components {
+    /* Buttons: original solid fills that darken on hover */
+    .bb-btn-primary   { @apply bg-brand-500 text-white hover:bg-brand-700; }
+    .bb-btn-secondary { @apply bg-neutral-500 text-white hover:bg-neutral-700; }
+    .bb-btn-success   { @apply bg-success-500 text-white hover:bg-success-700; }
+    .bb-btn-danger    { @apply bg-danger-500 text-white hover:bg-danger-700; }
+
+    /* Links: darker blue that darkens further on hover */
+    .bb-link        { @apply text-brand-600 hover:text-brand-800; }
+    .bb-link-strong { @apply text-brand-700 hover:text-brand-900; }
+
+    /* Soft-tinted chips/badges/avatars: light fill + dark text */
+    .bb-pill-brand    { @apply bg-brand-100 text-brand-800; }
+    .bb-pill-success  { @apply bg-success-100 text-success-800; }
+    .bb-badge-brand   { @apply bg-brand-200 text-brand-700; }
+    .bb-avatar-brand  { @apply bg-brand-100 text-brand-600; }
+    .bb-tag-btn       { @apply bg-brand-100 text-brand-800 hover:bg-brand-200; }
+
+    .bb-token-suggestion--active,
+    .bb-token-suggestion:hover { @apply bg-brand-50 text-brand-800; }
+
+    /* Alerts: light tinted panels with dark text */
+    .bb-alert-info    { @apply border-brand-200 bg-brand-50 text-brand-900; }
+    .bb-alert-success { @apply border-success-200 bg-success-50 text-success-900; }
+    .bb-alert-warning { @apply border-warning-200 bg-warning-50 text-warning-900; }
+    .bb-alert-error   { @apply border-danger-200 bg-danger-50 text-danger-900; }
+
+    /* Dropzone accent (light) */
+    .bb-dropzone__status { @apply text-brand-700; }
+    .bb-dropzone--active { @apply border-brand-400 bg-brand-50 text-brand-600; }
   }
 }

@@ -1,21 +1,21 @@
-<nav id="bb_navbar" class="bg-neutral-100 text-neutral-900 border-b border-neutral-200" role="navigation" aria-label="main navigation" data-controller="navbar">
+<nav id="bb_navbar" class="bg-nav text-nav-fg border-b border-nav-border" role="navigation" aria-label="main navigation" data-controller="navbar">
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-16">
 
       <!-- Logo and Breadcrumbs -->
       <div class="flex items-center">
-        <a class="text-xl font-bold text-white hover:text-neutral-600 px-3 py-2" href="/">
+        <a class="text-xl font-bold text-nav-fg hover:text-nav-muted px-3 py-2" href="/">
           Blackbook
         </a>
         <div class="ml-4 flex items-center">
           <% if (current_universe = breadcrumb_universe) %>
-            <span class="text-neutral-400 mx-2">|</span>
+            <span class="text-nav-muted mx-2">|</span>
             <%= link_to current_universe.name, universe_url(current_universe), class: "bb-nav-link" %>
 
             <% if @trait %>
-              <span class="text-neutral-400 mx-2">|</span>
-              <span class="text-neutral-600 px-3 py-2 text-sm font-medium">"<%= @trait.name %>"</span>
+              <span class="text-nav-muted mx-2">|</span>
+              <span class="text-nav-muted px-3 py-2 text-sm font-medium">"<%= @trait.name %>"</span>
             <% end %>
           <% end %>
         </div>
@@ -24,7 +24,7 @@
       <!-- Mobile Menu Button -->
       <button
         type="button"
-        class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-neutral-700 hover:text-white hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+        class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-nav-link hover:text-nav-fg hover:bg-nav-hover focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
         aria-controls="bb_navbar_mobile"
         aria-expanded="false"
         data-navbar-target="button"
@@ -49,7 +49,7 @@
   </div>
 
   <!-- Mobile Navigation Menu -->
-  <div id="bb_navbar_mobile" class="md:hidden hidden border-t border-neutral-200" data-navbar-target="menu">
+  <div id="bb_navbar_mobile" class="md:hidden hidden border-t border-nav-border" data-navbar-target="menu">
     <div class="px-2 pt-2 pb-3 space-y-1">
       <%= render "shared/nav_links", mobile: true %>
     </div>

@@ -33,7 +33,7 @@
             <%= pluralize(universe_counts.fetch(user.id, 0), 'universe') %> • <%= pluralize(image_counts.fetch(user.id, 0), 'image') %>
           </span>
           <%= button_to (user.admin ? "Revoke admin" : "Make admin"), toggle_admin_user_path(user), method: :patch, class: "bb-btn-sm bb-btn-secondary" %>
-          <%= link_to user_path(user.id), data: { turbo_method: :delete, turbo_confirm: "Delete #{user.display_name} (#{user.email})? This permanently removes their account." }, class: "bb-action-text p-2 hover:bg-danger-950 rounded-full" do %>
+          <%= link_to user_path(user.id), data: { turbo_method: :delete, turbo_confirm: "Delete #{user.display_name} (#{user.email})? This permanently removes their account." }, class: "bb-action-text p-2 hover:bg-neutral-200 rounded-full" do %>
             <span>🗑️</span>
           <% end %>
         </div>

@@ -3,14 +3,14 @@
 <div data-controller="dropzone"
      data-dropzone-url-value="<%= url %>"
      <% if local_assigns[:character_id] %>data-dropzone-character-id-value="<%= character_id %>"<% end %>
-     data-dropzone-dragover-class="border-brand-500 bg-brand-950 text-brand-300"
+     data-dropzone-dragover-class="bb-dropzone--active"
      data-action="dragover->dropzone#dragover dragleave->dropzone#dragleave drop->dropzone#drop click->dropzone#open"
      class="cursor-pointer border-2 border-dashed border-neutral-300 rounded-lg p-4 text-center text-neutral-500 hover:border-brand-400 hover:text-brand-600 transition-colors">
   <div data-dropzone-target="prompt">
     <span class="text-xl">⬆</span>
     <div class="text-sm mt-1">Drag images here or click to upload.</div>
   </div>
-  <div data-dropzone-target="status" class="hidden text-sm text-brand-300 font-medium"></div>
+  <div data-dropzone-target="status" class="hidden text-sm bb-dropzone__status"></div>
   <input type="file" multiple accept="image/*" class="hidden"
          data-dropzone-target="input" data-action="change->dropzone#picked">
 </div>

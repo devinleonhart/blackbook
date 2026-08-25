@@ -10,7 +10,7 @@
     </div>
 
     <!-- Character List -->
-    <div data-character-results class="max-h-80 overflow-y-auto border border-neutral-200 rounded-md bg-neutral-100">
+    <div data-character-results class="max-h-80 overflow-y-auto border border-neutral-200 rounded-md bg-surface">
       <% characters.sort_by(&:name).each do |character| %>
         <div data-filter-target="item" class="bb-list-item--bordered">
           <%= link_to character.name, character_path(character), class: "bb-link" %>
