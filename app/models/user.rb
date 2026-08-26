@@ -25,8 +25,6 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  # email presence/uniqueness/format come from Devise :validatable; only
-  # display_name needs explicit validation (citext, so case-insensitive).
   validates :display_name, presence: true, uniqueness: true
   validates :admin, exclusion: { in: [nil] }
 

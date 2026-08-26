@@ -1,6 +1,4 @@
-<%# Type-ahead token box for tagging several characters at once. Replaced in place
-    by Turbo Stream after a create/destroy, which resets it. Locals: image,
-    available_characters. %>
+<%# Type-ahead token box for tagging several characters. Locals: image, available_characters. %>
 <div id="character_picker">
   <h3 class="bb-subheading">Add characters</h3>
 
@@ -9,8 +7,7 @@
   <% else %>
     <%= form_with url: universe_image_appearances_url(image.universe, image), method: :post do %>
       <div data-controller="appearance-picker">
-        <%# Source list the controller reads to build suggestions — data in DOM
-            attributes (not an inline <script>) to satisfy the strict CSP. %>
+        <%# Suggestion source list the controller reads. %>
         <% available_characters.sort_by(&:name).each do |character| %>
           <span data-appearance-picker-target="option"
                 data-character-id="<%= character.id %>"

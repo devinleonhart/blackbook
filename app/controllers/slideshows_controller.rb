@@ -9,8 +9,6 @@ class SlideshowsController < ApplicationController
     @character_ids = selected_character_ids
     @universes = Universe.where(id: universe_ids).order(Arel.sql("LOWER(universes.name) ASC"))
 
-    # The trait and character pickers only make sense within a single universe,
-    # where the lists are bounded and names are unambiguous.
     @available_trait_names = @universe_id ? universe_trait_names(@universe_id) : []
     @characters = @universe_id ? Character.where(universe_id: @universe_id).order(:name) : Character.none
 
@@ -69,19 +67,12 @@ class SlideshowsController < ApplicationController
     raise ActiveRecord::RecordNotFound
   end
 
-  # Trait names to cycle through — images that include any character carrying one
-  # of these traits. Accepts an array or a comma-separated string; names are
-  # normalized the same way Trait stores them (stripped + downcased). Unknown
-  # names simply match nothing, so no extra authorization is needed here.
   def selected_trait_names
     raw = params[:trait_names]
     values = raw.is_a?(Array) ? raw : raw.to_s.split(",")
     values.map { |value| value.to_s.strip.downcase }.compact_blank.uniq
   end
 
-  # Character ids to cycle through. Accepts an array or a comma-separated string;
-  # non-numeric values are ignored. Ids outside the accessible images simply match
-  # nothing, so no extra authorization is needed here.
   def selected_character_ids
     raw = params[:character_ids]
     values = raw.is_a?(Array) ? raw : raw.to_s.split(",")
@@ -107,10 +98,8 @@ class SlideshowsController < ApplicationController
     scope.distinct
   end
 
-  # Characters the trait/character pickers narrow to. Returns nil when neither
-  # filter is active (no narrowing); otherwise the union of the explicitly chosen
-  # characters and every character carrying a chosen trait. An empty array is a
-  # real result that matches no images.
+  # nil when no filter is active; otherwise chosen characters plus every
+  # character carrying a chosen trait ([] matches no images).
   def filter_character_ids(universe_ids)
     trait_names = selected_trait_names
     character_ids = selected_character_ids

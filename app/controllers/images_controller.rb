@@ -20,17 +20,12 @@ class ImagesController < ApplicationController
       return
     end
 
-    # Land the user on the image's detail page — full navigation plus tag,
-    # favorite and delete controls, and "Random" again in the nav — instead of
-    # a bare image file with no way back.
     redirect_to edit_universe_image_url(image.universe, image)
   end
 
   def edit
     @favorited = @image.favorited_by?(current_user)
     @available_characters = @image.universe.characters - @image.characters
-    # Preserves the character the user came from so deleting the image can send
-    # them back to that character's page instead of the universe.
     @source_character = source_character(@image.universe)
   end
 
@@ -87,8 +82,6 @@ class ImagesController < ApplicationController
 
   def destroy
     universe = @image.universe
-    # Resolve the originating character before destroying the image so we can
-    # return the user to it — even when it has no images left afterwards.
     character = source_character(universe)
     @image.destroy!
     flash[:success] = "Image deleted!"
@@ -97,8 +90,6 @@ class ImagesController < ApplicationController
 
   private
 
-  # The character the user navigated from (passed as `character_id`), scoped to
-  # the image's universe so it can't point elsewhere. Nil when absent/invalid.
   def source_character(universe)
     return nil if params[:character_id].blank?
 
@@ -119,16 +110,12 @@ class ImagesController < ApplicationController
     universe_visible_to_user?(@image.universe)
   end
 
-  # `view` is intentionally public so image URLs are shareable/embeddable
-  # (e.g. Discord). The URL filename must match the stored (UUID) filename:
-  # this keeps the endpoint public while preventing enumeration by sequential
-  # id, since the integer alone is not enough to fetch an image.
+  # The URL filename must match the stored UUID filename so the public `view`
+  # endpoint can't be enumerated by sequential id alone.
   def url_filename_matches?(image)
     params[:filename] == image.image_file.filename.to_s
   end
 
-  # Optional character to tag every uploaded image with — used by the character
-  # page's drag-and-drop. Must belong to the target universe (nil otherwise).
   def tag_target_character
     return nil if params[:character_id].blank?
 

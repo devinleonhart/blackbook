@@ -1,16 +1,10 @@
 # frozen_string_literal: true
 
-# Finds and removes duplicate image uploads within a universe. Two images are
-# duplicates when their attached blobs are identical (same checksum, byte_size
-# and content_type). The earliest-created image of each group is always kept.
-#
-# All query/deletion logic lives here; Admin::DedupeController just calls these
-# and renders flash/redirect.
+# Finds and removes duplicate image uploads within a universe. Images are
+# duplicates when their blobs match (checksum, byte_size, content_type); the
+# earliest-created image of each group is kept.
 class ImageDeduplicator
   class << self
-    # Read side: per-universe listing of duplicate groups for the admin view.
-    # Returns [{ universe:, groups: [{ checksum:, byte_size:, content_type:,
-    # count:, images: }] }], sorted by universe name.
     def duplicate_groups_by_universe
       groups = duplicate_group_rows(limit: 200)
       images_by_key = images_for_groups(groups)
@@ -26,8 +20,7 @@ class ImageDeduplicator
       entries.sort_by { |entry| entry[:universe].name.to_s.downcase }
     end
 
-    # Delete side: dedupe a single group. Returns [kept_image, deleted_count],
-    # or nil if the group has no images.
+    # Returns [kept_image, deleted_count], or nil if the group has no images.
     def dedupe_group(universe_id:, checksum:, byte_size:, content_type:)
       images =
         Image
@@ -44,8 +37,7 @@ class ImageDeduplicator
       [keep, destroy_images(images.offset(1).pluck(:id))]
     end
 
-    # Delete side: dedupe every group in a universe. Returns
-    # [deleted_count, groups_processed].
+    # Returns [deleted_count, groups_processed].
     def dedupe_universe(universe)
       groups = duplicate_group_rows(universe_id: universe.id)
       images_by_key = images_for_groups(groups)
@@ -65,16 +57,12 @@ class ImageDeduplicator
       [deleted, groups_processed]
     end
 
-    # Number of duplicate groups across all universes — a single grouped query,
-    # no image records loaded. Used for the admin dashboard stat.
     def duplicate_group_count
       duplicate_group_rows.length
     end
 
     private
 
-    # Duplicate groups (COUNT > 1) keyed by universe + blob identity. `limit`
-    # caps the listing; the per-universe dedupe passes none so it processes all.
     def duplicate_group_rows(universe_id: nil, limit: nil)
       scope = Image.joins(image_file_attachment: :blob)
       scope = scope.where(universe_id: universe_id) if universe_id
@@ -98,8 +86,6 @@ class ImageDeduplicator
       limit ? scope.order(Arel.sql("images_count DESC")).limit(limit) : scope
     end
 
-    # Loads every image belonging to any of the given groups in ONE query and
-    # indexes them by group key, so callers avoid a per-group query.
     def images_for_groups(groups)
       return {} if groups.empty?
 
@@ -135,8 +121,7 @@ class ImageDeduplicator
       }
     end
 
-    # A stable, type-normalized key so SQL group rows and loaded Image records
-    # land in the same bucket regardless of how the DB types the raw columns.
+    # Type-normalized so SQL group rows and loaded Image records share a bucket.
     def key_for(universe_id, checksum, byte_size, content_type)
       [universe_id.to_i, checksum.to_s, byte_size.to_i, content_type.to_s]
     end

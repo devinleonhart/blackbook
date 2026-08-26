@@ -52,8 +52,6 @@ class TraitsController < ApplicationController
   def destroy
     @trait.destroy!
     flash[:success] = "Trait removed."
-    # Return to wherever the delete came from (the character page's inline ×
-    # or the manage list); fall back to the character page.
     redirect_back_or_to(character_path(@character))
   end
 

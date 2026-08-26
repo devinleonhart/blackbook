@@ -1,7 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Fades a flash message out after a few seconds and lets the user dismiss it
-// early with the close button. Errors linger longer since they matter more.
+// Auto-fades a flash message after a delay; the close button dismisses early.
 export default class extends Controller {
   static values = { delay: { type: Number, default: 5000 } }
 

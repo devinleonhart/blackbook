@@ -37,10 +37,6 @@ class AppearancesController < ApplicationController
 
   private
 
-  # Character ids to add. Accepts character_ids[] (bulk) plus a single
-  # appearance[character_id] for backward compatibility. Restricted to characters
-  # that belong to the image's universe and aren't already tagged, so bogus or
-  # cross-universe ids are silently ignored.
   def submitted_character_ids(image)
     raw = Array(params[:character_ids]) + [params.dig(:appearance, :character_id)]
     ids = raw.filter_map { |value| Integer(value, 10, exception: false) }.uniq

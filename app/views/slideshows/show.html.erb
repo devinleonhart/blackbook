@@ -67,7 +67,7 @@
           </div>
         </div>
 
-        <!-- Bottom controls (sit under the image, so the trait filter never pushes it down) -->
+        <!-- Bottom controls -->
         <div class="bb-slideshow-controls bb-slideshow-controls--bottom" data-slideshow-target="bottomControls">
           <div class="flex items-center justify-between">
             <label class="text-sm font-medium text-neutral-700" for="slideshow_speed">Speed</label>
@@ -75,7 +75,7 @@
           </div>
           <input id="slideshow_speed" type="range" min="1" max="300" step="1" value="3" class="w-full mt-2" data-action="input->slideshow#speedChanged" data-slideshow-target="speed" />
 
-          <!-- Trait filter: cycle through only images featuring a character with one of these traits. -->
+          <!-- Trait filter -->
           <% if @universe_id %>
             <div class="mt-4 pt-4 border-t border-neutral-200">
               <% if @available_trait_names.any? %>
@@ -97,7 +97,7 @@
               <% end %>
             </div>
 
-            <!-- Character filter: cycle through only images featuring one of these characters. -->
+            <!-- Character filter -->
             <div class="mt-4 pt-4 border-t border-neutral-200">
               <% if @characters.any? %>
                 <div class="flex flex-wrap items-center gap-2">

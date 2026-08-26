@@ -2,15 +2,11 @@
 
 class UniversesController < ApplicationController
   before_action :set_universe, only: [:show, :edit, :update]
-  # Creating universes is an admin action — individual users don't self-serve
-  # new universes; an admin creates one and assigns it an owner.
   before_action :require_admin!, only: [:new, :create]
 
   def index
     @universes = Universe.accessible_to(current_user)
 
-    # Counts for every universe in two grouped queries, so the view doesn't
-    # run a per-row COUNT (N+1). Missing keys default to 0.
     universe_ids = @universes.map(&:id)
     @character_counts = Character.where(universe_id: universe_ids).group(:universe_id).count
     @image_counts = Image.where(universe_id: universe_ids).group(:universe_id).count
@@ -36,14 +32,12 @@ class UniversesController < ApplicationController
       end
       .paginate(page: params[:page], per_page: 20)
 
-    # Load traits for the trait browser
     @traits = Trait.joins(:character)
                    .where(characters: { universe_id: @universe.id })
                    .group(:name)
                    .count
                    .sort_by { |name, count| [-count, name] }
 
-    # Get the first trait ID for each tag name for linking
     @trait_name_to_id = Trait.joins(:character)
                              .where(characters: { universe_id: @universe.id })
                              .group(:name)

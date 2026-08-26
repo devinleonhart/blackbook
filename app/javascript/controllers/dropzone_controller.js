@@ -1,9 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
-// Drag-and-drop (or click) bulk image upload. Posts the dropped image files to
-// the universe's images endpoint in one request; on a character page it also
-// sends character_id so each new image is tagged with that character. On
-// success it Turbo-refreshes the page to show the new images.
+// Drag-and-drop (or click) bulk image upload; Turbo-refreshes on success.
 export default class extends Controller {
   static values = { url: String, characterId: Number }
   static targets = ["input", "status", "prompt"]

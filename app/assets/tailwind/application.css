@@ -3,26 +3,12 @@
 /* =====================================================================
    COLOR SCHEME — single source of truth
    ---------------------------------------------------------------------
-   Every color in the app resolves to one of these five semantic ramps.
-   To re-theme the whole application, repoint a ramp below — to another
-   Tailwind ramp (e.g. blue -> teal), or to your own hex/oklch values.
-   Nothing else in the codebase references raw palette names, so this is
-   the only place a color scheme is defined.
-
-   Because this is a plain @theme block, each ramp is also emitted as a
-   :root CSS variable (e.g. --color-neutral-300), so raw stylesheets can
-   reference them and a future dark theme can override the underlying
-   values at runtime under a :root (or [data-theme]) selector without
-   touching any utility class.
-
-   Utility classes generated:  bg-brand-500, text-neutral-900,
-   border-danger-200, ring-success-500, etc.
+   Every color resolves to one of these five semantic ramps; repoint a
+   ramp below to re-theme the whole app. Each is also emitted as a :root
+   CSS variable, so the light-theme block can override it at runtime.
    ===================================================================== */
 @theme {
-  /* Brand / accent — Tailwind "slate": a muted, desaturated blue-grey.
-     Reads as a deliberate accent without the glare of a saturated blue on
-     dark. Repoint this ramp (e.g. -> indigo, -> sky) to change every accent
-     at once. */
+  /* Brand / accent — Tailwind "slate". Repoint to change every accent at once. */
   --color-brand-50:  var(--color-slate-50);
   --color-brand-100: var(--color-slate-100);
   --color-brand-200: var(--color-slate-200);
@@ -35,15 +21,9 @@
   --color-brand-900: var(--color-slate-900);
   --color-brand-950: var(--color-slate-950);
 
-  /* Neutral — the DARK ramp. This is what makes the app dark.
-     It is Tailwind "gray" inverted end-to-end: the numeric scale still reads
-     the conventional way in markup (bg-neutral-50 = page background,
-     text-neutral-900 = primary text, border-neutral-200 = subtle border), but
-     each step resolves to its opposite lightness — 50 is nearly black, 900 is
-     nearly white. So every existing utility flips to a dark equivalent from
-     this one place. To return to a light theme, restore the 50->50 mapping.
-     (Deliberately-dark chrome — the navbar, tinted chips, alerts — is authored
-     directly in the component layer below rather than relying on this flip.) */
+  /* Neutral — Tailwind "gray" inverted end-to-end, which is what makes the app
+     dark: the scale reads conventionally in markup but each step resolves to its
+     opposite lightness. The light-theme block restores the un-inverted mapping. */
   --color-neutral-50:  var(--color-gray-950);
   --color-neutral-100: var(--color-gray-900);
   --color-neutral-200: var(--color-gray-800);
@@ -95,15 +75,10 @@
   --color-warning-900: var(--color-yellow-900);
   --color-warning-950: var(--color-yellow-950);
 
-  /* Raised surface (cards, inputs, dropdowns, dialogs) — the one surface that
-     is NOT a neutral-ramp step: pure white in light, near-black-grey in dark.
-     The light value is set in the prefers-color-scheme: light block below.
-     Use via bg-surface. */
+  /* Raised surface (cards, inputs, dropdowns) — not a neutral-ramp step. Use via bg-surface. */
   --color-surface: var(--color-gray-900);
 
-  /* Navbar — a dark bar in BOTH themes, so it is pinned to the constant Tailwind
-     gray ramp and does not follow the neutral flip. Used via bg-nav /
-     text-nav-fg / text-nav-muted / text-nav-link / bg-nav-hover / border-nav. */
+  /* Navbar — dark in BOTH themes, so pinned to the constant gray ramp (no neutral flip). */
   --color-nav:        var(--color-gray-900);
   --color-nav-fg:     var(--color-gray-100);
   --color-nav-muted:  var(--color-gray-400);
@@ -112,15 +87,10 @@
   --color-nav-border: var(--color-gray-800);
 }
 
-/* Tailwind v4's Preflight no longer sets `cursor: pointer` on buttons, so restore
-   the hand cursor on interactive elements and controls app-wide (links already get
-   it natively). Disabled controls show `not-allowed`. Kept in the base layer so
-   component/utility cursor classes (e.g. cursor-text on the token box) still win. */
+/* Restore the hand cursor on interactive controls (Tailwind v4 Preflight drops it);
+   disabled controls show not-allowed. In the base layer so utility classes still win. */
 @layer base {
-  /* The app ships a dark theme (the base, below) and a light theme (the
-     prefers-color-scheme: light overrides at the end of this file); the browser
-     picks per the OS/user preference. `light dark` lets native form controls,
-     default scrollbars, and other UA chrome follow that same preference. */
+  /* `light dark` lets native UA chrome (form controls, scrollbars) follow the theme preference. */
   :root {
     color-scheme: light dark;
   }
@@ -725,16 +695,10 @@
 /* =====================================================================
    LIGHT THEME
    ---------------------------------------------------------------------
-   The base above is the dark theme. When the browser/OS prefers light,
-   this block restores the original light scheme:
-     1. re-points the swappable ramps — surface -> white, neutral -> the
-        normal (un-inverted) grey direction, brand -> blue; and
-     2. re-styles the handful of components whose accent/tint/shade
-        choices genuinely differ between the two themes (buttons, links,
-        soft-tinted chips/badges/alerts/tags, dropzone).
-   Everything else flips automatically because it is expressed in these
-   ramp tokens. The navbar is intentionally absent — it is pinned to the
-   constant `nav` tokens and stays dark in both themes.
+   When the browser prefers light, re-point the swappable ramps (surface,
+   neutral, brand) and re-style the few components whose tints differ.
+   Everything else flips automatically via the ramp tokens; the navbar is
+   pinned to the constant `nav` tokens and stays dark in both themes.
    ===================================================================== */
 @media (prefers-color-scheme: light) {
   :root {

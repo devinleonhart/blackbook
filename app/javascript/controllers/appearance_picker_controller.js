@@ -1,11 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 
 // Type-ahead token box for tagging several characters onto an image at once.
-// Type to filter, Enter/Tab/click to drop a character token into the box, then
-// submit to add them all (handled by Turbo Stream, no reload).
-//
-// Character options are read from hidden `option` target nodes (data-character-id
-// / data-name) rather than an inline <script>, to satisfy the strict CSP.
 export default class extends Controller {
   static targets = ["input", "option", "suggestions", "tokens", "submit"]
 
@@ -40,8 +35,7 @@ export default class extends Controller {
         break
       case "Enter":
       case "Tab": {
-        // When a suggestion is showing, accept it (and for Tab, keep focus here).
-        // Otherwise let the key do its normal thing: Enter submits, Tab moves on.
+        // With a suggestion open, accept it; otherwise Enter submits and Tab moves on.
         const row = rows[this.activeIndex] || rows[0]
         if (open && row) {
           event.preventDefault()

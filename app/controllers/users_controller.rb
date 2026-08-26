@@ -5,7 +5,6 @@ class UsersController < ApplicationController
 
   def index
     @users = User.order(:email)
-    # Grouped queries keyed by owner id, so the view avoids per-row COUNTs.
     @universe_counts = Universe.group(:owner_id).count
     @image_counts = Image.joins(:universe).group("universes.owner_id").count
   end

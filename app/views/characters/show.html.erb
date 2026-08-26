@@ -5,7 +5,7 @@
     <div class="bb-layout-sidebar">
       <!-- Left Sidebar - Traits -->
       <div class="bb-sidebar order-1 lg:order-1" data-controller="collapse">
-        <!-- Collapsed on small screens so the character's images stay near the top. -->
+        <!-- Collapse toggle (small screens only) -->
         <button type="button"
                 class="lg:hidden bb-btn bb-btn-secondary w-full flex items-center justify-between mb-3"
                 data-action="collapse#toggle"
@@ -26,7 +26,7 @@
             <div data-controller="filter">
               <h2 class="bb-section-heading bb-section-heading--center">Traits</h2>
 
-              <!-- Current traits: name links to a browse; × removes it from this character -->
+              <!-- Current traits -->
               <div class="mb-6">
                 <% if @character.traits.empty? %>
                   <p class="bb-subtitle-sm">No traits yet</p>
@@ -44,7 +44,7 @@
                 <% end %>
               </div>
 
-              <!-- Add a trait: type to find an existing one or create a new one -->
+              <!-- Add a trait -->
               <div>
                 <%= form_with model: [@character, @character.traits.build], url: character_traits_path(@character), method: :post, class: "mb-3" do |form| %>
                   <div class="flex gap-2">

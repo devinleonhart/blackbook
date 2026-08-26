@@ -207,8 +207,7 @@ export default class extends Controller {
     const traitNames = this.hasTraitTarget ? this.checkedValues(this.traitTargets) : []
     const characterIds = this.hasCharacterTarget ? this.checkedValues(this.characterTargets) : []
 
-    // Rebuild the JSON endpoint URL (preserving mode/universe) and mirror the
-    // selection in the page URL so a reload remembers it.
+    // Mirror the selection into the page URL so a reload remembers it.
     this.slidesUrlValue = this.withFilters(new URL(this.slidesUrlValue, window.location.origin), traitNames, characterIds)
     window.history.replaceState({}, "", this.withFilters(new URL(window.location.href), traitNames, characterIds))
 
@@ -282,8 +281,7 @@ export default class extends Controller {
     }
   }
 
-  // Click zones: left third = prev, right third = next. The centre toggles play,
-  // except in fullscreen where it exits (so touch devices without Esc can leave).
+  // Click zones: left third = prev, right third = next, centre toggles play (exits in fullscreen).
   stageTapped(event) {
     if (event?.target?.closest?.("a,button,input,label")) return
 
@@ -499,8 +497,7 @@ export default class extends Controller {
     document.documentElement.classList.add("bb-no-scroll")
     document.body.classList.add("bb-no-scroll")
 
-    // Sizing is handled entirely by CSS (100dvh + flex), so no inline styles are
-    // written here — that keeps the strict CSP happy and works on iOS Safari.
+    // Sizing is handled entirely by CSS (100dvh + flex); no inline styles, to satisfy the CSP.
     this.element.classList.add("bb-slideshow-shell--pseudo")
     this.stageTarget.classList.add("bb-slideshow-stage--pseudo")
     this.stageTarget.classList.remove("bb-slideshow-stage--default")

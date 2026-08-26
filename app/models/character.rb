@@ -28,8 +28,7 @@ class Character < ApplicationRecord
   has_many :appearances, inverse_of: :character, dependent: :destroy
   has_many :traits, inverse_of: :character, dependent: :destroy
 
-  # prepend so this runs before the dependent: :destroy callbacks, while the
-  # traits still exist and can be counted.
+  # prepend so traits still exist to be counted before dependent: :destroy runs.
   before_destroy :log_character_deletion, prepend: true
 
   private

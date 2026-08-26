@@ -21,8 +21,6 @@
 #  fk_rails_...  (character_id => characters.id)
 #
 class Trait < ApplicationRecord
-  # Names are stored lowercased + stripped, so uniqueness needs no
-  # case_sensitive flag and presence subsumes the old length check.
   normalizes :name, with: ->(name) { name.strip.downcase }
 
   validates :name, presence: true
@@ -34,7 +32,6 @@ class Trait < ApplicationRecord
 
   private
 
-  # Log-only observability hook for tag deletions.
   def log_tag_destruction
     Rails.logger.debug { "Trait '#{name}' (ID: #{id}) was destroyed for character #{character_id}" }
   end
