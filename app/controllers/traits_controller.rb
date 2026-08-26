@@ -59,13 +59,16 @@ class TraitsController < ApplicationController
 
   def set_character
     if params[:character_id]
-      @character = Character.find(params.expect(:character_id))
+      @character = Character.find_by(id: params[:character_id])
+      return unless model_found?(@character, "Character", params[:character_id], universes_url)
     else
-      @trait = Trait.find(params.expect(:id))
+      @trait = Trait.find_by(id: params[:id])
+      return unless model_found?(@trait, "Trait", params[:id], universes_url)
+
       @character = @trait.character
     end
+
     universe_visible_to_user?(@character.universe)
-    nil
   end
 
   def set_trait

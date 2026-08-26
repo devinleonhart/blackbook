@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class SlideshowsController < ApplicationController
+  # Upper bound on slides sent to the browser in one request. Randomization and
+  # this limit are applied in SQL so we never materialize the whole library.
+  MAX_SLIDES = 5000
+
   def show
     universe_ids = Universe.accessible_to(current_user).pluck(:id)
     @mode = slideshow_mode
@@ -22,13 +26,16 @@ class SlideshowsController < ApplicationController
     universe_id = selected_universe_id!(universe_ids)
     scoped_universe_ids = universe_id ? [universe_id] : universe_ids
 
+    # The scope is DISTINCT (it may join appearances/favorites), and Postgres
+    # rejects ORDER BY RANDOM() alongside SELECT DISTINCT. Feed the distinct ids
+    # into an outer query that does the random ordering and limiting in SQL.
     images =
-      slideshow_images_scope(scoped_universe_ids)
-      .with_attached_image_file
-      .includes(:characters)
-      .limit(5000)
-      .to_a
-      .shuffle
+      Image.where(id: slideshow_images_scope(scoped_universe_ids).select(:id))
+           .with_attached_image_file
+           .includes(:characters)
+           .order(Arel.sql("RANDOM()"))
+           .limit(MAX_SLIDES)
+           .to_a
 
     favorited_ids = ImageFavorite.where(user: current_user, image_id: images.map(&:id)).pluck(:image_id).to_set
 

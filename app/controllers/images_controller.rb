@@ -8,11 +8,12 @@ class ImagesController < ApplicationController
   def random
     universe_ids = Universe.accessible_to(current_user).pluck(:id)
 
-    image =
-      Image
-      .where(universe_id: universe_ids)
-      .order(Arel.sql("RANDOM()"))
-      .first
+    scope = Image.where(universe_id: universe_ids)
+    count = scope.count
+    # Pick a random row by offset rather than sorting the whole table with
+    # ORDER BY RANDOM(). `first` may return nil if a row is deleted between the
+    # count and the fetch, which the guard below handles.
+    image = scope.offset(rand(count)).first if count.positive?
 
     unless image
       flash[:notice] = "No images available yet."

@@ -1,4 +1,4 @@
-FROM ruby:3.4.10-alpine AS base
+FROM ruby:3.4.10-slim-bookworm AS base
 
 ENV APP_PATH=/app \
     BUNDLE_VERSION=2.6.2 \
@@ -8,23 +8,27 @@ ENV APP_PATH=/app \
 
 WORKDIR $APP_PATH
 
-RUN apk add --no-cache \
-    curl=8.21.0-r0 \
-    postgresql18-client=18.6-r0 \
-    tzdata=2026c-r0 \
-    vips=8.18.2-r0 \
-    yaml=0.2.5-r2
+# Runtime libraries. Debian's libpq (postgresql-client) speaks to any modern
+# server, so the client version no longer has to track the prod Postgres major.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    libvips42 \
+    postgresql-client \
+    tzdata \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN gem install bundler --version "$BUNDLE_VERSION" --no-document
 
 FROM base AS build_base
 
-RUN apk add --no-cache \
-    build-base=0.5-r4 \
-    git=2.54.0-r0 \
-    postgresql18-dev=18.6-r0 \
-    vips-dev=8.18.2-r0 \
-    yaml-dev=0.2.5-r2
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    git \
+    libpq-dev \
+    libvips-dev \
+    libyaml-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 
 FROM build_base AS dev
 
@@ -70,8 +74,8 @@ ENV BUNDLE_WITHOUT=development:test \
     NODE_ENV=production \
     RAILS_SERVE_STATIC_FILES=true
 
-RUN addgroup -g 1000 -S rails && \
-    adduser -u 1000 -S rails -G rails
+RUN groupadd --gid 1000 rails && \
+    useradd --uid 1000 --gid rails --create-home --shell /bin/bash rails
 
 COPY --from=builder /usr/local/bundle /usr/local/bundle
 COPY --from=builder --chown=rails:rails $APP_PATH $APP_PATH

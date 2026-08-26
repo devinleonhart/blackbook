@@ -6,6 +6,7 @@ class FavoritesController < ApplicationController
       Image
       .joins(:image_favorites)
       .includes(:universe)
+      .with_attached_image_file
       .where(image_favorites: { user_id: current_user.id })
       .order(created_at: :desc)
 

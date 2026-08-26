@@ -27,13 +27,4 @@ class Character < ApplicationRecord
 
   has_many :appearances, inverse_of: :character, dependent: :destroy
   has_many :traits, inverse_of: :character, dependent: :destroy
-
-  # prepend so traits still exist to be counted before dependent: :destroy runs.
-  before_destroy :log_character_deletion, prepend: true
-
-  private
-
-  def log_character_deletion
-    Rails.logger.info "Character '#{name}' (##{id}) is being deleted with #{traits.count} tags"
-  end
 end

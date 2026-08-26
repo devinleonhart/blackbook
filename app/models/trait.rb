@@ -27,12 +27,4 @@ class Trait < ApplicationRecord
   validates :name, uniqueness: { scope: :character_id }
 
   belongs_to :character, inverse_of: :traits
-
-  after_destroy :log_tag_destruction
-
-  private
-
-  def log_tag_destruction
-    Rails.logger.debug { "Trait '#{name}' (ID: #{id}) was destroyed for character #{character_id}" }
-  end
 end
