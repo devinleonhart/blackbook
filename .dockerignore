@@ -22,6 +22,14 @@ log/*
 tmp/*
 *.log
 *.pid
+!log/.keep
+!tmp/.keep
+!tmp/pids/
+!tmp/storage/
+tmp/pids/*
+tmp/storage/*
+!tmp/pids/.keep
+!tmp/storage/.keep
 
 # Storage (use volumes)
 storage/*
