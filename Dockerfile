@@ -1,7 +1,7 @@
-FROM ruby:3.4.11-slim-trixie AS base
+FROM ruby:4.0.7-slim-trixie AS base
 
 ENV APP_PATH=/app \
-    BUNDLE_VERSION=2.6.2 \
+    BUNDLE_VERSION=4.0.22 \
     BUNDLE_PATH=/usr/local/bundle/gems \
     RAILS_LOG_TO_STDOUT=true \
     RAILS_PORT=3000
