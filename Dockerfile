@@ -1,4 +1,4 @@
-FROM ruby:3.4.11-slim-bookworm AS base
+FROM ruby:3.4.11-slim-trixie AS base
 
 ENV APP_PATH=/app \
     BUNDLE_VERSION=2.6.2 \
@@ -12,7 +12,7 @@ WORKDIR $APP_PATH
 # server, so the client version no longer has to track the prod Postgres major.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
-    libvips42 \
+    libvips42t64 \
     postgresql-client \
     tzdata \
     && rm -rf /var/lib/apt/lists/*
