@@ -1,4 +1,4 @@
-FROM ruby:3.4.10-slim-bookworm AS base
+FROM ruby:3.4.11-slim-bookworm AS base
 
 ENV APP_PATH=/app \
     BUNDLE_VERSION=2.6.2 \
