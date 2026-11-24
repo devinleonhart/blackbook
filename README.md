@@ -81,6 +81,21 @@ The suite is order-randomized; reproduce a failing order with
 `bundle exec rspec --seed N`. **Coverage must stay at 100% line coverage** or the
 build fails.
 
+## MCP
+
+`POST /mcp` offers a user's universes, characters, traits, images and favorites as tools. It exists only
+when `MCP_HOST` is set, and answers only that host. Images are given by address, never as data.
+
+Each machine has its own token, which carries `read`, `write` or `delete` and expires:
+
+```bash
+bin/rails mcp:tokens:issue USER=<email> MACHINE=<name> SCOPES=read,write DAYS=90   # prints the token once
+bin/rails mcp:tokens:list
+bin/rails mcp:tokens:revoke ID=<id>
+```
+
+Tools are in `app/mcp`. They may only use records that `BlackbookMcp::Access` gives.
+
 ## How the app fits together
 
 - **Domain:** `User`s own `Universe`s and can be added as collaborators on

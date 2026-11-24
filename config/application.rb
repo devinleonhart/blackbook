@@ -25,6 +25,12 @@ module Blackbook
     # redirect/expiry dance.
     config.active_storage.resolve_model_to_route = :rails_storage_proxy
 
+    # The public site, for addresses given outside a request to it.
+    config.x.site = { host: "blackbook.devleo.me", protocol: "https" }
+
+    # The only host that may be used for MCP. Without it, /mcp does not exist.
+    config.x.mcp_host = ENV["MCP_HOST"].presence
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
