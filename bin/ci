@@ -2,6 +2,9 @@
 
 set -eu
 
+# Enforces minimum coverage.
+export CI=true
+
 echo "==> rubocop"
 bundle exec rubocop
 
@@ -21,4 +24,3 @@ echo "==> rspec"
 bundle exec rspec
 
 echo "OK"
-

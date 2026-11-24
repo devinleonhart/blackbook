@@ -35,9 +35,6 @@ tmp/storage/*
 storage/*
 public/uploads
 
-# Node modules (if any)
-node_modules/
-
 # Environment files
 .env
 .env.*
@@ -68,3 +65,5 @@ vendor/bundle
 # Database
 *.sqlite3
 db/*.sqlite3
+
+.claude/
