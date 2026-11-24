@@ -55,7 +55,7 @@ class UniversesController < ApplicationController
   end
 
   def create
-    @universe = Universe.new(allowed_universe_params)
+    @universe = Universe.new(new_universe_params)
     if @universe.save
       flash[:success] = "Universe \"#{@universe.name}\" created for #{@universe.owner.display_name}."
       redirect_to users_url
@@ -66,7 +66,7 @@ class UniversesController < ApplicationController
   end
 
   def update
-    if @universe.update(allowed_universe_params)
+    if @universe.update(universe_params)
       flash[:success] = "Universe updated!"
       redirect_to universes_url
     else
@@ -84,12 +84,13 @@ class UniversesController < ApplicationController
     universe_visible_to_user?(@universe)
   end
 
-  def allowed_universe_params
-    params.expect(
-      universe: [:name,
-                 :owner_id,
-                 :page,
-                 { collaborator_ids: [] }]
-    )
+  # Only an admin creates a universe, and so chooses its owner.
+  def new_universe_params
+    params.expect(universe: [:name, :owner_id])
+  end
+
+  # The owner never changes here, and collaborators have their own controller.
+  def universe_params
+    params.expect(universe: [:name])
   end
 end

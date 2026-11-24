@@ -162,6 +162,38 @@ RSpec.describe "Universes", type: :request do
       end
     end
 
+    it "does not let a collaborator take the universe over" do
+      collaborator = create(:user)
+      target = create(:universe, owner: owner, name: "Old")
+      create(:collaboration, universe: target, user: collaborator)
+
+      sign_in(collaborator)
+      patch universe_path(target), params: { universe: { name: "Renamed", owner_id: collaborator.id } }
+
+      expect(target.reload).to have_attributes(name: "Renamed", owner: owner)
+    end
+
+    it "does not let an owner or an admin change the owner" do
+      other = create(:user)
+
+      patch universe_path(universe), params: { universe: { name: "Mine", owner_id: other.id } }
+      sign_in(create(:user, admin: true))
+      patch universe_path(universe), params: { universe: { name: "Mine", owner_id: other.id } }
+
+      expect(universe.reload.owner).to eq(owner)
+    end
+
+    it "does not change the collaborators" do
+      collaborator = create(:user)
+      outsider = create(:user)
+      create(:collaboration, universe: universe, user: collaborator)
+
+      sign_in(collaborator)
+      patch universe_path(universe), params: { universe: { name: "Same", collaborator_ids: [outsider.id] } }
+
+      expect(universe.reload.collaborators).to contain_exactly(collaborator)
+    end
+
     context "with invalid params" do
       it "does not update and redirects back to edit with a flash" do
         patch universe_path(universe), params: { universe: { name: "" } }
