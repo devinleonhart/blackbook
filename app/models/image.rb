@@ -27,6 +27,20 @@ class Image < ApplicationRecord
 
   scope :untagged, -> { where.missing(:appearances) }
 
+  # Tags those of the characters that belong to the universe and are not tagged yet, and gives their number.
+  def tag_characters(ids)
+    new_ids = universe.characters.where(id: ids).where.not(id: appearances.select(:character_id)).ids
+    new_ids.count { |id| appearances.create(character_id: id).persisted? }
+  end
+
+  def favorite_by(user)
+    image_favorites.find_or_create_by!(user: user)
+  end
+
+  def unfavorite_by(user)
+    image_favorites.where(user: user).destroy_all
+  end
+
   def favorited_by?(user)
     return false if user.nil?
 

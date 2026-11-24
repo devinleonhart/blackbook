@@ -54,9 +54,9 @@ class ImagesController < ApplicationController
   def update
     desired = ActiveModel::Type::Boolean.new.cast(allowed_image_update_params[:favorite])
     if desired
-      ImageFavorite.find_or_create_by!(user: current_user, image: @image)
+      @image.favorite_by(current_user)
     else
-      ImageFavorite.where(user: current_user, image: @image).destroy_all
+      @image.unfavorite_by(current_user)
     end
 
     respond_to do |format|
