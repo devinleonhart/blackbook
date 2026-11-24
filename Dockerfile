@@ -1,4 +1,4 @@
-FROM ruby:4.0.7-slim-trixie AS base
+FROM ruby:4.0.10-slim-trixie AS base
 
 ENV APP_PATH=/app \
     BUNDLE_VERSION=4.0.22 \
