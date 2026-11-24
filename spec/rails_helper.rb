@@ -11,8 +11,10 @@ SimpleCov.start "rails" do
   skip "app/jobs/application_job.rb"
   skip "app/mailers/application_mailer.rb"
 
-  # Keep reports stable for CI/Docker
   cover "{app,lib}/**/*.rb"
+
+  # Only bin/ci runs every spec, so only it can be held to the minimum.
+  minimum_coverage line: 90 if ENV["CI"]
 end
 
 ENV["RAILS_ENV"] = "test" if ENV["RAILS_ENV"].to_s != "test"

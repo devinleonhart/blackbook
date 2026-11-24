@@ -13,7 +13,6 @@ AllCops:
     - "config/**/*"
     - "config.ru"
     - "db/schema.rb"
-    - "node_modules/**/*"
     - "vendor/**/*"
     - "tmp/**/*"
 

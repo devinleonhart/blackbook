@@ -1,9 +1,8 @@
 source "https://rubygems.org"
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "4.0.10"
 
-gem "rails"
+gem "rails", "~> 8.1.4"
 
 gem "bootsnap", require: false
 gem "devise"
@@ -18,7 +17,6 @@ gem "stimulus-rails"
 gem "tailnet_mcp", github: "devinleonhart/tailnet-mcp", ref: "904fafe71bd70b10082ce0ec67d8a755bbf277f7"
 gem "tailwindcss-rails"
 gem "turbo-rails"
-gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 gem "will_paginate"
 
 group :development do

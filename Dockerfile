@@ -3,7 +3,6 @@ FROM ruby:4.0.10-slim-trixie AS base
 ENV APP_PATH=/app \
     BUNDLE_VERSION=4.0.22 \
     BUNDLE_PATH=/usr/local/bundle/gems \
-    RAILS_LOG_TO_STDOUT=true \
     RAILS_PORT=3000
 
 WORKDIR $APP_PATH
@@ -32,8 +31,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 FROM build_base AS dev
 
-ENV RAILS_ENV=development \
-    NODE_ENV=development
+ENV RAILS_ENV=development
 
 COPY Gemfile Gemfile.lock ./
 RUN bundle install --jobs 4 --retry 3
@@ -53,8 +51,7 @@ FROM build_base AS builder
 ENV BUNDLE_WITHOUT=development:test \
     BUNDLE_DEPLOYMENT=1 \
     BUNDLE_FROZEN=1 \
-    RAILS_ENV=production \
-    NODE_ENV=production
+    RAILS_ENV=production
 
 COPY Gemfile Gemfile.lock ./
 RUN bundle install --jobs 4 --retry 3 && \
@@ -63,7 +60,7 @@ RUN bundle install --jobs 4 --retry 3 && \
 
 COPY . .
 
-RUN SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
+RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails assets:precompile
 
 FROM base AS runtime
 
@@ -71,8 +68,8 @@ ENV BUNDLE_WITHOUT=development:test \
     BUNDLE_DEPLOYMENT=1 \
     BUNDLE_FROZEN=1 \
     RAILS_ENV=production \
-    NODE_ENV=production \
-    RAILS_SERVE_STATIC_FILES=true
+    BOOTSNAP_CACHE_DIR=/tmp/bootsnap \
+    MALLOC_ARENA_MAX=2
 
 RUN groupadd --gid 1000 rails && \
     useradd --uid 1000 --gid rails --create-home --shell /bin/bash rails

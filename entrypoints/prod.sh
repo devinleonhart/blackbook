@@ -6,8 +6,5 @@ echo "Environment: $RAILS_ENV"
 
 bundle check
 
-# Remove pre-existing puma/passenger server.pid
-rm -f $APP_PATH/tmp/pids/server.pid
-
-# run passed commands
-bundle exec ${@}
+# Migrations are a separate command, never run here.
+exec bundle exec "$@"
