@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_08_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_23_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
   enable_extension "pg_catalog.plpgsql"
@@ -99,6 +99,20 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_000000) do
     t.index ["universe_id"], name: "index_images_on_universe_id"
   end
 
+  create_table "mcp_tokens", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "machine", null: false
+    t.string "digest", null: false
+    t.string "scopes", default: [], null: false, array: true
+    t.datetime "expires_at", null: false
+    t.datetime "revoked_at"
+    t.datetime "last_used_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["digest"], name: "index_mcp_tokens_on_digest", unique: true
+    t.index ["user_id"], name: "index_mcp_tokens_on_user_id"
+  end
+
   create_table "traits", force: :cascade do |t|
     t.bigint "character_id", null: false
     t.datetime "created_at", null: false
@@ -138,6 +152,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_08_000000) do
   add_foreign_key "characters", "universes"
   add_foreign_key "image_favorites", "images"
   add_foreign_key "image_favorites", "users"
+  add_foreign_key "mcp_tokens", "users"
   add_foreign_key "traits", "characters"
   add_foreign_key "universes", "users", column: "owner_id"
 end
