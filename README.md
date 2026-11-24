@@ -1,92 +1,45 @@
 # Blackbook
 
-A wiki for tabletop-RPG **universes**. Create a universe, populate it with
-**characters** and **images**, tag images with the characters in them, tag
-characters with freeform labels, favorite images, and browse them as a
-**slideshow**. Share a universe with **collaborators**; admins get user
-management and an image-deduplication tool.
+Keeps the characters and images of fictional universes, shared with collaborators.
 
-## Tech stack
+## Features
 
-- **Ruby 3.4** / **Rails 8.1** / **PostgreSQL 18**
-- **Devise** for authentication
-- **Hotwire** (Turbo + Stimulus) delivered through **importmap** — no JS build step
-- **Tailwind CSS v4** via `tailwindcss-rails` (standalone binary)
-- **Active Storage** (libvips) for image uploads
-- **RSpec** + shoulda-matchers + FactoryBot; **SimpleCov** enforces 100% line coverage
-- Docker Compose for the local dev environment
+- **Universes**: a user owns universes and may add collaborators to them.
+- **Characters**: belong to a universe and carry traits.
+- **Images**: uploaded to a universe and tagged with the characters in them.
+- **Favorites, random image and slideshow**: for looking through a universe's images.
+- **Administration**: admins manage users and remove duplicate images.
+- **Import**: `POST /api/discord_imports/images` takes images from a Discord bot that has the import token.
+- **MCP**: `/mcp`, for hosts and tokens that are allowed.
 
-## Prerequisites
+## Development
 
-- **Docker** + **Docker Compose** (the whole dev stack runs in containers)
-- That's it for day-to-day work. Running Rails commands directly on your host
-  additionally needs Ruby 3.4 (e.g. via [asdf](https://asdf-vm.com/)) and
-  `libvips` (`brew install vips`).
-
-## Setup
+Needs Docker; the application, the Tailwind watcher and PostgreSQL run in containers.
 
 ```bash
-bin/setup-dev
+bin/setup-dev                              # builds the images, creates and seeds the database
+docker compose up -d                       # http://localhost:3001
+docker compose exec blackbook bin/ci       # everything CI checks; ends in OK
+bin/reset-db                               # drops, creates, migrates and seeds development
 ```
 
-This builds the images and creates + seeds the development database.
+The seeds create `admin@blackbook.dev`, `owner@blackbook.dev` and `collaborator@blackbook.dev`, each with the password `password123`.
 
-## Running the app
+## Environment
 
-```bash
-docker compose up -d
-```
-
-Starts three services:
-
-- **blackbook** — the Rails server, available at **http://localhost:3001**
-- **css** — Tailwind watcher that rebuilds styles on change
-- **postgres_db** — PostgreSQL (exposed on host port `5434`)
-
-The seed data creates sample universes and these logins (all password
-`password123`):
-
-| Email | Role |
-| --- | --- |
-| `admin@blackbook.dev` | admin |
-| `owner@blackbook.dev` | universe owner |
-| `collaborator@blackbook.dev` | collaborator |
-
-## Common commands
-
-Run these inside the container (`docker compose exec blackbook …`):
-
-```bash
-docker compose exec blackbook bundle exec rails console   # Rails console
-docker compose exec blackbook bundle exec rspec           # run the test suite
-docker compose exec blackbook bundle exec rails db:migrate # apply migrations
-```
-
-Database helpers (from the host):
-
-```bash
-bin/reset-db        # drop, create, migrate, and seed the development database
-bin/reset-test-db   # reset the test database
-```
-
-## Tests & checks
-
-```bash
-bin/ci
-```
-
-`bin/ci` runs the full quality gate — RuboCop, Brakeman, bundler-audit, a
-Tailwind build, and the RSpec suite — and is exactly what CI runs on every push.
-The suite is order-randomized; reproduce a failing order with
-`bundle exec rspec --seed N`. **Coverage must stay at 100% line coverage** or the
-build fails.
+| Variable | Purpose |
+|---|---|
+| `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USERNAME`, `DATABASE_PASSWORD` | The database |
+| `RAILS_MASTER_KEY` | Production secret |
+| `DISCORD_IMPORT_TOKEN` | The token of the import address; without it, imports are refused |
+| `SMTP_USERNAME`, `SMTP_PASSWORD` | Mail, for password resets |
+| `MCP_HOST` | The only host that `/mcp` answers; unset, `/mcp` does not exist |
 
 ## MCP
 
-`POST /mcp` offers a user's universes, characters, traits, images and favorites as tools. It exists only
-when `MCP_HOST` is set, and answers only that host. Images are given by address, never as data.
+`POST /mcp` offers a user's universes, characters, traits, images and favorites as tools. Images are given by address, never as data.
 
-Each machine has its own token, which carries `read`, `write` or `delete` and expires:
+Each machine has its own token, which belongs to a user, carries `read`, `write` or `delete`, and expires:
 
 ```bash
 bin/rails mcp:tokens:issue USER=<email> MACHINE=<name> SCOPES=read,write DAYS=90   # prints the token once
@@ -94,22 +47,24 @@ bin/rails mcp:tokens:list
 bin/rails mcp:tokens:revoke ID=<id>
 ```
 
-The endpoint, limits and tokens come from the `tailnet_mcp` gem, pinned by commit. Tools are in `app/mcp`. They may only use records that `BlackbookMcp::Access` gives.
+The endpoint, limits and tokens come from the [`tailnet_mcp`](https://github.com/devinleonhart/tailnet-mcp) gem. The tools are in `app/mcp`, and may only use records that `BlackbookMcp::Access` gives.
 
-## How the app fits together
+## Deployment
 
-- **Domain:** `User`s own `Universe`s and can be added as collaborators on
-  others'. A universe has `Character`s and `Image`s. `ImageTag` links an image to
-  the characters in it; `CharacterTag` is a freeform label on a character;
-  `ImageFavorite` marks a user's favorite images.
-- **Authorization:** a universe is visible to its owner and collaborators
-  (`Universe#visible_to_user?` / `Universe.accessible_to`). Controllers load and
-  authorize records in `before_action` setters; managing collaborators is
-  owner-only; user management and the dedupe tool are admin-only.
-- **Front end:** server-rendered ERB enhanced with Turbo and small Stimulus
-  controllers (`app/javascript/controllers`). JavaScript is pinned in
-  `config/importmap.rb` — there is no bundler.
-- **Styling:** Tailwind utility classes plus a small set of reusable `bb-*`
-  component classes defined in `app/assets/tailwind/application.css`.
-- **Security:** a strict Content-Security-Policy (same-origin only, nonce-based)
-  is enforced in `config/initializers/content_security_policy.rb`.
+A merge to `master` runs CI, which publishes `devleo/blackbook:latest` to Docker Hub when the checks pass. On the server:
+
+```bash
+docker compose pull blackbook
+docker compose run --rm --no-deps blackbook bin/rails db:migrate   # only with a new migration
+docker compose up -d blackbook
+```
+
+Migrations never run at boot.
+
+## Architecture
+
+- **Access**: a universe is visible to its owner and collaborators (`Universe.accessible_to`). Controllers load and authorize records in `before_action` setters.
+- **Pages**: ERB with Turbo and Stimulus controllers, pinned in `config/importmap.rb`. There is no JavaScript build.
+- **Styles**: Tailwind, with a few `bb-*` component classes in `app/assets/tailwind/application.css`.
+- **Images**: Active Storage with libvips.
+- **Security**: a Content-Security-Policy of the same origin with nonces, in `config/initializers/content_security_policy.rb`.
