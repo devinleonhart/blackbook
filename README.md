@@ -94,7 +94,7 @@ bin/rails mcp:tokens:list
 bin/rails mcp:tokens:revoke ID=<id>
 ```
 
-Tools are in `app/mcp`. They may only use records that `BlackbookMcp::Access` gives.
+The endpoint, limits and tokens come from the `tailnet_mcp` gem, pinned by commit. Tools are in `app/mcp`. They may only use records that `BlackbookMcp::Access` gives.
 
 ## How the app fits together
 

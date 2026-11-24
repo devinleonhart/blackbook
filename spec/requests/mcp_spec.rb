@@ -48,7 +48,7 @@ RSpec.describe "MCP", type: :request do
     freeze_time do
       mcp_request("tools/list", token: reader)
 
-      expect(McpToken.authenticate(reader).last_used_at).to eq(Time.current)
+      expect(TailnetMcp::Token.authenticate(reader).last_used_at).to eq(Time.current)
     end
   end
 

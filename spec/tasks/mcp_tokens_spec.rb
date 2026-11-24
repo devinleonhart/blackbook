@@ -34,7 +34,8 @@ RSpec.describe "McpTokenTasks" do
       expect(out).to match(/\Abbk_[A-Za-z0-9_-]{43}\n\z/)
       expect(err).to include("cocoa", "read")
       expect(err).not_to include(out.strip)
-      expect(McpToken.authenticate(out.chomp)).to have_attributes(user: user, machine: "cocoa", scopes: ["read"])
+      expect(TailnetMcp::Token.authenticate(out.chomp))
+        .to have_attributes(user: user, machine: "cocoa", scopes: ["read"])
     end
 
     it "takes scopes and days" do
@@ -42,7 +43,7 @@ RSpec.describe "McpTokenTasks" do
         run_task("mcp:tokens:issue", "USER" => "owner@example.com", "MACHINE" => "pepper",
                                      "SCOPES" => "read, write", "DAYS" => "7")
 
-        expect(McpToken.sole).to have_attributes(scopes: %w[read write], expires_at: 7.days.from_now)
+        expect(TailnetMcp::Token.sole).to have_attributes(scopes: %w[read write], expires_at: 7.days.from_now)
       end
     end
 
@@ -57,13 +58,13 @@ RSpec.describe "McpTokenTasks" do
         expect([out, success]).to eq(["", false])
         expect(err).not_to be_empty
       end
-      expect(McpToken.count).to eq(0)
+      expect(TailnetMcp::Token.count).to eq(0)
     end
   end
 
   describe "mcp:tokens:list" do
     it "shows each token without its text or digest" do
-      text = McpToken.issue!(user: user, machine: "cocoa", scopes: %w[read write])
+      text = TailnetMcp::Token.issue!(user: user, machine: "cocoa", scopes: %w[read write])
       used = create(:mcp_token, user: user, machine: "pepper", last_used_at: Time.utc(2026, 1, 2, 3, 4))
       used.revoke!
       out, = run_task("mcp:tokens:list")
@@ -72,18 +73,18 @@ RSpec.describe "McpTokenTasks" do
       expect(out.lines.first).to include("owner@example.com", "cocoa", "read,write", "expires", "never used")
       expect(out.lines.last).to include("pepper", "revoked", "2026-01-02 03:04")
       expect(out).not_to include(text)
-      McpToken.find_each { |token| expect(out).not_to include(token.digest) }
+      TailnetMcp::Token.find_each { |token| expect(out).not_to include(token.digest) }
     end
   end
 
   describe "mcp:tokens:revoke" do
     it "revokes one token" do
-      text = McpToken.issue!(user: user, machine: "cocoa", scopes: ["read"])
+      text = TailnetMcp::Token.issue!(user: user, machine: "cocoa", scopes: ["read"])
       other = create(:mcp_token)
-      _, _, success = run_task("mcp:tokens:revoke", "ID" => McpToken.authenticate(text).id.to_s)
+      _, _, success = run_task("mcp:tokens:revoke", "ID" => TailnetMcp::Token.authenticate(text).id.to_s)
 
       expect(success).to be(true)
-      expect(McpToken.authenticate(text)).to be_nil
+      expect(TailnetMcp::Token.authenticate(text)).to be_nil
       expect(other.reload.revoked_at).to be_nil
     end
 

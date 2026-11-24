@@ -26,7 +26,7 @@ require "rails_helper"
 #
 #  fk_rails_...  (user_id => users.id)
 #
-RSpec.describe McpToken, type: :model do
+RSpec.describe TailnetMcp::Token, type: :model do
   let(:user) { create(:user) }
 
   def issue(**)

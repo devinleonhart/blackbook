@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   # Health check endpoint for uptime monitoring
   get "up" => "rails/health#show", as: :rails_health_check
 
-  match "/mcp", to: "mcp#handle", via: :all
+  match "/mcp", to: "tailnet_mcp/endpoint#handle", via: :all
 
   root to: "universes#index"
 

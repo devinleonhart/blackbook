@@ -202,7 +202,7 @@ RSpec.describe "MCP read tools", type: :request do
 
   it "needs the read scope" do
     weak = issue_token(user)
-    McpToken.authenticate(weak).update_column(:scopes, []) # rubocop:disable Rails/SkipsModelValidations
+    TailnetMcp::Token.authenticate(weak).update_column(:scopes, []) # rubocop:disable Rails/SkipsModelValidations
 
     expect(tool_names(weak)).to eq([])
     expect(tool_error("list_universes", token: weak)).to be_present
