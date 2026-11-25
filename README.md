@@ -35,6 +35,7 @@ The seeds create `admin@blackbook.dev`, `owner@blackbook.dev` and `collaborator@
 | `DISCORD_IMPORT_TOKEN` | The token of the import address; without it, imports are refused |
 | `SMTP_USERNAME`, `SMTP_PASSWORD` | Mail, for password resets |
 | `MCP_HOST` | The only host that `/mcp` answers; unset, `/mcp` does not exist |
+| `APP_HOST` | The host production answers to (default `blackbook.devleo.me`) |
 
 ## MCP
 

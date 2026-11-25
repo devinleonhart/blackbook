@@ -45,6 +45,14 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   config.force_ssl = true
 
+  # The health check comes from inside the container, without TLS or the public name.
+  health_check = ->(request) { request.path == "/up" }
+  config.ssl_options = { redirect: { exclude: health_check } }
+  # Memo reaches the import address by the service's name on the internal network.
+  config.hosts = [ENV.fetch("APP_HOST", "blackbook.devleo.me"), "blackbook"]
+  # The MCP endpoint checks its own host, which must not open the pages.
+  config.host_authorization = { exclude: ->(request) { ["/up", "/mcp"].include?(request.path) } }
+
   # Include generic and useful information about system operation, but avoid logging too much
   # information to avoid inadvertent exposure of personally identifiable information (PII).
   config.log_level = :info
@@ -52,6 +60,9 @@ Rails.application.configure do
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [:request_id]
   config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
+
+  # Prevent health checks from clogging up the logs.
+  config.silence_healthcheck_path = "/up"
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
