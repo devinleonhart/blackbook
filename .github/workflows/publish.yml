@@ -37,7 +37,7 @@ jobs:
             -e POSTGRES_USER=postgres \
             -e POSTGRES_PASSWORD=postgres \
             -e POSTGRES_DB=blackbook_test \
-            postgres:18.6-alpine
+            postgres:18.7-alpine
           timeout 60 sh -c 'until docker exec postgres-test pg_isready -h 127.0.0.1 -U postgres; do sleep 1; done'
 
       - name: Run linters, security scans and specs
