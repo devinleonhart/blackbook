@@ -1,0 +1,22 @@
+version: 2
+# No "docker" ecosystem: the Ruby version is pinned in several files that must
+# agree, and Dependabot can only bump the Dockerfile. Bump Ruby by hand.
+updates:
+  - package-ecosystem: 'bundler'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    open-pull-requests-limit: 10
+    groups:
+      # One PR for routine dev-tooling bumps to cut noise.
+      dev-dependencies:
+        dependency-type: 'development'
+        update-types:
+          - 'minor'
+          - 'patch'
+
+  # GitHub Actions used in the workflow
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
