@@ -6,7 +6,7 @@ echo "Environment: $RAILS_ENV"
 
 if ! bundle check; then
   echo "ERROR: Missing gems. Rebuild the dev image to install them:"
-  echo "  docker compose build blackbook"
+  echo "  docker compose build web"
   exit 1
 fi
 

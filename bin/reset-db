@@ -9,22 +9,14 @@ echo "Resetting development database..."
 # Stop containers if running
 docker compose down
 
-echo "Starting database..."
-docker compose up -d postgres_db
-
-echo "Waiting for database..."
-for i in $(seq 1 30); do
-  if docker compose exec -T postgres_db pg_isready -U postgres >/dev/null 2>&1; then
-    break
-  fi
-  sleep 1
-done
+echo "Starting databases..."
+docker compose up -d --wait db db-test
 
 echo "Resetting database..."
-docker compose run --rm -e RAILS_ENV=development blackbook bundle exec rails db:reset
+docker compose run --rm web bundle exec rails db:reset
 
 echo "Starting app..."
-docker compose up -d blackbook
+docker compose up -d web css
 
 echo "Database reset complete."
 echo "Accounts:"

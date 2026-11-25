@@ -12,23 +12,15 @@ if ! docker info > /dev/null 2>&1; then
   exit 1
 fi
 
-echo "Starting database..."
-docker compose up -d postgres_db
-
-echo "Waiting for database..."
-for i in $(seq 1 30); do
-  if docker compose exec -T postgres_db pg_isready -U postgres >/dev/null 2>&1; then
-    break
-  fi
-  sleep 1
-done
+echo "Starting databases..."
+docker compose up -d --wait db db-test
 
 echo "Preparing development database..."
-docker compose run --rm -e RAILS_ENV=development blackbook bundle exec rails db:prepare
-docker compose run --rm -e RAILS_ENV=development blackbook bundle exec rails db:seed
+docker compose run --rm web bundle exec rails db:prepare
+docker compose run --rm web bundle exec rails db:seed
 
 echo "Preparing test database..."
-docker compose run --rm -e RAILS_ENV=test blackbook bundle exec rails db:prepare
+docker compose run --rm -e RAILS_ENV=test web bundle exec rails db:prepare
 
 echo ""
 echo "Development environment ready."
@@ -47,4 +39,4 @@ echo "  docker compose logs - View application logs"
 echo "  docker compose down - Stop containers"
 
 echo "Starting app..."
-docker compose up -d blackbook
+docker compose up -d web css

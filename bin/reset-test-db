@@ -6,18 +6,10 @@ set -e
 
 echo "Resetting test database..."
 
-echo "Starting database..."
-docker compose up -d postgres_db
-
-echo "Waiting for database..."
-for i in $(seq 1 30); do
-  if docker compose exec -T postgres_db pg_isready -U postgres >/dev/null 2>&1; then
-    break
-  fi
-  sleep 1
-done
+echo "Starting databases..."
+docker compose up -d --wait db db-test
 
 echo "Recreating test database schema..."
-docker compose run --rm -e RAILS_ENV=test blackbook bundle exec rails db:drop db:create db:schema:load
+docker compose run --rm -e RAILS_ENV=test web bundle exec rails db:drop db:create db:schema:load
 
 echo "Test database reset complete."

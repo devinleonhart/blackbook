@@ -17,10 +17,10 @@ Keeps the characters and images of fictional universes, shared with collaborator
 Needs Docker; the application, the Tailwind watcher and PostgreSQL run in containers.
 
 ```bash
-bin/setup-dev                              # builds the images, creates and seeds the database
-docker compose up -d                       # http://localhost:3001
-docker compose exec blackbook bin/ci       # everything CI checks; ends in OK
-bin/reset-db                               # drops, creates, migrates and seeds development
+bin/setup-dev                                            # builds the images, creates and seeds the database
+docker compose up -d                                     # http://localhost:3001
+docker compose run --rm -e RAILS_ENV=test web bin/ci     # everything CI checks; ends in OK
+bin/reset-db                                             # drops, creates, migrates and seeds development
 ```
 
 The seeds create `admin@blackbook.dev`, `owner@blackbook.dev` and `collaborator@blackbook.dev`, each with the password `password123`.
@@ -29,7 +29,8 @@ The seeds create `admin@blackbook.dev`, `owner@blackbook.dev` and `collaborator@
 
 | Variable | Purpose |
 |---|---|
-| `DATABASE_HOST`, `DATABASE_PORT`, `DATABASE_NAME`, `DATABASE_USERNAME`, `DATABASE_PASSWORD` | The database |
+| `DATABASE_URL` | Production database |
+| `DEVELOPMENT_DATABASE_URL`, `TEST_DATABASE_URL` | Set by compose; not `DATABASE_URL`, which would apply to both |
 | `RAILS_MASTER_KEY` | Production secret |
 | `DISCORD_IMPORT_TOKEN` | The token of the import address; without it, imports are refused |
 | `SMTP_USERNAME`, `SMTP_PASSWORD` | Mail, for password resets |
