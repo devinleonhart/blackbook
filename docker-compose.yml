@@ -1,81 +1,62 @@
 services:
-  postgres_db:
-    container_name: postgres_db
-    image: postgres:18.7-alpine
-    volumes:
-      - db_data:/var/lib/postgresql
-      - shared_data:/var/shared
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=test_pass
-      - POSTGRES_DB=blackbook_development
-    networks:
-      - blackbook_network
-    ports:
-      - 5434:5432
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 10s
-
-  css:
-    container_name: blackbook_css
+  web:
+    # One image for web and css, so building either renews both.
+    image: blackbook-dev
     build:
       context: .
-      dockerfile: ./Dockerfile
-      target: dev
-    entrypoint: []
-    environment:
-      - RAILS_ENV=development
-    volumes:
-      - .:/app
-    tty: true
-    stdin_open: true
-    command: bin/rails tailwindcss:watch[poll]
-    healthcheck:
-      disable: true
-    restart: unless-stopped
-
-  blackbook:
-    container_name: blackbook
-    build:
-      context: .
-      dockerfile: ./Dockerfile
       target: dev
     depends_on:
-      postgres_db:
+      db:
+        condition: service_healthy
+      db-test:
         condition: service_healthy
     environment:
-      - RAILS_ENV=development
-      - DATABASE_HOST=postgres_db
-      - DATABASE_PORT=5432
-      - DATABASE_NAME=blackbook_development
-      - DATABASE_USERNAME=postgres
-      - DATABASE_PASSWORD=test_pass
+      DEVELOPMENT_DATABASE_URL: postgresql://postgres:postgres@db:5432/blackbook_dev
+      TEST_DATABASE_URL: postgresql://postgres:postgres@db-test:5432/blackbook_test
     volumes:
       - .:/app
-      - shared_data:/var/shared
-      - ./storage:/app/storage
-    networks:
-      - blackbook_network
-    tty: true
-    stdin_open: true
     ports:
-      - 3001:3000
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
-      interval: 30s
-      timeout: 3s
-      retries: 3
-      start_period: 60s
+      - "3001:3000"
 
-networks:
-  blackbook_network:
+  # Rebuilds the stylesheet as views change.
+  css:
+    image: blackbook-dev
+    build:
+      context: .
+      target: dev
+    entrypoint: []
+    command: bin/rails tailwindcss:watch[poll]
+    volumes:
+      - .:/app
+    tty: true
+    healthcheck:
+      disable: true
+
+  db:
+    image: postgres:18.7
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: blackbook_dev
+    volumes:
+      - pgdata_18:/var/lib/postgresql
+    healthcheck: &postgres_health
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  db-test:
+    image: postgres:18.7
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: blackbook_test
+    healthcheck: *postgres_health
 
 volumes:
-  db_data:
-  shared_data:
+  pgdata_18:

@@ -45,7 +45,7 @@ jobs:
             -e POSTGRES_USER=postgres \
             -e POSTGRES_PASSWORD=postgres \
             -e POSTGRES_DB=blackbook_test \
-            postgres:18.7-alpine
+            postgres:18.7
           timeout 60 sh -c 'until docker exec postgres-test pg_isready -h 127.0.0.1 -U postgres; do sleep 1; done'
 
       - name: Run linters, security scans and specs
@@ -53,10 +53,7 @@ jobs:
           docker run --rm --network blackbook-test-net \
             -v "$GITHUB_WORKSPACE:/app" \
             -e RAILS_ENV=test \
-            -e DATABASE_HOST=postgres-test \
-            -e DATABASE_PORT=5432 \
-            -e DATABASE_USERNAME=postgres \
-            -e DATABASE_PASSWORD=postgres \
+            -e TEST_DATABASE_URL=postgresql://postgres:postgres@postgres-test:5432/blackbook_test \
             blackbook:test bin/ci
 
       - name: Cleanup
